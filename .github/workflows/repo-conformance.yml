@@ -1,0 +1,37 @@
+name: Node Platform conformance
+
+on:
+  workflow_call:
+    inputs:
+      node_version:
+        description: Node.js version used for NodeKit.
+        required: false
+        type: string
+        default: "22"
+      platform_ref:
+        description: Immutable node-platform ref during coordinated migrations.
+        required: false
+        type: string
+        default: main
+
+jobs:
+  conformance:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout consumer
+        uses: actions/checkout@v4
+      - name: Checkout Node Platform
+        uses: actions/checkout@v4
+        with:
+          repository: HomenShum/node-platform
+          ref: ${{ inputs.platform_ref }}
+          path: .node-platform
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ inputs.node_version }}
+          cache: npm
+          cache-dependency-path: .node-platform/package-lock.json
+      - name: Install NodeKit
+        run: npm ci --prefix .node-platform
+      - name: Check repository contract
+        run: node .node-platform/src/cli.mjs repo check --repo-root . --registry-root .node-platform

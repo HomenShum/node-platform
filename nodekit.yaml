@@ -1,0 +1,36 @@
+schemaVersion: nodekit.repo/v1
+repository: HomenShum/node-platform
+lifecycle: preview
+support: active
+role: platform
+commandProfile: platform
+
+canonicalFor:
+  - nodeplatform.repo-contract
+
+consumes: []
+
+commands:
+  doctor:
+    script: doctor
+    mode: finite
+  check:
+    script: check
+    mode: finite
+
+noKey:
+  status: not-applicable
+  command: null
+  externalAccountsRequired: 0
+  disclosure: NodeKit is deterministic repository tooling and does not call a model.
+
+environment:
+  contractVersion: nodeplatform.env/v1
+  status: aligned
+
+proof:
+  command: npm run check
+  receiptSchema: nodeplatform.conformance/v1
+
+contractDeclarations: []
+architectureExceptions: []

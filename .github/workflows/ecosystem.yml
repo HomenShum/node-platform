@@ -1,0 +1,26 @@
+name: ecosystem conformance
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "17 13 * * 1"
+
+jobs:
+  ecosystem:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Checkout active repositories
+        shell: bash
+        run: |
+          mkdir -p ../ecosystem
+          for repo in NodeAgent NodeRoom NodeSlide NodeVideo NodeVoice NodeTrace NodeMem NodeProof agentic-ui-qa; do
+            git clone --depth 1 "https://github.com/HomenShum/${repo}.git" "../ecosystem/${repo}"
+          done
+      - name: Verify ecosystem
+        run: node src/cli.mjs ecosystem check --registry-root . --workspace ../ecosystem

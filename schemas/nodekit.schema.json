@@ -1,0 +1,108 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/HomenShum/node-platform/blob/main/schemas/nodekit.schema.json",
+  "title": "NodeKit repository contract",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "repository",
+    "lifecycle",
+    "support",
+    "role",
+    "commandProfile",
+    "canonicalFor",
+    "consumes",
+    "commands",
+    "noKey",
+    "environment",
+    "proof",
+    "contractDeclarations",
+    "architectureExceptions"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "nodekit.repo/v1" },
+    "repository": { "type": "string", "pattern": "^[^/]+/[^/]+$" },
+    "lifecycle": { "enum": ["production", "preview", "experimental", "reference", "archived"] },
+    "support": { "enum": ["active", "maintenance", "frozen"] },
+    "role": { "type": "string", "minLength": 1 },
+    "commandProfile": { "enum": ["application", "platform", "protocol", "untracked"] },
+    "canonicalFor": { "type": "array", "items": { "type": "string" }, "uniqueItems": true },
+    "consumes": { "type": "array", "items": { "type": "string" }, "uniqueItems": true },
+    "commands": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "oneOf": [
+          { "required": ["script"] },
+          { "required": ["run"] }
+        ],
+        "properties": {
+          "script": { "type": "string", "minLength": 1 },
+          "run": { "type": "string", "minLength": 1 },
+          "mode": { "enum": ["finite", "service"] }
+        },
+        "required": ["mode"],
+        "additionalProperties": false
+      }
+    },
+    "noKey": {
+      "type": "object",
+      "required": ["status", "command", "externalAccountsRequired", "disclosure"],
+      "properties": {
+        "status": { "enum": ["certified", "partial", "missing", "not-applicable"] },
+        "command": { "type": ["string", "null"] },
+        "externalAccountsRequired": { "type": "integer", "minimum": 0 },
+        "disclosure": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    },
+    "environment": {
+      "type": "object",
+      "required": ["contractVersion", "status"],
+      "properties": {
+        "contractVersion": { "const": "nodeplatform.env/v1" },
+        "status": { "enum": ["aligned", "legacy", "migration-planned", "not-applicable"] }
+      },
+      "additionalProperties": false
+    },
+    "proof": {
+      "type": "object",
+      "required": ["command", "receiptSchema"],
+      "properties": {
+        "command": { "type": ["string", "null"] },
+        "receiptSchema": { "type": ["string", "null"] }
+      },
+      "additionalProperties": false
+    },
+    "contractDeclarations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["concept", "signature", "path", "mode"],
+        "properties": {
+          "concept": { "type": "string" },
+          "signature": { "type": "string" },
+          "path": { "type": "string" },
+          "mode": { "enum": ["canonical", "adapter", "domain-specialization", "generated", "migration-copy", "migration-source", "template-copy"] },
+          "origin": { "type": "string" },
+          "reason": { "type": "string" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "architectureExceptions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["rule", "path", "reason"],
+        "properties": {
+          "rule": { "type": "string", "minLength": 1 },
+          "path": { "type": "string", "minLength": 1 },
+          "reason": { "type": "string", "minLength": 1 }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

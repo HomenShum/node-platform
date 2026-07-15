@@ -1,0 +1,108 @@
+schemaVersion: nodeplatform.repositories/v1
+
+repositories:
+  - name: node-platform
+    github: HomenShum/node-platform
+    lifecycle: preview
+    support: active
+    role: platform
+    commandProfile: platform
+
+  - name: NodeAgent
+    github: HomenShum/NodeAgent
+    lifecycle: production
+    support: active
+    role: runtime
+    commandProfile: application
+
+  - name: NodeRoom
+    github: HomenShum/NodeRoom
+    lifecycle: production
+    support: active
+    role: domain-application
+    commandProfile: application
+
+  - name: NodeSlide
+    github: HomenShum/NodeSlide
+    lifecycle: preview
+    support: active
+    role: domain-application
+    commandProfile: application
+
+  - name: NodeVideo
+    github: HomenShum/NodeVideo
+    lifecycle: preview
+    support: active
+    role: domain-application
+    commandProfile: application
+
+  - name: NodeVoice
+    github: HomenShum/NodeVoice
+    lifecycle: preview
+    support: active
+    role: domain-application
+    commandProfile: application
+
+  - name: NodeTrace
+    github: HomenShum/NodeTrace
+    lifecycle: preview
+    support: active
+    role: standalone-package
+    commandProfile: application
+
+  - name: NodeMem
+    github: HomenShum/NodeMem
+    lifecycle: preview
+    support: active
+    role: standalone-package
+    commandProfile: application
+
+  - name: NodeProof
+    github: HomenShum/NodeProof
+    lifecycle: production
+    support: active
+    role: certification-harness
+    commandProfile: application
+
+  - name: agentic-ui-qa
+    github: HomenShum/agentic-ui-qa
+    lifecycle: production
+    support: active
+    role: qa-protocol
+    commandProfile: protocol
+
+  - name: NodeAgentSpec
+    github: HomenShum/NodeAgentSpec
+    lifecycle: reference
+    support: maintenance
+    role: protocol-reference
+    commandProfile: untracked
+
+  - name: NodeGraph
+    github: HomenShum/NodeGraph
+    lifecycle: experimental
+    support: maintenance
+    role: experiment
+    commandProfile: untracked
+
+  - name: NodeRL
+    github: HomenShum/NodeRL
+    lifecycle: experimental
+    support: maintenance
+    role: research
+    commandProfile: untracked
+
+  - name: NodeBenchAI
+    github: HomenShum/NodeBenchAI
+    lifecycle: reference
+    support: frozen
+    role: legacy-product
+    commandProfile: untracked
+    replacedBy: NodeRoom
+
+  - name: NodeBenchBoilerplate
+    github: HomenShum/NodeBenchBoilerplate
+    lifecycle: reference
+    support: maintenance
+    role: template
+    commandProfile: untracked

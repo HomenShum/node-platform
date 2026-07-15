@@ -1,0 +1,36 @@
+{
+  "name": "@homenshum/nodekit",
+  "version": "0.1.0",
+  "description": "Node Platform repository contracts, ownership checks, and lifecycle CLI",
+  "type": "module",
+  "bin": {
+    "nodekit": "src/cli.mjs"
+  },
+  "files": [
+    "src",
+    "schemas",
+    "ownership.yaml",
+    "repositories.yaml",
+    "architecture.yaml",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "doctor": "node src/cli.mjs registry check --registry-root .",
+    "test": "node --test",
+    "registry:check": "node src/cli.mjs registry check --registry-root .",
+    "ecosystem:check": "node src/cli.mjs ecosystem check --registry-root . --workspace ..",
+    "dashboard": "node src/cli.mjs dashboard --registry-root . --workspace .. --write",
+    "check": "npm run test && npm run registry:check && npm run ecosystem:check"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "yaml": "^2.9.0"
+  },
+  "license": "MIT"
+}

@@ -1,0 +1,187 @@
+schemaVersion: nodeplatform.ownership/v1
+
+concepts:
+  nodeplatform.repo-contract:
+    owner: node-platform
+    package: "@homenshum/nodekit"
+    targetPackage: "@homenshum/nodekit"
+    status: canonical
+    contractVersion: nodekit.repo/v1
+    consumers:
+      - NodeAgent
+      - NodeRoom
+      - NodeSlide
+      - NodeVideo
+      - NodeVoice
+      - NodeTrace
+      - NodeMem
+      - NodeProof
+      - agentic-ui-qa
+
+  nodeplatform.environment:
+    owner: node-platform
+    package: null
+    targetPackage: "@nodeagent/config"
+    status: planned
+    contractVersion: nodeplatform.env/v1
+    consumers:
+      - NodeAgent
+      - NodeRoom
+      - NodeSlide
+      - NodeVideo
+      - NodeVoice
+
+  nodeagent.agent-run:
+    owner: NodeAgent
+    package: nodeagent
+    targetPackage: "@nodeagent/runtime"
+    status: canonical-unpackaged
+    contractVersion: nodeagent.run/v1
+    consumers:
+      - NodeRoom
+      - NodeSlide
+      - NodeVideo
+      - NodeVoice
+      - NodeProof
+    signatures:
+      - id: agent-run-result
+        regex: '^\s*export\s+(?:interface|type)\s+AgentRunResult\b'
+
+  nodeagent.policy-context:
+    owner: NodeAgent
+    package: nodeagent
+    targetPackage: "@nodeagent/runtime"
+    status: canonical-unpackaged
+    contractVersion: nodeagent.policy/v1
+    consumers:
+      - NodeRoom
+      - NodeSlide
+      - NodeVideo
+      - NodeVoice
+    signatures:
+      - id: policy-context
+        regex: '^\s*export\s+(?:interface|type)\s+PolicyContext\b'
+
+  nodeagent.proposal-review:
+    owner: NodeAgent
+    package: null
+    targetPackage: "@nodeagent/proposal-protocol"
+    status: planned
+    contractVersion: nodeagent.proposal/v1
+    consumers:
+      - NodeRoom
+      - NodeSlide
+      - NodeVideo
+
+  nodeagent.trace-workpaper:
+    owner: NodeAgent
+    package: null
+    targetPackage: "@nodeagent/trace-protocol"
+    status: migration-planned
+    contractVersion: nodeagent.trace/v1
+    currentSource:
+      repository: NodeRoom
+      path: src/nodeagent/traces/traceTypes.ts
+    consumers:
+      - NodeRoom
+      - NodeSlide
+      - NodeVideo
+      - NodeTrace
+      - NodeProof
+    signatures:
+      - id: trace-schema
+        regex: '^\s*export\s+const\s+NODEAGENT_TRACE_SCHEMA\b'
+      - id: trace-tool-receipt
+        regex: '^\s*export\s+(?:interface|type)\s+TraceToolReceipt\b'
+
+  nodetrace.trace-ui-store:
+    owner: NodeTrace
+    package: "@homenshum/nodetrace"
+    targetPackage: "@homenshum/nodetrace"
+    status: canonical
+    contractVersion: nodetrace.state/v1
+    consumers:
+      - NodeAgent
+      - NodeRoom
+      - NodeSlide
+      - NodeVideo
+
+  nodemem.memory:
+    owner: NodeMem
+    package: nodemem
+    targetPackage: "@nodeagent/memory"
+    status: canonical-unpackaged
+    contractVersion: nodeagent.memory/v1
+    consumers:
+      - NodeRoom
+      - NodeAgent
+
+  proofloop.certification:
+    owner: NodeProof
+    package: proofloop
+    targetPackage: proofloop
+    status: canonical
+    contractVersion: proofloop.receipt/v1
+    consumers:
+      - NodeAgent
+      - NodeRoom
+      - NodeSlide
+      - NodeVideo
+      - NodeVoice
+      - NodeTrace
+      - NodeMem
+      - agentic-ui-qa
+
+  agentic-ui-qa.flight-recorder:
+    owner: agentic-ui-qa
+    package: null
+    targetPackage: "@nodeagent/ui-qa"
+    status: canonical-unpackaged
+    contractVersion: agentic-ui-qa.run/v1
+    consumers:
+      - NodeRoom
+      - NodeSlide
+      - NodeVideo
+
+  noderoom.collaboration:
+    owner: NodeRoom
+    package: null
+    targetPackage: null
+    status: canonical-domain
+    contractVersion: noderoom.room/v1
+    consumers: []
+
+  nodeslide.deck:
+    owner: NodeSlide
+    package: null
+    targetPackage: null
+    status: canonical-domain
+    contractVersion: nodeslide.slidelang/v1
+    consumers: []
+
+  nodeslide.deck-patch:
+    owner: NodeSlide
+    package: null
+    targetPackage: null
+    status: canonical-domain
+    contractVersion: nodeslide.deck-patch/v1
+    consumers: []
+    signatures:
+      - id: nodeslide-patch-operation
+        regex: '^\s*export\s+type\s+PatchOperation\b'
+
+  nodevideo.worker-receipt:
+    owner: NodeVideo
+    package: null
+    targetPackage: null
+    status: canonical-domain
+    contractVersion: nodevideo.worker-receipt.v1
+    consumers: []
+
+  nodevoice.room-state:
+    owner: NodeVoice
+    package: null
+    targetPackage: null
+    status: canonical-domain
+    contractVersion: nodevoice.room-state/v1
+    consumers: []

@@ -1,0 +1,43 @@
+schemaVersion: nodeplatform.architecture/v1
+
+requiredCommands:
+  application:
+    - dev
+    - demo
+    - doctor
+    - check
+    - proof
+  platform:
+    - doctor
+    - check
+  protocol:
+    - doctor
+    - check
+    - proof
+  untracked: []
+
+reuseModes:
+  - package-import
+  - generated
+  - template-copy
+  - migration-copy
+  - migration-source
+  - adapter
+  - domain-specialization
+
+sourceRules:
+  - id: no-provider-sdk-in-ui
+    description: Domain UI may not import model-provider SDKs.
+    pathIncludes:
+      - /src/ui/
+      - /src/components/
+      - /src/domains/
+    regex: '(?:from\s+["''](?:openai|@anthropic-ai/sdk|@google/generative-ai|groq-sdk)["'']|require\(["''](?:openai|@anthropic-ai/sdk|@google/generative-ai|groq-sdk)["'']\))'
+
+  - id: no-cross-app-internal-import
+    description: Applications may not import another application's internal source tree.
+    pathIncludes:
+      - /src/
+      - /convex/
+      - /mcp/
+    regex: '(?:HomenShum/Node(?:Room|Slide|Video|Voice)/(?:blob|raw)/[^"'']+/src/|Node(?:Room|Slide|Video|Voice)/src/)'
