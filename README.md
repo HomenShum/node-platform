@@ -42,3 +42,4 @@ The unscoped `nodekit` npm name belongs to an unrelated project. Until a scoped 
 `planned`, `migration-planned`, and `canonical-unpackaged` are intentionally distinct from a released shared package. P0 freezes new duplication; it does not claim the P1 package extraction, environment loader, templates, codemods, or release automation are complete.
 
 See [`docs/DECISIONS.md`](docs/DECISIONS.md) for the ownership split and migration rules.
+The coordinated consumer commits, pull requests, hosted checks, and known limits are recorded in [`docs/P0_ROLLOUT.md`](docs/P0_ROLLOUT.md) and [`proof/p0-rollout.json`](proof/p0-rollout.json).

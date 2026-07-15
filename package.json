@@ -17,11 +17,12 @@
   ],
   "scripts": {
     "doctor": "node src/cli.mjs registry check --registry-root .",
+    "audit:prod": "npm audit --omit=dev",
     "test": "node --test",
     "registry:check": "node src/cli.mjs registry check --registry-root .",
     "ecosystem:check": "node src/cli.mjs ecosystem check --registry-root . --workspace ..",
     "dashboard": "node src/cli.mjs dashboard --registry-root . --workspace .. --write",
-    "check": "npm run test && npm run registry:check && npm run ecosystem:check"
+    "check": "npm run test && npm run audit:prod && npm run registry:check && npm run ecosystem:check"
   },
   "engines": {
     "node": ">=20"

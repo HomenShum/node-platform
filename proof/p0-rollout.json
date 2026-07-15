@@ -1,0 +1,147 @@
+{
+  "schemaVersion": "nodeplatform.p0-rollout/v1",
+  "generatedAt": "2026-07-15T07:14:40Z",
+  "status": "verified-prs-open",
+  "registry": {
+    "repository": "HomenShum/node-platform",
+    "baseCommit": "ef4ac8a011b230efa3324892a193abe02ff2d673",
+    "branch": "main",
+    "qualityRun": "https://github.com/HomenShum/node-platform/actions/runs/29395304911",
+    "qualityResult": "pass"
+  },
+  "verification": {
+    "passed": true,
+    "registryTests": {
+      "tests": 9,
+      "failClosedCases": 7,
+      "result": "pass"
+    },
+    "ecosystemConformance": {
+      "repositories": 10,
+      "classifiedContractSignatures": 7,
+      "undeclaredContractSignatures": 0,
+      "architectureViolations": 0,
+      "result": "pass"
+    },
+    "publicInvocation": {
+      "command": "npx --yes github:HomenShum/node-platform doctor --repo-root .",
+      "repository": "HomenShum/NodeAgent",
+      "result": "pass"
+    },
+    "cleanCheckoutGates": [
+      {
+        "repository": "HomenShum/NodeSlide",
+        "command": "npm run check",
+        "result": "pass",
+        "details": "Biome, TypeScript, 61 test files and 482 tests, production build"
+      },
+      {
+        "repository": "HomenShum/NodeVideo",
+        "command": "npm run check",
+        "result": "pass",
+        "details": "Biome, TypeScript, 5 test files and 23 tests, UI policy and budgets, 18 capability checks, 12 synthetic receipt checks, 19 owner-authorized receipt checks, production build"
+      }
+    ]
+  },
+  "consumers": [
+    {
+      "repository": "HomenShum/NodeAgent",
+      "commit": "7265bc2de71bc402500690ea9ee5468df0a22d55",
+      "pullRequest": "https://github.com/HomenShum/NodeAgent/pull/1",
+      "mergeState": "clean",
+      "conformanceJob": "https://github.com/HomenShum/NodeAgent/actions/runs/29395690759/job/87288559611",
+      "repositoryJob": "https://github.com/HomenShum/NodeAgent/actions/runs/29395690446/job/87288558561",
+      "localEvidence": "doctor, frame and Omnigent compatibility smokes, deterministic happy path, typecheck, 7 test files and 41 tests"
+    },
+    {
+      "repository": "HomenShum/NodeRoom",
+      "commit": "13c2cd110e31c21443790e992f104a38ab99294c",
+      "pullRequest": "https://github.com/HomenShum/NodeRoom/pull/198",
+      "mergeState": "clean",
+      "conformanceJob": "https://github.com/HomenShum/NodeRoom/actions/runs/29396282396/job/87290410946",
+      "repositoryJob": "https://github.com/HomenShum/NodeRoom/actions/runs/29396281994/job/87290409764",
+      "localEvidence": "ProofLoop doctor 11/11, frame and Omnigent compatibility smokes, floor gate, 330 test files and 2234 tests",
+      "hostedEvidence": "production gate, ladder, Accounting and Notion proof loops, scaffold check, ProofLoop gate, Vercel and security checks"
+    },
+    {
+      "repository": "HomenShum/NodeSlide",
+      "commit": "6be352486cf6bd5b3ff32969c9d99465dc1162f3",
+      "pullRequest": "https://github.com/HomenShum/NodeSlide/pull/2",
+      "mergeState": "clean",
+      "conformanceJob": "https://github.com/HomenShum/NodeSlide/actions/runs/29395690464/job/87288558636",
+      "repositoryJob": "https://github.com/HomenShum/NodeSlide/actions/runs/29395690242/job/87288557939",
+      "localEvidence": "fresh checkout check passed Biome, TypeScript, 61 test files and 482 tests, production build; production dependency audit has zero vulnerabilities"
+    },
+    {
+      "repository": "HomenShum/NodeVideo",
+      "commit": "1f55faaae6d0c9e6f0226e72df889b8e56824dd2",
+      "pullRequest": "https://github.com/HomenShum/NodeVideo/pull/3",
+      "mergeState": "clean",
+      "conformanceJob": "https://github.com/HomenShum/NodeVideo/actions/runs/29395846762/job/87289058368",
+      "repositoryJob": "https://github.com/HomenShum/NodeVideo/actions/runs/29395846476/job/87289057429",
+      "localEvidence": "fresh checkout full check and zero production dependency vulnerabilities",
+      "hostedEvidence": "quality and authorized real-media Agentic UI Bar passed"
+    },
+    {
+      "repository": "HomenShum/NodeVoice",
+      "commit": "37e646bc49252bd2b1977152d697784c1cf53a3d",
+      "pullRequest": "https://github.com/HomenShum/NodeVoice/pull/3",
+      "mergeState": "clean",
+      "conformanceJob": "https://github.com/HomenShum/NodeVoice/actions/runs/29395690113/job/87288557733",
+      "repositoryJob": "https://github.com/HomenShum/NodeVoice/actions/runs/29395689754/job/87288556420",
+      "localEvidence": "server and client typechecks, 6 test files and 32 tests, deterministic V0-V3 comparison, Vite build"
+    },
+    {
+      "repository": "HomenShum/NodeTrace",
+      "commit": "fa448323c7abcad6075901b6c9eff67e0216f6aa",
+      "pullRequest": "https://github.com/HomenShum/NodeTrace/pull/1",
+      "mergeState": "clean",
+      "conformanceJob": "https://github.com/HomenShum/NodeTrace/actions/runs/29396363433/job/87290665742",
+      "repositoryJob": "https://github.com/HomenShum/NodeTrace/actions/runs/29396363033/job/87290664352",
+      "localEvidence": "happy path, smoke/CLI/MCP, build and walkthrough receipt verification",
+      "hostedEvidence": "FFmpeg render, structural media receipt and full prepush passed on Ubuntu"
+    },
+    {
+      "repository": "HomenShum/NodeMem",
+      "commit": "d75757db04b32a34940da9a1723e270c0beac1ae",
+      "pullRequest": "https://github.com/HomenShum/NodeMem/pull/1",
+      "mergeState": "clean",
+      "conformanceJob": "https://github.com/HomenShum/NodeMem/actions/runs/29395690451/job/87288558870",
+      "repositoryJob": null,
+      "localEvidence": "doctor smoke 13/13, typecheck, 2 test files and 27 tests"
+    },
+    {
+      "repository": "HomenShum/NodeProof",
+      "commit": "bac57a017c04ec2dacbc19b7ac2f74ea5c3d82e7",
+      "pullRequest": "https://github.com/HomenShum/NodeProof/pull/21",
+      "mergeState": "clean",
+      "conformanceJob": "https://github.com/HomenShum/NodeProof/actions/runs/29395690894/job/87288560276",
+      "repositoryJob": "https://github.com/HomenShum/NodeProof/actions/runs/29395690515/job/87288559058",
+      "localEvidence": "build/site, 26 test files and 145 tests, zero production dependency vulnerabilities, maturity level 4 score 93"
+    },
+    {
+      "repository": "HomenShum/agentic-ui-qa",
+      "commit": "52a1b0155c1c79ff7070a5056d025039772f4161",
+      "pullRequest": "https://github.com/HomenShum/agentic-ui-qa/pull/3",
+      "mergeState": "clean",
+      "conformanceJob": "https://github.com/HomenShum/agentic-ui-qa/actions/runs/29395691049/job/87288560986",
+      "repositoryJob": null,
+      "localEvidence": "protocol self-check 12/12 with ignored local receipt"
+    }
+  ],
+  "adoption": {
+    "status": "pending-merge",
+    "openPullRequests": 9,
+    "mergedPullRequests": 0,
+    "note": "Verification is complete on the pinned commits. Main-branch adoption remains a repository-owner review and merge action."
+  },
+  "limitations": [
+    "P0 freezes contract and architecture drift; it does not claim the planned protocol package extractions are released.",
+    "The scoped @homenshum/nodekit npm package is not published; the verified public path is the GitHub npx invocation.",
+    "NodeSlide remains a partial no-key path because its full authoritative workflow requires a Convex account.",
+    "NodeSlide has dev-tooling audit debt, while npm audit --omit=dev reports zero production vulnerabilities.",
+    "Several repositories still declare no canonical proof receipt schema, which is visible in the ecosystem dashboard.",
+    "The official Omnigent CLI was unavailable locally; NodeAgent and NodeRoom compatibility smokes passed without claiming the official binary ran.",
+    "No paid model-provider route was invoked for this rollout."
+  ]
+}
