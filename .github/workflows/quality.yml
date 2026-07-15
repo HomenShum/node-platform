@@ -18,3 +18,13 @@ jobs:
       - run: npm test
       - run: npm run audit:prod
       - run: npm run registry:check
+      - name: Pack and install NodeKit
+        shell: bash
+        run: |
+          package_dir="$RUNNER_TEMP/nodekit-package"
+          install_dir="$RUNNER_TEMP/nodekit-install"
+          mkdir -p "$package_dir" "$install_dir"
+          npm pack --pack-destination "$package_dir"
+          npm install --ignore-scripts --prefix "$install_dir" "$package_dir"/*.tgz
+          "$install_dir/node_modules/.bin/nodekit" registry check
+          "$install_dir/node_modules/.bin/nodekit" doctor --repo-root "$GITHUB_WORKSPACE"

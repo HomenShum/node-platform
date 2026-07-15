@@ -19,13 +19,13 @@ npm run dashboard
 From any repository with `nodekit.yaml`:
 
 ```bash
-npx github:HomenShum/node-platform doctor
-npx github:HomenShum/node-platform demo
-npx github:HomenShum/node-platform check
-npx github:HomenShum/node-platform proof
+npx --yes @homenshum/nodekit doctor
+npx --yes @homenshum/nodekit demo
+npx --yes @homenshum/nodekit check
+npx --yes @homenshum/nodekit proof
 ```
 
-The unscoped `nodekit` npm name belongs to an unrelated project. Until a scoped package is released, the GitHub invocation above is the canonical public command. A future npm release will use `@homenshum/nodekit` and still expose the `nodekit` binary.
+For a source-pinned fallback, replace `@homenshum/nodekit` with `github:HomenShum/node-platform#v0.1.0`. The unscoped `nodekit` npm name belongs to an unrelated project; this project uses the `@homenshum/nodekit` package and exposes the `nodekit` binary.
 
 ## P0 Contract
 
