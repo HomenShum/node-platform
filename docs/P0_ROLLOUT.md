@@ -18,4 +18,4 @@ The machine-readable evidence is [`proof/p0-rollout.json`](../proof/p0-rollout.j
 
 ## P0 Boundary
 
-This release establishes ownership, lifecycle, universal command aliases, no-key disclosures, duplicate-contract classification, architecture checks, CI enforcement, and an ecosystem dashboard. Shared environment loading, package extraction, templates, codemods, migrations, npm publication, release automation, and portfolio archival remain later phases.
+This release establishes ownership, lifecycle, universal command aliases, no-key disclosures, duplicate-contract classification, architecture checks, CI enforcement, an ecosystem dashboard, and the scoped P0 CLI package. Shared environment loading, protocol package extraction, templates, codemods, migrations, automated release orchestration, and portfolio archival remain later phases.
