@@ -1,7 +1,7 @@
 {
   "schemaVersion": "nodeplatform.p0-rollout/v1",
-  "generatedAt": "2026-07-15T07:14:40Z",
-  "status": "verified-prs-open",
+  "generatedAt": "2026-07-15T08:44:40Z",
+  "status": "adopted",
   "registry": {
     "repository": "HomenShum/node-platform",
     "baseCommit": "ef4ac8a011b230efa3324892a193abe02ff2d673",
@@ -21,6 +21,9 @@
       "classifiedContractSignatures": 7,
       "undeclaredContractSignatures": 0,
       "architectureViolations": 0,
+      "hostedRun": "https://github.com/HomenShum/node-platform/actions/runs/29401841672",
+      "hostedEnvironment": "ubuntu-latest",
+      "localEnvironment": "Windows fresh shallow checkouts of every adopted main branch",
       "result": "pass"
     },
     "publicInvocation": {
@@ -46,94 +49,98 @@
   "consumers": [
     {
       "repository": "HomenShum/NodeAgent",
-      "commit": "7265bc2de71bc402500690ea9ee5468df0a22d55",
+      "commit": "3aec0e81435f611f8a1509c1ecd5468c243c1fc0",
       "pullRequest": "https://github.com/HomenShum/NodeAgent/pull/1",
-      "mergeState": "clean",
-      "conformanceJob": "https://github.com/HomenShum/NodeAgent/actions/runs/29395690759/job/87288559611",
-      "repositoryJob": "https://github.com/HomenShum/NodeAgent/actions/runs/29395690446/job/87288558561",
+      "mergeState": "merged",
+      "conformanceJob": "https://github.com/HomenShum/NodeAgent/actions/runs/29399056987/job/87299153163",
+      "repositoryJob": "https://github.com/HomenShum/NodeAgent/actions/runs/29399056467/job/87299151329",
       "localEvidence": "doctor, frame and Omnigent compatibility smokes, deterministic happy path, typecheck, 7 test files and 41 tests"
     },
     {
       "repository": "HomenShum/NodeRoom",
-      "commit": "13c2cd110e31c21443790e992f104a38ab99294c",
+      "commit": "ca25e347dc467bc37f06918e1a18656f7336ee28",
       "pullRequest": "https://github.com/HomenShum/NodeRoom/pull/198",
-      "mergeState": "clean",
-      "conformanceJob": "https://github.com/HomenShum/NodeRoom/actions/runs/29396282396/job/87290410946",
-      "repositoryJob": "https://github.com/HomenShum/NodeRoom/actions/runs/29396281994/job/87290409764",
+      "repairPullRequest": "https://github.com/HomenShum/NodeRoom/pull/199",
+      "mergeState": "merged-repaired",
+      "conformanceJob": "https://github.com/HomenShum/NodeRoom/actions/runs/29401077716/job/87305521877",
+      "repositoryJob": "https://github.com/HomenShum/NodeRoom/actions/runs/29401077284/job/87305520464",
+      "proofloopJob": "https://github.com/HomenShum/NodeRoom/actions/runs/29401077305/job/87305520516",
+      "repairEvidence": "Post-merge CI exposed wall-clock timestamps on implicit JSZip directory entries; PR #199 removed those records, added deterministic archive coverage, and passed local plus hosted production gates on the repaired main merge commit.",
       "localEvidence": "ProofLoop doctor 11/11, frame and Omnigent compatibility smokes, floor gate, 330 test files and 2234 tests",
       "hostedEvidence": "production gate, ladder, Accounting and Notion proof loops, scaffold check, ProofLoop gate, Vercel and security checks"
     },
     {
       "repository": "HomenShum/NodeSlide",
-      "commit": "6be352486cf6bd5b3ff32969c9d99465dc1162f3",
+      "commit": "dd67e4c642c40e6bb414af617a67a31dbed507c5",
       "pullRequest": "https://github.com/HomenShum/NodeSlide/pull/2",
-      "mergeState": "clean",
-      "conformanceJob": "https://github.com/HomenShum/NodeSlide/actions/runs/29395690464/job/87288558636",
-      "repositoryJob": "https://github.com/HomenShum/NodeSlide/actions/runs/29395690242/job/87288557939",
+      "mergeState": "merged",
+      "conformanceJob": "https://github.com/HomenShum/NodeSlide/actions/runs/29399176820/job/87299537291",
+      "repositoryJob": "https://github.com/HomenShum/NodeSlide/actions/runs/29399176424",
       "localEvidence": "fresh checkout check passed Biome, TypeScript, 61 test files and 482 tests, production build; production dependency audit has zero vulnerabilities"
     },
     {
       "repository": "HomenShum/NodeVideo",
-      "commit": "1f55faaae6d0c9e6f0226e72df889b8e56824dd2",
+      "commit": "bb79bc385de93c90cee89b160fc801d18372d89e",
       "pullRequest": "https://github.com/HomenShum/NodeVideo/pull/3",
-      "mergeState": "clean",
-      "conformanceJob": "https://github.com/HomenShum/NodeVideo/actions/runs/29395846762/job/87289058368",
-      "repositoryJob": "https://github.com/HomenShum/NodeVideo/actions/runs/29395846476/job/87289057429",
+      "mergeState": "merged",
+      "conformanceJob": "https://github.com/HomenShum/NodeVideo/actions/runs/29399173184/job/87299525555",
+      "repositoryJob": "https://github.com/HomenShum/NodeVideo/actions/runs/29399173075",
       "localEvidence": "fresh checkout full check and zero production dependency vulnerabilities",
       "hostedEvidence": "quality and authorized real-media Agentic UI Bar passed"
     },
     {
       "repository": "HomenShum/NodeVoice",
-      "commit": "37e646bc49252bd2b1977152d697784c1cf53a3d",
+      "commit": "9a27b69abe1c62d829dbbe2352357082ae537585",
       "pullRequest": "https://github.com/HomenShum/NodeVoice/pull/3",
-      "mergeState": "clean",
-      "conformanceJob": "https://github.com/HomenShum/NodeVoice/actions/runs/29395690113/job/87288557733",
-      "repositoryJob": "https://github.com/HomenShum/NodeVoice/actions/runs/29395689754/job/87288556420",
+      "mergeState": "merged",
+      "conformanceJob": "https://github.com/HomenShum/NodeVoice/actions/runs/29399169989/job/87299514742",
+      "repositoryJob": "https://github.com/HomenShum/NodeVoice/actions/runs/29399169663/job/87299513446",
       "localEvidence": "server and client typechecks, 6 test files and 32 tests, deterministic V0-V3 comparison, Vite build"
     },
     {
       "repository": "HomenShum/NodeTrace",
-      "commit": "fa448323c7abcad6075901b6c9eff67e0216f6aa",
+      "commit": "5dd5c1ccf847c866a444e77813d412e193ca0930",
       "pullRequest": "https://github.com/HomenShum/NodeTrace/pull/1",
-      "mergeState": "clean",
-      "conformanceJob": "https://github.com/HomenShum/NodeTrace/actions/runs/29396363433/job/87290665742",
-      "repositoryJob": "https://github.com/HomenShum/NodeTrace/actions/runs/29396363033/job/87290664352",
+      "mergeState": "merged",
+      "conformanceJob": "https://github.com/HomenShum/NodeTrace/actions/runs/29398966279/job/87298864515",
+      "repositoryJob": "https://github.com/HomenShum/NodeTrace/actions/runs/29398965959/job/87298863732",
       "localEvidence": "happy path, smoke/CLI/MCP, build and walkthrough receipt verification",
       "hostedEvidence": "FFmpeg render, structural media receipt and full prepush passed on Ubuntu"
     },
     {
       "repository": "HomenShum/NodeMem",
-      "commit": "d75757db04b32a34940da9a1723e270c0beac1ae",
+      "commit": "71da5c8e2c41f0afa8fd1e6296a80cb8322b284c",
       "pullRequest": "https://github.com/HomenShum/NodeMem/pull/1",
-      "mergeState": "clean",
-      "conformanceJob": "https://github.com/HomenShum/NodeMem/actions/runs/29395690451/job/87288558870",
+      "mergeState": "merged",
+      "conformanceJob": "https://github.com/HomenShum/NodeMem/actions/runs/29398962771/job/87298853270",
       "repositoryJob": null,
       "localEvidence": "doctor smoke 13/13, typecheck, 2 test files and 27 tests"
     },
     {
       "repository": "HomenShum/NodeProof",
-      "commit": "bac57a017c04ec2dacbc19b7ac2f74ea5c3d82e7",
+      "commit": "53e084ee4a9941fb205ebc66380e2fc009c4d465",
       "pullRequest": "https://github.com/HomenShum/NodeProof/pull/21",
-      "mergeState": "clean",
-      "conformanceJob": "https://github.com/HomenShum/NodeProof/actions/runs/29395690894/job/87288560276",
-      "repositoryJob": "https://github.com/HomenShum/NodeProof/actions/runs/29395690515/job/87288559058",
+      "mergeState": "merged",
+      "conformanceJob": "https://github.com/HomenShum/NodeProof/actions/runs/29398970195/job/87298877084",
+      "repositoryJob": "https://github.com/HomenShum/NodeProof/actions/runs/29398969688/job/87298875581",
       "localEvidence": "build/site, 26 test files and 145 tests, zero production dependency vulnerabilities, maturity level 4 score 93"
     },
     {
       "repository": "HomenShum/agentic-ui-qa",
-      "commit": "52a1b0155c1c79ff7070a5056d025039772f4161",
+      "commit": "bb31f8db7a0b3b665c6e38793b839b09f1ace394",
       "pullRequest": "https://github.com/HomenShum/agentic-ui-qa/pull/3",
-      "mergeState": "clean",
-      "conformanceJob": "https://github.com/HomenShum/agentic-ui-qa/actions/runs/29395691049/job/87288560986",
+      "mergeState": "merged",
+      "conformanceJob": "https://github.com/HomenShum/agentic-ui-qa/actions/runs/29398959615/job/87298843704",
       "repositoryJob": null,
       "localEvidence": "protocol self-check 12/12 with ignored local receipt"
     }
   ],
   "adoption": {
-    "status": "pending-merge",
-    "openPullRequests": 9,
-    "mergedPullRequests": 0,
-    "note": "Verification is complete on the pinned commits. Main-branch adoption remains a repository-owner review and merge action."
+    "status": "adopted",
+    "openPullRequests": 0,
+    "mergedPullRequests": 9,
+    "repairPullRequests": 1,
+    "note": "All nine adoption pull requests are merged. Every consumer passed Node Platform conformance on its merge commit, available native main-branch CI passed, and the central hosted ecosystem run passed against fresh main checkouts."
   },
   "limitations": [
     "P0 freezes contract and architecture drift; it does not claim the planned protocol package extractions are released.",
