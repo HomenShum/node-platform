@@ -22,6 +22,7 @@
   "properties": {
     "schemaVersion": { "const": "nodekit.repo/v1" },
     "repository": { "type": "string", "pattern": "^[^/]+/[^/]+$" },
+    "registryMode": { "enum": ["ecosystem", "external"] },
     "lifecycle": { "enum": ["production", "preview", "experimental", "reference", "archived"] },
     "support": { "enum": ["active", "maintenance", "frozen"] },
     "role": { "type": "string", "minLength": 1 },

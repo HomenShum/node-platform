@@ -1,0 +1,18 @@
+{
+  "name": "nodekit",
+  "version": "0.2.0",
+  "description": "Research, scaffold, evaluate, and prove a production-shaped agent application from a business brief.",
+  "author": {
+    "name": "Homen Shum"
+  },
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "NodeKit",
+    "shortDescription": "Turn a brief into a proof-carrying agent app.",
+    "longDescription": "NodeKit gives Codex a timed research, scaffolding, evaluation, live-provider, browser QA, and proof workflow for hackathon and founder agent applications.",
+    "developerName": "Homen Shum",
+    "category": "Developer Tools",
+    "capabilities": ["skills"],
+    "defaultPrompt": "Use NodeKit to turn my business pain point and required sponsor tools into the smallest live-tested, deployable, proof-carrying agent application."
+  }
+}

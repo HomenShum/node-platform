@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: __APP_NAME__
+    runtime: docker
+    plan: free
+    autoDeploy: false
+    healthCheckPath: /api/health
+    envVars:
+      - key: __SECRET_REF__
+        sync: false

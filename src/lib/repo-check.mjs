@@ -132,16 +132,20 @@ export async function checkRepository(repoRoot, registry) {
   const packageJson = (await pathExists(packagePath)) ? await readJson(packagePath) : null;
   const name = manifest?.repository ? repositoryName(manifest) : path.basename(repoRoot);
   const catalogEntry = repositoryByName(registry, name);
+  const external = manifest?.registryMode === "external";
 
   addCheck(checks, "manifest-schema", manifest?.schemaVersion === REPO_SCHEMA, REPO_SCHEMA);
-  addCheck(checks, "catalog-entry", Boolean(catalogEntry), name);
+  addCheck(checks, "catalog-entry", external || Boolean(catalogEntry), external ? "external repository" : name);
   addCheck(checks, "lifecycle", LIFECYCLES.has(manifest?.lifecycle), manifest?.lifecycle ?? "missing");
   addCheck(checks, "support", SUPPORT_STATES.has(manifest?.support), manifest?.support ?? "missing");
 
   if (manifest?.schemaVersion !== REPO_SCHEMA) {
     errors.push(`nodekit.yaml must use ${REPO_SCHEMA}`);
   }
-  if (!catalogEntry) errors.push(`${name} is missing from repositories.yaml`);
+  if (!external && !catalogEntry) errors.push(`${name} is missing from repositories.yaml`);
+  if (manifest?.registryMode && !["ecosystem", "external"].includes(manifest.registryMode)) {
+    errors.push(`invalid registryMode ${manifest.registryMode}`);
+  }
   if (!LIFECYCLES.has(manifest?.lifecycle)) errors.push(`invalid lifecycle ${manifest?.lifecycle ?? "missing"}`);
   if (!SUPPORT_STATES.has(manifest?.support)) errors.push(`invalid support ${manifest?.support ?? "missing"}`);
   if (!Array.isArray(manifest?.canonicalFor)) errors.push("canonicalFor must be an array");
@@ -229,7 +233,7 @@ export async function checkRepository(repoRoot, registry) {
     }
   }
   for (const conceptId of declaredConsumedConcepts) {
-    if (!consumedConcepts.includes(conceptId)) {
+    if (!external && !consumedConcepts.includes(conceptId)) {
       errors.push(`consumes lists ${conceptId} but the ownership registry does not register ${name}`);
     }
   }
@@ -250,7 +254,7 @@ export async function checkRepository(repoRoot, registry) {
     const concept = concepts[conceptId];
     if (!concept) {
       errors.push(`consumes references unknown concept ${conceptId}`);
-    } else if (concept.owner !== name && !(concept.consumers ?? []).includes(name)) {
+    } else if (!external && concept.owner !== name && !(concept.consumers ?? []).includes(name)) {
       errors.push(`${conceptId} does not declare ${name} as a consumer`);
     }
   }

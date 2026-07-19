@@ -1,0 +1,27 @@
+{
+  "name": "__APP_NAME__",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=22.19.0" },
+  "scripts": {
+    "compile": "nodekit compile --repo-root .",
+    "inspect": "nodekit inspect --repo-root .",
+    "doctor": "nodekit doctor --repo-root .",
+    "dev": "node apps/web/server.mjs",
+    "demo": "node scripts/demo.mjs",
+    "eval": "node scripts/eval.mjs",
+    "smoke:pi": "node scripts/live-smoke.mjs",
+    "proof:browser": "node scripts/browser-proof.mjs",
+    "check": "node scripts/check.mjs",
+    "proof": "node scripts/proof.mjs",
+    "phase": "node scripts/phase.mjs",
+    "timeline": "node scripts/timeline.mjs"
+  },
+  "dependencies": {
+    "@earendil-works/pi-ai": "__PI_PACKAGE__"
+  },
+  "devDependencies": {
+    "@homenshum/nodekit": __NODEKIT_SPECIFIER_JSON__
+  }
+}

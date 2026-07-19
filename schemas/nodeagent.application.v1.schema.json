@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/HomenShum/node-platform/blob/main/schemas/nodeagent.application.v1.schema.json",
+  "title": "NodeAgent application manifest",
+  "type": "object",
+  "required": ["schemaVersion", "application", "runtime", "provider", "backend", "packs", "policies", "evaluations"],
+  "properties": {
+    "schemaVersion": { "const": "nodeagent.application/v1" },
+    "application": {
+      "type": "object",
+      "required": ["id", "name", "purpose"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$" },
+        "name": { "type": "string", "minLength": 1 },
+        "purpose": { "type": "string", "minLength": 1 }
+      }
+    },
+    "runtime": { "type": "object", "required": ["engine", "profile"] },
+    "provider": { "type": "object", "required": ["adapter", "model", "secretRef"] },
+    "backend": { "type": "object", "required": ["adapter"] },
+    "packs": { "type": "array", "minItems": 1, "items": { "type": "string" } },
+    "policies": { "type": "object" },
+    "evaluations": { "type": "object", "required": ["required"] },
+    "secrets": { "type": "array" }
+  }
+}

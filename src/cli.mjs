@@ -4,9 +4,11 @@ import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { renderDashboard } from "./lib/dashboard.mjs";
+import { compileAgentDefinition, inspectAgentDefinition } from "./lib/agent-definition.mjs";
 import { pathExists } from "./lib/files.mjs";
 import { checkRepository, commandFor } from "./lib/repo-check.mjs";
 import { loadRegistry, validateRegistry } from "./lib/registry.mjs";
+import { adoptProject, createProject, recordSetupEvent } from "./lib/scaffold.mjs";
 
 const packageRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
@@ -38,19 +40,23 @@ function parseArgs(argv) {
 }
 
 function printHelp() {
-  console.log(`NodeKit P0
+  console.log(`NodeKit
 
 Usage:
+  nodekit create <directory> --name <slug> --brief <text> [--preset research-loop]
+      [--provider openrouter] [--model openai/gpt-4o-mini] [--backend filesystem]
+      [--nodekit-specifier <npm-or-file-spec>] [--sponsors <comma-list>]
+      [--launch-started-at <iso>] [--research-ms <number>] [--no-install] [--no-git]
+  nodekit adopt [directory] --name <slug> --brief <text>
+  nodekit compile [--repo-root <path>] [--check] [--json]
+  nodekit inspect [--repo-root <path>] [--json]
   nodekit doctor [--repo-root <path>] [--json]
   nodekit dev|demo|check|proof [--repo-root <path>] [-- <args>]
   nodekit repo check [--repo-root <path>] [--json]
   nodekit registry check [--registry-root <path>] [--json]
   nodekit ecosystem check [--workspace <path>] [--json]
   nodekit dashboard [--workspace <path>] [--write] [--out <path>]
-  nodekit certify [--repo-root <path>] [--json]
-
-P0 owns repository contracts and drift prevention. create/add/upgrade/migrate/release
-remain planned commands and are not reported as implemented.`);
+  nodekit certify [--repo-root <path>] [--json]`);
 }
 
 function summarize(result) {
@@ -204,9 +210,101 @@ async function runDoctor(parsed) {
     passed: nodeMajor >= 20,
   });
   if (nodeMajor < 20) result.errors.unshift("Node.js 20 or newer is required");
+  const repoRoot = path.resolve(String(parsed.options["repo-root"] ?? process.cwd()));
+  if (await pathExists(path.join(repoRoot, "nodeagent.yaml"))) {
+    const [major, minor] = process.versions.node.split(".").map(Number);
+    const compiled = await compileAgentDefinition(repoRoot, { write: false });
+    if (compiled.definition.provider.package === "@earendil-works/pi-ai" && (major < 22 || (major === 22 && minor < 19))) {
+      result.errors.unshift("@earendil-works/pi-ai requires Node.js 22.19 or newer");
+    }
+  }
   result.passed = result.errors.length === 0;
   printResult(result, parsed.options.json);
   if (!result.passed) process.exitCode = 1;
+}
+
+function optionEnabled(options, name, defaultValue = true) {
+  if (options[`no-${name}`]) return false;
+  if (options[name] === false || options[name] === "false") return false;
+  return defaultValue;
+}
+
+async function runCreate(parsed) {
+  const target = parsed.positional[1];
+  if (!target) throw new Error("create requires a target directory");
+  const nodekitSpecifier = parsed.options["nodekit-specifier"] ?? parsed.options["nodekit-source"];
+  const result = await createProject({
+    backend: parsed.options.backend,
+    brief: parsed.options.brief,
+    git: optionEnabled(parsed.options, "git"),
+    install: optionEnabled(parsed.options, "install"),
+    launchStartedAt: parsed.options["launch-started-at"],
+    model: parsed.options.model,
+    name: parsed.options.name ?? path.basename(path.resolve(target)),
+    nodekitSpecifier,
+    preset: parsed.options.preset,
+    provider: parsed.options.provider,
+    researchMs: parsed.options["research-ms"] === undefined ? undefined : Number(parsed.options["research-ms"]),
+    secretRef: parsed.options["secret-ref"],
+    sponsors: String(parsed.options.sponsors ?? "").split(",").filter(Boolean),
+    target,
+  });
+  const compileStarted = Date.now();
+  const compiled = await compileAgentDefinition(result.target);
+  await recordSetupEvent(result.target, "compile_completed", { configHash: compiled.definition.configHash }, Date.now() - compileStarted);
+  console.log(`CREATED ${result.name} at ${result.target}`);
+  console.log(`NEXT cd ${quoteArgument(result.target)} && npm run compile && npm run demo`);
+}
+
+async function runAdopt(parsed) {
+  const target = path.resolve(String(parsed.positional[1] ?? parsed.options["repo-root"] ?? process.cwd()));
+  const result = await adoptProject({
+    backend: parsed.options.backend,
+    brief: parsed.options.brief,
+    model: parsed.options.model,
+    name: parsed.options.name ?? path.basename(target),
+    nodekitSpecifier: parsed.options["nodekit-specifier"] ?? parsed.options["nodekit-source"],
+    provider: parsed.options.provider,
+    secretRef: parsed.options["secret-ref"],
+    target,
+  });
+  console.log(`ADOPTED ${result.name} at ${result.target}`);
+  console.log("NodeKit only added missing harness files; existing auth, routes, CSS, and schemas were preserved.");
+  console.log(`COLLISIONS ${result.collisions.length}; inspect proof/adoption-receipt.json before installation.`);
+}
+
+async function runCompile(parsed) {
+  const repoRoot = path.resolve(String(parsed.options["repo-root"] ?? process.cwd()));
+  const result = await compileAgentDefinition(repoRoot, {
+    check: Boolean(parsed.options.check),
+    write: !parsed.options.check,
+  });
+  const output = {
+    application: result.definition.application.id,
+    configHash: result.definition.configHash,
+    fileCount: result.definition.fileCount,
+    passed: true,
+    schemaVersion: "nodekit.compile/v1",
+  };
+  if (parsed.options.json) console.log(JSON.stringify(output, null, 2));
+  else console.log(`${parsed.options.check ? "CURRENT" : "COMPILED"} ${output.application} ${output.configHash.slice(0, 12)} (${output.fileCount} authored files)`);
+}
+
+async function runInspect(parsed) {
+  const repoRoot = path.resolve(String(parsed.options["repo-root"] ?? process.cwd()));
+  const output = inspectAgentDefinition(await compileAgentDefinition(repoRoot, { write: false }));
+  if (parsed.options.json) {
+    console.log(JSON.stringify(output, null, 2));
+    return;
+  }
+  console.log(`${output.application.name} (${output.application.id})`);
+  console.log(`  runtime ${output.runtime.engine}/${output.runtime.profile}`);
+  console.log(`  provider ${output.provider.adapter}:${output.provider.model.provider}/${output.provider.model.id}`);
+  console.log(`  backend ${output.backend.adapter}`);
+  console.log(`  config ${output.configHash}`);
+  console.log(`  files ${output.fileCount}`);
+  for (const [name, count] of Object.entries(output.discovered)) console.log(`  ${name} ${count}`);
+  for (const secret of output.secrets) console.log(`  secret ${secret.name}: ${secret.configured ? "configured" : "missing"}`);
 }
 
 async function runCertify(parsed) {
@@ -255,6 +353,22 @@ async function main() {
   }
   if (["dev", "demo", "check", "proof"].includes(first)) {
     await runLifecycle(first, parsed);
+    return;
+  }
+  if (first === "create") {
+    await runCreate(parsed);
+    return;
+  }
+  if (first === "adopt") {
+    await runAdopt(parsed);
+    return;
+  }
+  if (first === "compile") {
+    await runCompile(parsed);
+    return;
+  }
+  if (first === "inspect") {
+    await runInspect(parsed);
     return;
   }
   if (first === "doctor") {

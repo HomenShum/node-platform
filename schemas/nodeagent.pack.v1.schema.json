@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/HomenShum/node-platform/blob/main/schemas/nodeagent.pack.v1.schema.json",
+  "title": "NodeAgent capability pack",
+  "type": "object",
+  "required": ["schemaVersion", "id", "version", "artifacts", "tools", "validators", "evals"],
+  "properties": {
+    "schemaVersion": { "const": "nodeagent.pack/v1" },
+    "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$" },
+    "version": { "type": "string" },
+    "skill": { "type": "string" },
+    "artifacts": { "type": "array", "items": { "type": "string" } },
+    "tools": { "type": "array", "items": { "type": "string" } },
+    "validators": { "type": "array", "items": { "type": "string" } },
+    "evals": { "type": "array", "items": { "type": "string" } }
+  }
+}

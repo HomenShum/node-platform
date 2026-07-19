@@ -1,0 +1,10 @@
+{
+  "schemaVersion": "nodeagent.eval-suite/v1",
+  "id": "deterministic-smoke",
+  "assertions": [
+    "a deliberately over-smoothed experiment is reverted",
+    "a higher-order bounded experiment is kept when it improves held-out BPC",
+    "a human intervention is attached to the next experiment",
+    "reload produces the same session digest"
+  ]
+}

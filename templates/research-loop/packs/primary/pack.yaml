@@ -1,0 +1,18 @@
+schemaVersion: nodeagent.pack/v1
+id: measurable-research-loop
+version: 0.1.0
+skill: ../../agent/skills/autoresearch-live/SKILL.md
+artifacts:
+  - experiment-session
+  - experiment-result
+  - reproduction-receipt
+tools:
+  - experiment.propose
+  - experiment.measure
+  - experiment.keep-or-revert
+validators:
+  - metric-is-finite
+  - decision-matches-metric
+  - receipt-is-secret-free
+evals:
+  - ../../evals/deterministic-smoke.json

@@ -1,0 +1,4 @@
+interface:
+  display_name: "NodeKit Launch"
+  short_description: "Build and prove an agent app from a brief"
+  default_prompt: "Use NodeKit to research this brief, scaffold the smallest credible agent application, run deterministic and live evaluations, test it in the browser, and emit proof with a phase timeline."
