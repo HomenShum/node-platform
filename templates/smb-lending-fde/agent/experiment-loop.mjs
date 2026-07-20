@@ -2,9 +2,16 @@ import { createHash, randomUUID } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
+import {
+  approveProposalThroughRegistry,
+  packRegistrySummary,
+  prepareDocumentRequestThroughRegistry,
+  validateReceiptThroughRegistry,
+} from "./runtime/smb-lending-pack-registry.mjs";
+import { stableDigest } from "./runtime/stable-digest.mjs";
 
 export function digest(value) {
-  return createHash("sha256").update(JSON.stringify(value)).digest("hex");
+  return stableDigest(value);
 }
 
 function event(type, details = {}) {
@@ -221,6 +228,31 @@ function rejectProposal(session, proposal, reason) {
   return result;
 }
 
+function recordRegistryRun(session, registryRun) {
+  for (const toolExecution of registryRun.toolExecutions ?? []) {
+    session.events.push(event("tool.executed", toolExecution));
+  }
+  for (const validatorResult of registryRun.validation?.results ?? []) {
+    session.events.push(event("validator.completed", validatorResult));
+  }
+}
+
+function validationFailureReason(validation) {
+  return validation.results.find((result) => !result.passed)?.message
+    ?? "The local pack validators rejected this proposal.";
+}
+
+function registryExecutionSummary(registryRun) {
+  return {
+    packId: registryRun.registry.id,
+    packVersion: registryRun.registry.version,
+    toolIds: (registryRun.toolExecutions ?? []).map((entry) => entry.toolId),
+    toolOutputHashes: (registryRun.toolExecutions ?? []).map((entry) => entry.outputHash),
+    validatorIds: (registryRun.validation?.results ?? []).map((entry) => entry.validatorId),
+    validatorOutputHashes: (registryRun.validation?.results ?? []).map((entry) => entry.outputHash),
+  };
+}
+
 export async function runExperiment(store, proposal) {
   const session = await store.load();
   if (!session) throw new Error("start a session first");
@@ -228,24 +260,22 @@ export async function runExperiment(store, proposal) {
   session.events.push(event("proposal.started", { action: proposal.action, mode: proposal.model?.mode ?? "unknown" }));
   await store.save(refresh(session));
 
-  if (proposal.action === "approve_loan" || proposal.action === "decline_loan") {
-    const result = rejectProposal(session, proposal, "A credit decision is human-underwriter-only and cannot be proposed by this lab.");
+  const registryRun = await prepareDocumentRequestThroughRegistry(session, proposal);
+  recordRegistryRun(session, registryRun);
+  const normalized = registryRun.normalized;
+  if (!registryRun.validation.passed) {
+    const result = rejectProposal(session, normalized, validationFailureReason(registryRun.validation));
     await store.save(refresh(session));
     return { experiment: result, session };
   }
-  if (proposal.action !== "request_document") {
-    const result = rejectProposal(session, proposal, "Only bounded missing-document requests are allowed in deterministic mode.");
+  if (normalized.model?.mode === "live" && !normalized.consent?.grantedAt) {
+    const result = rejectProposal(session, normalized, "A live external-model proposal requires explicit per-action consent.");
     await store.save(refresh(session));
     return { experiment: result, session };
   }
-  if (proposal.model?.mode === "live" && !proposal.consent?.grantedAt) {
-    const result = rejectProposal(session, proposal, "A live external-model proposal requires explicit per-action consent.");
-    await store.save(refresh(session));
-    return { experiment: result, session };
-  }
-  const document = session.documents.find((entry) => entry.id === proposal.documentId);
+  const document = session.documents.find((entry) => entry.id === normalized.documentId);
   if (!document || document.status !== "missing") {
-    const result = rejectProposal(session, proposal, "The proposal does not target a currently missing required document.");
+    const result = rejectProposal(session, normalized, "The proposal does not target a currently missing required document.");
     await store.save(refresh(session));
     return { experiment: result, session };
   }
@@ -256,11 +286,12 @@ export async function runExperiment(store, proposal) {
     evidence: [{ documentId: document.id, sourceRef: document.sourceRef, status: document.status }],
     id: randomUUID(),
     intervention: session.intervention,
-    model: proposal.model ?? { mode: "replay", provider: "deterministic" },
-    consent: proposal.consent ?? null,
-    rationale: String(proposal.rationale ?? "The file cannot advance until this required evidence is supplied."),
+    model: normalized.model,
+    consent: normalized.consent,
+    rationale: String(normalized.rationale || "The file cannot advance until this required evidence is supplied."),
+    registry: registryExecutionSummary(registryRun),
     status: "pending_approval",
-    usage: proposal.usage ?? null,
+    usage: normalized.usage,
   };
   session.proposals.push(request);
   session.events.push(event("proposal.submitted", {
@@ -268,6 +299,7 @@ export async function runExperiment(store, proposal) {
     documentId: document.id,
     model: request.model,
     proposalId: request.id,
+    registry: request.registry,
     usage: request.usage,
   }));
   session.status = "ready";
@@ -289,12 +321,17 @@ export async function approveProposal(store, proposalId) {
   if (!session) throw new Error("start a session first");
   const proposal = session.proposals.find((entry) => entry.id === proposalId);
   if (!proposal || proposal.status !== "pending_approval") throw new Error("proposal is not available for approval");
-  const document = session.documents.find((entry) => entry.id === proposal.documentId);
-  if (!document || document.status !== "missing") throw new Error("proposal target is no longer missing");
-  proposal.status = "approved";
-  proposal.approvedAt = new Date().toISOString();
-  document.status = "requested";
-  session.events.push(event("proposal.approved", { documentId: document.id, proposalId: proposal.id }));
+  const registryRun = await approveProposalThroughRegistry(session, proposal);
+  recordRegistryRun(session, registryRun);
+  if (!registryRun.validation.passed || !registryRun.applied) {
+    throw new Error(validationFailureReason(registryRun.validation));
+  }
+  proposal.approvalRegistry = registryExecutionSummary(registryRun);
+  session.events.push(event("proposal.approved", {
+    documentId: registryRun.applied.documentId,
+    proposalId: proposal.id,
+    registry: proposal.approvalRegistry,
+  }));
   return store.save(refresh(session));
 }
 
@@ -337,6 +374,7 @@ export async function createReceipt(session, { candidate = null } = {}) {
     proposals: session.proposals,
     readiness: session.readiness,
     replay: ["npm install", "npm run compile", "npm run demo", "npm run eval"],
+    packRegistry: packRegistrySummary(session),
     safety: {
       affiliation: "independent synthetic evaluation lab; not affiliated with Casca",
       decisionAuthority: "human underwriter or credit authority",
@@ -348,6 +386,11 @@ export async function createReceipt(session, { candidate = null } = {}) {
     sessionSnapshot,
     sourcePackets: session.sourcePackets,
   };
+  const receiptRegistry = await validateReceiptThroughRegistry(receipt);
+  if (!receiptRegistry.validation.passed) {
+    throw new Error(validationFailureReason(receiptRegistry.validation));
+  }
+  receipt.packRegistry.receiptValidation = registryExecutionSummary(receiptRegistry);
   receipt.receiptDigest = digest(receipt);
   return receipt;
 }

@@ -337,6 +337,16 @@ test("the SMB lending FDE preset produces a clean-room human-authority proof", a
 
   assert.equal(demo.schemaVersion, "nodekit.smb-lending-receipt/v1");
   assert.equal(demo.documents.find((document) => document.id === "operating-bank-statements-q2").status, "requested");
+  assert.deepEqual(demo.packRegistry.toolIds, [
+    "lending.inspect-file",
+    "lending.propose-document-request",
+    "lending.approve-proposal",
+  ]);
+  assert.deepEqual(demo.packRegistry.receiptValidation.validatorIds, ["receipt-is-secret-free"]);
+  assert.equal(
+    await readFile(path.join(root, "test", "pack-registry.test.mjs"), "utf8").then((value) => value.includes("fails closed")),
+    true,
+  );
   assert.equal(evaluation.passed, true);
   assert.equal(proof.passed, true);
   assert.equal(proof.applicationHash, compiled.definition.applicationHash);

@@ -11,3 +11,11 @@ export function inspectSyntheticLendingFile(session) {
     objective: session.objective,
   };
 }
+
+export const tool = Object.freeze({
+  id: "lending.inspect-file",
+  version: "1.0.0",
+  async execute({ session }) {
+    return inspectSyntheticLendingFile(session);
+  },
+});

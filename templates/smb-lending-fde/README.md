@@ -53,6 +53,8 @@ exists.
 - The request stays pending until a human approves it.
 - Approval changes only document-request state, not a credit decision.
 - Interrupted proposal state recovers on reload.
+- The declared SMB lending pack fails closed if its local tool or validator modules drift from `packs/primary/pack.yaml`.
+- Proposal, approval, and receipt events record the concrete local tool and validator IDs plus output hashes.
 - The receipt binds the compiled NodeKit application identity.
 - The deterministic conformance harness runs the same proposal-only contract on restaurant and medical-practice fixture packets. It does not claim sealed held-out performance, graph-agent execution, memory improvement, or model superiority.
 
