@@ -122,8 +122,8 @@ export function validateAgentManifest(manifest) {
     errors.push("at least one capability pack is required");
   }
   if (manifest?.authoring?.directory && (
-    path.isAbsolute(manifest.authoring.directory) ||
-    normalizePath(manifest.authoring.directory).split("/").includes("..")
+    path.isAbsolute(String(manifest.authoring.directory)) ||
+    normalizePath(String(manifest.authoring.directory)).split("/").includes("..")
   )) {
     errors.push("authoring.directory must be repository-relative and may not escape the repository");
   }
@@ -136,6 +136,10 @@ function classify(files, manifest) {
     .map((file) => file.path);
   const authoringRoot = normalizePath(manifest.authoring?.directory ?? "agent").replace(/^\.\//, "");
   const skills = files.filter((file) => file.path.endsWith("SKILL.md")).map((file) => file.path);
+  const subagentRoot = `${authoringRoot}/subagents/`;
+  const subagents = files
+    .filter((file) => file.path.startsWith(subagentRoot) && /\/agent\.(?:yaml|ts|js)$/.test(file.path))
+    .map((file) => file.path);
   return {
     evals: matching("evals/"),
     integrations: matching("integrations/"),
@@ -145,7 +149,7 @@ function classify(files, manifest) {
     ])].sort(),
     policies: matching(`${authoringRoot}/policies/`),
     skills,
-    subagents: matching(`${authoringRoot}/subagents/`, "agent.yaml"),
+    subagents,
     tools: matching("/tools/"),
   };
 }

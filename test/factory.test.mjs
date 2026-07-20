@@ -83,8 +83,13 @@ test("authoring.directory outside the conventional root is discovered and hash-b
   await createProject({ git: false, install: false, name: "eve-map", target: root });
   const authoredRoot = path.join(root, "apps", "eve-agent", "agent");
   await mkdir(path.join(authoredRoot, "tools"), { recursive: true });
+  await mkdir(path.join(authoredRoot, "subagents", "reviewer"), { recursive: true });
   await writeFile(path.join(authoredRoot, "instructions.md"), "Run through the existing Eve adapter.\n");
   await writeFile(path.join(authoredRoot, "tools", "measure.ts"), "export const measure = true;\n");
+  await writeFile(
+    path.join(authoredRoot, "subagents", "reviewer", "agent.ts"),
+    "export const reviewer = { runtime: 'eve' };\n",
+  );
   const manifestPath = path.join(root, "nodeagent.yaml");
   const original = await readFile(manifestPath, "utf8");
   await writeFile(manifestPath, original.replace("directory: ./agent", "directory: ./apps/eve-agent/agent"));
@@ -97,6 +102,10 @@ test("authoring.directory outside the conventional root is discovered and hash-b
   assert.equal(
     first.definition.discovered.tools.includes("apps/eve-agent/agent/tools/measure.ts"),
     true,
+  );
+  assert.deepEqual(
+    first.definition.discovered.subagents,
+    ["apps/eve-agent/agent/subagents/reviewer/agent.ts"],
   );
   await writeFile(path.join(authoredRoot, "tools", "measure.ts"), "export const measure = false;\n");
   const changed = await compileAgentDefinition(root, { write: false });
