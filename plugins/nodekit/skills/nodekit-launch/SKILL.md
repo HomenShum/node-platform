@@ -21,6 +21,7 @@ Read [the launch contract](references/launch-contract.md) before acting.
 8. Run deterministic demo, unit/contract tests, domain evals, failure cases, strict live provider smoke, and browser journeys. Test missing secrets, malformed input, reload/resume, repeated actions, narrow/mobile layout, and export/reopen.
 9. Deploy only the exact tested revision and only with user authorization. Record URL, revision, environment identity, health, and a fresh-user journey.
 10. Emit the release proof and launch timeline. Do not call the run production-proven if live, browser, deployment, or receipt evidence is absent.
+11. Read and run the sibling `nodekit-present` skill. Bind the problem, product workflow, sponsor use, architecture, screenshots, and proof to one Change Story; produce the presentation tier required by the audience without upgrading unsupported claims.
 
 ## Sponsor rule
 

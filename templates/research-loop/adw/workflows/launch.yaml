@@ -9,6 +9,7 @@ steps:
   - live-smoke
   - browser-proof
   - receipt
+  - evidence-bound-presentation
 approvals:
   productionDeployment: human
   publicSubmission: human

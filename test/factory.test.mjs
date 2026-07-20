@@ -27,6 +27,14 @@ test("create emits a parseable, reproducible application from multiline input", 
   assert.equal(packageJson.devDependencies["@homenshum/nodekit"], "file:D:/work/node-platform");
   assert.equal(packageJson.dependencies["@earendil-works/pi-ai"], "0.80.10");
   assert.equal(await readFile(path.join(target, "integrations", "convex", "sponsor.yaml"), "utf8").then(Boolean), true);
+  assert.match(
+    await readFile(path.join(target, ".claude", "skills", "nodekit-present", "SKILL.md"), "utf8"),
+    /evidence-backed presentation/,
+  );
+  assert.match(
+    await readFile(path.join(target, ".codex", "skills", "nodekit-launch", "SKILL.md"), "utf8"),
+    /smallest undeniable vertical slice/,
+  );
   const dockerfile = await readFile(path.join(target, "Dockerfile"), "utf8");
   const renderBlueprint = await readFile(path.join(target, "render.yaml"), "utf8");
   assert.match(dockerfile, /@earendil-works\/pi-ai@0\.80\.10/);
@@ -68,14 +76,25 @@ test("adopt is additive, runnable, and reports collisions", async (t) => {
   const root = await mkdtemp(path.join(os.tmpdir(), "nodekit-adopt-"));
   t.after(() => rm(root, { force: true, recursive: true }));
   await mkdir(path.join(root, "agent"), { recursive: true });
+  await mkdir(path.join(root, ".claude", "skills", "nodekit-present"), { recursive: true });
   await writeFile(path.join(root, "agent", "instructions.md"), "user-owned instructions\n");
+  await writeFile(path.join(root, ".claude", "skills", "nodekit-present", "SKILL.md"), "user-owned presentation skill\n");
   await writeFile(path.join(root, "package.json"), JSON.stringify({ name: "host", scripts: { dev: "host-dev" }, type: "module" }));
   const result = await adoptProject({ name: "host", nodekitSpecifier: "file:D:/node-platform", target: root });
   const packageJson = JSON.parse(await readFile(path.join(root, "package.json"), "utf8"));
   assert.equal(packageJson.scripts.dev, "host-dev");
   assert.equal(packageJson.scripts["nodekit:demo"], "node scripts/demo.mjs");
   assert.equal(await readFile(path.join(root, "agent", "instructions.md"), "utf8"), "user-owned instructions\n");
+  assert.equal(
+    await readFile(path.join(root, ".claude", "skills", "nodekit-present", "SKILL.md"), "utf8"),
+    "user-owned presentation skill\n",
+  );
+  assert.equal(
+    await readFile(path.join(root, ".codex", "skills", "nodekit-present", "SKILL.md"), "utf8").then(Boolean),
+    true,
+  );
   assert.equal(result.collisions.includes("agent/instructions.md"), true);
+  assert.equal(result.collisions.includes(".claude/skills/nodekit-present/SKILL.md"), true);
   assert.equal(await readFile(path.join(root, "backend", "filesystem", "store.mjs"), "utf8").then(Boolean), true);
 });
 

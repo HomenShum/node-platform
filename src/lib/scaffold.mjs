@@ -6,6 +6,8 @@ import { pathExists } from "./files.mjs";
 
 const packageRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..", "..");
 const templateRoot = path.join(packageRoot, "templates", "research-loop");
+const pluginSkillsRoot = path.join(packageRoot, "plugins", "nodekit", "skills");
+const projectedSkillNames = ["nodekit-launch", "nodekit-present"];
 
 function titleCase(value) {
   return value.split(/[-_\s]+/).filter(Boolean).map((part) => `${part[0].toUpperCase()}${part.slice(1)}`).join(" ");
@@ -67,6 +69,18 @@ async function copyTemplate(source, destination, values, { collisions = [], miss
   return collisions;
 }
 
+async function projectCodingAgentSkills(target, values, { collisions = [], missingOnly = false } = {}) {
+  for (const agentRoot of [".claude", ".codex"]) {
+    for (const skillName of projectedSkillNames) {
+      const source = path.join(pluginSkillsRoot, skillName);
+      const destination = path.join(target, agentRoot, "skills", skillName);
+      await mkdir(destination, { recursive: true });
+      await copyTemplate(source, destination, values, { collisions, missingOnly });
+    }
+  }
+  return collisions;
+}
+
 function run(command, args, cwd) {
   return new Promise((resolve, reject) => {
     const child = spawn(command, args, { cwd, env: process.env, shell: process.platform === "win32", stdio: "inherit" });
@@ -88,6 +102,7 @@ export async function createProject(options) {
   const values = substitutions({ ...options, target });
   await mkdir(target, { recursive: true });
   await copyTemplate(templateRoot, target, values);
+  await projectCodingAgentSkills(target, values);
   const sponsors = [...new Set(["pi-ai", ...(options.sponsors ?? [])].map(slugify).filter(Boolean))];
   for (const sponsor of sponsors.filter((entry) => entry !== "pi-ai")) {
     const integrationRoot = path.join(target, "integrations", sponsor);
@@ -161,6 +176,7 @@ export async function adoptProject(options) {
       collisions.push(destination);
     }
   }
+  await projectCodingAgentSkills(target, values, { collisions, missingOnly: true });
   const packagePath = path.join(target, "package.json");
   let packageJson;
   if (await pathExists(packagePath)) packageJson = JSON.parse(await readFile(packagePath, "utf8"));
@@ -186,6 +202,7 @@ export async function adoptProject(options) {
   await writeFile(packagePath, `${JSON.stringify(packageJson, null, 2)}\n`);
   const receipt = {
     addedRoots: adoptRoots,
+    codingAgentSkills: projectedSkillNames,
     collisions: collisions.map((entry) => path.isAbsolute(entry) ? path.relative(target, entry).replaceAll("\\", "/") : entry),
     generatedAt: new Date().toISOString(),
     installRequired: true,

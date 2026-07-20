@@ -7,5 +7,6 @@ Read `nodeagent.yaml`, `hackathon.yaml`, and `.nodeagent/resolved-definition.jso
 - Never place provider secrets in source, YAML, browser bundles, logs, or receipts.
 - Do not weaken a metric or fixture to make an experiment pass.
 - Treat `.data/` as durable runtime state and `proof/` as sanitized evidence.
+- Use the projected `nodekit-present` skill for major changes and the final app presentation. Derive claims from current receipts, commits, screenshots, and limitations.
 - Ask before deploying, creating paid resources, publishing, or making destructive changes.
 - Run `npm run compile`, `npm run check`, `npm run eval`, and `npm run proof` after harness changes.
