@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto";
-import { mkdir, readFile, readdir, stat, writeFile } from "node:fs/promises";
+import { lstat, mkdir, readFile, readdir, stat, writeFile } from "node:fs/promises";
 import path from "node:path";
 import {
   alternateDialectErrors,
@@ -11,7 +11,57 @@ import { normalizePath, pathExists, readYaml } from "./files.mjs";
 import { validateSchema } from "./schema-validation.mjs";
 
 const APPLICATION_SCHEMA = CONTRACT_VERSIONS.application;
-const DISCOVERY_ROOTS = ["agent", "packs", "integrations", "backend", "workers", "evals", "fixtures", "schemas"];
+// These directories contain executable behavior, evaluation behavior, or the
+// workflow contract that turns an authored agent into a running application.
+// Keep this list deliberately small and explicit: recursively hashing the
+// whole repository would make generated proof artifacts and editor state part
+// of the application identity.
+const DISCOVERY_ROOTS = [
+  "agent",
+  "packs",
+  "integrations",
+  "backend",
+  "workers",
+  "evals",
+  "fixtures",
+  "schemas",
+  "apps",
+  "scripts",
+  "adw",
+  "test",
+  "tests",
+  "e2e",
+];
+
+// Root files are not beneath a discovered directory but can materially change
+// dependency resolution, deployment, browser behavior, or the workflow that
+// is being certified. They must therefore be bound to configHash as well.
+const APPLICATION_ROOT_FILES = [
+  "nodekit.yaml",
+  "hackathon.yaml",
+  "package.json",
+  "package-lock.json",
+  "pnpm-lock.yaml",
+  "yarn.lock",
+  "bun.lockb",
+  "Dockerfile",
+  "docker-compose.yml",
+  "docker-compose.yaml",
+  "render.yaml",
+  "railway.json",
+  "vercel.json",
+  "netlify.toml",
+  "fly.toml",
+  "Procfile",
+  "convex.json",
+  "vite.config.js",
+  "vite.config.ts",
+  "next.config.js",
+  "next.config.mjs",
+  "playwright.config.js",
+  "playwright.config.ts",
+  "tsconfig.json",
+];
 const SECRET_FIELD = /(api.?key|password|secret|token)/i;
 const SECRET_LITERAL = /(?:sk-[A-Za-z0-9_-]{12,}|AIza[A-Za-z0-9_-]{20,}|-----BEGIN [A-Z ]+PRIVATE KEY-----)/;
 
@@ -62,22 +112,27 @@ function discoveryRoots(repoRoot, manifest) {
 async function discoverFiles(repoRoot, manifest) {
   const files = new Map();
 
+  async function addFile(absolute) {
+    const content = await readFile(absolute);
+    const relative = normalizePath(path.relative(repoRoot, absolute));
+    files.set(relative, {
+      bytes: content.byteLength,
+      digest: hash(content),
+      path: relative,
+    });
+  }
+
   async function visit(directory) {
     const entries = await readdir(directory, { withFileTypes: true });
     entries.sort((left, right) => left.name.localeCompare(right.name));
     for (const entry of entries) {
       if ([".git", ".nodeagent", "node_modules"].includes(entry.name)) continue;
       const absolute = path.join(directory, entry.name);
-      if (entry.isDirectory()) await visit(absolute);
-      else {
-        const content = await readFile(absolute);
-        const relative = normalizePath(path.relative(repoRoot, absolute));
-        files.set(relative, {
-          bytes: content.byteLength,
-          digest: hash(content),
-          path: relative,
-        });
+      if (entry.isSymbolicLink()) {
+        throw new Error(`application identity does not permit symlinks: ${normalizePath(path.relative(repoRoot, absolute))}`);
       }
+      if (entry.isDirectory()) await visit(absolute);
+      else await addFile(absolute);
     }
   }
 
@@ -87,6 +142,15 @@ async function discoverFiles(repoRoot, manifest) {
       throw new Error(`discovery root is not a directory: ${normalizePath(path.relative(repoRoot, absolute))}`);
     }
     await visit(absolute);
+  }
+  for (const relative of APPLICATION_ROOT_FILES) {
+    const absolute = path.join(repoRoot, relative);
+    if (await pathExists(absolute)) {
+      if ((await lstat(absolute)).isSymbolicLink()) {
+        throw new Error(`application identity does not permit symlinks: ${relative}`);
+      }
+      await addFile(absolute);
+    }
   }
   return [...files.values()].sort((left, right) => left.path.localeCompare(right.path));
 }
@@ -223,14 +287,27 @@ export async function compileAgentDefinition(repoRoot, { check = false, write = 
   const files = await discoverFiles(repoRoot, manifest);
   const manifestDigest = hash(manifestText);
   const contracts = resolveRuntimeContracts(manifest);
-  const hashInput = JSON.stringify(canonicalize({ files, manifest: { ...manifest, contracts } }));
+  const identity = {
+    files,
+    roots: {
+      directories: DISCOVERY_ROOTS,
+      files: APPLICATION_ROOT_FILES,
+    },
+  };
+  const hashInput = JSON.stringify(canonicalize({ identity, manifest: { ...manifest, contracts } }));
   const configHash = hash(hashInput);
+  // applicationHash is intentionally distinct as a named contract even though
+  // v1 has the same value as configHash. Receipts and external supervisors
+  // should bind this explicit application identity rather than infer the
+  // meaning of configHash from an implementation detail.
+  const applicationHash = configHash;
   const secretRefs = [...new Set([
     manifest.provider?.secretRef,
     ...(manifest.secrets ?? []).map((entry) => entry.envRef),
   ].filter(Boolean))].sort();
   const definition = {
     application: manifest.application,
+    applicationHash,
     backend: manifest.backend,
     configHash,
     contracts,
@@ -260,6 +337,8 @@ export async function compileAgentDefinition(repoRoot, { check = false, write = 
   if (write) {
     await mkdir(outputRoot, { recursive: true });
     await writeFile(path.join(outputRoot, "discovery.json"), `${JSON.stringify({ files, schemaVersion: "nodeagent.discovery/v1" }, null, 2)}\n`);
+    await writeFile(path.join(outputRoot, "application-identity.json"), `${JSON.stringify({ applicationHash, configHash, identity, schemaVersion: "nodeagent.application-identity/v1" }, null, 2)}\n`);
+    await writeFile(path.join(outputRoot, "application-hash.txt"), `${applicationHash}\n`);
     await writeFile(path.join(outputRoot, "resolved-definition.json"), `${JSON.stringify(definition, null, 2)}\n`);
     await writeFile(path.join(outputRoot, "evaluation-plan.json"), `${JSON.stringify({ required: manifest.evaluations?.required ?? [], schemaVersion: "nodeagent.evaluation-plan/v1" }, null, 2)}\n`);
     await writeFile(path.join(outputRoot, "diagnostics.json"), `${JSON.stringify({ errors: [], schemaVersion: "nodeagent.diagnostics/v1", warnings: [] }, null, 2)}\n`);
@@ -272,6 +351,7 @@ export function inspectAgentDefinition(compiled) {
   const { definition } = compiled;
   return {
     application: definition.application,
+    applicationHash: definition.applicationHash,
     backend: definition.backend,
     configHash: definition.configHash,
     discovered: Object.fromEntries(

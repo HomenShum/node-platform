@@ -300,6 +300,7 @@ async function runCompile(parsed) {
   });
   const output = {
     application: result.definition.application.id,
+    applicationHash: result.definition.applicationHash,
     configHash: result.definition.configHash,
     contracts: result.definition.contracts,
     fileCount: result.definition.fileCount,
@@ -323,6 +324,7 @@ async function runInspect(parsed) {
   console.log(`  backend ${output.backend.adapter}`);
   console.log(`  contracts event=${output.contracts.event} trace=${output.contracts.trace}`);
   console.log(`  config ${output.configHash}`);
+  console.log(`  application ${output.applicationHash}`);
   console.log(`  files ${output.fileCount}`);
   for (const [name, count] of Object.entries(output.discovered)) console.log(`  ${name} ${count}`);
   for (const secret of output.secrets) console.log(`  secret ${secret.name}: ${secret.configured ? "configured" : "missing"}`);

@@ -58,6 +58,15 @@ test("create emits a parseable, reproducible application from multiline input", 
   const first = await compileAgentDefinition(target);
   const second = await compileAgentDefinition(target, { write: false });
   assert.equal(first.definition.configHash, second.definition.configHash);
+  assert.equal(first.definition.applicationHash, first.definition.configHash);
+  assert.equal(
+    JSON.parse(await readFile(path.join(target, ".nodeagent", "application-identity.json"), "utf8")).applicationHash,
+    first.definition.applicationHash,
+  );
+  assert.equal(
+    (await readFile(path.join(target, ".nodeagent", "application-hash.txt"), "utf8")).trim(),
+    first.definition.applicationHash,
+  );
   assert.equal(first.manifest.application.purpose.includes("second line"), true);
   assert.equal(inspectAgentDefinition(second).secrets[0].name, "OPENROUTER_API_KEY");
 });
@@ -75,6 +84,30 @@ test("compiled hash detects fixture drift and literal secrets fail closed", asyn
   const manifestPath = path.join(root, "nodeagent.yaml");
   await writeFile(manifestPath, `${await readFile(manifestPath, "utf8")}\napiKey: sk-abcdefghijklmnopqrstuv\n`);
   await assert.rejects(() => compileAgentDefinition(root, { write: false }), /literal secret/);
+});
+
+test("compiled hash binds the shipped app, workflow, dependency, and deployment surface", async (t) => {
+  const root = await mkdtemp(path.join(os.tmpdir(), "nodekit-shipped-identity-"));
+  t.after(() => rm(root, { force: true, recursive: true }));
+  await createProject({ git: false, install: false, name: "identity-test", target: root });
+
+  const assertDrift = async (relative, replacement) => {
+    await compileAgentDefinition(root);
+    const file = path.join(root, ...relative.split("/"));
+    await writeFile(file, replacement);
+    await assert.rejects(
+      () => compileAgentDefinition(root, { check: true, write: false }),
+      /compiled definition is stale/,
+      `${relative} must be bound to configHash`,
+    );
+  };
+
+  await assertDrift("apps/web/server.mjs", "export const serverIdentity = 'changed';\n");
+  await assertDrift("scripts/demo.mjs", "console.log('changed demo');\n");
+  await assertDrift("adw/workflows/launch.yaml", "schemaVersion: nodekit.workflow/v1\nname: changed\n");
+  await assertDrift("hackathon.yaml", "schemaVersion: nodekit.hackathon/v1\nname: changed\n");
+  await assertDrift("package.json", JSON.stringify({ name: "changed", type: "module" }, null, 2));
+  await assertDrift("Dockerfile", "FROM node:22\nCMD [\"node\", \"changed.mjs\"]\n");
 });
 
 test("authoring.directory outside the conventional root is discovered and hash-bound", async (t) => {
