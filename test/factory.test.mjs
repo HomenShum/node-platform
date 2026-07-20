@@ -226,6 +226,7 @@ test("a fresh no-key project reaches an honest local-ready proof", async (t) => 
   const root = await mkdtemp(path.join(os.tmpdir(), "nodekit-local-proof-"));
   t.after(() => rm(root, { force: true, recursive: true }));
   await createProject({ git: false, install: false, name: "local-proof", target: root });
+  const compiled = await compileAgentDefinition(root);
 
   for (const script of ["demo.mjs", "eval.mjs", "proof.mjs"]) {
     await execFileAsync(process.execPath, [path.join(root, "scripts", script)], { cwd: root });
@@ -236,5 +237,7 @@ test("a fresh no-key project reaches an honest local-ready proof", async (t) => 
   assert.equal(receipt.level, "local-ready");
   assert.equal(receipt.passed, true);
   assert.equal(receipt.releaseReady, false);
+  assert.equal(receipt.applicationHash, compiled.definition.applicationHash);
+  assert.equal(receipt.configHash, compiled.definition.configHash);
   assert.deepEqual(receipt.missingReleaseGates, ["livePi", "browserQa", "deployment"]);
 });
