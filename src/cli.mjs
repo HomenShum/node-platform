@@ -47,7 +47,8 @@ Usage:
       [--provider openrouter] [--model openai/gpt-4o-mini] [--backend filesystem]
       [--nodekit-specifier <npm-or-file-spec>] [--sponsors <comma-list>]
       [--package-manager npm|pnpm]
-      [--launch-started-at <iso>] [--research-ms <number>] [--no-install] [--no-git]
+      [--launch-started-at <iso>] [--research-ms <number>] [--local-proof]
+      [--no-install] [--no-git]
   nodekit adopt [directory] --name <slug> --brief <text>
   nodekit compile [--repo-root <path>] [--check] [--json]
   nodekit inspect [--repo-root <path>] [--json]
@@ -254,6 +255,22 @@ async function runCreate(parsed) {
   const compileStarted = Date.now();
   const compiled = await compileAgentDefinition(result.target);
   await recordSetupEvent(result.target, "compile_completed", { configHash: compiled.definition.configHash }, Date.now() - compileStarted);
+  if (parsed.options["local-proof"] === true || parsed.options["local-proof"] === "true") {
+    for (const script of ["demo.mjs", "eval.mjs", "proof.mjs"]) {
+      await new Promise((resolve, reject) => {
+        const child = spawn(process.execPath, [path.join(result.target, "scripts", script)], {
+          cwd: result.target,
+          env: process.env,
+          stdio: "inherit",
+        });
+        child.on("error", reject);
+        child.on("exit", (code) => {
+          if (code === 0) resolve();
+          else reject(new Error(`${script} exited ${code}`));
+        });
+      });
+    }
+  }
   console.log(`CREATED ${result.name} at ${result.target}`);
   console.log(`NEXT cd ${quoteArgument(result.target)} && ${result.packageManager} run compile && ${result.packageManager} run demo`);
 }

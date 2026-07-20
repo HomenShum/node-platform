@@ -87,6 +87,26 @@ test("create rejects an unsupported package manager before writing files", async
   assert.deepEqual(await readdir(root), []);
 });
 
+test("create --local-proof emits the deterministic receipt in one CLI workflow", async (t) => {
+  const root = await mkdtemp(path.join(os.tmpdir(), "nodekit-cli-proof-"));
+  const target = path.join(root, "app");
+  t.after(() => rm(root, { force: true, recursive: true }));
+  await execFileAsync(process.execPath, [
+    path.resolve("src", "cli.mjs"),
+    "create",
+    target,
+    "--name",
+    "cli-proof",
+    "--no-install",
+    "--no-git",
+    "--local-proof",
+  ]);
+  const receipt = JSON.parse(await readFile(path.join(target, "proof", "release-proof.json"), "utf8"));
+  assert.equal(receipt.level, "local-ready");
+  assert.equal(receipt.passed, true);
+  assert.equal(receipt.releaseReady, false);
+});
+
 test("adopt is additive, runnable, and reports collisions", async (t) => {
   const root = await mkdtemp(path.join(os.tmpdir(), "nodekit-adopt-"));
   t.after(() => rm(root, { force: true, recursive: true }));

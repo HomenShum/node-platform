@@ -15,7 +15,7 @@ Read [the launch contract](references/launch-contract.md) before acting.
 2. Research current official sources for the user problem and every sponsor. Record links, package versions, authentication, pricing/limits, and one visible contribution to the demo.
 3. Select one workflow shaped as `input -> agent decision -> tool-backed action -> measurable artifact -> visible proof`. Prefer a real metric and a reversible experiment.
 4. Compile the prose into `hackathon.yaml`. Ask only questions whose answers materially change the product, security model, or irreversible action.
-5. For an empty target, run `nodekit create`. For an existing target, run `nodekit adopt` and inspect its collision receipt before accepting changes.
+5. For an empty target, run `nodekit create --local-proof`; add `--package-manager pnpm` when pnpm is available and appropriate. For an existing target, run `nodekit adopt` and inspect its collision receipt before accepting changes.
 6. Run `nodekit compile` and `nodekit inspect`. Confirm the filesystem-discovered tools, skills, integrations, fixtures, evals, provider, secret references, and config hash.
 7. Implement one end-to-end surface. Preserve one execution path for the no-key demo, live provider, browser, and evals.
 8. Run deterministic demo, unit/contract tests, domain evals, failure cases, strict live provider smoke, and browser journeys. Test missing secrets, malformed input, reload/resume, repeated actions, narrow/mobile layout, and export/reopen.

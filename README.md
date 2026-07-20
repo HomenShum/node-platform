@@ -15,6 +15,8 @@ node src/cli.mjs create ../my-agent-app \
   --name my-agent-app \
   --brief "A persistent research agent that users can steer mid-run" \
   --sponsors pi-ai,convex \
+  --package-manager pnpm \
+  --local-proof \
   --nodekit-specifier file:$(pwd)
 
 cd ../my-agent-app
