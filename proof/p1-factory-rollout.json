@@ -1,15 +1,23 @@
 {
   "schemaVersion": "nodeplatform.p1-factory-rollout/v1",
-  "generatedAt": "2026-07-20T03:02:56Z",
-  "status": "draft-pull-requests-open",
+  "generatedAt": "2026-07-20T05:10:09.0418196Z",
+  "status": "implementation-complete-release-gates-open",
   "verification": {
     "passed": false,
-    "reason": "The implementation branches are locally proven but remain unmerged drafts; the stacked NodeSlide external-agent PR and cross-repository release gates are not all complete.",
+    "reason": "The reusable seams and assembled ecosystem conformance are proven, but open dependency-ordered reviews, package publication, production deployment, browser certification, PPTX export/reopen certification, and a repeatable under-30 live launch remain release gates.",
+    "validatedImplementationHead": "ec1d8bfe53fd205711d11cc7a1cf337f93381dd2",
+    "receiptBinding": "This receipt is committed after the immutable validated implementation head; it does not claim a recursive self-hash.",
     "nodekit": {
-      "tests": 26,
+      "tests": 30,
+      "testsResult": "pass-30-of-30",
       "registryCheck": "pass",
-      "productionAudit": "pass-zero-known-vulnerabilities",
-      "hostedQualityRun": "https://github.com/HomenShum/node-platform/actions/runs/29713688834",
+      "productionAudit": "pass-zero-known-production-vulnerabilities",
+      "packageDryRun": {
+        "result": "pass",
+        "files": 72,
+        "packedBytes": 50744
+      },
+      "hostedQualityRun": "https://github.com/HomenShum/node-platform/actions/runs/29718493272",
       "hostedQualityResult": "pass"
     },
     "timing": {
@@ -19,117 +27,237 @@
       "latestPnpmLocalReadySeconds": 31.86,
       "latestPnpmInstallSeconds": 29.5,
       "repeatablyUnderTarget": false
+    },
+    "ecosystemConformance": {
+      "passed": true,
+      "scope": "assembled workspace pinned to reviewed pull-request heads",
+      "repositoriesPassed": 13,
+      "repositoriesFailed": 0,
+      "canonicalSignaturesClassified": 14,
+      "architectureExceptions": 0,
+      "fastestObservedSeconds": 14.59,
+      "finalColdRerunSeconds": 69.8,
+      "repeatablyUnderThirtySeconds": false,
+      "workspace": "D:/VSCode Projects/cafecorner_nodebench/nodebench_ai4/.tmp-nodekit-ecosystem-audit-20260719-2145"
+    },
+    "neighboringDefaultCheckoutAudit": {
+      "passed": false,
+      "classification": "environment-assembly-mismatch",
+      "reason": "Several neighboring checkouts were absent or remained on default/stale branches, so they did not represent the reviewed heads. The pinned assembled workspace is the authoritative coordinated audit."
     }
+  },
+  "githubAudit": {
+    "snapshotDate": "2026-07-19",
+    "repositoriesReturned": 100,
+    "resultSetSaturated": true,
+    "ownerAuthored": 78,
+    "forks": 22,
+    "private": 13,
+    "githubArchived": 0,
+    "pushedSince2026-06-19": 36,
+    "report": "../docs/GITHUB_ECOSYSTEM_AUDIT.md"
   },
   "pullRequests": [
     {
       "capability": "nodekit-factory-and-contracts",
       "repository": "HomenShum/node-platform",
       "pullRequest": "https://github.com/HomenShum/node-platform/pull/4",
-      "implementationHead": "b79535f45c4c7acf0ba61607b12c0f36fedd39f8",
-      "state": "draft-open"
+      "implementationHead": "ec1d8bfe53fd205711d11cc7a1cf337f93381dd2",
+      "state": "draft-open",
+      "mergeable": true,
+      "hostedStatus": "quality-pass"
     },
     {
       "capability": "nodeagent-event-and-pi-adapter",
       "repository": "HomenShum/NodeAgent",
       "pullRequest": "https://github.com/HomenShum/NodeAgent/pull/2",
-      "head": "c0ad523",
-      "state": "draft-open"
+      "head": "c0ad5236d5424fca60008ed500cb565683bcd1d5",
+      "state": "draft-open",
+      "mergeable": true,
+      "hostedStatus": "own-ci-pass-central-conformance-waits-for-node-platform-4"
     },
     {
       "capability": "nodeslide-injectable-core",
       "repository": "HomenShum/NodeSlide",
       "pullRequest": "https://github.com/HomenShum/NodeSlide/pull/5",
-      "head": "0669be4",
-      "state": "draft-open"
+      "head": "81bb2c81b93c5461184bb7b31bb1a6736d64ef01",
+      "mergeCommit": "ade92f567459657c4c52a339bb27a1cd04e2205a",
+      "state": "merged",
+      "hostedStatus": "pass"
     },
     {
       "capability": "nodeslide-controlled-react",
       "repository": "HomenShum/NodeSlide",
-      "pullRequest": "https://github.com/HomenShum/NodeSlide/pull/6",
-      "head": "baa2d04",
+      "pullRequest": "https://github.com/HomenShum/NodeSlide/pull/7",
+      "head": "5f367932fe10cc9631f522e1e2148519ed2ff369",
+      "mergeCommit": "0e7f289fe375035fe3aa824f357685be59f48ee4",
+      "state": "merged",
+      "hostedStatus": "pass"
+    },
+    {
+      "capability": "nodeslide-external-cli-mcp",
+      "repository": "HomenShum/NodeSlide",
+      "pullRequest": "https://github.com/HomenShum/NodeSlide/pull/10",
+      "head": "7815b44fe24d6673745cb5d51af219ef4f6652c9",
       "state": "draft-open",
-      "dependsOn": "https://github.com/HomenShum/NodeSlide/pull/5"
+      "mergeable": true,
+      "hostedStatus": "all-pass"
     },
     {
       "capability": "proofloop-receipt-envelope",
       "repository": "HomenShum/NodeProof",
       "pullRequest": "https://github.com/HomenShum/NodeProof/pull/22",
-      "head": "802f63c",
+      "head": "802f63c0c938cfab06479459c31ff11280a3b00b",
       "state": "draft-open",
-      "hostedStatus": "vercel-preview-success"
+      "mergeable": true,
+      "hostedStatus": "all-pass"
     },
     {
       "capability": "nodetrace-nodekit-consumer",
       "repository": "HomenShum/NodeTrace",
-      "pullRequest": "https://github.com/HomenShum/NodeTrace/pull/2",
-      "head": "09deaef",
-      "state": "draft-open"
+      "pullRequest": "https://github.com/HomenShum/NodeTrace/pull/3",
+      "head": "22db52beafcc906a0fb20aa8ee5d6e2a7dea328c",
+      "state": "draft-open",
+      "mergeable": true,
+      "hostedStatus": "own-ci-pass-central-conformance-waits-for-node-platform-4"
     },
     {
       "capability": "nodemem-nodekit-consumer",
       "repository": "HomenShum/NodeMem",
-      "pullRequest": "https://github.com/HomenShum/NodeMem/pull/2",
-      "head": "8d71920",
-      "state": "draft-open"
+      "pullRequest": "https://github.com/HomenShum/NodeMem/pull/3",
+      "head": "d9be0f86d944c4129dac1d1e6cfa4423cb922afd",
+      "state": "draft-open",
+      "mergeable": true,
+      "hostedStatus": "local-proof-pass-central-conformance-waits-for-node-platform-4"
     },
     {
       "capability": "noderoom-nodeslide-consumer-proof",
       "repository": "HomenShum/NodeRoom",
-      "pullRequest": "https://github.com/HomenShum/NodeRoom/pull/217",
-      "head": "b7962334",
+      "pullRequest": "https://github.com/HomenShum/NodeRoom/pull/218",
+      "head": "2cced7395df623392c8692b40cdad791f5a1cf4d",
+      "mergeCommit": "51da4d3240137f60bd2d14dec7acf352df054c19",
+      "state": "merged",
+      "hostedStatus": "all-pass"
+    },
+    {
+      "capability": "noderoom-contract-reconciliation",
+      "repository": "HomenShum/NodeRoom",
+      "pullRequest": "https://github.com/HomenShum/NodeRoom/pull/219",
+      "head": "65f8cfe4b2bd0c3665e7d111ce3e9e1b0df702d4",
       "state": "draft-open",
-      "dependsOn": "https://github.com/HomenShum/NodeSlide/pull/5",
-      "hostedStatus": "vercel-preview-success"
+      "mergeable": true,
+      "hostedStatus": "own-ci-pass-central-conformance-waits-for-node-platform-4"
     },
     {
       "capability": "nodebench-brownfield-contract-alignment",
       "repository": "HomenShum/NodeBenchAI",
-      "pullRequest": "https://github.com/HomenShum/NodeBenchAI/pull/591",
-      "head": "795164fbd9f8c17925d411fc72de8033429ed1c5",
+      "pullRequest": "https://github.com/HomenShum/NodeBenchAI/pull/592",
+      "head": "8eb9872e094df1a240394fa1352ab644946d2406",
       "state": "draft-open",
-      "hostedStatus": "vercel-preview-success"
+      "mergeable": true,
+      "hostedStatus": "all-16-checks-pass",
+      "supersedes": "https://github.com/HomenShum/NodeBenchAI/pull/591"
+    },
+    {
+      "capability": "nodevoice-brownfield-map",
+      "repository": "HomenShum/NodeVoice",
+      "pullRequest": "https://github.com/HomenShum/NodeVoice/pull/4",
+      "head": "ee5e3f02dd206cce6658e9ec1274e3cbb5a009ee",
+      "state": "draft-open",
+      "mergeable": true,
+      "hostedStatus": "all-pass"
+    },
+    {
+      "capability": "nodevideo-eve-brownfield-map",
+      "repository": "HomenShum/NodeVideo",
+      "pullRequest": "https://github.com/HomenShum/NodeVideo/pull/30",
+      "head": "31319bdc962801328850d171903eae9cc611ed20",
+      "state": "draft-open",
+      "mergeable": true,
+      "hostedStatus": "all-pass"
+    },
+    {
+      "capability": "nodetasks-corpus-receipt",
+      "repository": "HomenShum/NodeTasks",
+      "pullRequest": "https://github.com/HomenShum/NodeTasks/pull/1",
+      "head": "8e9b6495ba3bf716549825d05f48faaefc73dcfb",
+      "state": "draft-open",
+      "mergeable": true,
+      "hostedStatus": "gitguardian-pass-local-proof-pass"
+    },
+    {
+      "capability": "betterprhandoff-to-present",
+      "repository": "HomenShum/BetterPRHandoff",
+      "pullRequest": "https://github.com/HomenShum/BetterPRHandoff/pull/4",
+      "head": "941b17611d422997216dd4f2b1816b76774bc4ad",
+      "state": "draft-open",
+      "mergeable": true,
+      "hostedStatus": "gitguardian-pass-local-proof-pass"
+    },
+    {
+      "capability": "featureclip-to-presentation-evidence",
+      "repository": "HomenShum/FeatureClipStudio",
+      "pullRequest": "https://github.com/HomenShum/FeatureClipStudio/pull/4",
+      "head": "36dd7741e53a6cc66e4ea0eac48d8717fa60ee69",
+      "state": "draft-open",
+      "mergeable": true,
+      "hostedStatus": "gitguardian-pass-local-proof-pass"
     }
   ],
-  "ecosystemAudit": {
-    "p1": [
-      "Map the existing NodeVideo Eve harness without relocating it.",
-      "Map the existing NodeVoice runtime and logically declare one voice-room pack.",
-      "Register NodeTasks as a task corpus rather than inventing a product-agent runtime.",
-      "Distribute agentic-ui-qa as the default NodeKit QA skill/pack.",
-      "Connect BetterPRHandoff and FeatureClipStudio to NodeKit Present.",
-      "Freeze new embedded NodeSlide domain capability in parity-studio after standalone parity."
-    ],
-    "p2": [
-      "NodeGraph capability pack",
-      "NodeSEO proof pack",
-      "AgentRedteam and maturity-model evaluation inputs",
-      "FreeAgentResources research catalog",
-      "NodeRL unique reward/repair/export extraction"
-    ],
-    "consolidationCandidates": [
-      "NodeBenchBoilerplate",
-      "NodeAgentSpec",
-      "solo-founder-agent-builder",
-      "agent-workspace-template",
-      "NodeBenchClean after public parity",
-      "VisualJudge as a standalone product",
-      "copied NodeTrace/NodeMem/NodeEval code in NodeRL",
-      "embedded NodeSlide domain code in parity-studio after parity"
-    ],
-    "nodesheet": "No standalone GitHub repository found; keep it as a finance/spreadsheet pack until a second host justifies extraction."
+  "presentationProof": {
+    "nodeSlideHead": "7815b44fe24d6673745cb5d51af219ef4f6652c9",
+    "baseSnapshotDigest": "sha256:464cd9d5021cf2c1dcf556822ae58828ab8b3f6f54ec0ca09d293fca31b74031",
+    "patchDigest": "sha256:c1be9d504068abd4360a4eb37d2fafed75c640bb0e4ba661a37163154343695c",
+    "candidateDigest": "sha256:b742c7321effa324e0a99f6942ef49596d6eaecfb21666d5d49db7ae7e36abaf",
+    "proposalId": "proposal:6a06b6872de43772d0db038fda160e5a",
+    "applicationReceiptId": "application:039db09490de59dce3d36d60b922b101",
+    "sourceBound": true,
+    "digestBound": true,
+    "exactApproval": true,
+    "deterministicCandidateParity": true,
+    "claimsEvidenceCertified": false,
+    "pptxExportVerified": false,
+    "productionDeployed": false,
+    "packagePublished": false
   },
-  "pendingBeforeReviewComplete": [
-    "Add and verify the stacked NodeSlide external CLI/MCP pull request.",
-    "Record and verify the NodeVideo and NodeVoice brownfield-map pull requests.",
-    "Run central registry validation after all final branch heads are recorded.",
-    "Forward-test every branch against its documented base before coordinated merge review."
+  "supportingReceipts": {
+    "nodeTasks": {
+      "tasks": 9155,
+      "corpusHash": "7aa41b0f5e15bbb7b74af5a307322f695c8231bc61301f4a98fba39efe8058ee",
+      "officialScoreClaims": 0
+    },
+    "betterPRHandoff": {
+      "source": "real archived handoff fixture",
+      "outputs": ["change-story", "claims", "evidence-index", "architecture-diff", "limitations", "content-hashed-receipt"],
+      "directNodeSlideExport": false
+    },
+    "featureClipStudio": {
+      "trackedMediaArtifacts": 3,
+      "independentBrowserOrJudgeReceipts": 0,
+      "releaseReady": false,
+      "productWorkflowProof": "not-certified"
+    }
+  },
+  "pendingReleaseGates": [
+    "Merge node-platform #4 before rerunning dependent NodeAgent, NodeTrace, NodeMem, and NodeRoom conformance checks.",
+    "Review and merge the remaining dependency-ordered pull requests.",
+    "Publish versioned packages only after package-consumer and release approval gates pass.",
+    "Mount NodeSlide's controlled React UI and a production repository adapter inside NodeRoom.",
+    "Certify PPTX export and reopen fidelity.",
+    "Certify one live sponsor-backed hackathon application from vague brief through fresh-browser judge workflow.",
+    "Reduce setup variance enough to prove the under-30 target repeatedly rather than from the fastest sample."
   ],
   "notPerformed": [
     "npm publication",
     "production deployment",
     "paid-resource activation",
     "destructive data migration",
-    "merge to any default branch"
+    "remaining pull-request merges",
+    "public release"
+  ],
+  "observedDefaultBranchMerges": [
+    "HomenShum/NodeSlide#5",
+    "HomenShum/NodeSlide#7",
+    "HomenShum/NodeRoom#218"
   ]
 }
