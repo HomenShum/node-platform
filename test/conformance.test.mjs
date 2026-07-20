@@ -126,6 +126,20 @@ test("ignored temporary proof copies are not scanned as repository source", asyn
   assert.equal(result.passed, true, result.errors.join("\n"));
 });
 
+test("nested temporary-looking source directories remain fail-closed", async (t) => {
+  const root = await mkdtemp(path.join(os.tmpdir(), "nodekit-nested-temp-source-"));
+  t.after(() => rm(root, { force: true, recursive: true }));
+  await writeFixture(root, { declaration: true });
+  await mkdir(path.join(root, "src", ".tmp-runtime"), { recursive: true });
+  await writeFile(
+    path.join(root, "src", ".tmp-runtime", "runtime.ts"),
+    "export type AgentRunResult = { hidden: true };\n",
+  );
+  const result = await checkRepository(root, await loadRegistry(platformRoot));
+  assert.equal(result.passed, false);
+  assert.match(result.errors.join("\n"), /undeclared contract signature agent-run-result/);
+});
+
 test("provider SDK imports in UI fail architecture conformance", async (t) => {
   const root = await mkdtemp(path.join(os.tmpdir(), "nodekit-ui-provider-"));
   t.after(() => rm(root, { force: true, recursive: true }));

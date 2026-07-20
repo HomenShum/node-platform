@@ -3,11 +3,11 @@
   "changeId": "nodekit-factory-p1",
   "evidence": [
     {
-      "id": "nodekit-tests-28",
+      "id": "nodekit-tests-30",
       "kind": "test-run",
       "status": "verified",
       "location": "local://node-platform/npm-test",
-      "summary": "NodeKit contract, compiler, factory, adoption, no-key proof, arbitrary authoring-root binding, and registry suite passed 28 of 28 tests."
+      "summary": "NodeKit contract, compiler, factory, adoption, no-key proof, arbitrary authoring-root binding, evidence-graph integrity, and registry suite passed 30 of 30 tests."
     },
     {
       "id": "nodekit-hosted-quality",
@@ -146,15 +146,15 @@
       "id": "nodetasks-pr-1",
       "kind": "corpus-receipt",
       "status": "verified",
-      "location": "https://github.com/HomenShum/NodeTasks/blob/922d202568c64cc154c698eed961b6f6fc71d47f/proof/corpus-receipt.json",
-      "summary": "At immutable head 922d202, draft pull request #1 validates the 9,155-task corpus with zero source drift and zero official-score claims while preserving task ID/order, score-flag, and provenance semantics."
+      "location": "https://github.com/HomenShum/NodeTasks/blob/8e9b6495ba3bf716549825d05f48faaefc73dcfb/proof/corpus-receipt.json",
+      "summary": "At immutable head 8e9b649, draft pull request #1 validates the 9,155-task corpus with zero source drift and zero official-score claims while preserving task ID/order, score-flag, and provenance semantics."
     },
     {
       "id": "betterprhandoff-pr-4",
       "kind": "handoff-receipt",
       "status": "verified",
-      "location": "https://github.com/HomenShum/BetterPRHandoff/blob/79a1e25c02df89ac0031cbfffa3cce7252f687fe/changes/nodebench-redesign-chat-sprints-1-4-v2/evidence/tests/nodekit-present-receipt.json",
-      "summary": "At immutable head 79a1e25, draft pull request #4 deterministically transforms an archived handoff into Change Story, claims, Evidence Index, architecture diff, limitations, and a content-hashed receipt; it does not independently re-verify the current implementation."
+      "location": "https://github.com/HomenShum/BetterPRHandoff/blob/941b17611d422997216dd4f2b1816b76774bc4ad/changes/nodebench-redesign-chat-sprints-1-4-v2/evidence/tests/nodekit-present-receipt.json",
+      "summary": "At immutable head 941b176, draft pull request #4 deterministically transforms an archived handoff into Change Story, claims, Evidence Index, architecture diff, limitations, and a content-hashed receipt; it does not independently re-verify the current implementation."
     },
     {
       "id": "featureclip-pr-4",

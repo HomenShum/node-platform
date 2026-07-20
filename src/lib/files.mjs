@@ -45,6 +45,7 @@ export async function readYaml(target) {
 
 export async function listSourceFiles(root) {
   const files = [];
+  const resolvedRoot = path.resolve(root);
 
   async function visit(directory) {
     const entries = await readdir(directory, { withFileTypes: true });
@@ -53,7 +54,13 @@ export async function listSourceFiles(root) {
     for (const entry of entries) {
       if (entry.isDirectory() && EXCLUDED_DIRECTORIES.has(entry.name)) continue;
       if (entry.isDirectory() && entry.name.startsWith(".node-platform")) continue;
-      if (entry.isDirectory() && entry.name.startsWith(".tmp")) continue;
+      if (
+        entry.isDirectory() &&
+        path.resolve(directory) === resolvedRoot &&
+        entry.name.startsWith(".tmp")
+      ) {
+        continue;
+      }
 
       const absolute = path.join(directory, entry.name);
       if (entry.isDirectory()) {

@@ -6,7 +6,7 @@
       "id": "claim-empty-directory-factory",
       "text": "NodeKit can create a deterministic, local-ready agent application from an empty directory and can additively adopt an existing repository.",
       "status": "verified",
-      "evidenceIds": ["nodekit-tests-28", "nodekit-pr-4"],
+      "evidenceIds": ["nodekit-tests-30", "nodekit-pr-4"],
       "limitations": ["Live sponsor research, deployment, and production browser proof are separate gates."]
     },
     {

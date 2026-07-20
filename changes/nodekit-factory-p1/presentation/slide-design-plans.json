@@ -32,7 +32,7 @@
       "takeaway": "Brief, context, and sponsor requirements compile into a researched vertical slice, QA evidence, and presentation artifacts.",
       "narrativeRole": "workflow",
       "dominantVisual": "workflow",
-      "evidenceIds": ["nodekit-tests-28"],
+      "evidenceIds": ["nodekit-tests-30"],
       "maxVisibleWords": 45,
       "speakerNoteGoal": "Keep the 30-minute goal visible without presenting it as certified."
     },
@@ -65,7 +65,7 @@
       "takeaway": "Local factory, package boundaries, CAS review, and registry contracts have executable evidence across merged foundations and open review branches.",
       "narrativeRole": "proof",
       "dominantVisual": "benchmark",
-      "evidenceIds": ["nodekit-tests-28", "nodekit-hosted-quality", "nodeslide-change-card-application", "nodeslide-change-card-transport", "noderoom-pr-218", "nodetasks-pr-1", "betterprhandoff-pr-4", "featureclip-pr-4"],
+      "evidenceIds": ["nodekit-tests-30", "nodekit-hosted-quality", "nodeslide-change-card-application", "nodeslide-change-card-transport", "noderoom-pr-218", "nodetasks-pr-1", "betterprhandoff-pr-4", "featureclip-pr-4"],
       "maxVisibleWords": 48,
       "speakerNoteGoal": "Name local and hosted evidence separately and avoid cumulative vanity counts."
     },
