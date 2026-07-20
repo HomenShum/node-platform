@@ -46,6 +46,7 @@ Usage:
   nodekit create <directory> --name <slug> --brief <text> [--preset research-loop]
       [--provider openrouter] [--model openai/gpt-4o-mini] [--backend filesystem]
       [--nodekit-specifier <npm-or-file-spec>] [--sponsors <comma-list>]
+      [--package-manager npm|pnpm]
       [--launch-started-at <iso>] [--research-ms <number>] [--no-install] [--no-git]
   nodekit adopt [directory] --name <slug> --brief <text>
   nodekit compile [--repo-root <path>] [--check] [--json]
@@ -242,6 +243,7 @@ async function runCreate(parsed) {
     model: parsed.options.model,
     name: parsed.options.name ?? path.basename(path.resolve(target)),
     nodekitSpecifier,
+    packageManager: parsed.options["package-manager"],
     preset: parsed.options.preset,
     provider: parsed.options.provider,
     researchMs: parsed.options["research-ms"] === undefined ? undefined : Number(parsed.options["research-ms"]),
@@ -253,7 +255,7 @@ async function runCreate(parsed) {
   const compiled = await compileAgentDefinition(result.target);
   await recordSetupEvent(result.target, "compile_completed", { configHash: compiled.definition.configHash }, Date.now() - compileStarted);
   console.log(`CREATED ${result.name} at ${result.target}`);
-  console.log(`NEXT cd ${quoteArgument(result.target)} && npm run compile && npm run demo`);
+  console.log(`NEXT cd ${quoteArgument(result.target)} && ${result.packageManager} run compile && ${result.packageManager} run demo`);
 }
 
 async function runAdopt(parsed) {

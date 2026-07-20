@@ -15,6 +15,7 @@
     "proof:browser": "node scripts/browser-proof.mjs",
     "check": "node scripts/check.mjs",
     "proof": "node scripts/proof.mjs",
+    "audit:prod": "node scripts/audit-prod.mjs",
     "phase": "node scripts/phase.mjs",
     "timeline": "node scripts/timeline.mjs"
   },

@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { execFile } from "node:child_process";
-import { mkdtemp, mkdir, readFile, rm, writeFile } from "node:fs/promises";
+import { mkdtemp, mkdir, readFile, readdir, rm, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import test from "node:test";
@@ -20,12 +20,17 @@ test("create emits a parseable, reproducible application from multiline input", 
     install: false,
     name: "Fresh App",
     nodekitSpecifier: "file:D:\\work\\node-platform",
+    packageManager: "pnpm",
     sponsors: ["Convex", "Map Sponsor"],
     target,
   });
   const packageJson = JSON.parse(await readFile(path.join(target, "package.json"), "utf8"));
   assert.equal(packageJson.devDependencies["@homenshum/nodekit"], "file:D:/work/node-platform");
   assert.equal(packageJson.dependencies["@earendil-works/pi-ai"], "0.80.10");
+  assert.equal(
+    JSON.parse(await readFile(path.join(target, "proof", "build-friction.json"), "utf8")).packageManager,
+    "pnpm",
+  );
   assert.equal(await readFile(path.join(target, "integrations", "convex", "sponsor.yaml"), "utf8").then(Boolean), true);
   assert.match(
     await readFile(path.join(target, ".claude", "skills", "nodekit-present", "SKILL.md"), "utf8"),
@@ -70,6 +75,16 @@ test("create refuses nonempty targets", async (t) => {
   await writeFile(path.join(root, "user-file.txt"), "keep me");
   await assert.rejects(() => createProject({ force: true, git: false, install: false, name: "unsafe", target: root }), /target is not empty/);
   assert.equal(await readFile(path.join(root, "user-file.txt"), "utf8"), "keep me");
+});
+
+test("create rejects an unsupported package manager before writing files", async (t) => {
+  const root = await mkdtemp(path.join(os.tmpdir(), "nodekit-package-manager-"));
+  t.after(() => rm(root, { force: true, recursive: true }));
+  await assert.rejects(
+    () => createProject({ git: false, install: false, name: "unsafe", packageManager: "yarn", target: root }),
+    /unsupported package manager yarn/,
+  );
+  assert.deepEqual(await readdir(root), []);
 });
 
 test("adopt is additive, runnable, and reports collisions", async (t) => {

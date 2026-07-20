@@ -98,6 +98,10 @@ export async function createProject(options) {
     throw new Error(`unknown preset ${options.preset}; available: research-loop`);
   }
   const startedAt = new Date().toISOString();
+  const packageManager = options.packageManager ?? "npm";
+  if (!new Set(["npm", "pnpm"]).has(packageManager)) {
+    throw new Error(`unsupported package manager ${packageManager}; available: npm, pnpm`);
+  }
   const launchStartedAt = options.launchStartedAt && Number.isFinite(Date.parse(options.launchStartedAt)) ? options.launchStartedAt : startedAt;
   const values = substitutions({ ...options, target });
   await mkdir(target, { recursive: true });
@@ -125,6 +129,7 @@ export async function createProject(options) {
       },
     ],
     nodekitVersion: "0.2.0",
+    packageManager,
     preset: "research-loop",
     repairLoops: 0,
     schemaVersion: "nodekit.build-friction/v1",
@@ -134,7 +139,10 @@ export async function createProject(options) {
   if (options.install !== false) {
     const installStarted = Date.now();
     try {
-      await run("npm", ["install"], target);
+      const installArgs = packageManager === "pnpm"
+        ? ["install", "--prefer-offline"]
+        : ["install", "--prefer-offline", "--no-audit", "--no-fund"];
+      await run(packageManager, installArgs, target);
       friction.events.push({ at: new Date().toISOString(), durationMs: Date.now() - installStarted, name: "install_completed" });
     } catch (error) {
       friction.events.push({ at: new Date().toISOString(), durationMs: Date.now() - installStarted, name: "install_failed" });
@@ -145,7 +153,7 @@ export async function createProject(options) {
   friction.events.push({ at: new Date().toISOString(), durationMs: Date.now() - Date.parse(startedAt), name: "scaffold_completed" });
   await writeFile(path.join(target, "proof", "build-friction.json"), `${JSON.stringify(friction, null, 2)}\n`);
   if (options.git !== false && !(await pathExists(path.join(target, ".git")))) await run("git", ["init"], target);
-  return { name: values.__APP_NAME__, target };
+  return { name: values.__APP_NAME__, packageManager, target };
 }
 
 export async function recordSetupEvent(target, name, detail = {}, durationMs) {
