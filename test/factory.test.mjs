@@ -195,6 +195,43 @@ test("create --local-proof emits the deterministic receipt in one CLI workflow",
   assert.equal(receipt.releaseReady, false);
 });
 
+test("agentic RL preset creates an offline FounderQuest lab with protected heldout evaluation", async (t) => {
+  const root = await mkdtemp(path.join(os.tmpdir(), "nodekit-agentic-rl-"));
+  const target = path.join(root, "lab");
+  t.after(() => rm(root, { force: true, recursive: true }));
+  await createProject({
+    git: false,
+    install: false,
+    name: "FounderQuest RL",
+    nodekitSpecifier: "file:D:/node-platform",
+    preset: "agentic-rl-research",
+    target,
+  });
+
+  const packageJson = JSON.parse(await readFile(path.join(target, "package.json"), "utf8"));
+  assert.equal(packageJson.dependencies?.["@earendil-works/pi-ai"], undefined);
+  assert.doesNotMatch(await readFile(path.join(target, ".env.example"), "utf8"), /OPENROUTER|API_KEY/);
+  await assert.rejects(readFile(path.join(target, "integrations", "pi-ai", "provider.mjs"), "utf8"), /ENOENT/);
+  assert.equal(await readFile(path.join(target, "fixtures", "tasks", "train.json"), "utf8").then(Boolean), true);
+  assert.equal(await readFile(path.join(target, "fixtures", "tasks", "validation.json"), "utf8").then(Boolean), true);
+  assert.equal(await readFile(path.join(target, "fixtures", "tasks", "heldout.json"), "utf8").then(Boolean), true);
+
+  const compiled = await compileAgentDefinition(target);
+  assert.equal(compiled.manifest.provider.adapter, "deterministic-fixture");
+  assert.equal(compiled.manifest.runtime.profile, "replay-only");
+  assert.equal(compiled.definition.discovered.integrations.length, 0);
+
+  for (const script of ["demo.mjs", "eval.mjs", "benchmark.mjs", "proof.mjs"]) {
+    await execFileAsync(process.execPath, [path.join(target, "scripts", script)], { cwd: target });
+  }
+  const benchmark = JSON.parse(await readFile(path.join(target, "proof", "agentic-rl-benchmark.json"), "utf8"));
+  const proof = JSON.parse(await readFile(path.join(target, "proof", "release-proof.json"), "utf8"));
+  assert.equal(benchmark.assertions.heldoutProtected, true);
+  assert.equal(benchmark.assertions.unsafeActionRejected, true);
+  assert.equal(proof.passed, true);
+  assert.equal(proof.releaseReady, false);
+});
+
 test("adopt is additive, runnable, and reports collisions", async (t) => {
   const root = await mkdtemp(path.join(os.tmpdir(), "nodekit-adopt-"));
   t.after(() => rm(root, { force: true, recursive: true }));
@@ -240,6 +277,42 @@ test("a fresh no-key Git candidate reaches an honest local-ready proof", async (
   assert.equal(receipt.applicationHash, compiled.definition.applicationHash);
   assert.equal(receipt.configHash, compiled.definition.configHash);
   assert.deepEqual(receipt.missingReleaseGates, ["livePi", "browserQa", "deployment"]);
+});
+
+test("agentic RL preset creates an offline FounderQuest lab with protected heldout evaluation", async (t) => {
+  const root = await mkdtemp(path.join(os.tmpdir(), "nodekit-agentic-rl-"));
+  const target = path.join(root, "lab");
+  t.after(() => rm(root, { force: true, recursive: true }));
+  await createProject({
+    git: true,
+    install: false,
+    name: "FounderQuest RL",
+    nodekitSpecifier: "file:D:/node-platform",
+    preset: "agentic-rl-research",
+    target,
+  });
+
+  const packageJson = JSON.parse(await readFile(path.join(target, "package.json"), "utf8"));
+  assert.equal(packageJson.dependencies?.["@earendil-works/pi-ai"], undefined);
+  assert.doesNotMatch(await readFile(path.join(target, ".env.example"), "utf8"), /OPENROUTER|API_KEY/);
+  await assert.rejects(readFile(path.join(target, "integrations", "pi-ai", "provider.mjs"), "utf8"), /ENOENT/);
+  for (const split of ["train", "validation", "heldout"]) {
+    assert.equal(await readFile(path.join(target, "fixtures", "tasks", `${split}.json`), "utf8").then(Boolean), true);
+  }
+
+  const compiled = await compileAgentDefinition(target);
+  assert.equal(compiled.manifest.provider.adapter, "deterministic-fixture");
+  assert.equal(compiled.manifest.runtime.profile, "replay-only");
+  assert.equal(compiled.definition.discovered.integrations.length, 0);
+  for (const script of ["demo.mjs", "eval.mjs", "benchmark.mjs", "proof.mjs"]) {
+    await execFileAsync(process.execPath, [path.join(target, "scripts", script)], { cwd: target });
+  }
+  const benchmark = JSON.parse(await readFile(path.join(target, "proof", "agentic-rl-benchmark.json"), "utf8"));
+  const proof = JSON.parse(await readFile(path.join(target, "proof", "release-proof.json"), "utf8"));
+  assert.equal(benchmark.assertions.heldoutProtected, true);
+  assert.equal(benchmark.assertions.unsafeActionRejected, true);
+  assert.equal(proof.passed, true);
+  assert.equal(proof.releaseReady, false);
 });
 
 test("the SMB lending FDE preset produces a clean-room human-authority proof", async (t) => {

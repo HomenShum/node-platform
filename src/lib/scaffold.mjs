@@ -1,11 +1,12 @@
 import { spawn } from "node:child_process";
-import { mkdir, readFile, readdir, stat, writeFile } from "node:fs/promises";
+import { mkdir, readFile, readdir, rm, stat, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { pathExists } from "./files.mjs";
 
 const packageRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..", "..");
 const PRESETS = Object.freeze({
+  "agentic-rl-research": "agentic-rl-research",
   "research-loop": "research-loop",
   "smb-lending-fde": "smb-lending-fde",
 });
@@ -26,10 +27,15 @@ async function isEmpty(directory) {
   return (await readdir(directory)).length === 0;
 }
 
+function normalizedSponsors(options = {}, presetName = options.preset) {
+  const defaults = presetName === "agentic-rl-research" ? [] : ["pi-ai"];
+  return [...new Set([...defaults, ...(options.sponsors ?? [])].map(slugify).filter(Boolean))];
+}
+
 function substitutions(options) {
   const slug = slugify(options.name || path.basename(options.target));
   const nodekitSpecifier = String(options.nodekitSpecifier ?? "github:HomenShum/node-platform").replaceAll("\\", "/");
-  const sponsors = [...new Set(["pi-ai", ...(options.sponsors ?? [])].map(slugify).filter(Boolean))];
+  const sponsors = normalizedSponsors(options, options.preset);
   return {
     "__APP_NAME__": slug,
     "__APP_TITLE__": titleCase(slug),
@@ -50,6 +56,32 @@ function resolvePreset(preset) {
   const templateName = PRESETS[normalized];
   if (!templateName) throw new Error(`unknown preset ${normalized}; available: ${Object.keys(PRESETS).join(", ")}`);
   return { name: normalized, root: path.join(packageRoot, "templates", templateName) };
+}
+
+async function applyPresetTemplate(preset, target, values) {
+  if (preset.name !== "agentic-rl-research") {
+    await copyTemplate(preset.root, target, values);
+    return;
+  }
+
+  // The reference research loop carries a deliberately live-capable Pi adapter.
+  // FounderQuest-RL is a clean-room replay-only lab, so remove those semantics
+  // before its authored offline contract overlays the generic starter.
+  await copyTemplate(defaultTemplateRoot, target, values);
+  for (const relative of [
+    "agent/tools/measure-ngram.mjs",
+    "agent/skills/autoresearch-live",
+    "agent/subagents",
+    "fixtures/corpus",
+    "integrations/pi-ai",
+    "evals/deterministic-smoke.json",
+    "schemas/experiment-receipt.schema.json",
+    "scripts/live-smoke.mjs",
+    "scripts/browser-proof.mjs",
+  ]) {
+    await rm(path.join(target, relative), { force: true, recursive: true });
+  }
+  await copyTemplate(preset.root, target, values);
 }
 
 function replaceTokens(value, values) {
@@ -127,11 +159,11 @@ export async function createProject(options) {
     throw new Error(`unsupported package manager ${packageManager}; available: npm, pnpm`);
   }
   const launchStartedAt = options.launchStartedAt && Number.isFinite(Date.parse(options.launchStartedAt)) ? options.launchStartedAt : startedAt;
-  const values = substitutions({ ...options, target });
+  const values = substitutions({ ...options, preset: preset.name, target });
   await mkdir(target, { recursive: true });
-  await copyTemplate(preset.root, target, values);
+  await applyPresetTemplate(preset, target, values);
   await projectCodingAgentSkills(target, values);
-  const sponsors = [...new Set(["pi-ai", ...(options.sponsors ?? [])].map(slugify).filter(Boolean))];
+  const sponsors = normalizedSponsors(options, preset.name);
   for (const sponsor of sponsors.filter((entry) => entry !== "pi-ai")) {
     const integrationRoot = path.join(target, "integrations", sponsor);
     await mkdir(integrationRoot, { recursive: true });

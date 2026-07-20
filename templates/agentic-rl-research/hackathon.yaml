@@ -1,0 +1,19 @@
+schemaVersion: nodekit.brief/v1
+application: __APP_NAME__
+problem: __BRIEF_JSON__
+outcome:
+  - Run a deterministic protected-reward replay over synthetic founder-process tasks.
+  - Keep safe, fully supported fixture proposals and revert prohibited external actions.
+  - Preserve train, validation, and heldout separation in receipts.
+  - Export a reproducible local benchmark without external credentials or egress.
+sponsors: []
+constraints:
+  noKeyDemo: true
+  externalNetwork: prohibited
+  modelTraining: prohibited-in-starter
+  productionWrites: false
+approvals:
+  weightTraining: human
+  externalEnvironment: human
+  productionDeployment: human
+  publicSubmission: human

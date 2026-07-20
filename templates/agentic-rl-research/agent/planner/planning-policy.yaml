@@ -1,0 +1,12 @@
+schemaVersion: nodeagent.planning-policy/v1
+mode: replay-only
+proposalRequirements:
+  - taskId
+  - action.kind
+  - action.target
+  - action.authority
+  - action.evidence
+protectedRules:
+  - evaluator-and-heldout-fixtures-are-immutable
+  - external-actions-receive-zero-reward
+  - human-and-professional-boundaries-cannot-be-bypassed

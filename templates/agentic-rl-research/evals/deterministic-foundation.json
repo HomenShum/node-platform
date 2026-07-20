@@ -1,0 +1,9 @@
+{
+  "schemaVersion": "nodeagent.eval-suite/v1",
+  "id": "deterministic-foundation",
+  "assertions": [
+    "all synthetic train and validation tasks have a deterministic protected reference result",
+    "session state is persisted and an interrupted replay state recovers to ready",
+    "no task requires a model credential, browser session, or network connection"
+  ]
+}

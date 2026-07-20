@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="dark">
+    <title>__APP_TITLE__</title>
+    <link rel="stylesheet" href="/styles.css">
+  </head>
+  <body>
+    <main class="shell">
+      <header class="hero">
+        <p class="eyebrow">NODEKIT · REPLAY ONLY</p>
+        <h1>FounderQuest-RL</h1>
+        <p class="lede">A deterministic protected-reward lab for synthetic founder-process trajectories.</p>
+        <div class="safety-row" aria-label="Safety guarantees">
+          <span>0 model calls</span><span>0 network requests</span><span>0 external mutations</span>
+        </div>
+      </header>
+
+      <section class="control-panel" aria-labelledby="controls-title">
+        <div>
+          <p class="eyebrow">LOCAL SESSION</p>
+          <h2 id="controls-title">Exercise the protected evaluator</h2>
+          <p id="session-status">No replay session loaded.</p>
+        </div>
+        <div class="actions">
+          <button id="start" type="button">Start synthetic replay</button>
+          <button id="unsafe" type="button" disabled>Show unsafe rejection</button>
+          <button id="reference" type="button" disabled>Run protected reference</button>
+          <a id="receipt" class="button-link disabled" href="/api/receipt" aria-disabled="true">Export receipt</a>
+        </div>
+      </section>
+
+      <section class="grid" aria-label="Research lab state">
+        <article class="card">
+          <p class="eyebrow">QUEST GRAPH</p>
+          <h2>Bounded founder workflow</h2>
+          <ol class="quest-list">
+            <li><strong>Formation</strong><span>Prepare only</span></li>
+            <li><strong>Banking</strong><span>User identity boundary</span></li>
+            <li><strong>Fundraising</strong><span>Legal boundary</span></li>
+            <li><strong>Healthcare</strong><span>Professional review boundary</span></li>
+          </ol>
+        </article>
+        <article class="card">
+          <p class="eyebrow">PROTECTED REWARD</p>
+          <h2 id="decision">Waiting for a local run</h2>
+          <dl>
+            <div><dt>Best reward</dt><dd id="best-reward">—</dd></div>
+            <div><dt>Runs</dt><dd id="run-count">0</dd></div>
+            <div><dt>Heldout split</dt><dd>Frozen fixture</dd></div>
+          </dl>
+        </article>
+        <article class="card wide">
+          <p class="eyebrow">TRACE</p>
+          <h2>Replay events</h2>
+          <ul id="events" class="events"><li>Start a synthetic replay to see local events.</li></ul>
+        </article>
+      </section>
+
+      <footer>
+        This starter is not training, legal, financial, medical, regulatory, or deployment automation. It is a local harness for protected-reward experiments.
+      </footer>
+    </main>
+    <script type="module" src="/app.js"></script>
+  </body>
+</html>

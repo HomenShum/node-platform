@@ -48,7 +48,7 @@ function printHelp() {
   console.log(`NodeKit
 
 Usage:
-  nodekit create <directory> --name <slug> --brief <text> [--preset research-loop|smb-lending-fde]
+  nodekit create <directory> --name <slug> --brief <text> [--preset research-loop|smb-lending-fde|agentic-rl-research]
       [--provider openrouter] [--model openai/gpt-4o-mini] [--backend filesystem]
       [--nodekit-specifier <npm-or-file-spec>] [--sponsors <comma-list>]
       [--package-manager npm|pnpm]
@@ -267,7 +267,7 @@ async function runCreate(parsed) {
   const compiled = await compileAgentDefinition(result.target);
   await recordSetupEvent(result.target, "compile_completed", { configHash: compiled.definition.configHash }, Date.now() - compileStarted);
   if (localProof) {
-    const scripts = result.preset === "smb-lending-fde"
+    const scripts = ["smb-lending-fde", "agentic-rl-research"].includes(result.preset)
       ? ["demo.mjs", "eval.mjs", "benchmark.mjs", "proof.mjs"]
       : ["demo.mjs", "eval.mjs", "proof.mjs"];
     for (const script of scripts) {
