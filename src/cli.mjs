@@ -9,6 +9,11 @@ import { pathExists } from "./lib/files.mjs";
 import { checkRepository, commandFor } from "./lib/repo-check.mjs";
 import { loadRegistry, validateRegistry } from "./lib/registry.mjs";
 import { adoptProject, createProject, recordSetupEvent } from "./lib/scaffold.mjs";
+import {
+  importUnderstandAnythingCodeGraph,
+  queryUnderstandAnythingCodeGraph,
+  readUnderstandAnythingCodeGraph,
+} from "./lib/understand-anything.mjs";
 
 const packageRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
@@ -58,6 +63,8 @@ Usage:
   nodekit registry check [--registry-root <path>] [--json]
   nodekit ecosystem check [--workspace <path>] [--json]
   nodekit dashboard [--workspace <path>] [--write] [--out <path>]
+  nodekit graph import [--repo-root <path>] [--graph-dir <path>] [--repo-id <id>] [--commit <sha>] [--json]
+  nodekit graph query <terms> [--repo-root <path>] [--limit <number>] [--json]
   nodekit certify [--repo-root <path>] [--json]`);
 }
 
@@ -367,6 +374,45 @@ async function runCertify(parsed) {
   if (!output.passed) process.exitCode = 1;
 }
 
+async function runGraphImport(parsed) {
+  const repoRoot = path.resolve(String(parsed.options["repo-root"] ?? process.cwd()));
+  const snapshot = await importUnderstandAnythingCodeGraph(repoRoot, {
+    commitSha: parsed.options.commit,
+    graphDir: parsed.options["graph-dir"],
+    repoId: parsed.options["repo-id"],
+  });
+  const output = {
+    commitSha: snapshot.commitSha,
+    contentHash: snapshot.contentHash,
+    layers: snapshot.layers.length,
+    nodes: snapshot.nodes.length,
+    passed: true,
+    repoId: snapshot.repoId,
+    schemaVersion: "nodekit.graph-import/v1",
+    source: snapshot.source,
+  };
+  if (parsed.options.json) console.log(JSON.stringify(output, null, 2));
+  else console.log(`IMPORTED ${output.repoId}@${output.commitSha} ${output.nodes} nodes ${output.layers} layers`);
+}
+
+async function runGraphQuery(parsed) {
+  const query = parsed.positional.slice(2).join(" ");
+  if (!query) throw new Error("graph query requires search terms");
+  const repoRoot = path.resolve(String(parsed.options["repo-root"] ?? process.cwd()));
+  const snapshot = await readUnderstandAnythingCodeGraph(repoRoot, {
+    snapshotPath: parsed.options["snapshot-path"],
+  });
+  const output = queryUnderstandAnythingCodeGraph(snapshot, query, {
+    limit: parsed.options.limit,
+  });
+  if (parsed.options.json) {
+    console.log(JSON.stringify(output, null, 2));
+    return;
+  }
+  console.log(`CODE GRAPH ${output.source.repoId}@${output.source.commitSha}`);
+  for (const { node, score } of output.matched) console.log(`  ${score} ${node.name} (${node.type})`);
+}
+
 async function main() {
   const parsed = parseArgs(process.argv.slice(2));
   const [first, second] = parsed.positional;
@@ -418,6 +464,14 @@ async function main() {
   }
   if (first === "dashboard") {
     await runDashboard(parsed);
+    return;
+  }
+  if (first === "graph" && second === "import") {
+    await runGraphImport(parsed);
+    return;
+  }
+  if (first === "graph" && second === "query") {
+    await runGraphQuery(parsed);
     return;
   }
   throw new Error(`unknown command: ${parsed.positional.join(" ")}`);
