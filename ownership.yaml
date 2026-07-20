@@ -33,7 +33,7 @@ concepts:
 
   nodeagent.agent-run:
     owner: NodeAgent
-    package: nodeagent
+    package: "@homenshum/nodeagent"
     targetPackage: "@nodeagent/runtime"
     status: canonical-unpackaged
     contractVersion: nodeagent.run/v1
@@ -49,7 +49,7 @@ concepts:
 
   nodeagent.policy-context:
     owner: NodeAgent
-    package: nodeagent
+    package: "@homenshum/nodeagent"
     targetPackage: "@nodeagent/runtime"
     status: canonical-unpackaged
     contractVersion: nodeagent.policy/v1
@@ -72,6 +72,30 @@ concepts:
       - NodeRoom
       - NodeSlide
       - NodeVideo
+
+  nodeagent.event-protocol:
+    owner: NodeAgent
+    package: "@homenshum/nodeagent"
+    targetPackage: "@nodeagent/event-protocol"
+    status: canonical-unpackaged
+    contractVersion: nodeagent.event/v1
+    consumers:
+      - NodeTrace
+      - NodeMem
+    signatures:
+      - id: nodeagent.event/v1
+        regex: '^\s*export\s+const\s+NODEAGENT_EVENT_SCHEMA_VERSION\b'
+
+  nodeagent.provider-pi:
+    owner: NodeAgent
+    package: "@homenshum/nodeagent"
+    targetPackage: "@nodeagent/provider-pi"
+    status: canonical-unpackaged
+    contractVersion: nodeagent.provider-pi/v1
+    consumers: []
+    signatures:
+      - id: agent-model-adapter
+        regex: '^\s*export\s+function\s+createPiAiAdapter\b'
 
   nodeagent.trace-workpaper:
     owner: NodeAgent

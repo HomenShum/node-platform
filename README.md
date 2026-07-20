@@ -62,13 +62,24 @@ npx --yes @homenshum/nodekit proof
 - [`ownership.yaml`](ownership.yaml) names one owner, current package, target package, status, version, and consumers for every governed concept.
 - [`repositories.yaml`](repositories.yaml) records lifecycle, support state, role, successor, and command profile.
 - [`architecture.yaml`](architecture.yaml) defines universal commands, allowed reuse modes, and source-layer rules.
-- [`schemas/nodekit.schema.json`](schemas/nodekit.schema.json) documents each consumer repository's `nodekit.yaml`.
-- [`schemas/nodeagent.application.v1.schema.json`](schemas/nodeagent.application.v1.schema.json) and [`schemas/nodeagent.pack.v1.schema.json`](schemas/nodeagent.pack.v1.schema.json) are enforced during compilation.
+- [`schemas/nodekit.schema.json`](schemas/nodekit.schema.json) enforces `nodekit.repo/v1` for each consumer repository's `nodekit.yaml`.
+- [`schemas/nodeagent.application.v1.schema.json`](schemas/nodeagent.application.v1.schema.json) and [`schemas/nodeagent.pack.v1.schema.json`](schemas/nodeagent.pack.v1.schema.json) enforce the application and capability-pack contracts during compilation.
+- [`schemas/nodeagent.event.v1.schema.json`](schemas/nodeagent.event.v1.schema.json) defines the canonical portable event envelope. Applications resolve `nodeagent.event/v1` and `nodeagent.trace/v1` contract references even when an older v1 manifest omits the optional `contracts` block.
 - `nodekit compile` discovers authored files, validates pack references, rejects literal secrets, and hashes the runtime, backend, fixtures, schemas, integrations, and evals into `.nodeagent/`.
 - `nodekit create` refuses non-empty targets. `nodekit adopt` writes missing files only, preserves host scripts, and emits a collision receipt.
 - `nodekit repo check` validates ownership declarations, command aliases, migration origins, signature classification, and source rules.
 - `nodekit ecosystem check` checks all active local clones together.
 - `nodekit dashboard` generates the cross-repository status table.
+
+## Frozen v1 manifest dialect
+
+The three public v1 manifests use one flat, fail-closed shape:
+
+```yaml
+schemaVersion: nodekit.repo/v1 # or nodeagent.application/v1 / nodeagent.pack/v1
+```
+
+The earlier planning-only `apiVersion` / `kind` / `metadata` / `spec` envelope is not another accepted v1 dialect. Repository checks and application compilation reject that shape with a migration-oriented error. Existing `nodeagent.application/v1` manifests that predate the optional `contracts` block remain compatible; the compiler resolves their event and trace references to the canonical v1 values.
 
 ## Honest boundary
 

@@ -282,6 +282,7 @@ async function runCompile(parsed) {
   const output = {
     application: result.definition.application.id,
     configHash: result.definition.configHash,
+    contracts: result.definition.contracts,
     fileCount: result.definition.fileCount,
     passed: true,
     schemaVersion: "nodekit.compile/v1",
@@ -301,6 +302,7 @@ async function runInspect(parsed) {
   console.log(`  runtime ${output.runtime.engine}/${output.runtime.profile}`);
   console.log(`  provider ${output.provider.adapter}:${output.provider.model.provider}/${output.provider.model.id}`);
   console.log(`  backend ${output.backend.adapter}`);
+  console.log(`  contracts event=${output.contracts.event} trace=${output.contracts.trace}`);
   console.log(`  config ${output.configHash}`);
   console.log(`  files ${output.fileCount}`);
   for (const [name, count] of Object.entries(output.discovered)) console.log(`  ${name} ${count}`);

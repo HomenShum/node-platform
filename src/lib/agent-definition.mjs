@@ -1,25 +1,19 @@
 import { createHash } from "node:crypto";
 import { mkdir, readFile, readdir, writeFile } from "node:fs/promises";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
-import Ajv2020 from "ajv/dist/2020.js";
+import {
+  alternateDialectErrors,
+  CONTRACT_SCHEMA_FILES,
+  CONTRACT_VERSIONS,
+  resolveRuntimeContracts,
+} from "./contracts.mjs";
 import { normalizePath, pathExists, readYaml } from "./files.mjs";
+import { validateSchema } from "./schema-validation.mjs";
 
-const APPLICATION_SCHEMA = "nodeagent.application/v1";
+const APPLICATION_SCHEMA = CONTRACT_VERSIONS.application;
 const DISCOVERY_ROOTS = ["agent", "packs", "integrations", "backend", "workers", "evals", "fixtures", "schemas"];
 const SECRET_FIELD = /(api.?key|password|secret|token)/i;
 const SECRET_LITERAL = /(?:sk-[A-Za-z0-9_-]{12,}|AIza[A-Za-z0-9_-]{20,}|-----BEGIN [A-Z ]+PRIVATE KEY-----)/;
-const packageRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..", "..");
-
-async function schemaValidator(name) {
-  const schema = JSON.parse(await readFile(path.join(packageRoot, "schemas", name), "utf8"));
-  const ajv = new Ajv2020({ allErrors: true, strict: false });
-  return ajv.compile(schema);
-}
-
-function formatSchemaErrors(label, validator) {
-  return (validator.errors ?? []).map((entry) => `${label}${entry.instancePath || "/"} ${entry.message}`);
-}
 
 function canonicalize(value) {
   if (Array.isArray(value)) return value.map(canonicalize);
@@ -80,7 +74,7 @@ function validateSecrets(value, location = "nodeagent.yaml", errors = []) {
 }
 
 export function validateAgentManifest(manifest) {
-  const errors = [];
+  const errors = alternateDialectErrors(manifest, "nodeagent.yaml", APPLICATION_SCHEMA);
   if (manifest?.schemaVersion !== APPLICATION_SCHEMA) {
     errors.push(`nodeagent.yaml must use ${APPLICATION_SCHEMA}`);
   }
@@ -119,15 +113,16 @@ export async function compileAgentDefinition(repoRoot, { check = false, write = 
   const manifestText = await readFile(manifestPath, "utf8");
   const manifest = await readYaml(manifestPath);
   const errors = validateAgentManifest(manifest);
-  const validateApplication = await schemaValidator("nodeagent.application.v1.schema.json");
-  if (!validateApplication(manifest)) errors.push(...formatSchemaErrors("nodeagent.yaml", validateApplication));
-  const validatePack = await schemaValidator("nodeagent.pack.v1.schema.json");
+  errors.push(...await validateSchema(CONTRACT_SCHEMA_FILES.application, manifest, "nodeagent.yaml"));
   for (const pack of manifest.packs ?? []) {
     const packPath = path.resolve(repoRoot, String(pack));
     if (!(await pathExists(packPath))) errors.push(`capability pack does not exist: ${pack}`);
     else {
       const packManifest = await readYaml(packPath);
-      if (!validatePack(packManifest)) errors.push(...formatSchemaErrors(String(pack), validatePack));
+      errors.push(
+        ...alternateDialectErrors(packManifest, String(pack), CONTRACT_VERSIONS.pack),
+        ...await validateSchema(CONTRACT_SCHEMA_FILES.pack, packManifest, String(pack)),
+      );
       for (const reference of [packManifest.skill, ...(packManifest.evals ?? [])].filter(Boolean)) {
         const referencedPath = path.resolve(path.dirname(packPath), String(reference));
         if (!(await pathExists(referencedPath))) errors.push(`${pack} references missing file: ${reference}`);
@@ -157,7 +152,8 @@ export async function compileAgentDefinition(repoRoot, { check = false, write = 
 
   const files = await discoverFiles(repoRoot);
   const manifestDigest = hash(manifestText);
-  const hashInput = JSON.stringify(canonicalize({ files, manifest }));
+  const contracts = resolveRuntimeContracts(manifest);
+  const hashInput = JSON.stringify(canonicalize({ files, manifest: { ...manifest, contracts } }));
   const configHash = hash(hashInput);
   const secretRefs = [...new Set([
     manifest.provider?.secretRef,
@@ -167,6 +163,7 @@ export async function compileAgentDefinition(repoRoot, { check = false, write = 
     application: manifest.application,
     backend: manifest.backend,
     configHash,
+    contracts,
     discovered: classify(files),
     fileCount: files.length,
     manifestDigest,
@@ -213,6 +210,7 @@ export function inspectAgentDefinition(compiled) {
     fileCount: definition.fileCount,
     provider: definition.provider,
     runtime: definition.runtime,
+    contracts: definition.contracts,
     secrets: definition.secretRefs.map((name) => ({ configured: Boolean(process.env[name]), name })),
   };
 }

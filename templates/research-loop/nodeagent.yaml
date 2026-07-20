@@ -17,6 +17,9 @@ provider:
   secretRef: __SECRET_REF__
 backend:
   adapter: __BACKEND__
+contracts:
+  event: nodeagent.event/v1
+  trace: nodeagent.trace/v1
 orchestration:
   mode: persistent-metric-loop
   maxConcurrentExperiments: 1

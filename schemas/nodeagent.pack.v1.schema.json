@@ -2,16 +2,39 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://github.com/HomenShum/node-platform/blob/main/schemas/nodeagent.pack.v1.schema.json",
   "title": "NodeAgent capability pack",
+  "description": "Canonical flat schemaVersion dialect. apiVersion/kind/spec envelopes are not part of v1.",
   "type": "object",
   "required": ["schemaVersion", "id", "version", "artifacts", "tools", "validators", "evals"],
   "properties": {
     "schemaVersion": { "const": "nodeagent.pack/v1" },
     "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$" },
-    "version": { "type": "string" },
-    "skill": { "type": "string" },
-    "artifacts": { "type": "array", "items": { "type": "string" } },
-    "tools": { "type": "array", "items": { "type": "string" } },
-    "validators": { "type": "array", "items": { "type": "string" } },
-    "evals": { "type": "array", "items": { "type": "string" } }
-  }
+    "version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+(?:-[0-9A-Za-z.-]+)?$" },
+    "name": { "type": "string", "minLength": 1 },
+    "description": { "type": "string", "minLength": 1 },
+    "skill": { "type": "string", "minLength": 1 },
+    "prompts": { "$ref": "#/$defs/pathList" },
+    "artifacts": { "$ref": "#/$defs/idList" },
+    "tools": { "$ref": "#/$defs/idList" },
+    "jobs": { "$ref": "#/$defs/idList" },
+    "validators": { "$ref": "#/$defs/idList" },
+    "policies": { "$ref": "#/$defs/pathList" },
+    "renderers": { "$ref": "#/$defs/idList" },
+    "fixtures": { "$ref": "#/$defs/pathList" },
+    "examples": { "$ref": "#/$defs/pathList" },
+    "evals": { "$ref": "#/$defs/pathList" },
+    "permissions": { "type": "object" }
+  },
+  "$defs": {
+    "idList": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "pathList": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "type": "string", "minLength": 1 }
+    }
+  },
+  "additionalProperties": false
 }

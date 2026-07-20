@@ -94,11 +94,13 @@ repositories:
 
   - name: NodeBenchAI
     github: HomenShum/NodeBenchAI
-    lifecycle: reference
-    support: frozen
-    role: legacy-product
+    lifecycle: production
+    support: active
+    role: domain-application
+    # The live repository still uses the superseded apiVersion/kind/spec
+    # contract draft. Keep it visible but untracked until its manifest is
+    # explicitly migrated to the canonical flat nodekit.repo/v1 shape.
     commandProfile: untracked
-    replacedBy: NodeRoom
 
   - name: NodeBenchBoilerplate
     github: HomenShum/NodeBenchBoilerplate

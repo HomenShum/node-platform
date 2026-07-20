@@ -17,6 +17,14 @@ Current standalone owners:
 
 NodeTrace owns the portable trace UI/store, not every runtime event emitted by NodeAgent. The richer `nodeagent.trace/v1` workpaper currently lives in NodeRoom and is recorded as a migration source. Its target owner is NodeAgent. This avoids pretending a package exists before the protocol is extracted and compatibility-tested.
 
+NodeAgent owns the portable `nodeagent.event/v1` envelope. Its minimum fields are `eventId`, `runId`, monotonic `sequence`, namespaced `type`, ISO `occurredAt`, optional actor and references, and a payload. NodeKit owns the JSON Schema and NodeAgent owns the typed runtime implementation. Product-specific stream rows are projections, not alternate event protocols.
+
+## Manifest Dialect
+
+`nodekit.repo/v1`, `nodeagent.application/v1`, and `nodeagent.pack/v1` use a flat `schemaVersion` manifest. The earlier `apiVersion` / `kind` / `metadata` / `spec` proposal is rejected rather than silently reinterpreted. This prevents benchmark, generator, and production paths from compiling different definitions from visually similar YAML.
+
+The `contracts` block in `nodeagent.application/v1` is optional for compatibility with manifests authored before the freeze. The compiler always resolves it to `nodeagent.event/v1` and `nodeagent.trace/v1`; new templates write those values explicitly.
+
 ## Proposal Split
 
 `nodeslide.deck-patch/v1` remains a NodeSlide domain protocol. The planned generic `nodeagent.proposal/v1` may later carry review decisions, candidate receipts, and authority boundaries, but it must not erase deck-specific operations or make NodeSlide import another application's internals.

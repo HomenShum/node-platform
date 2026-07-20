@@ -1,6 +1,11 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import {
+  alternateDialectErrors,
+  CONTRACT_SCHEMA_FILES,
+  CONTRACT_VERSIONS,
+} from "./contracts.mjs";
+import {
   listSourceFiles,
   normalizePath,
   pathExists,
@@ -8,8 +13,9 @@ import {
   readYaml,
 } from "./files.mjs";
 import { repositoryByName, repositoryName, validateRegistry } from "./registry.mjs";
+import { validateSchema } from "./schema-validation.mjs";
 
-const REPO_SCHEMA = "nodekit.repo/v1";
+const REPO_SCHEMA = CONTRACT_VERSIONS.repository;
 const LIFECYCLES = new Set(["production", "preview", "experimental", "reference", "archived"]);
 const SUPPORT_STATES = new Set(["active", "maintenance", "frozen"]);
 const NO_KEY_STATES = new Set(["certified", "partial", "missing", "not-applicable"]);
@@ -128,6 +134,10 @@ export async function checkRepository(repoRoot, registry) {
   }
 
   const manifest = await readYaml(manifestPath);
+  errors.push(
+    ...alternateDialectErrors(manifest, "nodekit.yaml", REPO_SCHEMA),
+    ...await validateSchema(CONTRACT_SCHEMA_FILES.repository, manifest, "nodekit.yaml"),
+  );
   const packagePath = path.join(repoRoot, "package.json");
   const packageJson = (await pathExists(packagePath)) ? await readJson(packagePath) : null;
   const name = manifest?.repository ? repositoryName(manifest) : path.basename(repoRoot);
