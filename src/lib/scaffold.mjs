@@ -5,7 +5,11 @@ import { fileURLToPath } from "node:url";
 import { pathExists } from "./files.mjs";
 
 const packageRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..", "..");
-const templateRoot = path.join(packageRoot, "templates", "research-loop");
+const PRESETS = Object.freeze({
+  "research-loop": "research-loop",
+  "smb-lending-fde": "smb-lending-fde",
+});
+const defaultTemplateRoot = path.join(packageRoot, "templates", PRESETS["research-loop"]);
 const pluginSkillsRoot = path.join(packageRoot, "plugins", "nodekit", "skills");
 const projectedSkillNames = ["nodekit-launch", "nodekit-present", "nodekit-qa"];
 
@@ -39,6 +43,13 @@ function substitutions(options) {
     "__SECRET_REF__": options.secretRef ?? "OPENROUTER_API_KEY",
     "__SPONSORS_YAML__": sponsors.map((sponsor) => `  - id: ${sponsor}\n    intendedUse: ${sponsor === "pi-ai" ? "Provider-neutral live hypothesis generation." : "Sponsor capability selected during launch research."}`).join("\n"),
   };
+}
+
+function resolvePreset(preset) {
+  const normalized = preset ?? "research-loop";
+  const templateName = PRESETS[normalized];
+  if (!templateName) throw new Error(`unknown preset ${normalized}; available: ${Object.keys(PRESETS).join(", ")}`);
+  return { name: normalized, root: path.join(packageRoot, "templates", templateName) };
 }
 
 function replaceTokens(value, values) {
@@ -89,14 +100,27 @@ function run(command, args, cwd) {
   });
 }
 
+function runGit(args, cwd, { capture = false } = {}) {
+  return new Promise((resolve, reject) => {
+    const child = spawn("git", args, {
+      cwd,
+      env: process.env,
+      shell: false,
+      stdio: capture ? ["ignore", "pipe", "inherit"] : "inherit",
+    });
+    let stdout = "";
+    child.stdout?.on("data", (chunk) => { stdout += chunk; });
+    child.on("error", reject);
+    child.on("exit", (code) => code === 0 ? resolve(stdout) : reject(new Error(`git ${args[0]} exited ${code}`)));
+  });
+}
+
 export async function createProject(options) {
   const target = path.resolve(options.target);
   if (!(await isEmpty(target))) {
     throw new Error(`target is not empty: ${target}`);
   }
-  if (options.preset && options.preset !== "research-loop") {
-    throw new Error(`unknown preset ${options.preset}; available: research-loop`);
-  }
+  const preset = resolvePreset(options.preset);
   const startedAt = new Date().toISOString();
   const packageManager = options.packageManager ?? "npm";
   if (!new Set(["npm", "pnpm"]).has(packageManager)) {
@@ -105,7 +129,7 @@ export async function createProject(options) {
   const launchStartedAt = options.launchStartedAt && Number.isFinite(Date.parse(options.launchStartedAt)) ? options.launchStartedAt : startedAt;
   const values = substitutions({ ...options, target });
   await mkdir(target, { recursive: true });
-  await copyTemplate(templateRoot, target, values);
+  await copyTemplate(preset.root, target, values);
   await projectCodingAgentSkills(target, values);
   const sponsors = [...new Set(["pi-ai", ...(options.sponsors ?? [])].map(slugify).filter(Boolean))];
   for (const sponsor of sponsors.filter((entry) => entry !== "pi-ai")) {
@@ -130,7 +154,7 @@ export async function createProject(options) {
     ],
     nodekitVersion: "0.2.0",
     packageManager,
-    preset: "research-loop",
+    preset: preset.name,
     repairLoops: 0,
     schemaVersion: "nodekit.build-friction/v1",
   };
@@ -152,8 +176,18 @@ export async function createProject(options) {
   }
   friction.events.push({ at: new Date().toISOString(), durationMs: Date.now() - Date.parse(startedAt), name: "scaffold_completed" });
   await writeFile(path.join(target, "proof", "build-friction.json"), `${JSON.stringify(friction, null, 2)}\n`);
-  if (options.git !== false && !(await pathExists(path.join(target, ".git")))) await run("git", ["init"], target);
-  return { name: values.__APP_NAME__, packageManager, target };
+  let candidateCommit = null;
+  if (options.git !== false) {
+    if (!(await pathExists(path.join(target, ".git")))) await runGit(["init"], target);
+    await runGit(["add", "--all"], target);
+    await runGit([
+      "-c", "user.name=NodeKit",
+      "-c", "user.email=nodekit@local",
+      "commit", "-m", "chore: initialize NodeKit application",
+    ], target);
+    candidateCommit = (await runGit(["rev-parse", "HEAD"], target, { capture: true })).trim();
+  }
+  return { candidateCommit, name: values.__APP_NAME__, packageManager, preset: preset.name, target };
 }
 
 export async function recordSetupEvent(target, name, detail = {}, durationMs) {
@@ -172,7 +206,7 @@ export async function adoptProject(options) {
   const collisions = [];
   const adoptRoots = ["nodekit.yaml", "nodeagent.yaml", "hackathon.yaml", "agent", "packs", "integrations", "backend", "fixtures", "evals", "schemas", "scripts", "adw", "apps"];
   for (const root of adoptRoots) {
-    const source = path.join(templateRoot, root);
+    const source = path.join(defaultTemplateRoot, root);
     if (!(await pathExists(source))) continue;
     const destination = path.join(target, root);
     if ((await stat(source)).isDirectory()) {

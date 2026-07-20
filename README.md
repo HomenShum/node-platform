@@ -27,6 +27,17 @@ npm run dev
 
 The first certified preset is `research-loop`: a small reference runtime with an objective held-out metric, deterministic keep/revert decisions, versioned human intervention, interrupted-run recovery, a strict Pi smoke, and sanitized reproduction receipts. It is a reference adapter to the NodeAgent application contract; it is not presented as the still-unfinished extraction of NodeRoom's deeper production runtime.
 
+`smb-lending-fde` is the first clean-room, domain-specific preset. It generates an independent synthetic forward-deployment lab with a primary restaurant working-capital case and held-out medical-practice equipment case. Its agent can only propose a request for an explicitly missing document; a human approval is required before a request is applied, and the starter never makes or simulates a lending decision. The included four-row benchmark is a contract harness: its manual and chat-only rows are declared baselines, not claims about Casca, a bank, a human operator, or an external model.
+
+```bash
+node src/cli.mjs create ../casca-fde-deployment-lab \
+  --name casca-fde-deployment-lab \
+  --preset smb-lending-fde \
+  --brief "Map a synthetic SMB lending file without making a lending decision" \
+  --local-proof \
+  --nodekit-specifier file:$(pwd)
+```
+
 `npm run proof` works before credentials exist: it emits a passing `local-ready` receipt after the deterministic demo and evaluation. If live Pi, browser, or deployment receipts are present, every attempted gate must pass; the receipt becomes `release-ready` only when all three are present and green.
 
 Every created or adopted repository receives the same three coding-agent skills
@@ -55,7 +66,7 @@ npm run dashboard
 Factory commands:
 
 ```bash
-nodekit create <empty-directory> --name <slug> --brief <text>
+nodekit create <empty-directory> --name <slug> --brief <text> [--preset research-loop|smb-lending-fde]
 nodekit adopt <existing-directory> --name <slug> --brief <text>
 nodekit compile --repo-root <directory>
 nodekit inspect --repo-root <directory>

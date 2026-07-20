@@ -1,0 +1,12 @@
+{
+  "schemaVersion": "nodekit.synthetic-lending-source-packet/v1",
+  "notice": "SYNTHETIC - NO REAL CUSTOMER DATA. Independent evaluation fixture; not lending advice or a lending decision.",
+  "caseId": "bay-hearth-working-capital",
+  "applicant": "Bay Hearth Foods LLC",
+  "request": "$350,000 working-capital request",
+  "documents": [
+    { "id": "business-tax-return-2025", "label": "2025 business tax return", "status": "received" },
+    { "id": "operating-bank-statements-q2", "label": "Most recent three operating-bank statements", "status": "missing" },
+    { "id": "debt-schedule", "label": "Current debt schedule", "status": "received" }
+  ]
+}

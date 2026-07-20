@@ -1,0 +1,20 @@
+schemaVersion: nodekit.brief/v1
+application: __APP_NAME__
+problem: __BRIEF_JSON__
+outcome:
+  - Map a synthetic SMB lending file into a bounded process graph.
+  - Identify missing evidence without inventing applicant facts.
+  - Propose a reviewable document request while preserving human underwriting authority.
+  - Resume from durable state and export a reproducibility receipt.
+sponsors:
+__SPONSORS_YAML__
+constraints:
+  noKeyDemo: true
+  liveSecretRef: __SECRET_REF__
+  productionWrites: false
+  syntheticDataOnly: true
+  lendingDecisions: human-only
+approvals:
+  paidResourceActivation: human
+  productionDeployment: human
+  publicSubmission: human

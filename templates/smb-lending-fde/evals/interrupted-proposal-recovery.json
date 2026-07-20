@@ -1,0 +1,9 @@
+{
+  "schemaVersion": "nodeagent.eval-suite/v1",
+  "id": "interrupted-proposal-recovery",
+  "assertions": [
+    "an interrupted proposal state recovers to ready on reload",
+    "recovery preserves the evidence and proposal ledger",
+    "recovery never makes a lending decision"
+  ]
+}

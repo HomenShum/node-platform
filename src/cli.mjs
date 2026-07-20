@@ -48,7 +48,7 @@ function printHelp() {
   console.log(`NodeKit
 
 Usage:
-  nodekit create <directory> --name <slug> --brief <text> [--preset research-loop]
+  nodekit create <directory> --name <slug> --brief <text> [--preset research-loop|smb-lending-fde]
       [--provider openrouter] [--model openai/gpt-4o-mini] [--backend filesystem]
       [--nodekit-specifier <npm-or-file-spec>] [--sponsors <comma-list>]
       [--package-manager npm|pnpm]
@@ -241,6 +241,10 @@ function optionEnabled(options, name, defaultValue = true) {
 async function runCreate(parsed) {
   const target = parsed.positional[1];
   if (!target) throw new Error("create requires a target directory");
+  const localProof = parsed.options["local-proof"] === true || parsed.options["local-proof"] === "true";
+  if (localProof && !optionEnabled(parsed.options, "git")) {
+    throw new Error("--local-proof requires the default local Git candidate; omit --no-git so NodeKit can bind receipts to an immutable commit");
+  }
   const nodekitSpecifier = parsed.options["nodekit-specifier"] ?? parsed.options["nodekit-source"];
   const result = await createProject({
     backend: parsed.options.backend,
@@ -262,8 +266,11 @@ async function runCreate(parsed) {
   const compileStarted = Date.now();
   const compiled = await compileAgentDefinition(result.target);
   await recordSetupEvent(result.target, "compile_completed", { configHash: compiled.definition.configHash }, Date.now() - compileStarted);
-  if (parsed.options["local-proof"] === true || parsed.options["local-proof"] === "true") {
-    for (const script of ["demo.mjs", "eval.mjs", "proof.mjs"]) {
+  if (localProof) {
+    const scripts = result.preset === "smb-lending-fde"
+      ? ["demo.mjs", "eval.mjs", "benchmark.mjs", "proof.mjs"]
+      : ["demo.mjs", "eval.mjs", "proof.mjs"];
+    for (const script of scripts) {
       await new Promise((resolve, reject) => {
         const child = spawn(process.execPath, [path.join(result.target, "scripts", script)], {
           cwd: result.target,
@@ -278,7 +285,7 @@ async function runCreate(parsed) {
       });
     }
   }
-  console.log(`CREATED ${result.name} at ${result.target}`);
+  console.log(`CREATED ${result.name} at ${result.target}${result.candidateCommit ? ` (${result.candidateCommit.slice(0, 12)})` : ""}`);
   console.log(`NEXT cd ${quoteArgument(result.target)} && ${result.packageManager} run compile && ${result.packageManager} run demo`);
 }
 

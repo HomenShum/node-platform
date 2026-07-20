@@ -1,0 +1,13 @@
+schemaVersion: nodeagent.permissions/v1
+default: deny
+allow:
+  - lending.file.read
+  - lending.document-request.propose
+  - session.persist
+  - receipt.write
+deny:
+  - lending.decision
+  - lending.external-submit
+network:
+  liveOnly:
+    - openrouter.ai

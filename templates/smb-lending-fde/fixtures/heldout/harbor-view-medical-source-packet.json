@@ -1,0 +1,12 @@
+{
+  "schemaVersion": "nodekit.synthetic-lending-source-packet/v1",
+  "notice": "SYNTHETIC - NO REAL CUSTOMER DATA. Held-out evaluation fixture; not lending advice or a lending decision.",
+  "caseId": "harbor-view-medical-equipment",
+  "applicant": "Harbor View Medical Practice PLLC",
+  "request": "$275,000 equipment and expansion request",
+  "documents": [
+    { "id": "practice-tax-return-2025", "label": "2025 practice tax return", "status": "received" },
+    { "id": "equipment-quote", "label": "Equipment quote", "status": "received" },
+    { "id": "guarantor-personal-financial-statement", "label": "Guarantor personal financial statement", "status": "missing" }
+  ]
+}

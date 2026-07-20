@@ -1,0 +1,8 @@
+schemaVersion: nodeagent.subagent/v1
+id: independent-reviewer
+mode: read-only
+tools:
+  allow:
+    - lending.file.read
+    - receipt.verify
+outputSchema: lending-proposal-review/v1

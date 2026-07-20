@@ -187,7 +187,6 @@ test("create --local-proof emits the deterministic receipt in one CLI workflow",
     "--name",
     "cli-proof",
     "--no-install",
-    "--no-git",
     "--local-proof",
   ]);
   const receipt = JSON.parse(await readFile(path.join(target, "proof", "release-proof.json"), "utf8"));
@@ -222,10 +221,11 @@ test("adopt is additive, runnable, and reports collisions", async (t) => {
   assert.equal(await readFile(path.join(root, "backend", "filesystem", "store.mjs"), "utf8").then(Boolean), true);
 });
 
-test("a fresh no-key project reaches an honest local-ready proof", async (t) => {
+test("a fresh no-key Git candidate reaches an honest local-ready proof", async (t) => {
   const root = await mkdtemp(path.join(os.tmpdir(), "nodekit-local-proof-"));
   t.after(() => rm(root, { force: true, recursive: true }));
-  await createProject({ git: false, install: false, name: "local-proof", target: root });
+  const created = await createProject({ git: true, install: false, name: "local-proof", target: root });
+  assert.match(created.candidateCommit, /^[a-f0-9]{40}$/);
   const compiled = await compileAgentDefinition(root);
 
   for (const script of ["demo.mjs", "eval.mjs", "proof.mjs"]) {
@@ -240,4 +240,33 @@ test("a fresh no-key project reaches an honest local-ready proof", async (t) => 
   assert.equal(receipt.applicationHash, compiled.definition.applicationHash);
   assert.equal(receipt.configHash, compiled.definition.configHash);
   assert.deepEqual(receipt.missingReleaseGates, ["livePi", "browserQa", "deployment"]);
+});
+
+test("the SMB lending FDE preset produces a clean-room human-authority proof", async (t) => {
+  const root = await mkdtemp(path.join(os.tmpdir(), "nodekit-smb-lending-fde-"));
+  t.after(() => rm(root, { force: true, recursive: true }));
+  await createProject({
+    brief: "Map a synthetic SMB lending file without making a credit decision.",
+    git: true,
+    install: false,
+    name: "casca-fde-deployment-lab",
+    preset: "smb-lending-fde",
+    target: root,
+  });
+  const compiled = await compileAgentDefinition(root);
+  for (const script of ["demo.mjs", "eval.mjs", "benchmark.mjs", "proof.mjs"]) {
+    await execFileAsync(process.execPath, [path.join(root, "scripts", script)], { cwd: root });
+  }
+  const demo = JSON.parse(await readFile(path.join(root, "proof", "demo-receipt.json"), "utf8"));
+  const evaluation = JSON.parse(await readFile(path.join(root, "proof", "eval-receipt.json"), "utf8"));
+  const proof = JSON.parse(await readFile(path.join(root, "proof", "release-proof.json"), "utf8"));
+  const instructions = await readFile(path.join(root, "agent", "instructions.md"), "utf8");
+
+  assert.equal(demo.schemaVersion, "nodekit.smb-lending-receipt/v1");
+  assert.equal(demo.documents.find((document) => document.id === "operating-bank-statements-q2").status, "requested");
+  assert.equal(evaluation.passed, true);
+  assert.equal(proof.passed, true);
+  assert.equal(proof.applicationHash, compiled.definition.applicationHash);
+  assert.match(proof.receiptVerification.candidateCommit, /^[a-f0-9]{40}$/);
+  assert.match(instructions, /Never make, recommend, approve, decline, or simulate a credit decision/);
 });
