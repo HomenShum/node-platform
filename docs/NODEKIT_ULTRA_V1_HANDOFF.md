@@ -126,6 +126,8 @@ graph, NodeRoom state, or execution receipts.
 Use GPT-5.6 Sol to challenge the following claims, rather than to rubber-stamp
 the implementation:
 
+The paste-ready review brief is `docs/SOL_ADVERSARIAL_REVIEW_PROMPT.md`.
+
 1. **Candidate binding:** mutate a source file, fixture, or receipt after a
    gate and confirm the verifier fails.
 2. **Factory portability:** generate a project into a clean directory with a
