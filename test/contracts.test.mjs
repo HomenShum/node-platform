@@ -48,6 +48,20 @@ test("applications authored before contracts references were added remain v1 com
   assert.equal(compiled.definition.configHash, explicit.definition.configHash);
 });
 
+test("pack-root SKILL.md files appear in compiled discovery", async (t) => {
+  const root = await freshProject(t, "nodekit-pack-skill-");
+  const packPath = path.join(root, "packs", "primary", "pack.yaml");
+  const pack = (await readFile(packPath, "utf8")).replace(
+    "skill: ../../agent/skills/autoresearch-live/SKILL.md",
+    "skill: SKILL.md",
+  );
+  await writeFile(packPath, pack);
+  await writeFile(path.join(root, "packs", "primary", "SKILL.md"), "# Pack skill\n");
+
+  const compiled = await compileAgentDefinition(root, { write: false });
+  assert.equal(compiled.definition.discovered.skills.includes("packs/primary/SKILL.md"), true);
+});
+
 test("nodeagent application apiVersion/kind/spec envelopes fail closed", async (t) => {
   const root = await freshProject(t, "nodekit-app-dialect-");
   await writeFile(

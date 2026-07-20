@@ -96,12 +96,17 @@ function classify(files) {
   const matching = (fragment, suffix) => files
     .filter((file) => file.path.includes(fragment) && (!suffix || file.path.endsWith(suffix)))
     .map((file) => file.path);
+  const skills = files
+    .filter((file) => file.path.endsWith("SKILL.md") && (
+      file.path.includes("/skills/") || file.path.startsWith("packs/")
+    ))
+    .map((file) => file.path);
   return {
     evals: matching("evals/"),
     integrations: matching("integrations/"),
     packs: matching("packs/", "pack.yaml"),
     policies: matching("agent/policies/"),
-    skills: matching("/skills/", "SKILL.md"),
+    skills,
     subagents: matching("agent/subagents/", "agent.yaml"),
     tools: matching("/tools/"),
   };
