@@ -101,6 +101,31 @@ test("a classified adapter signature is accepted", async (t) => {
   assert.equal(result.passed, true, result.errors.join("\n"));
 });
 
+test("generated JSON metadata is not scanned as executable source", async (t) => {
+  const root = await mkdtemp(path.join(os.tmpdir(), "nodekit-json-metadata-"));
+  t.after(() => rm(root, { force: true, recursive: true }));
+  await writeFixture(root, { declaration: true });
+  await writeFile(
+    path.join(root, "src", "components", "generated.json"),
+    JSON.stringify({ renderedCode: 'import OpenAI from "openai";' }),
+  );
+  const result = await checkRepository(root, await loadRegistry(platformRoot));
+  assert.equal(result.passed, true, result.errors.join("\n"));
+});
+
+test("ignored temporary proof copies are not scanned as repository source", async (t) => {
+  const root = await mkdtemp(path.join(os.tmpdir(), "nodekit-temp-copy-"));
+  t.after(() => rm(root, { force: true, recursive: true }));
+  await writeFixture(root, { declaration: true });
+  await mkdir(path.join(root, ".tmp", "copied-repo"), { recursive: true });
+  await writeFile(
+    path.join(root, ".tmp", "copied-repo", "runtime.ts"),
+    "export type AgentRunResult = { copied: true };\n",
+  );
+  const result = await checkRepository(root, await loadRegistry(platformRoot));
+  assert.equal(result.passed, true, result.errors.join("\n"));
+});
+
 test("provider SDK imports in UI fail architecture conformance", async (t) => {
   const root = await mkdtemp(path.join(os.tmpdir(), "nodekit-ui-provider-"));
   t.after(() => rm(root, { force: true, recursive: true }));

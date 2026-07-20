@@ -34,6 +34,11 @@ implementation:
     - NodeMem
     - NodeRoom
     - NodeBenchAI
+    - NodeVideo
+    - NodeVoice
+    - NodeTasks
+    - BetterPRHandoff
+    - FeatureClipStudio
   importantContracts:
     - nodekit.repo/v1
     - nodeagent.application/v1
@@ -41,12 +46,20 @@ implementation:
     - nodeagent.event/v1
     - nodeagent.trace/v1
     - proofloop.receipt/v1
+    - nodetasks.corpus-receipt/v1
+    - betterprhandoff.handoff/v1
+    - featureclip.evidence-manifest/v1
+    - featureclip.evidence-receipt/v1
     - NodeSlide repository and patch contracts
 proofRequirements:
   - generated empty-directory local-ready application
   - additive brownfield adoption with collision receipt
   - NodeAgent Pi adapter package proof
   - NodeSlide package and second-consumer proof
+  - NodeSlide CLI/MCP external-agent proof
+  - NodeTasks corpus integrity proof
+  - BetterPRHandoff to Change Story compilation proof
+  - FeatureClipStudio media-to-Evidence-Index projection proof
   - canonical proof envelope validation
   - cross-repository registry validation
 approvalBoundaries:
@@ -57,8 +70,8 @@ approvalBoundaries:
   - destructive migration
 limitations:
   - under-30 setup has a fast observed pass but is not repeatably certified
-  - all implementation branches remain unmerged drafts
+  - NodeSlide core, controlled React surfaces, and the NodeRoom consumer proof are merged; the remaining implementation branches are reviews
   - no package was published and no production deployment was performed
   - NodeSlide editable canvas and PPTX export/reopen certification remain open
   - NodeBench native-runtime parity and honest no-key profile remain open
-nextMilestone: Forward-test and review the dependency-ordered PR set, then mount NodeSlide in NodeRoom and certify one live hackathon application without changing the benchmark execution path.
+nextMilestone: Forward-test and review the dependency-ordered PR set, mount the NodeSlide React UI and production adapter in NodeRoom, then certify one live hackathon application without changing the benchmark execution path.

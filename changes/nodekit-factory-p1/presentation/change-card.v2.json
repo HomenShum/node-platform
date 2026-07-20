@@ -38,10 +38,10 @@
       "spacingUnit": 8
     },
     "slideOrder": ["deck:nodekit-factory-p1:slide:1"],
-    "version": 1,
+    "version": 2,
     "status": "ready",
     "createdAt": 1784515200000,
-    "updatedAt": 1784515200000
+    "updatedAt": 1784515200001
   },
   "slides": [
     {
@@ -50,7 +50,7 @@
       "title": "Problem, contract, proof",
       "background": "#f8f7f2",
       "elementOrder": ["deck:nodekit-factory-p1:slide:1:title"],
-      "version": 1
+      "version": 2
     }
   ],
   "elements": [
@@ -62,12 +62,12 @@
       "role": "title",
       "bbox": { "x": 0.08, "y": 0.12, "width": 0.82, "height": 0.24 },
       "rotation": 0,
-      "content": "NodeKit Factory P1 | Problem -> Contract -> Proof",
+      "content": "P1 factory | Draft contracts, verified local seams",
       "style": { "color": "#17201b", "fontSize": 38, "fontWeight": 700 },
       "sourceIds": ["source:nodekit-factory-p1:evidence-index"],
       "locked": false,
       "exportCapabilities": ["web_native", "pptx_editable"],
-      "version": 1
+      "version": 2
     }
   ],
   "sources": [

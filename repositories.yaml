@@ -71,6 +71,27 @@ repositories:
     role: qa-protocol
     commandProfile: protocol
 
+  - name: NodeTasks
+    github: HomenShum/NodeTasks
+    lifecycle: preview
+    support: active
+    role: evaluation-corpus
+    commandProfile: protocol
+
+  - name: BetterPRHandoff
+    github: HomenShum/BetterPRHandoff
+    lifecycle: production
+    support: active
+    role: handoff-protocol
+    commandProfile: protocol
+
+  - name: FeatureClipStudio
+    github: HomenShum/FeatureClipStudio
+    lifecycle: preview
+    support: active
+    role: presentation-evidence-tool
+    commandProfile: protocol
+
   - name: NodeAgentSpec
     github: HomenShum/NodeAgentSpec
     lifecycle: reference

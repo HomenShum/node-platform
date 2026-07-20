@@ -54,9 +54,8 @@ function declaredNpmCommandExists(command, packageJson) {
   return Boolean(match && typeof packageJson?.scripts?.[match[1]] === "string");
 }
 
-async function scanContracts(repoRoot, registry, manifest) {
+async function scanContracts(registry, manifest, files) {
   const findings = [];
-  const files = await listSourceFiles(repoRoot);
   const declarations = new Set(
     (manifest.contractDeclarations ?? []).map((entry) =>
       declarationKey(entry.concept, entry.signature, entry.path),
@@ -86,9 +85,8 @@ async function scanContracts(repoRoot, registry, manifest) {
   return findings;
 }
 
-async function scanArchitecture(repoRoot, registry, manifest) {
+async function scanArchitecture(registry, manifest, files) {
   const findings = [];
-  const files = await listSourceFiles(repoRoot);
   const exceptions = new Set(
     (manifest.architectureExceptions ?? []).map(
       (entry) => `${entry.rule}\0${normalizePath(entry.path)}`,
@@ -317,7 +315,12 @@ export async function checkRepository(repoRoot, registry) {
     }
   }
 
-  const contractFindings = await scanContracts(repoRoot, registry, manifest);
+  // Source discovery can dominate ecosystem checks for mature repositories.
+  // Discover executable source once, then reuse it for contract and
+  // architecture scans. JSON manifests/catalogs are schema-validated through
+  // their dedicated paths and are intentionally not treated as source code.
+  const sourceFiles = await listSourceFiles(repoRoot);
+  const contractFindings = await scanContracts(registry, manifest, sourceFiles);
   const findingKeys = new Set(
     contractFindings.map((finding) => declarationKey(finding.concept, finding.signature, finding.path)),
   );
@@ -348,7 +351,7 @@ export async function checkRepository(repoRoot, registry) {
     }
   }
 
-  const sourceFindings = await scanArchitecture(repoRoot, registry, manifest);
+  const sourceFindings = await scanArchitecture(registry, manifest, sourceFiles);
   const sourceFindingKeys = new Set(
     sourceFindings.map((finding) => `${finding.rule}\0${normalizePath(finding.path)}`),
   );
