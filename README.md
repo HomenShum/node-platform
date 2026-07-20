@@ -16,8 +16,7 @@ node src/cli.mjs create ../my-agent-app \
   --brief "A persistent research agent that users can steer mid-run" \
   --sponsors pi-ai,convex \
   --package-manager pnpm \
-  --local-proof \
-  --nodekit-specifier file:$(pwd)
+  --local-proof
 
 cd ../my-agent-app
 npm run demo
@@ -27,15 +26,28 @@ npm run dev
 
 The first certified preset is `research-loop`: a small reference runtime with an objective held-out metric, deterministic keep/revert decisions, versioned human intervention, interrupted-run recovery, a strict Pi smoke, and sanitized reproduction receipts. It is a reference adapter to the NodeAgent application contract; it is not presented as the still-unfinished extraction of NodeRoom's deeper production runtime.
 
-`smb-lending-fde` is the first clean-room, domain-specific preset. It generates an independent synthetic forward-deployment lab with a primary restaurant working-capital case and held-out medical-practice equipment case. Its agent can only propose a request for an explicitly missing document; a human approval is required before a request is applied, and the starter never makes or simulates a lending decision. The included four-row benchmark is a contract harness: its manual and chat-only rows are declared baselines, not claims about Casca, a bank, a human operator, or an external model.
+`smb-lending-fde` is the first clean-room, domain-specific preset. It generates an independent synthetic forward-deployment lab with a primary restaurant working-capital case and a second medical-practice equipment case. Its agent can only propose a request for an explicitly missing document; a human approval is required before a request is applied, and the starter never makes or simulates a lending decision. Its two-case deterministic conformance harness is not a claim about Casca, a bank, a human operator, an external model, sealed held-out performance, or graph-agent superiority.
 
 ```bash
 node src/cli.mjs create ../casca-fde-deployment-lab \
   --name casca-fde-deployment-lab \
   --preset smb-lending-fde \
   --brief "Map a synthetic SMB lending file without making a lending decision" \
-  --local-proof \
-  --nodekit-specifier file:$(pwd)
+  --local-proof
+```
+
+`agentic-rl-research` generates a separate **replay-only** FounderQuest research
+lab. It has synthetic train, validation, and held-out task files plus a protected
+reward that rejects external/public/financial actions. It is a reproducible
+environment and baseline, not an RL-training result or proof of real-world
+generalization.
+
+```bash
+node src/cli.mjs create ../founderquest-rl \
+  --name founderquest-rl \
+  --preset agentic-rl-research \
+  --brief "Evaluate safe next-action selection in synthetic founder journeys" \
+  --local-proof
 ```
 
 `npm run proof` works before credentials exist: it emits a passing `local-ready` receipt after the deterministic demo and evaluation. If live Pi, browser, or deployment receipts are present, every attempted gate must pass; the receipt becomes `release-ready` only when all three are present and green.
@@ -63,10 +75,11 @@ npm run ecosystem:check
 npm run dashboard
 ```
 
-Factory commands:
+Factory commands (a `--local-proof` run creates an initial local Git commit so
+receipts have an immutable candidate to bind to):
 
 ```bash
-nodekit create <empty-directory> --name <slug> --brief <text> [--preset research-loop|smb-lending-fde]
+nodekit create <empty-directory> --name <slug> --brief <text> [--preset research-loop|smb-lending-fde|agentic-rl-research]
 nodekit adopt <existing-directory> --name <slug> --brief <text>
 nodekit compile --repo-root <directory>
 nodekit inspect --repo-root <directory>
@@ -83,7 +96,7 @@ npx --yes @homenshum/nodekit check
 npx --yes @homenshum/nodekit proof
 ```
 
-`@homenshum/nodekit` 0.2.0 is not yet published. Until it is tagged and released, use a normalized local `file:` spec while dogfooding. The unscoped `nodekit` npm name belongs to an unrelated project.
+`@homenshum/nodekit` 0.2.0 is not yet published. Until it is tagged and released, use an immutable Git or packed-tarball reference for portable handoff; a normalized local `file:` spec is appropriate only for local dogfooding. The unscoped `nodekit` npm name belongs to an unrelated project.
 
 ## Contracts
 
@@ -117,3 +130,4 @@ The earlier planning-only `apiVersion` / `kind` / `metadata` / `spec` envelope i
 
 See [`docs/DECISIONS.md`](docs/DECISIONS.md) for the ownership split and migration rules.
 The coordinated consumer commits, pull requests, hosted checks, and known limits are recorded in [`docs/P0_ROLLOUT.md`](docs/P0_ROLLOUT.md) and [`proof/p0-rollout.json`](proof/p0-rollout.json).
+The overnight Casca/Agentic-RL delivery and morning adversarial-review sequence is in [`docs/NODEKIT_ULTRA_V1_HANDOFF.md`](docs/NODEKIT_ULTRA_V1_HANDOFF.md).
