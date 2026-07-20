@@ -1,0 +1,76 @@
+{
+  "schemaVersion": "nodekit.evidence-index/v1",
+  "changeId": "nodekit-factory-p1",
+  "evidence": [
+    {
+      "id": "nodekit-tests-26",
+      "kind": "test-run",
+      "status": "verified",
+      "location": "local://node-platform/npm-test",
+      "summary": "NodeKit contract, compiler, factory, adoption, no-key proof, arbitrary authoring-root binding, and registry suite passed 26 of 26 tests."
+    },
+    {
+      "id": "nodekit-hosted-quality",
+      "kind": "ci-run",
+      "status": "verified",
+      "location": "https://github.com/HomenShum/node-platform/actions/runs/29713688834",
+      "summary": "Hosted NodeKit quality workflow passed before the final rollout-ledger update."
+    },
+    {
+      "id": "nodekit-pr-4",
+      "kind": "pull-request",
+      "status": "observed",
+      "location": "https://github.com/HomenShum/node-platform/pull/4",
+      "summary": "Factory, compiler, launch/presentation/QA skills, deterministic evaluation, and local proof are proposed as a draft."
+    },
+    {
+      "id": "nodeagent-pr-2",
+      "kind": "pull-request",
+      "status": "observed",
+      "location": "https://github.com/HomenShum/NodeAgent/pull/2",
+      "summary": "Portable event contracts and real Pi AI adapter are proposed as a draft."
+    },
+    {
+      "id": "nodeslide-core-pr-5",
+      "kind": "pull-request",
+      "status": "observed",
+      "location": "https://github.com/HomenShum/NodeSlide/pull/5",
+      "summary": "Host-neutral NodeSlide contracts, engine, backend port, and conformance testkit are proposed as a draft."
+    },
+    {
+      "id": "nodeslide-react-pr-6",
+      "kind": "pull-request",
+      "status": "observed",
+      "location": "https://github.com/HomenShum/NodeSlide/pull/6",
+      "summary": "Controlled React/headless proposal review surfaces are proposed as a draft stacked on NodeSlide core."
+    },
+    {
+      "id": "nodeproof-pr-22",
+      "kind": "pull-request",
+      "status": "observed",
+      "location": "https://github.com/HomenShum/NodeProof/pull/22",
+      "summary": "The proofloop.receipt/v1 envelope and verifier CLI are proposed as a draft."
+    },
+    {
+      "id": "noderoom-pr-217",
+      "kind": "pull-request",
+      "status": "observed",
+      "location": "https://github.com/HomenShum/NodeRoom/pull/217",
+      "summary": "NodeRoom consumes NodeSlide packages and proves review, accept, stale CAS, versions, and receipts without modifying its production runtime."
+    },
+    {
+      "id": "nodebench-pr-591",
+      "kind": "pull-request",
+      "status": "observed",
+      "location": "https://github.com/HomenShum/NodeBenchAI/pull/591",
+      "summary": "NodeBench brownfield manifests, logical Entity Intelligence pack, eval bindings, and compiled definition are proposed without replacing its runtime."
+    },
+    {
+      "id": "setup-timing-sample",
+      "kind": "benchmark-observation",
+      "status": "measured",
+      "location": "../../proof/p1-factory-rollout.json",
+      "summary": "Observed local-ready times ranged from 17.72 to 36.37 seconds; the latest pnpm local-proof run took 31.86 seconds, dominated by dependency installation."
+    }
+  ]
+}

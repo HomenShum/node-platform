@@ -40,6 +40,14 @@ test("create emits a parseable, reproducible application from multiline input", 
     await readFile(path.join(target, ".codex", "skills", "nodekit-launch", "SKILL.md"), "utf8"),
     /smallest undeniable vertical slice/,
   );
+  assert.match(
+    await readFile(path.join(target, ".claude", "skills", "nodekit-qa", "SKILL.md"), "utf8"),
+    /rendered user surface/,
+  );
+  assert.match(
+    await readFile(path.join(target, ".codex", "skills", "nodekit-qa", "references", "qa-contract.md"), "utf8"),
+    /must describe the same run/,
+  );
   const dockerfile = await readFile(path.join(target, "Dockerfile"), "utf8");
   const renderBlueprint = await readFile(path.join(target, "render.yaml"), "utf8");
   assert.match(dockerfile, /@earendil-works\/pi-ai@0\.80\.10/);
@@ -67,6 +75,45 @@ test("compiled hash detects fixture drift and literal secrets fail closed", asyn
   const manifestPath = path.join(root, "nodeagent.yaml");
   await writeFile(manifestPath, `${await readFile(manifestPath, "utf8")}\napiKey: sk-abcdefghijklmnopqrstuv\n`);
   await assert.rejects(() => compileAgentDefinition(root, { write: false }), /literal secret/);
+});
+
+test("authoring.directory outside the conventional root is discovered and hash-bound", async (t) => {
+  const root = await mkdtemp(path.join(os.tmpdir(), "nodekit-authoring-directory-"));
+  t.after(() => rm(root, { force: true, recursive: true }));
+  await createProject({ git: false, install: false, name: "eve-map", target: root });
+  const authoredRoot = path.join(root, "apps", "eve-agent", "agent");
+  await mkdir(path.join(authoredRoot, "tools"), { recursive: true });
+  await writeFile(path.join(authoredRoot, "instructions.md"), "Run through the existing Eve adapter.\n");
+  await writeFile(path.join(authoredRoot, "tools", "measure.ts"), "export const measure = true;\n");
+  const manifestPath = path.join(root, "nodeagent.yaml");
+  const original = await readFile(manifestPath, "utf8");
+  await writeFile(manifestPath, original.replace("directory: ./agent", "directory: ./apps/eve-agent/agent"));
+
+  const first = await compileAgentDefinition(root);
+  assert.equal(
+    first.files.some((file) => file.path === "apps/eve-agent/agent/tools/measure.ts"),
+    true,
+  );
+  assert.equal(
+    first.definition.discovered.tools.includes("apps/eve-agent/agent/tools/measure.ts"),
+    true,
+  );
+  await writeFile(path.join(authoredRoot, "tools", "measure.ts"), "export const measure = false;\n");
+  const changed = await compileAgentDefinition(root, { write: false });
+  assert.notEqual(changed.definition.configHash, first.definition.configHash);
+});
+
+test("authoring.directory cannot escape the repository", async (t) => {
+  const root = await mkdtemp(path.join(os.tmpdir(), "nodekit-authoring-escape-"));
+  t.after(() => rm(root, { force: true, recursive: true }));
+  await createProject({ git: false, install: false, name: "unsafe-map", target: root });
+  const manifestPath = path.join(root, "nodeagent.yaml");
+  const original = await readFile(manifestPath, "utf8");
+  await writeFile(manifestPath, original.replace("directory: ./agent", "directory: ../outside"));
+  await assert.rejects(
+    () => compileAgentDefinition(root, { write: false }),
+    /authoring\.directory must be repository-relative/,
+  );
 });
 
 test("create refuses nonempty targets", async (t) => {

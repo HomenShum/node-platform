@@ -1,0 +1,18 @@
+{
+  "schemaVersion": "nodekit.architecture-diff/v1",
+  "changeId": "nodekit-factory-p1",
+  "before": [
+    "Repository-specific runtime and setup conventions",
+    "Presentation assembled after implementation from prose and screenshots",
+    "Benchmark or consumer paths could use parallel implementations",
+    "Brownfield adoption implied physical reorganization"
+  ],
+  "after": [
+    "Flat NodeKit and NodeAgent manifests compile to one hashed definition",
+    "NodeAgent runtime/provider seam supports Pi without domain forks",
+    "NodeSlide packages serve build-time presentation, runtime embedding, CLI, and MCP consumers",
+    "Change Story and evidence index feed presentation and distribution",
+    "Brownfield applications map and wrap existing paths before shadow migration",
+    "Proof receipts and QA skills preserve revision-bound evidence"
+  ]
+}

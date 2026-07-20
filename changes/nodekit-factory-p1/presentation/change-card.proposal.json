@@ -1,0 +1,47 @@
+{
+  "schemaVersion": "nodeslide.file-proposal/v1",
+  "id": "proposal:89b8c091db7beafa555b63bf5d9f064e",
+  "status": "ready",
+  "applied": false,
+  "createdAt": "2026-07-20T03:29:01.614Z",
+  "base": {
+    "deckId": "deck:nodekit-factory-p1",
+    "deckVersion": 1,
+    "snapshotDigest": "sha256:ae89ee8552ae034863d4ac267047e5ce4db9a0714da100a12635476c78efba95"
+  },
+  "patch": {
+    "id": "patch:nodekit-factory-p1:review-copy",
+    "deckId": "deck:nodekit-factory-p1",
+    "baseDeckVersion": 1,
+    "baseSlideVersions": {
+      "deck:nodekit-factory-p1:slide:1": 1
+    },
+    "baseElementVersions": {
+      "deck:nodekit-factory-p1:slide:1:title": 1
+    },
+    "scope": {
+      "kind": "elements",
+      "deckId": "deck:nodekit-factory-p1",
+      "slideIds": ["deck:nodekit-factory-p1:slide:1"],
+      "elementIds": ["deck:nodekit-factory-p1:slide:1:title"],
+      "operationMode": "copy"
+    },
+    "operations": [
+      {
+        "op": "replace_text",
+        "slideId": "deck:nodekit-factory-p1:slide:1",
+        "elementId": "deck:nodekit-factory-p1:slide:1:title",
+        "text": "P1 factory | Draft contracts, verified local seams"
+      }
+    ],
+    "source": "agent",
+    "summary": "Tighten the change-card title so draft and verified states remain distinct."
+  },
+  "candidate": {
+    "committedAt": 1784518141614,
+    "deckVersion": 2,
+    "snapshotDigest": "sha256:49d96ee78c0f600727a35ee845f30a179a42a600705b9972f4d6e5d0591638bd",
+    "affectedSlideIds": ["deck:nodekit-factory-p1:slide:1"],
+    "affectedElementIds": ["deck:nodekit-factory-p1:slide:1:title"]
+  }
+}

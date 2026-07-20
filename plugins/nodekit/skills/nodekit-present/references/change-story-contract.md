@@ -4,25 +4,25 @@
 
 ```text
 changes/<change-id>/
-├── change.yaml
-├── evidence/
-│   ├── baseline/
-│   ├── implementation/
-│   ├── tests/
-│   ├── browser/
-│   ├── traces/
-│   ├── benchmarks/
-│   └── deployment/
-├── story/
-│   ├── claims.json
-│   ├── evidence-index.json
-│   ├── architecture-diff.json
-│   └── limitations.json
-└── presentation/
-    ├── deck-spec.json
-    ├── slide-design-plans/
-    ├── speaker-notes.md
-    └── exports/
+|-- change.yaml
+|-- evidence/
+|   |-- baseline/
+|   |-- implementation/
+|   |-- tests/
+|   |-- browser/
+|   |-- traces/
+|   |-- benchmarks/
+|   `-- deployment/
+|-- story/
+|   |-- claims.json
+|   |-- evidence-index.json
+|   |-- architecture-diff.json
+|   `-- limitations.json
+`-- presentation/
+    |-- deck-spec.json
+    |-- slide-design-plans/
+    |-- speaker-notes.md
+    `-- exports/
 ```
 
 ## Required change fields
@@ -49,9 +49,9 @@ Invalidate a claim when its bound commit, deployment, source, or benchmark is st
 ## Presentation tiers
 
 - Tier 0: no deck; PR or changelog text only
-- Tier 1: one-page `Problem → Change → Proof` card
-- Tier 2: 3–5 slides for a substantial feature or migration
-- Tier 3: 6–10 slides plus technical appendix for a release
+- Tier 1: one-page `Problem -> Change -> Proof` card
+- Tier 2: 3-5 slides for a substantial feature or migration
+- Tier 3: 6-10 slides plus technical appendix for a release
 - Tier 4: judge/customer/investor deck, appendix, demo choreography, and Q&A map
 
 ## Default narrative
@@ -67,8 +67,13 @@ Invalidate a claim when its bound commit, deployment, source, or benchmark is st
 9. Reuse across the ecosystem
 10. Next milestone
 
-Match visual form to meaning: before/after, architecture, workflow, trace, benchmark, screenshot, code contract, or timeline. Avoid repeating title-plus-bullets on every slide.
+Match visual form to meaning: before/after, architecture, workflow, trace,
+benchmark, screenshot, code contract, or timeline. Avoid repeating
+title-plus-bullets on every slide.
 
 ## Verification gate
 
-Require current evidence, accurate architecture, scoped metrics, visible limitations, no overflow/collision, editable export, reopen success, and human-reviewable proposals. A missing production artifact may still yield a draft, but it cannot yield a production claim.
+Require current evidence, accurate architecture, scoped metrics, visible
+limitations, no overflow/collision, editable export, reopen success, and
+human-reviewable proposals. A missing production artifact may still yield a
+draft, but it cannot yield a production claim.

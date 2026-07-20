@@ -1,0 +1,41 @@
+{
+  "schemaVersion": "nodekit.presentation-claims/v1",
+  "changeId": "nodekit-factory-p1",
+  "claims": [
+    {
+      "id": "claim-empty-directory-factory",
+      "text": "NodeKit can create a deterministic, local-ready agent application from an empty directory and can additively adopt an existing repository.",
+      "status": "verified",
+      "evidenceIds": ["nodekit-tests-26", "nodekit-pr-4"],
+      "limitations": ["Live sponsor research, deployment, and production browser proof are separate gates."]
+    },
+    {
+      "id": "claim-portable-pi-seam",
+      "text": "NodeAgent now has a proposed provider-neutral runtime contract and real Pi AI adapter rather than requiring a second domain runtime.",
+      "status": "observed",
+      "evidenceIds": ["nodeagent-pr-2"],
+      "limitations": ["The package is not published and production consumers have not been promoted."]
+    },
+    {
+      "id": "claim-injectable-nodeslide",
+      "text": "NodeSlide is proposed as a governed embeddable system with core packages, controlled React surfaces, and a second consumer in NodeRoom.",
+      "status": "observed",
+      "evidenceIds": ["nodeslide-core-pr-5", "nodeslide-react-pr-6", "noderoom-pr-217"],
+      "limitations": ["The mounted production UI and PPTX export/reopen path are not certified."]
+    },
+    {
+      "id": "claim-under-30",
+      "text": "Under 30 minutes remains a target, not a repeatably certified guarantee.",
+      "status": "measured",
+      "evidenceIds": ["setup-timing-sample"],
+      "limitations": ["Observed dependency installation variance crossed the target."]
+    },
+    {
+      "id": "claim-brownfield",
+      "text": "A mature application can map existing paths and capability ownership before replacing its runtime.",
+      "status": "observed",
+      "evidenceIds": ["nodebench-pr-591"],
+      "limitations": ["Native runtime shadow parity has not run."]
+    }
+  ]
+}

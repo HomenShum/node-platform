@@ -1,0 +1,135 @@
+{
+  "schemaVersion": "nodeplatform.p1-factory-rollout/v1",
+  "generatedAt": "2026-07-20T03:02:56Z",
+  "status": "draft-pull-requests-open",
+  "verification": {
+    "passed": false,
+    "reason": "The implementation branches are locally proven but remain unmerged drafts; the stacked NodeSlide external-agent PR and cross-repository release gates are not all complete.",
+    "nodekit": {
+      "tests": 26,
+      "registryCheck": "pass",
+      "productionAudit": "pass-zero-known-vulnerabilities",
+      "hostedQualityRun": "https://github.com/HomenShum/node-platform/actions/runs/29713688834",
+      "hostedQualityResult": "pass"
+    },
+    "timing": {
+      "targetSeconds": 30,
+      "fastestObservedLocalReadySeconds": 17.72,
+      "slowestObservedLocalReadySeconds": 36.37,
+      "latestPnpmLocalReadySeconds": 31.86,
+      "latestPnpmInstallSeconds": 29.5,
+      "repeatablyUnderTarget": false
+    }
+  },
+  "pullRequests": [
+    {
+      "capability": "nodekit-factory-and-contracts",
+      "repository": "HomenShum/node-platform",
+      "pullRequest": "https://github.com/HomenShum/node-platform/pull/4",
+      "implementationHead": "b79535f45c4c7acf0ba61607b12c0f36fedd39f8",
+      "state": "draft-open"
+    },
+    {
+      "capability": "nodeagent-event-and-pi-adapter",
+      "repository": "HomenShum/NodeAgent",
+      "pullRequest": "https://github.com/HomenShum/NodeAgent/pull/2",
+      "head": "c0ad523",
+      "state": "draft-open"
+    },
+    {
+      "capability": "nodeslide-injectable-core",
+      "repository": "HomenShum/NodeSlide",
+      "pullRequest": "https://github.com/HomenShum/NodeSlide/pull/5",
+      "head": "0669be4",
+      "state": "draft-open"
+    },
+    {
+      "capability": "nodeslide-controlled-react",
+      "repository": "HomenShum/NodeSlide",
+      "pullRequest": "https://github.com/HomenShum/NodeSlide/pull/6",
+      "head": "baa2d04",
+      "state": "draft-open",
+      "dependsOn": "https://github.com/HomenShum/NodeSlide/pull/5"
+    },
+    {
+      "capability": "proofloop-receipt-envelope",
+      "repository": "HomenShum/NodeProof",
+      "pullRequest": "https://github.com/HomenShum/NodeProof/pull/22",
+      "head": "802f63c",
+      "state": "draft-open",
+      "hostedStatus": "vercel-preview-success"
+    },
+    {
+      "capability": "nodetrace-nodekit-consumer",
+      "repository": "HomenShum/NodeTrace",
+      "pullRequest": "https://github.com/HomenShum/NodeTrace/pull/2",
+      "head": "09deaef",
+      "state": "draft-open"
+    },
+    {
+      "capability": "nodemem-nodekit-consumer",
+      "repository": "HomenShum/NodeMem",
+      "pullRequest": "https://github.com/HomenShum/NodeMem/pull/2",
+      "head": "8d71920",
+      "state": "draft-open"
+    },
+    {
+      "capability": "noderoom-nodeslide-consumer-proof",
+      "repository": "HomenShum/NodeRoom",
+      "pullRequest": "https://github.com/HomenShum/NodeRoom/pull/217",
+      "head": "b7962334",
+      "state": "draft-open",
+      "dependsOn": "https://github.com/HomenShum/NodeSlide/pull/5",
+      "hostedStatus": "vercel-preview-success"
+    },
+    {
+      "capability": "nodebench-brownfield-contract-alignment",
+      "repository": "HomenShum/NodeBenchAI",
+      "pullRequest": "https://github.com/HomenShum/NodeBenchAI/pull/591",
+      "head": "795164fbd9f8c17925d411fc72de8033429ed1c5",
+      "state": "draft-open",
+      "hostedStatus": "vercel-preview-success"
+    }
+  ],
+  "ecosystemAudit": {
+    "p1": [
+      "Map the existing NodeVideo Eve harness without relocating it.",
+      "Map the existing NodeVoice runtime and logically declare one voice-room pack.",
+      "Register NodeTasks as a task corpus rather than inventing a product-agent runtime.",
+      "Distribute agentic-ui-qa as the default NodeKit QA skill/pack.",
+      "Connect BetterPRHandoff and FeatureClipStudio to NodeKit Present.",
+      "Freeze new embedded NodeSlide domain capability in parity-studio after standalone parity."
+    ],
+    "p2": [
+      "NodeGraph capability pack",
+      "NodeSEO proof pack",
+      "AgentRedteam and maturity-model evaluation inputs",
+      "FreeAgentResources research catalog",
+      "NodeRL unique reward/repair/export extraction"
+    ],
+    "consolidationCandidates": [
+      "NodeBenchBoilerplate",
+      "NodeAgentSpec",
+      "solo-founder-agent-builder",
+      "agent-workspace-template",
+      "NodeBenchClean after public parity",
+      "VisualJudge as a standalone product",
+      "copied NodeTrace/NodeMem/NodeEval code in NodeRL",
+      "embedded NodeSlide domain code in parity-studio after parity"
+    ],
+    "nodesheet": "No standalone GitHub repository found; keep it as a finance/spreadsheet pack until a second host justifies extraction."
+  },
+  "pendingBeforeReviewComplete": [
+    "Add and verify the stacked NodeSlide external CLI/MCP pull request.",
+    "Record and verify the NodeVideo and NodeVoice brownfield-map pull requests.",
+    "Run central registry validation after all final branch heads are recorded.",
+    "Forward-test every branch against its documented base before coordinated merge review."
+  ],
+  "notPerformed": [
+    "npm publication",
+    "production deployment",
+    "paid-resource activation",
+    "destructive data migration",
+    "merge to any default branch"
+  ]
+}

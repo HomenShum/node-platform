@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto";
-import { mkdir, readFile, readdir, writeFile } from "node:fs/promises";
+import { mkdir, readFile, readdir, stat, writeFile } from "node:fs/promises";
 import path from "node:path";
 import {
   alternateDialectErrors,
@@ -31,8 +31,36 @@ function hash(value) {
   return createHash("sha256").update(value).digest("hex");
 }
 
-async function discoverFiles(repoRoot) {
-  const files = [];
+function containedPath(repoRoot, candidate, label) {
+  const absoluteRoot = path.resolve(repoRoot);
+  const absolute = path.resolve(absoluteRoot, String(candidate));
+  const relative = path.relative(absoluteRoot, absolute);
+  if (!relative || relative === ".") return { absolute, relative: "." };
+  if (path.isAbsolute(String(candidate)) || relative.startsWith("..") || path.isAbsolute(relative)) {
+    throw new Error(`${label} must stay inside the repository: ${candidate}`);
+  }
+  return { absolute, relative: normalizePath(relative) };
+}
+
+function discoveryRoots(repoRoot, manifest) {
+  const roots = new Map();
+  for (const root of DISCOVERY_ROOTS) {
+    const resolved = containedPath(repoRoot, root, `discovery root ${root}`);
+    roots.set(resolved.relative, resolved.absolute);
+  }
+  if (manifest.authoring?.directory) {
+    const resolved = containedPath(repoRoot, manifest.authoring.directory, "authoring.directory");
+    roots.set(resolved.relative, resolved.absolute);
+  }
+  for (const pack of manifest.packs ?? []) {
+    const resolved = containedPath(repoRoot, path.dirname(String(pack)), `capability pack ${pack}`);
+    roots.set(resolved.relative, resolved.absolute);
+  }
+  return [...roots.entries()].sort(([left], [right]) => left.localeCompare(right));
+}
+
+async function discoverFiles(repoRoot, manifest) {
+  const files = new Map();
 
   async function visit(directory) {
     const entries = await readdir(directory, { withFileTypes: true });
@@ -43,20 +71,24 @@ async function discoverFiles(repoRoot) {
       if (entry.isDirectory()) await visit(absolute);
       else {
         const content = await readFile(absolute);
-        files.push({
+        const relative = normalizePath(path.relative(repoRoot, absolute));
+        files.set(relative, {
           bytes: content.byteLength,
           digest: hash(content),
-          path: normalizePath(path.relative(repoRoot, absolute)),
+          path: relative,
         });
       }
     }
   }
 
-  for (const root of DISCOVERY_ROOTS) {
-    const absolute = path.join(repoRoot, root);
-    if (await pathExists(absolute)) await visit(absolute);
+  for (const [, absolute] of discoveryRoots(repoRoot, manifest)) {
+    if (!(await pathExists(absolute))) continue;
+    if (!(await stat(absolute)).isDirectory()) {
+      throw new Error(`discovery root is not a directory: ${normalizePath(path.relative(repoRoot, absolute))}`);
+    }
+    await visit(absolute);
   }
-  return files.sort((left, right) => left.path.localeCompare(right.path));
+  return [...files.values()].sort((left, right) => left.path.localeCompare(right.path));
 }
 
 function validateSecrets(value, location = "nodeagent.yaml", errors = []) {
@@ -89,25 +121,31 @@ export function validateAgentManifest(manifest) {
   if (!Array.isArray(manifest?.packs) || manifest.packs.length === 0) {
     errors.push("at least one capability pack is required");
   }
+  if (manifest?.authoring?.directory && (
+    path.isAbsolute(manifest.authoring.directory) ||
+    normalizePath(manifest.authoring.directory).split("/").includes("..")
+  )) {
+    errors.push("authoring.directory must be repository-relative and may not escape the repository");
+  }
   return [...errors, ...validateSecrets(manifest)];
 }
 
-function classify(files) {
+function classify(files, manifest) {
   const matching = (fragment, suffix) => files
     .filter((file) => file.path.includes(fragment) && (!suffix || file.path.endsWith(suffix)))
     .map((file) => file.path);
-  const skills = files
-    .filter((file) => file.path.endsWith("SKILL.md") && (
-      file.path.includes("/skills/") || file.path.startsWith("packs/")
-    ))
-    .map((file) => file.path);
+  const authoringRoot = normalizePath(manifest.authoring?.directory ?? "agent").replace(/^\.\//, "");
+  const skills = files.filter((file) => file.path.endsWith("SKILL.md")).map((file) => file.path);
   return {
     evals: matching("evals/"),
     integrations: matching("integrations/"),
-    packs: matching("packs/", "pack.yaml"),
-    policies: matching("agent/policies/"),
+    packs: [...new Set([
+      ...matching("packs/", "pack.yaml"),
+      ...(manifest.packs ?? []).map((entry) => normalizePath(String(entry)).replace(/^\.\//, "")),
+    ])].sort(),
+    policies: matching(`${authoringRoot}/policies/`),
     skills,
-    subagents: matching("agent/subagents/", "agent.yaml"),
+    subagents: matching(`${authoringRoot}/subagents/`, "agent.yaml"),
     tools: matching("/tools/"),
   };
 }
@@ -119,8 +157,26 @@ export async function compileAgentDefinition(repoRoot, { check = false, write = 
   const manifest = await readYaml(manifestPath);
   const errors = validateAgentManifest(manifest);
   errors.push(...await validateSchema(CONTRACT_SCHEMA_FILES.application, manifest, "nodeagent.yaml"));
+  if (manifest.authoring?.directory) {
+    try {
+      const authored = containedPath(repoRoot, manifest.authoring.directory, "authoring.directory");
+      if (!(await pathExists(authored.absolute))) {
+        errors.push(`authoring directory does not exist: ${manifest.authoring.directory}`);
+      } else if (!(await stat(authored.absolute)).isDirectory()) {
+        errors.push(`authoring path is not a directory: ${manifest.authoring.directory}`);
+      }
+    } catch (error) {
+      errors.push(error instanceof Error ? error.message : String(error));
+    }
+  }
   for (const pack of manifest.packs ?? []) {
-    const packPath = path.resolve(repoRoot, String(pack));
+    let packPath;
+    try {
+      packPath = containedPath(repoRoot, String(pack), `capability pack ${pack}`).absolute;
+    } catch (error) {
+      errors.push(error instanceof Error ? error.message : String(error));
+      continue;
+    }
     if (!(await pathExists(packPath))) errors.push(`capability pack does not exist: ${pack}`);
     else {
       const packManifest = await readYaml(packPath);
@@ -130,6 +186,11 @@ export async function compileAgentDefinition(repoRoot, { check = false, write = 
       );
       for (const reference of [packManifest.skill, ...(packManifest.evals ?? [])].filter(Boolean)) {
         const referencedPath = path.resolve(path.dirname(packPath), String(reference));
+        const relative = path.relative(repoRoot, referencedPath);
+        if (relative.startsWith("..") || path.isAbsolute(relative)) {
+          errors.push(`${pack} reference escapes the repository: ${reference}`);
+          continue;
+        }
         if (!(await pathExists(referencedPath))) errors.push(`${pack} references missing file: ${reference}`);
       }
     }
@@ -155,7 +216,7 @@ export async function compileAgentDefinition(repoRoot, { check = false, write = 
   }
   if (errors.length > 0) throw new Error(errors.join("\n"));
 
-  const files = await discoverFiles(repoRoot);
+  const files = await discoverFiles(repoRoot, manifest);
   const manifestDigest = hash(manifestText);
   const contracts = resolveRuntimeContracts(manifest);
   const hashInput = JSON.stringify(canonicalize({ files, manifest: { ...manifest, contracts } }));
@@ -169,7 +230,7 @@ export async function compileAgentDefinition(repoRoot, { check = false, write = 
     backend: manifest.backend,
     configHash,
     contracts,
-    discovered: classify(files),
+    discovered: classify(files, manifest),
     fileCount: files.length,
     manifestDigest,
     orchestration: manifest.orchestration ?? {},

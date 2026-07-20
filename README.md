@@ -29,6 +29,17 @@ The first certified preset is `research-loop`: a small reference runtime with an
 
 `npm run proof` works before credentials exist: it emits a passing `local-ready` receipt after the deterministic demo and evaluation. If live Pi, browser, or deployment receipts are present, every attempted gate must pass; the receipt becomes `release-ready` only when all three are present and green.
 
+Every created or adopted repository receives the same three coding-agent skills
+under both `.claude/skills/` and `.codex/skills/`:
+
+- `nodekit-launch` turns the brief into the smallest proof-carrying vertical slice;
+- `nodekit-qa` verifies the rendered journey, runtime, durable artifact, and receipt;
+- `nodekit-present` turns the same revision-bound evidence into an editable change,
+  judge, or release presentation through an available NodeSlide transport.
+
+Adoption never overwrites a user-owned skill with the same path; the collision is
+preserved in `proof/adoption-receipt.json` for explicit review.
+
 ## Commands
 
 From this repository:

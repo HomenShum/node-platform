@@ -7,7 +7,7 @@ import { pathExists } from "./files.mjs";
 const packageRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..", "..");
 const templateRoot = path.join(packageRoot, "templates", "research-loop");
 const pluginSkillsRoot = path.join(packageRoot, "plugins", "nodekit", "skills");
-const projectedSkillNames = ["nodekit-launch", "nodekit-present"];
+const projectedSkillNames = ["nodekit-launch", "nodekit-present", "nodekit-qa"];
 
 function titleCase(value) {
   return value.split(/[-_\s]+/).filter(Boolean).map((part) => `${part[0].toUpperCase()}${part.slice(1)}`).join(" ");

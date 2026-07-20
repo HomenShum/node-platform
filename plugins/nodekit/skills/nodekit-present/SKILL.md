@@ -11,7 +11,7 @@ Read [the change-story contract](references/change-story-contract.md) before cre
 
 ## Workflow
 
-1. Classify the change tier. Skip decks for trivial work; use a change card for a narrow fix, a 3–5 slide mini-deck for a major feature, and a full deck plus appendix for releases or hackathons.
+1. Classify the change tier. Skip decks for trivial work; use a change card for a narrow fix, a 3-5 slide mini-deck for a major feature, and a full deck plus appendix for releases or hackathons.
 2. Create or update `changes/<change-id>/change.yaml`. Record audience, problem, prior state, decision, alternatives, affected systems, user workflow, proof requirements, limitations, and presentation tier.
 3. Capture evidence while work happens: baseline and after screenshots, exact commits, deployment identity, tests, benchmarks, traces, artifacts, exports, and known failures. Preserve raw receipts.
 4. Build an evidence index. Give every material claim a status and evidence IDs. Label planned, inferred, user-asserted, and measured claims distinctly.
