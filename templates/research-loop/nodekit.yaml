@@ -26,6 +26,6 @@ environment:
   status: aligned
 proof:
   command: npm run proof
-  receiptSchema: nodekit.experiment-receipt/v1
+  receiptSchema: nodekit.proof-receipt/v1
 contractDeclarations: []
 architectureExceptions: []

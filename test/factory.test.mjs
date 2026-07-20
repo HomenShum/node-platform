@@ -1,10 +1,14 @@
 import assert from "node:assert/strict";
+import { execFile } from "node:child_process";
 import { mkdtemp, mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import test from "node:test";
+import { promisify } from "node:util";
 import { compileAgentDefinition, inspectAgentDefinition } from "../src/lib/agent-definition.mjs";
 import { adoptProject, createProject } from "../src/lib/scaffold.mjs";
+
+const execFileAsync = promisify(execFile);
 
 test("create emits a parseable, reproducible application from multiline input", async (t) => {
   const root = await mkdtemp(path.join(os.tmpdir(), "nodekit-create-"));
@@ -73,4 +77,21 @@ test("adopt is additive, runnable, and reports collisions", async (t) => {
   assert.equal(await readFile(path.join(root, "agent", "instructions.md"), "utf8"), "user-owned instructions\n");
   assert.equal(result.collisions.includes("agent/instructions.md"), true);
   assert.equal(await readFile(path.join(root, "backend", "filesystem", "store.mjs"), "utf8").then(Boolean), true);
+});
+
+test("a fresh no-key project reaches an honest local-ready proof", async (t) => {
+  const root = await mkdtemp(path.join(os.tmpdir(), "nodekit-local-proof-"));
+  t.after(() => rm(root, { force: true, recursive: true }));
+  await createProject({ git: false, install: false, name: "local-proof", target: root });
+
+  for (const script of ["demo.mjs", "eval.mjs", "proof.mjs"]) {
+    await execFileAsync(process.execPath, [path.join(root, "scripts", script)], { cwd: root });
+  }
+
+  const receipt = JSON.parse(await readFile(path.join(root, "proof", "release-proof.json"), "utf8"));
+  assert.equal(receipt.schemaVersion, "nodekit.proof-receipt/v1");
+  assert.equal(receipt.level, "local-ready");
+  assert.equal(receipt.passed, true);
+  assert.equal(receipt.releaseReady, false);
+  assert.deepEqual(receipt.missingReleaseGates, ["livePi", "browserQa", "deployment"]);
 });
