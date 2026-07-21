@@ -49,6 +49,7 @@ test("fresh-agent recorder preserves process fields and prohibits routine reprom
 test("submission remains fail-closed while external EaseProof gates are open", async () => {
   const factory = await readFile(path.resolve("src", "factory-acceptance.mjs"), "utf8");
   assert.match(factory, /submissionReady: false/);
+  assert.doesNotMatch(factory, /submissionBlockers: \["browserStateCoverage"/);
   for (const blocker of ["freshAgentHeldout", "freshHumanUsability", "threeConvexConsumers", "proofloopEaseVerification"]) {
     assert.match(factory, new RegExp(blocker));
   }

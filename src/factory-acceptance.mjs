@@ -122,7 +122,9 @@ async function acceptBase(root, sourceIdentity) {
     candidateCommitted: /^[a-f0-9]{40}$/.test(candidateCommit),
     compileReproducible: currentIdentity.applicationHash === compiled.definition.applicationHash,
     domainBlank: !/lending|research-loop|founderquest/i.test(`${figuredOut}\n${experience}`),
-    easeCertificationHonest: browserJourney.certified === false && browserJourney.missingStates.length > 0,
+    easeCertificationHonest: browserJourney.certified === true
+      && browserJourney.missingStates.length === 0
+      && browserJourney.coveredStates.length === browserJourney.requiredStates.length,
     figuredOutContract: figuredOut.includes("Case -> Run -> Stage -> Artifact -> Proposal -> Approval -> Receipt"),
     lockCreated: lock === true,
     proofIdentityBound: proof.applicationHash === currentIdentity.applicationHash && proof.configHash === currentIdentity.configHash,
@@ -176,7 +178,7 @@ try {
     schemaVersion: "nodekit.ease-proof-run/v1",
     startedAt,
     submissionReady: false,
-    submissionBlockers: ["browserStateCoverage", "freshAgentHeldout", "freshHumanUsability", "threeConvexConsumers", "previewDeployment", "proofloopEaseVerification"],
+    submissionBlockers: ["freshAgentHeldout", "freshHumanUsability", "threeConvexConsumers", "previewDeployment", "proofloopEaseVerification"],
     verdict: "EASE_NOT_CERTIFIED",
   };
   receipt.receiptDigest = digest(receipt);
