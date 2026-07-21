@@ -1,0 +1,17 @@
+{
+  "schemaVersion": "nodekit.agent-ease-tasks/v1",
+  "tasks": [
+    {
+      "id": "research-map",
+      "goal": "Use this repository to build an application that helps a researcher compare the latest work on a narrowly defined Agentic RL question and produce a source-backed research map.\n\nResearch the current workflow, build the smallest useful vertical slice, and prove it end to end. Continue until complete or legitimately blocked."
+    },
+    {
+      "id": "volunteer-onboarding",
+      "goal": "Use this repository to build an application that helps a small nonprofit onboard a volunteer from application through document review and confirmed completion.\n\nResearch the current workflow, build the smallest useful vertical slice, and prove it end to end. Continue until complete or legitimately blocked."
+    },
+    {
+      "id": "launch-presentation",
+      "goal": "Use this repository to build an application that helps a founder turn a product brief and metrics file into a reviewable launch presentation.\n\nResearch the current workflow, build the smallest useful vertical slice, and prove it end to end. Continue until complete or legitimately blocked."
+    }
+  ]
+}

@@ -21,10 +21,10 @@ try {
     proposalBoundaryVisible: page.includes("Review proposal"),
     semanticLandmarks: /<main[\s>]/.test(page) && /<aside[\s>]/.test(page),
   };
-  const receipt = { assertions, generatedAt: new Date().toISOString(), note: "DOM and live HTTP contract check; visual screenshots remain required before release.", passed: Object.values(assertions).every(Boolean), schemaVersion: "nodekit.browser-proof/v1" };
+  const receipt = { assertions, generatedAt: new Date().toISOString(), note: "Structural live HTTP and source-DOM contract only. This is not rendered-browser certification.", passed: Object.values(assertions).every(Boolean), schemaVersion: "nodekit.browser-contract/v1" };
   await mkdir("proof", { recursive: true });
-  await writeFile(path.resolve("proof", "browser-proof.json"), `${JSON.stringify(receipt, null, 2)}\n`);
-  await recordFriction(receipt.passed ? "browser_qa_completed" : "browser_qa_failed", assertions);
+  await writeFile(path.resolve("proof", "browser-contract.json"), `${JSON.stringify(receipt, null, 2)}\n`);
+  await recordFriction(receipt.passed ? "browser_contract_completed" : "browser_contract_failed", assertions);
   console.log(JSON.stringify(receipt, null, 2));
   if (!receipt.passed) process.exitCode = 1;
 } finally {

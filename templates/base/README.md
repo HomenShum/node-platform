@@ -20,6 +20,8 @@ npm run dev
 
 Open `http://127.0.0.1:4173`. The deterministic demonstration requires no account, provider key, database, or network connection.
 
+`npm run proof:browser-contract` checks the live HTTP/source-DOM contract. It is deliberately not called browser certification. `npm run proof:browser` drives a real Playwright journey and emits candidate-bound screenshots and metadata; install Chromium with `npx playwright install chromium` when running that certification outside CI.
+
 ## Specialize the application
 
 Start with `docs/FIGURED_OUT.md` and the files in `product/`. Replace the neutral copy, artifact renderer, guided stages, domain tools, validators, and fixtures only after researching the real user journey. Do not replace the proposal, approval, version-conflict, safe-failure, or receipt semantics.

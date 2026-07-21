@@ -1,0 +1,13 @@
+{
+  "schemaVersion": "nodekit.fresh-user-study/v1",
+  "instruction": "Use this app to complete the job shown on screen.",
+  "participants": [],
+  "thresholds": {
+    "minimumUnassistedCompletions": 4,
+    "maximumMedianFirstMeaningfulActionMs": 30000,
+    "maximumMedianNeutralJourneyMs": 180000,
+    "minimumMedianSingleEaseQuestion": 6,
+    "maximumP0P1Failures": 0
+  },
+  "status": "not-run"
+}

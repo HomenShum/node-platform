@@ -1,0 +1,46 @@
+name: NodeKit EaseProof
+
+on:
+  workflow_dispatch:
+    inputs:
+      cache_class:
+        description: Evidence label; use cold only on a genuinely clean runner.
+        required: true
+        default: cold
+        type: choice
+        options: [cold, warm-or-unknown]
+
+jobs:
+  developer-ease:
+    name: ${{ matrix.os }} / ${{ matrix.package_manager }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, ubuntu-latest, macos-latest]
+        package_manager: [npm, pnpm]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - uses: pnpm/action-setup@v4
+        if: matrix.package_manager == 'pnpm'
+        with:
+          version: 10
+      - run: npm ci
+      - run: npx playwright install chromium
+      - name: Run fresh generated-candidate journey
+        run: npm run acceptance:factory
+        env:
+          NODEKIT_CACHE_CLASS: ${{ inputs.cache_class }}
+          NODEKIT_PACKAGE_MANAGER: ${{ matrix.package_manager }}
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ease-proof-${{ matrix.os }}-${{ matrix.package_manager }}
+          if-no-files-found: error
+          path: |
+            proof/factory-acceptance.json
+            proof/ease/latest/**

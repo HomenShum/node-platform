@@ -24,6 +24,7 @@
     "test": "node --test test/*.test.mjs",
     "presentation:nodekit-proof": "node scripts/generate-nodekit-proof-presentation.mjs",
     "acceptance:factory": "node src/factory-acceptance.mjs",
+    "acceptance:agent": "node scripts/run-agent-ease-trial.mjs",
     "registry:check": "node src/cli.mjs registry check --registry-root .",
     "ecosystem:check": "node src/cli.mjs ecosystem check --registry-root . --workspace ..",
     "dashboard": "node src/cli.mjs dashboard --registry-root . --workspace .. --write",
@@ -39,5 +40,8 @@
     "ajv": "8.20.0",
     "yaml": "^2.9.0"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "playwright": "^1.61.1"
+  }
 }

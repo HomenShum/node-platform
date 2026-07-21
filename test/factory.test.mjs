@@ -366,7 +366,13 @@ test("a fresh no-key Git candidate reaches an honest local-ready proof", async (
   assert.equal(receipt.releaseReady, false);
   assert.equal(receipt.applicationHash, compiled.definition.applicationHash);
   assert.equal(receipt.configHash, compiled.definition.configHash);
-  assert.deepEqual(receipt.missingReleaseGates, ["browserQa", "deployment"]);
+  assert.deepEqual(receipt.missingReleaseGates, [
+    "browserCertification",
+    "deployment",
+    "freshAgentHeldout",
+    "freshHumanUsability",
+    "threeConvexConsumers",
+  ]);
 });
 
 test("agentic RL preset creates an offline FounderQuest lab with protected heldout evaluation", async (t) => {

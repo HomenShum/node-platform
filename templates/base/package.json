@@ -13,10 +13,14 @@
     "eval": "node scripts/eval.mjs",
     "check": "node scripts/check.mjs",
     "proof": "node scripts/proof.mjs",
-    "proof:browser": "node scripts/browser-proof.mjs",
+    "proof:browser-contract": "node scripts/browser-proof.mjs",
+    "proof:browser": "node scripts/browser-certify.mjs",
     "audit:prod": "node scripts/audit-prod.mjs"
   },
   "dependencies": {
     "@homenshum/nodekit": __NODEKIT_SPECIFIER_JSON__
+  },
+  "devDependencies": {
+    "playwright": "1.61.1"
   }
 }
