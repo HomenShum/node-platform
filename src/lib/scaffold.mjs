@@ -1,17 +1,11 @@
 import { spawn } from "node:child_process";
-import { chmod, cp, mkdir, readFile, readdir, rm, stat, writeFile } from "node:fs/promises";
+import { chmod, cp, mkdir, readFile, readdir, stat, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { pathExists } from "./files.mjs";
 
 const packageRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..", "..");
-const REFERENCE_TEMPLATES = Object.freeze({
-  "agentic-rl-research": "agentic-rl-research",
-  "research-loop": "research-loop",
-  "smb-lending-fde": "smb-lending-fde",
-});
 const defaultTemplateRoot = path.join(packageRoot, "templates", "base");
-const researchReferenceRoot = path.join(packageRoot, "reference-apps", REFERENCE_TEMPLATES["research-loop"]);
 const pluginSkillsRoot = path.join(packageRoot, "plugins", "nodekit", "skills");
 const projectedSkillNames = ["nodekit-launch", "nodekit-present", "nodekit-qa"];
 const vendoredNodeKitSpecifier = "file:vendor/nodekit";
@@ -34,9 +28,8 @@ async function isEmpty(directory) {
   return (await readdir(directory)).length === 0;
 }
 
-function normalizedSponsors(options = {}, referenceName = options.reference) {
-  const defaults = ["research-loop", "smb-lending-fde"].includes(referenceName) ? ["pi-ai"] : [];
-  return [...new Set([...defaults, ...(options.sponsors ?? [])].map(slugify).filter(Boolean))];
+function normalizedSponsors(options = {}) {
+  return [...new Set((options.sponsors ?? []).map(slugify).filter(Boolean))];
 }
 
 function substitutions(options) {
@@ -49,7 +42,7 @@ function substitutions(options) {
   const nodekitRuntimeImport = usesVendoredNodeKitRuntime(options.nodekitSpecifier)
     ? "../vendor/nodekit/src/lib/caseflow.mjs"
     : "@homenshum/nodekit/src/lib/caseflow.mjs";
-  const sponsors = normalizedSponsors(options, options.reference);
+  const sponsors = normalizedSponsors(options);
   return {
     "__APP_NAME__": slug,
     "__APP_TITLE__": titleCase(slug),
@@ -82,39 +75,6 @@ async function vendorNodeKitRuntime(target) {
     await cp(source, path.join(destination, relative), { recursive: true });
   }
   await chmod(path.join(destination, "src", "cli.mjs"), 0o755);
-}
-
-function resolveReference(reference) {
-  const normalized = reference;
-  const templateName = REFERENCE_TEMPLATES[normalized];
-  if (!templateName) throw new Error(`unknown reference ${normalized}; available: ${Object.keys(REFERENCE_TEMPLATES).join(", ")}`);
-  return { name: normalized, root: path.join(packageRoot, "reference-apps", templateName) };
-}
-
-async function applyReferenceTemplate(reference, target, values) {
-  if (reference.name !== "agentic-rl-research") {
-    await copyTemplate(reference.root, target, values);
-    return;
-  }
-
-  // The reference research loop carries a deliberately live-capable Pi adapter.
-  // FounderQuest-RL is a clean-room replay-only lab, so remove those semantics
-  // before its authored offline contract overlays the generic starter.
-  await copyTemplate(researchReferenceRoot, target, values);
-  for (const relative of [
-    "agent/tools/measure-ngram.mjs",
-    "agent/skills/autoresearch-live",
-    "agent/subagents",
-    "fixtures/corpus",
-    "integrations/pi-ai",
-    "evals/deterministic-smoke.json",
-    "schemas/experiment-receipt.schema.json",
-    "scripts/live-smoke.mjs",
-    "scripts/browser-proof.mjs",
-  ]) {
-    await rm(path.join(target, relative), { force: true, recursive: true });
-  }
-  await copyTemplate(reference.root, target, values);
 }
 
 function replaceTokens(value, values) {
@@ -180,7 +140,7 @@ function runGit(args, cwd, { capture = false } = {}) {
   });
 }
 
-async function scaffoldProject(options, reference = null) {
+async function scaffoldProject(options) {
   const target = path.resolve(options.target);
   if (!(await isEmpty(target))) {
     throw new Error(`target is not empty: ${target}`);
@@ -191,15 +151,14 @@ async function scaffoldProject(options, reference = null) {
     throw new Error(`unsupported package manager ${packageManager}; available: npm, pnpm`);
   }
   const launchStartedAt = options.launchStartedAt && Number.isFinite(Date.parse(options.launchStartedAt)) ? options.launchStartedAt : startedAt;
-  const values = substitutions({ ...options, reference: reference?.name, target });
+  const values = substitutions({ ...options, target });
   await mkdir(target, { recursive: true });
-  if (reference) await applyReferenceTemplate(reference, target, values);
-  else await copyTemplate(defaultTemplateRoot, target, values);
+  await copyTemplate(defaultTemplateRoot, target, values);
   await projectCodingAgentSkills(target, values);
   if (usesVendoredNodeKitRuntime(options.nodekitSpecifier)) {
     await vendorNodeKitRuntime(target);
   }
-  const sponsors = normalizedSponsors(options, reference?.name);
+  const sponsors = normalizedSponsors(options);
   for (const sponsor of sponsors.filter((entry) => entry !== "pi-ai")) {
     const integrationRoot = path.join(target, "integrations", sponsor);
     await mkdir(integrationRoot, { recursive: true });
@@ -222,8 +181,7 @@ async function scaffoldProject(options, reference = null) {
     ],
     nodekitVersion: "0.2.1",
     packageManager,
-    foundation: reference ? "reference-template" : "domain-blank-base",
-    ...(reference ? { reference: reference.name } : {}),
+    foundation: "domain-blank-base",
     repairLoops: 0,
     schemaVersion: "nodekit.build-friction/v1",
   };
@@ -259,19 +217,14 @@ async function scaffoldProject(options, reference = null) {
     ], target);
     candidateCommit = (await runGit(["rev-parse", "HEAD"], target, { capture: true })).trim();
   }
-  return { candidateCommit, name: values.__APP_NAME__, packageManager, reference: reference?.name ?? null, target };
+  return { candidateCommit, name: values.__APP_NAME__, packageManager, target };
 }
 
 export async function createProject(options) {
   if (options.preset !== undefined) {
-    throw new Error("nodekit create no longer accepts --preset; create the domain-blank base, or use nodekit reference create for an explicitly labeled example");
+    throw new Error("nodekit create does not accept --preset; create the domain-blank figured-out base and let the coding agent specialize it from the user's real job");
   }
   return scaffoldProject(options);
-}
-
-export async function createReferenceProject(options) {
-  if (!options.reference) throw new Error("reference name is required");
-  return scaffoldProject(options, resolveReference(options.reference));
 }
 
 export async function recordSetupEvent(target, name, detail = {}, durationMs) {

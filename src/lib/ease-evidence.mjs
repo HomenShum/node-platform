@@ -81,7 +81,16 @@ export function evaluateDeveloperTimingMatrix(receipts) {
       }
       cells[lane][cacheClass] = Object.fromEntries(timingFields.map((field) => {
         const values = runs.map((entry) => entry.measurements?.[field]).filter(Number.isFinite);
-        return [field, { p50: median(values), p95: percentile(values, 0.95), samples: values.length }];
+        return [field, {
+          samples: values.length,
+          median: median(values),
+          minimum: values.length ? Math.min(...values) : null,
+          maximum: values.length ? Math.max(...values) : null,
+          q1: values.length >= 4 ? percentile(values, 0.25) : null,
+          q3: values.length >= 4 ? percentile(values, 0.75) : null,
+          p95: values.length >= 20 ? percentile(values, 0.95) : null,
+          p95Eligible: values.length >= 20,
+        }];
       }));
     }
   }

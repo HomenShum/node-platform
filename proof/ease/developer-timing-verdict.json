@@ -21,456 +21,876 @@
     "windows/npm": {
       "cold": {
         "scaffoldGenerationMs": {
-          "p50": null,
+          "samples": 0,
+          "median": null,
+          "minimum": null,
+          "maximum": null,
+          "q1": null,
+          "q3": null,
           "p95": null,
-          "samples": 0
+          "p95Eligible": false
         },
         "dependencyInstallationMs": {
-          "p50": null,
+          "samples": 0,
+          "median": null,
+          "minimum": null,
+          "maximum": null,
+          "q1": null,
+          "q3": null,
           "p95": null,
-          "samples": 0
+          "p95Eligible": false
         },
         "compileMs": {
-          "p50": null,
+          "samples": 0,
+          "median": null,
+          "minimum": null,
+          "maximum": null,
+          "q1": null,
+          "q3": null,
           "p95": null,
-          "samples": 0
+          "p95Eligible": false
         },
         "serverReadinessMs": {
-          "p50": null,
+          "samples": 0,
+          "median": null,
+          "minimum": null,
+          "maximum": null,
+          "q1": null,
+          "q3": null,
           "p95": null,
-          "samples": 0
+          "p95Eligible": false
         },
         "firstMeaningfulPaintMs": {
-          "p50": null,
+          "samples": 0,
+          "median": null,
+          "minimum": null,
+          "maximum": null,
+          "q1": null,
+          "q3": null,
           "p95": null,
-          "samples": 0
+          "p95Eligible": false
         },
         "neutralJourneyMs": {
-          "p50": null,
+          "samples": 0,
+          "median": null,
+          "minimum": null,
+          "maximum": null,
+          "q1": null,
+          "q3": null,
           "p95": null,
-          "samples": 0
+          "p95Eligible": false
         },
         "totalMs": {
-          "p50": null,
+          "samples": 0,
+          "median": null,
+          "minimum": null,
+          "maximum": null,
+          "q1": null,
+          "q3": null,
           "p95": null,
-          "samples": 0
+          "p95Eligible": false
         }
       },
       "warm": {
         "scaffoldGenerationMs": {
-          "p50": null,
+          "samples": 0,
+          "median": null,
+          "minimum": null,
+          "maximum": null,
+          "q1": null,
+          "q3": null,
           "p95": null,
-          "samples": 0
+          "p95Eligible": false
         },
         "dependencyInstallationMs": {
-          "p50": null,
+          "samples": 0,
+          "median": null,
+          "minimum": null,
+          "maximum": null,
+          "q1": null,
+          "q3": null,
           "p95": null,
-          "samples": 0
+          "p95Eligible": false
         },
         "compileMs": {
-          "p50": null,
+          "samples": 0,
+          "median": null,
+          "minimum": null,
+          "maximum": null,
+          "q1": null,
+          "q3": null,
           "p95": null,
-          "samples": 0
+          "p95Eligible": false
         },
         "serverReadinessMs": {
-          "p50": null,
+          "samples": 0,
+          "median": null,
+          "minimum": null,
+          "maximum": null,
+          "q1": null,
+          "q3": null,
           "p95": null,
-          "samples": 0
+          "p95Eligible": false
         },
         "firstMeaningfulPaintMs": {
-          "p50": null,
+          "samples": 0,
+          "median": null,
+          "minimum": null,
+          "maximum": null,
+          "q1": null,
+          "q3": null,
           "p95": null,
-          "samples": 0
+          "p95Eligible": false
         },
         "neutralJourneyMs": {
-          "p50": null,
+          "samples": 0,
+          "median": null,
+          "minimum": null,
+          "maximum": null,
+          "q1": null,
+          "q3": null,
           "p95": null,
-          "samples": 0
+          "p95Eligible": false
         },
         "totalMs": {
-          "p50": null,
+          "samples": 0,
+          "median": null,
+          "minimum": null,
+          "maximum": null,
+          "q1": null,
+          "q3": null,
           "p95": null,
-          "samples": 0
+          "p95Eligible": false
         }
       }
     },
     "windows/pnpm": {
       "cold": {
         "scaffoldGenerationMs": {
-          "p50": null,
+          "samples": 0,
+          "median": null,
+          "minimum": null,
+          "maximum": null,
+          "q1": null,
+          "q3": null,
           "p95": null,
-          "samples": 0
+          "p95Eligible": false
         },
         "dependencyInstallationMs": {
-          "p50": null,
+          "samples": 0,
+          "median": null,
+          "minimum": null,
+          "maximum": null,
+          "q1": null,
+          "q3": null,
           "p95": null,
-          "samples": 0
+          "p95Eligible": false
         },
         "compileMs": {
-          "p50": null,
+          "samples": 0,
+          "median": null,
+          "minimum": null,
+          "maximum": null,
+          "q1": null,
+          "q3": null,
           "p95": null,
-          "samples": 0
+          "p95Eligible": false
         },
         "serverReadinessMs": {
-          "p50": null,
+          "samples": 0,
+          "median": null,
+          "minimum": null,
+          "maximum": null,
+          "q1": null,
+          "q3": null,
           "p95": null,
-          "samples": 0
+          "p95Eligible": false
         },
         "firstMeaningfulPaintMs": {
-          "p50": null,
+          "samples": 0,
+          "median": null,
+          "minimum": null,
+          "maximum": null,
+          "q1": null,
+          "q3": null,
           "p95": null,
-          "samples": 0
+          "p95Eligible": false
         },
         "neutralJourneyMs": {
-          "p50": null,
+          "samples": 0,
+          "median": null,
+          "minimum": null,
+          "maximum": null,
+          "q1": null,
+          "q3": null,
           "p95": null,
-          "samples": 0
+          "p95Eligible": false
         },
         "totalMs": {
-          "p50": null,
+          "samples": 0,
+          "median": null,
+          "minimum": null,
+          "maximum": null,
+          "q1": null,
+          "q3": null,
           "p95": null,
-          "samples": 0
+          "p95Eligible": false
         }
       },
       "warm": {
         "scaffoldGenerationMs": {
-          "p50": null,
+          "samples": 0,
+          "median": null,
+          "minimum": null,
+          "maximum": null,
+          "q1": null,
+          "q3": null,
           "p95": null,
-          "samples": 0
+          "p95Eligible": false
         },
         "dependencyInstallationMs": {
-          "p50": null,
+          "samples": 0,
+          "median": null,
+          "minimum": null,
+          "maximum": null,
+          "q1": null,
+          "q3": null,
           "p95": null,
-          "samples": 0
+          "p95Eligible": false
         },
         "compileMs": {
-          "p50": null,
+          "samples": 0,
+          "median": null,
+          "minimum": null,
+          "maximum": null,
+          "q1": null,
+          "q3": null,
           "p95": null,
-          "samples": 0
+          "p95Eligible": false
         },
         "serverReadinessMs": {
-          "p50": null,
+          "samples": 0,
+          "median": null,
+          "minimum": null,
+          "maximum": null,
+          "q1": null,
+          "q3": null,
           "p95": null,
-          "samples": 0
+          "p95Eligible": false
         },
         "firstMeaningfulPaintMs": {
-          "p50": null,
+          "samples": 0,
+          "median": null,
+          "minimum": null,
+          "maximum": null,
+          "q1": null,
+          "q3": null,
           "p95": null,
-          "samples": 0
+          "p95Eligible": false
         },
         "neutralJourneyMs": {
-          "p50": null,
+          "samples": 0,
+          "median": null,
+          "minimum": null,
+          "maximum": null,
+          "q1": null,
+          "q3": null,
           "p95": null,
-          "samples": 0
+          "p95Eligible": false
         },
         "totalMs": {
-          "p50": null,
+          "samples": 0,
+          "median": null,
+          "minimum": null,
+          "maximum": null,
+          "q1": null,
+          "q3": null,
           "p95": null,
-          "samples": 0
+          "p95Eligible": false
         }
       }
     },
     "ubuntu/npm": {
       "cold": {
         "scaffoldGenerationMs": {
-          "p50": null,
+          "samples": 0,
+          "median": null,
+          "minimum": null,
+          "maximum": null,
+          "q1": null,
+          "q3": null,
           "p95": null,
-          "samples": 0
+          "p95Eligible": false
         },
         "dependencyInstallationMs": {
-          "p50": null,
+          "samples": 0,
+          "median": null,
+          "minimum": null,
+          "maximum": null,
+          "q1": null,
+          "q3": null,
           "p95": null,
-          "samples": 0
+          "p95Eligible": false
         },
         "compileMs": {
-          "p50": null,
+          "samples": 0,
+          "median": null,
+          "minimum": null,
+          "maximum": null,
+          "q1": null,
+          "q3": null,
           "p95": null,
-          "samples": 0
+          "p95Eligible": false
         },
         "serverReadinessMs": {
-          "p50": null,
+          "samples": 0,
+          "median": null,
+          "minimum": null,
+          "maximum": null,
+          "q1": null,
+          "q3": null,
           "p95": null,
-          "samples": 0
+          "p95Eligible": false
         },
         "firstMeaningfulPaintMs": {
-          "p50": null,
+          "samples": 0,
+          "median": null,
+          "minimum": null,
+          "maximum": null,
+          "q1": null,
+          "q3": null,
           "p95": null,
-          "samples": 0
+          "p95Eligible": false
         },
         "neutralJourneyMs": {
-          "p50": null,
+          "samples": 0,
+          "median": null,
+          "minimum": null,
+          "maximum": null,
+          "q1": null,
+          "q3": null,
           "p95": null,
-          "samples": 0
+          "p95Eligible": false
         },
         "totalMs": {
-          "p50": null,
+          "samples": 0,
+          "median": null,
+          "minimum": null,
+          "maximum": null,
+          "q1": null,
+          "q3": null,
           "p95": null,
-          "samples": 0
+          "p95Eligible": false
         }
       },
       "warm": {
         "scaffoldGenerationMs": {
-          "p50": null,
+          "samples": 0,
+          "median": null,
+          "minimum": null,
+          "maximum": null,
+          "q1": null,
+          "q3": null,
           "p95": null,
-          "samples": 0
+          "p95Eligible": false
         },
         "dependencyInstallationMs": {
-          "p50": null,
+          "samples": 0,
+          "median": null,
+          "minimum": null,
+          "maximum": null,
+          "q1": null,
+          "q3": null,
           "p95": null,
-          "samples": 0
+          "p95Eligible": false
         },
         "compileMs": {
-          "p50": null,
+          "samples": 0,
+          "median": null,
+          "minimum": null,
+          "maximum": null,
+          "q1": null,
+          "q3": null,
           "p95": null,
-          "samples": 0
+          "p95Eligible": false
         },
         "serverReadinessMs": {
-          "p50": null,
+          "samples": 0,
+          "median": null,
+          "minimum": null,
+          "maximum": null,
+          "q1": null,
+          "q3": null,
           "p95": null,
-          "samples": 0
+          "p95Eligible": false
         },
         "firstMeaningfulPaintMs": {
-          "p50": null,
+          "samples": 0,
+          "median": null,
+          "minimum": null,
+          "maximum": null,
+          "q1": null,
+          "q3": null,
           "p95": null,
-          "samples": 0
+          "p95Eligible": false
         },
         "neutralJourneyMs": {
-          "p50": null,
+          "samples": 0,
+          "median": null,
+          "minimum": null,
+          "maximum": null,
+          "q1": null,
+          "q3": null,
           "p95": null,
-          "samples": 0
+          "p95Eligible": false
         },
         "totalMs": {
-          "p50": null,
+          "samples": 0,
+          "median": null,
+          "minimum": null,
+          "maximum": null,
+          "q1": null,
+          "q3": null,
           "p95": null,
-          "samples": 0
+          "p95Eligible": false
         }
       }
     },
     "ubuntu/pnpm": {
       "cold": {
         "scaffoldGenerationMs": {
-          "p50": null,
+          "samples": 0,
+          "median": null,
+          "minimum": null,
+          "maximum": null,
+          "q1": null,
+          "q3": null,
           "p95": null,
-          "samples": 0
+          "p95Eligible": false
         },
         "dependencyInstallationMs": {
-          "p50": null,
+          "samples": 0,
+          "median": null,
+          "minimum": null,
+          "maximum": null,
+          "q1": null,
+          "q3": null,
           "p95": null,
-          "samples": 0
+          "p95Eligible": false
         },
         "compileMs": {
-          "p50": null,
+          "samples": 0,
+          "median": null,
+          "minimum": null,
+          "maximum": null,
+          "q1": null,
+          "q3": null,
           "p95": null,
-          "samples": 0
+          "p95Eligible": false
         },
         "serverReadinessMs": {
-          "p50": null,
+          "samples": 0,
+          "median": null,
+          "minimum": null,
+          "maximum": null,
+          "q1": null,
+          "q3": null,
           "p95": null,
-          "samples": 0
+          "p95Eligible": false
         },
         "firstMeaningfulPaintMs": {
-          "p50": null,
+          "samples": 0,
+          "median": null,
+          "minimum": null,
+          "maximum": null,
+          "q1": null,
+          "q3": null,
           "p95": null,
-          "samples": 0
+          "p95Eligible": false
         },
         "neutralJourneyMs": {
-          "p50": null,
+          "samples": 0,
+          "median": null,
+          "minimum": null,
+          "maximum": null,
+          "q1": null,
+          "q3": null,
           "p95": null,
-          "samples": 0
+          "p95Eligible": false
         },
         "totalMs": {
-          "p50": null,
+          "samples": 0,
+          "median": null,
+          "minimum": null,
+          "maximum": null,
+          "q1": null,
+          "q3": null,
           "p95": null,
-          "samples": 0
+          "p95Eligible": false
         }
       },
       "warm": {
         "scaffoldGenerationMs": {
-          "p50": null,
+          "samples": 0,
+          "median": null,
+          "minimum": null,
+          "maximum": null,
+          "q1": null,
+          "q3": null,
           "p95": null,
-          "samples": 0
+          "p95Eligible": false
         },
         "dependencyInstallationMs": {
-          "p50": null,
+          "samples": 0,
+          "median": null,
+          "minimum": null,
+          "maximum": null,
+          "q1": null,
+          "q3": null,
           "p95": null,
-          "samples": 0
+          "p95Eligible": false
         },
         "compileMs": {
-          "p50": null,
+          "samples": 0,
+          "median": null,
+          "minimum": null,
+          "maximum": null,
+          "q1": null,
+          "q3": null,
           "p95": null,
-          "samples": 0
+          "p95Eligible": false
         },
         "serverReadinessMs": {
-          "p50": null,
+          "samples": 0,
+          "median": null,
+          "minimum": null,
+          "maximum": null,
+          "q1": null,
+          "q3": null,
           "p95": null,
-          "samples": 0
+          "p95Eligible": false
         },
         "firstMeaningfulPaintMs": {
-          "p50": null,
+          "samples": 0,
+          "median": null,
+          "minimum": null,
+          "maximum": null,
+          "q1": null,
+          "q3": null,
           "p95": null,
-          "samples": 0
+          "p95Eligible": false
         },
         "neutralJourneyMs": {
-          "p50": null,
+          "samples": 0,
+          "median": null,
+          "minimum": null,
+          "maximum": null,
+          "q1": null,
+          "q3": null,
           "p95": null,
-          "samples": 0
+          "p95Eligible": false
         },
         "totalMs": {
-          "p50": null,
+          "samples": 0,
+          "median": null,
+          "minimum": null,
+          "maximum": null,
+          "q1": null,
+          "q3": null,
           "p95": null,
-          "samples": 0
+          "p95Eligible": false
         }
       }
     },
     "macos/npm": {
       "cold": {
         "scaffoldGenerationMs": {
-          "p50": null,
+          "samples": 0,
+          "median": null,
+          "minimum": null,
+          "maximum": null,
+          "q1": null,
+          "q3": null,
           "p95": null,
-          "samples": 0
+          "p95Eligible": false
         },
         "dependencyInstallationMs": {
-          "p50": null,
+          "samples": 0,
+          "median": null,
+          "minimum": null,
+          "maximum": null,
+          "q1": null,
+          "q3": null,
           "p95": null,
-          "samples": 0
+          "p95Eligible": false
         },
         "compileMs": {
-          "p50": null,
+          "samples": 0,
+          "median": null,
+          "minimum": null,
+          "maximum": null,
+          "q1": null,
+          "q3": null,
           "p95": null,
-          "samples": 0
+          "p95Eligible": false
         },
         "serverReadinessMs": {
-          "p50": null,
+          "samples": 0,
+          "median": null,
+          "minimum": null,
+          "maximum": null,
+          "q1": null,
+          "q3": null,
           "p95": null,
-          "samples": 0
+          "p95Eligible": false
         },
         "firstMeaningfulPaintMs": {
-          "p50": null,
+          "samples": 0,
+          "median": null,
+          "minimum": null,
+          "maximum": null,
+          "q1": null,
+          "q3": null,
           "p95": null,
-          "samples": 0
+          "p95Eligible": false
         },
         "neutralJourneyMs": {
-          "p50": null,
+          "samples": 0,
+          "median": null,
+          "minimum": null,
+          "maximum": null,
+          "q1": null,
+          "q3": null,
           "p95": null,
-          "samples": 0
+          "p95Eligible": false
         },
         "totalMs": {
-          "p50": null,
+          "samples": 0,
+          "median": null,
+          "minimum": null,
+          "maximum": null,
+          "q1": null,
+          "q3": null,
           "p95": null,
-          "samples": 0
+          "p95Eligible": false
         }
       },
       "warm": {
         "scaffoldGenerationMs": {
-          "p50": null,
+          "samples": 0,
+          "median": null,
+          "minimum": null,
+          "maximum": null,
+          "q1": null,
+          "q3": null,
           "p95": null,
-          "samples": 0
+          "p95Eligible": false
         },
         "dependencyInstallationMs": {
-          "p50": null,
+          "samples": 0,
+          "median": null,
+          "minimum": null,
+          "maximum": null,
+          "q1": null,
+          "q3": null,
           "p95": null,
-          "samples": 0
+          "p95Eligible": false
         },
         "compileMs": {
-          "p50": null,
+          "samples": 0,
+          "median": null,
+          "minimum": null,
+          "maximum": null,
+          "q1": null,
+          "q3": null,
           "p95": null,
-          "samples": 0
+          "p95Eligible": false
         },
         "serverReadinessMs": {
-          "p50": null,
+          "samples": 0,
+          "median": null,
+          "minimum": null,
+          "maximum": null,
+          "q1": null,
+          "q3": null,
           "p95": null,
-          "samples": 0
+          "p95Eligible": false
         },
         "firstMeaningfulPaintMs": {
-          "p50": null,
+          "samples": 0,
+          "median": null,
+          "minimum": null,
+          "maximum": null,
+          "q1": null,
+          "q3": null,
           "p95": null,
-          "samples": 0
+          "p95Eligible": false
         },
         "neutralJourneyMs": {
-          "p50": null,
+          "samples": 0,
+          "median": null,
+          "minimum": null,
+          "maximum": null,
+          "q1": null,
+          "q3": null,
           "p95": null,
-          "samples": 0
+          "p95Eligible": false
         },
         "totalMs": {
-          "p50": null,
+          "samples": 0,
+          "median": null,
+          "minimum": null,
+          "maximum": null,
+          "q1": null,
+          "q3": null,
           "p95": null,
-          "samples": 0
+          "p95Eligible": false
         }
       }
     },
     "macos/pnpm": {
       "cold": {
         "scaffoldGenerationMs": {
-          "p50": null,
+          "samples": 0,
+          "median": null,
+          "minimum": null,
+          "maximum": null,
+          "q1": null,
+          "q3": null,
           "p95": null,
-          "samples": 0
+          "p95Eligible": false
         },
         "dependencyInstallationMs": {
-          "p50": null,
+          "samples": 0,
+          "median": null,
+          "minimum": null,
+          "maximum": null,
+          "q1": null,
+          "q3": null,
           "p95": null,
-          "samples": 0
+          "p95Eligible": false
         },
         "compileMs": {
-          "p50": null,
+          "samples": 0,
+          "median": null,
+          "minimum": null,
+          "maximum": null,
+          "q1": null,
+          "q3": null,
           "p95": null,
-          "samples": 0
+          "p95Eligible": false
         },
         "serverReadinessMs": {
-          "p50": null,
+          "samples": 0,
+          "median": null,
+          "minimum": null,
+          "maximum": null,
+          "q1": null,
+          "q3": null,
           "p95": null,
-          "samples": 0
+          "p95Eligible": false
         },
         "firstMeaningfulPaintMs": {
-          "p50": null,
+          "samples": 0,
+          "median": null,
+          "minimum": null,
+          "maximum": null,
+          "q1": null,
+          "q3": null,
           "p95": null,
-          "samples": 0
+          "p95Eligible": false
         },
         "neutralJourneyMs": {
-          "p50": null,
+          "samples": 0,
+          "median": null,
+          "minimum": null,
+          "maximum": null,
+          "q1": null,
+          "q3": null,
           "p95": null,
-          "samples": 0
+          "p95Eligible": false
         },
         "totalMs": {
-          "p50": null,
+          "samples": 0,
+          "median": null,
+          "minimum": null,
+          "maximum": null,
+          "q1": null,
+          "q3": null,
           "p95": null,
-          "samples": 0
+          "p95Eligible": false
         }
       },
       "warm": {
         "scaffoldGenerationMs": {
-          "p50": null,
+          "samples": 0,
+          "median": null,
+          "minimum": null,
+          "maximum": null,
+          "q1": null,
+          "q3": null,
           "p95": null,
-          "samples": 0
+          "p95Eligible": false
         },
         "dependencyInstallationMs": {
-          "p50": null,
+          "samples": 0,
+          "median": null,
+          "minimum": null,
+          "maximum": null,
+          "q1": null,
+          "q3": null,
           "p95": null,
-          "samples": 0
+          "p95Eligible": false
         },
         "compileMs": {
-          "p50": null,
+          "samples": 0,
+          "median": null,
+          "minimum": null,
+          "maximum": null,
+          "q1": null,
+          "q3": null,
           "p95": null,
-          "samples": 0
+          "p95Eligible": false
         },
         "serverReadinessMs": {
-          "p50": null,
+          "samples": 0,
+          "median": null,
+          "minimum": null,
+          "maximum": null,
+          "q1": null,
+          "q3": null,
           "p95": null,
-          "samples": 0
+          "p95Eligible": false
         },
         "firstMeaningfulPaintMs": {
-          "p50": null,
+          "samples": 0,
+          "median": null,
+          "minimum": null,
+          "maximum": null,
+          "q1": null,
+          "q3": null,
           "p95": null,
-          "samples": 0
+          "p95Eligible": false
         },
         "neutralJourneyMs": {
-          "p50": null,
+          "samples": 0,
+          "median": null,
+          "minimum": null,
+          "maximum": null,
+          "q1": null,
+          "q3": null,
           "p95": null,
-          "samples": 0
+          "p95Eligible": false
         },
         "totalMs": {
-          "p50": null,
+          "samples": 0,
+          "median": null,
+          "minimum": null,
+          "maximum": null,
+          "q1": null,
+          "q3": null,
           "p95": null,
-          "samples": 0
+          "p95Eligible": false
         }
       }
     }

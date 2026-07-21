@@ -33,27 +33,7 @@ Case -> Run -> Stage -> Artifact -> Proposal -> Approval -> Receipt
 
 The generated app includes `docs/FIGURED_OUT.md`, a product brief, audience placeholder, user journey, service blueprint, experience contract, design direction, taste contract, a responsive artifact-first UI, and a deterministic in-memory conformance demo.
 
-The older domain templates remain available only as explicitly labeled references. They demonstrate applications of NodeKit; they do not define NodeKit.
-
-`smb-lending-fde` is a clean-room domain reference. It generates an independent synthetic forward-deployment lab and never makes or simulates a lending decision.
-
-```bash
-node src/cli.mjs reference create smb-lending-fde ../casca-fde-deployment-lab \
-  --name casca-fde-deployment-lab \
-  --brief "Map a synthetic SMB lending file without making a lending decision"
-```
-
-`agentic-rl-research` is a separate **replay-only** FounderQuest research
-lab. It has synthetic train, validation, and held-out task files plus a protected
-reward that rejects external/public/financial actions. It is a reproducible
-environment and baseline, not an RL-training result or proof of real-world
-generalization.
-
-```bash
-node src/cli.mjs reference create agentic-rl-research ../founderquest-rl \
-  --name founderquest-rl \
-  --brief "Evaluate safe next-action selection in synthetic founder journeys"
-```
+There is no domain chooser, public preset catalog, or silent fallback. Narrow examples in this source repository are regression fixtures and historical demonstrations only: they are not shipped in the npm package and cannot be selected by the creation CLI. The coding agent starts from the same blank foundation every time, researches the user's actual workflow, and adds only the domain behavior that job requires.
 
 `npm run proof` works before credentials exist: it emits a passing `local-ready` receipt after the deterministic demo and evaluation. If live Pi, browser, or deployment receipts are present, every attempted gate must pass; the receipt becomes `release-ready` only when all three are present and green.
 
@@ -104,7 +84,6 @@ receipts have an immutable candidate to bind to):
 
 ```bash
 nodekit create <empty-directory> --name <slug> --brief <text>
-nodekit reference create <reference> <empty-directory> --name <slug> --brief <text>
 nodekit adopt <existing-directory> --name <slug> --brief <text>
 nodekit compile --repo-root <directory>
 nodekit inspect --repo-root <directory>
@@ -155,7 +134,7 @@ The earlier planning-only `apiVersion` / `kind` / `metadata` / `spec` envelope i
 
 ## Honest boundary
 
-`planned`, `migration-planned`, and `canonical-unpackaged` remain intentionally distinct from released shared packages. NodeKit now has a domain-blank base, portable in-memory Caseflow semantics, and explicit reference templates. Convex Caseflow extraction, full Playwright screenshot certification, additional managed-database adapters, and NodeRoom's deeper live-runtime extraction remain separately evidenced work until their gates pass.
+`planned`, `migration-planned`, and `canonical-unpackaged` remain intentionally distinct from released shared packages. NodeKit now has one domain-blank base and portable in-memory Caseflow semantics. Convex Caseflow extraction, managed-database adapters, and deeper live-runtime adoption remain separately evidenced work until their respective gates pass.
 
 See [`docs/DECISIONS.md`](docs/DECISIONS.md) for the ownership split and migration rules.
 The coordinated consumer commits, pull requests, hosted checks, and known limits are recorded in [`docs/P0_ROLLOUT.md`](docs/P0_ROLLOUT.md) and [`proof/p0-rollout.json`](proof/p0-rollout.json).

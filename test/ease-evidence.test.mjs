@@ -17,4 +17,6 @@ test("developer timing matrix fails closed until all sixty isolated trials exist
   assert.equal(verdict.passed, false);
   assert.equal(verdict.requiredRuns, 60);
   assert.equal(verdict.errors.length, 12);
+  assert.equal(verdict.cells["windows/npm"].cold.totalMs.p95, null);
+  assert.equal(verdict.cells["windows/npm"].cold.totalMs.p95Eligible, false);
 });

@@ -14,7 +14,7 @@ nodekit create <empty-directory>
   -> browser and proof receipts
 ```
 
-The CLI no longer accepts `--preset`. Research Loop, SMB Lending FDE, and Agentic RL are explicitly labeled examples under `reference-apps/` and are created with `nodekit reference create`.
+The CLI accepts no `--preset`, domain selector, or public reference-creation path. Narrow applications under `reference-apps/` are repository-internal regression fixtures and historical demonstrations only; they are excluded from the published package. Every real application begins from the same blank, figured-out foundation and is specialized by the coding agent from the user's stated job.
 
 ## Portable kernel
 

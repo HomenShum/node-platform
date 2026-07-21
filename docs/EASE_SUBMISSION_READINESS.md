@@ -1,5 +1,7 @@
 # NodeKit Ease submission readiness
 
+This document governs **E3 Ease certification and C3 Convex submission**, not E0 engineering merge readiness. See `RELEASE_LADDER.md`. The engineering foundation can receive independent review while every later product claim remains fail-closed.
+
 Status: **DO NOT SUBMIT**
 
 Last evidence run: `ease_3f8133e3d5a5408bb13e` on NodeKit commit `4bdc60d0b0e224f7d4884d7857b6f968bb3a901d`.
@@ -38,7 +40,7 @@ Canonical evidence:
 
 - [ ] Five genuinely cold and five warm runs pass for each supported OS/package-manager lane.
 - [ ] Cold caches are isolated rather than merely labeled cold.
-- [ ] Per-phase cold/warm p50 and p95 are computed from raw receipts.
+- [ ] Per-phase sample count, median, range, and observed maximum are computed from raw receipts. Do not publish a per-lane p95 from five observations; require at least 20 cold and 20 warm samples per lane before a p95 claim.
 
 Fail-closed evaluator: `npm run ease:evaluate-developer -- proof/ease/developer-timing-runs.json`. It requires all 60 raw trials and refuses percentile claims when any lane, timing field, isolated cold cache, or zero-intervention invariant is missing.
 - [ ] No strong onboarding percentile claim is published from the current single-run samples.

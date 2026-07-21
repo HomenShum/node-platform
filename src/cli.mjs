@@ -8,7 +8,7 @@ import { compileAgentDefinition, inspectAgentDefinition } from "./lib/agent-defi
 import { pathExists } from "./lib/files.mjs";
 import { checkRepository, commandFor } from "./lib/repo-check.mjs";
 import { loadRegistry, validateRegistry } from "./lib/registry.mjs";
-import { adoptProject, createProject, createReferenceProject, recordSetupEvent } from "./lib/scaffold.mjs";
+import { adoptProject, createProject, recordSetupEvent } from "./lib/scaffold.mjs";
 import {
   importUnderstandAnythingCodeGraph,
   queryUnderstandAnythingCodeGraph,
@@ -55,7 +55,6 @@ Usage:
       [--launch-started-at <iso>] [--research-ms <number>] [--local-proof]
       [--no-install] [--no-git]
   nodekit adopt [directory] --name <slug> --brief <text>
-  nodekit reference create <reference> <directory> --name <slug> --brief <text>
   nodekit compile [--repo-root <path>] [--check] [--json]
   nodekit inspect [--repo-root <path>] [--json]
   nodekit doctor [--repo-root <path>] [--json]
@@ -287,25 +286,6 @@ async function runCreate(parsed) {
   console.log(`NEXT cd ${quoteArgument(result.target)} && ${result.packageManager} run compile && ${result.packageManager} run demo`);
 }
 
-async function runReferenceCreate(parsed) {
-  const reference = parsed.positional[2];
-  const target = parsed.positional[3];
-  if (!reference || !target) throw new Error("reference create requires a reference name and target directory");
-  const result = await createReferenceProject({
-    brief: parsed.options.brief,
-    git: optionEnabled(parsed.options, "git"),
-    install: optionEnabled(parsed.options, "install"),
-    name: parsed.options.name ?? path.basename(path.resolve(target)),
-    nodekitSpecifier: parsed.options["nodekit-specifier"] ?? parsed.options["nodekit-source"],
-    packageManager: parsed.options["package-manager"],
-    reference,
-    target,
-  });
-  await compileAgentDefinition(result.target);
-  console.log(`CREATED REFERENCE ${reference} at ${result.target}`);
-  console.log("This is an explicitly labeled example, not NodeKit's primary application foundation.");
-}
-
 async function runAdopt(parsed) {
   const target = path.resolve(String(parsed.positional[1] ?? parsed.options["repo-root"] ?? process.cwd()));
   const result = await adoptProject({
@@ -450,10 +430,6 @@ async function main() {
   }
   if (first === "create") {
     await runCreate(parsed);
-    return;
-  }
-  if (first === "reference" && second === "create") {
-    await runReferenceCreate(parsed);
     return;
   }
   if (first === "adopt") {
