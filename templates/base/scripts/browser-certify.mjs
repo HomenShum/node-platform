@@ -1,6 +1,6 @@
 import { createHash, randomUUID } from "node:crypto";
 import { execFileSync, spawn } from "node:child_process";
-import { copyFile, mkdir, readFile, stat, writeFile } from "node:fs/promises";
+import { copyFile, mkdir, readFile, rm, stat, writeFile } from "node:fs/promises";
 import path from "node:path";
 import AxeBuilder from "@axe-core/playwright";
 import { chromium } from "playwright";
@@ -220,6 +220,7 @@ try {
       if (canonicalJourney && video) {
         const recordedVideo = await video.path();
         await copyFile(recordedVideo, path.join(browserRoot, "journey.webm"));
+        await rm(path.join(browserRoot, "video"), { force: true, recursive: true });
         await recordArtifact("playwright-trace", path.join(browserRoot, "playwright-trace.zip"));
         await recordArtifact("browser-video", path.join(browserRoot, "journey.webm"));
       }

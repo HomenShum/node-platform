@@ -44,7 +44,7 @@ Every new app receives:
 
 The empty-directory acceptance runs installation, compilation, generated tests, deterministic demo, stale-proposal evaluation, live HTTP/DOM browser assertions, and proof generation. Its current receipt is `proof/factory-acceptance.json`.
 
-The canonical rendered QA packet is `proof/ease/latest/`. It contains 180 screenshots and sidecars covering 15 required states across six viewport/theme combinations. The browser manifest reports zero missing states, serious/critical Axe violations, console errors, failed requests, horizontal overflow, or detected mojibake. Independent ProofLoop verification re-hashed all 180 screenshots and the candidate/timer manifests. QA memory is append-only under `.qa/memory/`.
+The canonical rendered QA packet is `proof/ease/latest/`. It contains 180 screenshots and sidecars covering 15 required states across six viewport/theme combinations, plus a Playwright trace and browser video of a real proposal, approval, receipt, and reload journey. The browser manifest reports zero missing states, serious/critical Axe violations, console errors, failed requests, horizontal overflow, or detected mojibake. Independent ProofLoop verification re-hashed all 180 screenshots, both replay artifacts, and the candidate/timer manifests. QA memory is append-only under `.qa/memory/`.
 
 The current audience-facing proof deck is `outputs/nodekit-figured-out-proof.pptx`. It replaces the obsolete two-preset story with the neutral base, portable Caseflow, reference-app boundary, and Convex-first portability decision. Its byte hash, exact-template fidelity, overflow result, and per-slide visual inspection are recorded in `proof/nodekit-figured-out-presentation.json`.
 

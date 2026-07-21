@@ -17,7 +17,8 @@ NodeKit is eligible for Convex component extraction or submission only when ever
 - [x] Pixel inspection of desktop, tablet, mobile portrait, mobile landscape, light, dark, conflict, failure, approval, receipt, and export views.
 - [x] Stale proposals fail closed and preserve the newer canonical artifact.
 - [x] Failure and external-wait states preserve the last valid artifact and name next-action ownership.
-- [x] Independent ProofLoop integrity verification re-hashed the candidate archive, manifests, and all 180 screenshots.
+- [x] Independent ProofLoop integrity verification re-hashed the candidate archive, manifests, all 180 screenshots, the Playwright trace, and the browser video.
+- [x] A real click-through journey proves proposal creation, approval, receipt visibility, and receipt survival after reload; the trace, video, server process identity, timings, and hashes are in the browser manifest.
 - [x] One cross-platform npm/pnpm factory run passed on Ubuntu, macOS, and Windows.
 
 Canonical evidence:
