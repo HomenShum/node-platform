@@ -79,7 +79,7 @@
       "takeaway": "Independent loops watch one another, but only external anchors such as sources, commits, deployed URLs, exports, and user outcomes close the graph.",
       "narrativeRole": "synthesis",
       "dominantVisual": "Loop graph with external reality anchors crossing the boundary.",
-      "evidenceIds": ["E1_FACTORY_ACCEPTANCE", "E4_CASCA_BROWSER"],
+      "evidenceIds": ["E1_FACTORY_ACCEPTANCE", "E4_CASCA_BROWSER", "E10_GRAPH_OF_LOOPS_SOURCE"],
       "density": "medium"
     },
     {

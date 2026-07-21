@@ -61,6 +61,21 @@
       "kind": "official-source",
       "url": "https://www.anthropic.com/news/rare-disease-research-grants",
       "scope": "retrieved 2026-07-20"
+    },
+    {
+      "id": "E10_GRAPH_OF_LOOPS_SOURCE",
+      "kind": "conceptual-source",
+      "title": "From Loop Engineering to Graph Engineering?",
+      "author": "Carlos E. Perez",
+      "url": "https://medium.com/intuitionmachine/from-loop-engineering-to-graph-engineering-d3ebeb08511c",
+      "originPost": "https://x.com/steipete/status/2078277297791189132",
+      "scope": "retrieved 2026-07-20; conceptual inspiration, not product evidence"
+    },
+    {
+      "id": "E11_RL_CI",
+      "kind": "continuous-integration",
+      "url": "https://github.com/HomenShum/agentic-rl-research-lab/actions/runs/29799453044",
+      "scope": "agentic-rl-research-lab@e1b114c486fbe26703688ab6481331659081b083; offline quality workflow passed"
     }
   ]
 }

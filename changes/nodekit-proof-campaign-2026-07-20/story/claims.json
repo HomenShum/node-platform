@@ -33,7 +33,7 @@
       "id": "C3_RL_LOCAL_BASELINE",
       "text": "The Agentic RL research lab exports step trajectories, trains a deterministic behavior-cloning baseline, blocks nine adversarial reward attacks, and evaluates a label-free process-separated heldout split.",
       "status": "verified",
-      "evidenceIds": ["E6_RL_RELEASE", "E7_RL_HELDOUT"],
+      "evidenceIds": ["E6_RL_RELEASE", "E7_RL_HELDOUT", "E11_RL_CI"],
       "scope": {
         "commit": "d6826837920d828edd4d7026c4fc17388f27b8b9",
         "releaseLevel": "local-learning-baseline-ready"
@@ -86,6 +86,18 @@
       "scope": {},
       "limitations": [
         "Past tense is prohibited until all artifact, publication, and public-URL receipts exist."
+      ]
+    },
+    {
+      "id": "C8_GRAPH_OF_LOOPS_FRAME",
+      "text": "NodeKit applies Carlos E. Perez's graph-of-loops framing to a proof-carrying product workflow, with explicit attribution to Perez's essay and Peter Steinberger's originating prompt.",
+      "status": "verified",
+      "evidenceIds": ["E10_GRAPH_OF_LOOPS_SOURCE"],
+      "scope": {
+        "retrievedAt": "2026-07-20"
+      },
+      "limitations": [
+        "The loop and graph mechanics predate the current phrase; NodeKit claims an application of the framing, not ownership of the underlying architecture."
       ]
     }
   ]

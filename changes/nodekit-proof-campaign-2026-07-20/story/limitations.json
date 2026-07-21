@@ -34,7 +34,7 @@
     {
       "id": "L7_GRAPH_OF_LOOPS_ATTRIBUTION",
       "severity": "source-boundary",
-      "text": "The public campaign will describe a graph of research, build, evaluation, proof, presentation, distribution, feedback, and memory loops without claiming ownership of the wider loop/graph-engineering discourse."
+      "text": "The public campaign attributes the graph-of-loops framing to Carlos E. Perez's essay and Peter Steinberger's originating prompt, while recognizing that directed graphs, state machines, and multi-agent orchestration predate the current terminology."
     }
   ]
 }
