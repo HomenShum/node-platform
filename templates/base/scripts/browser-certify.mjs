@@ -2,6 +2,7 @@ import { createHash, randomUUID } from "node:crypto";
 import { execFileSync, spawn } from "node:child_process";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
+import AxeBuilder from "@axe-core/playwright";
 import { chromium } from "playwright";
 
 const startedAt = new Date().toISOString();
@@ -31,6 +32,7 @@ const viewports = [
 const screenshots = [];
 const globalConsole = [];
 const globalNetwork = [];
+const accessibilityViolations = [];
 const phases = [];
 let firstMeaningfulPaintMs = null;
 
@@ -127,11 +129,26 @@ try {
           await page.locator("#error").waitFor({ state: "visible" });
         }
         if (state === "approval") await page.locator("#approve").focus();
-        if (state === "receipt_inspection" || state === "export_share") await page.locator("#receipt-detail").waitFor({ state: "visible" });
+        if (state === "receipt_inspection" || state === "export_share") {
+          await page.locator("#receipt-detail").waitFor({ state: "visible" });
+          if (viewport.id === "mobile-landscape" || viewport.id === "mobile-portrait") await page.locator("#receipt-detail").scrollIntoViewIfNeeded();
+        }
         if (state === "recoverable_failure" || state === "external_wait") await page.locator("#exception").waitFor({ state: "visible" });
         if (state === "conflict") {
           const copy = await page.locator("#proposal").innerText();
           if (!copy.includes("conflicted")) throw new Error(`conflict state was not visible for ${viewport.id}/${theme}`);
+        }
+        if (viewport.id === "desktop" && theme === "light") {
+          const axe = await new AxeBuilder({ page }).analyze();
+          accessibilityViolations.push(...axe.violations
+            .filter((violation) => violation.impact === "serious" || violation.impact === "critical")
+            .map((violation) => ({
+              help: violation.help,
+              id: violation.id,
+              impact: violation.impact,
+              nodes: violation.nodes.map((node) => node.target),
+              state,
+            })));
         }
         await capture(page, state, viewport, theme, observations);
         if (state === "reload_resume") {
@@ -158,6 +175,7 @@ try {
     }
   }
   passed = screenshots.length === viewports.length * 2 * requiredStates.length
+    && accessibilityViolations.length === 0
     && screenshots.every((entry) => entry.consoleErrors === 0 && entry.failedRequests === 0 && entry.horizontalOverflowPx === 0 && entry.mojibakeDetected === false);
 } catch (caught) {
   error = caught instanceof Error ? caught.stack ?? caught.message : String(caught);
@@ -169,6 +187,7 @@ try {
 const coveredStates = [...new Set(screenshots.map((entry) => entry.state))];
 const missingStates = requiredStates.filter((state) => !coveredStates.includes(state));
 const manifest = {
+  accessibilityViolations,
   applicationHash: identity.applicationHash,
   certified: passed && missingStates.length === 0 && Boolean(nodekitCommit) && Boolean(nodekitSourceHash),
   configHash: identity.configHash,

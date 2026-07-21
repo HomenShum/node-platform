@@ -21,6 +21,7 @@
     "@homenshum/nodekit": __NODEKIT_SPECIFIER_JSON__
   },
   "devDependencies": {
+    "@axe-core/playwright": "4.12.1",
     "playwright": "1.61.1"
   }
 }

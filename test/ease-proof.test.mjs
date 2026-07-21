@@ -12,6 +12,8 @@ test("EaseProof keeps browser contracts distinct from certification", async () =
   assert.match(proof, /browserCertified/);
   assert.match(browser, /nodekit\.screenshot-proof\/v1/);
   assert.match(browser, /missingStates/);
+  assert.match(browser, /AxeBuilder/);
+  assert.match(browser, /accessibilityViolations\.length === 0/);
   for (const state of [
     "first_arrival", "orientation", "input", "validation_error", "running", "partial_result",
     "external_wait", "proposal_pending", "approval", "conflict", "recoverable_failure",

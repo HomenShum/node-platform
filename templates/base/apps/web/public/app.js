@@ -13,6 +13,7 @@ function render() {
   const latest = state.artifact.versions.at(-1);
   const scenario = state.presentation?.id ?? "first_arrival";
   document.body.dataset.scenario = scenario;
+  document.querySelector(".status").dataset.status = state.run.status;
   elements["state-kind"].textContent = String(state.presentation?.kind ?? "status").replaceAll("_", " ");
   elements["state-title"].textContent = state.presentation?.title ?? "Case status";
   elements["state-message"].textContent = state.presentation?.message ?? "The case state is available.";
