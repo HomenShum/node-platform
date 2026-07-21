@@ -1,0 +1,23 @@
+{
+  "schemaVersion": "nodekit.fresh-user-verdict/v1",
+  "passed": false,
+  "errors": [
+    "at least five fresh participants are required"
+  ],
+  "checks": {
+    "participantCount": false,
+    "unassistedCompletion": false,
+    "firstMeaningfulAction": false,
+    "neutralJourney": false,
+    "singleEaseQuestion": false,
+    "noP0P1Failures": true
+  },
+  "metrics": {
+    "participantCount": 0,
+    "unassistedCompletions": 0,
+    "medianFirstMeaningfulActionMs": null,
+    "medianNeutralJourneyMs": null,
+    "medianSingleEaseQuestion": null,
+    "p0P1Failures": 0
+  }
+}

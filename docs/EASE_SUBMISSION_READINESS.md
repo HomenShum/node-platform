@@ -39,6 +39,8 @@ Canonical evidence:
 - [ ] Five genuinely cold and five warm runs pass for each supported OS/package-manager lane.
 - [ ] Cold caches are isolated rather than merely labeled cold.
 - [ ] Per-phase cold/warm p50 and p95 are computed from raw receipts.
+
+Fail-closed evaluator: `npm run ease:evaluate-developer -- proof/ease/developer-timing-runs.json`. It requires all 60 raw trials and refuses percentile claims when any lane, timing field, isolated cold cache, or zero-intervention invariant is missing.
 - [ ] No strong onboarding percentile claim is published from the current single-run samples.
 
 The existing cross-platform result proves compatibility, not percentile stability.
@@ -66,6 +68,8 @@ Next repair: for the Docker executor only, rely on the outer disposable containe
 - [ ] Consent, timestamps, screen recordings or exact screenshots, interventions, and participant-level receipts are retained.
 
 Template: `proof/ease/fresh-users.template.json`. This gate requires real people and cannot be replaced with an agent simulation.
+
+After recording the five uncoached sessions, run `npm run ease:evaluate-humans -- proof/ease/fresh-users.json`. The evaluator writes a machine-readable verdict and exits nonzero until every threshold and required observation passes.
 
 ### 3. Three Convex-backed consumers
 

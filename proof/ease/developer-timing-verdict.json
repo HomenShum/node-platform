@@ -1,0 +1,478 @@
+{
+  "schemaVersion": "nodekit.developer-timing-verdict/v1",
+  "passed": false,
+  "errors": [
+    "windows/npm/cold: requires five runs, found 0",
+    "windows/npm/warm: requires five runs, found 0",
+    "windows/pnpm/cold: requires five runs, found 0",
+    "windows/pnpm/warm: requires five runs, found 0",
+    "ubuntu/npm/cold: requires five runs, found 0",
+    "ubuntu/npm/warm: requires five runs, found 0",
+    "ubuntu/pnpm/cold: requires five runs, found 0",
+    "ubuntu/pnpm/warm: requires five runs, found 0",
+    "macos/npm/cold: requires five runs, found 0",
+    "macos/npm/warm: requires five runs, found 0",
+    "macos/pnpm/cold: requires five runs, found 0",
+    "macos/pnpm/warm: requires five runs, found 0"
+  ],
+  "requiredRuns": 60,
+  "observedRuns": 0,
+  "cells": {
+    "windows/npm": {
+      "cold": {
+        "scaffoldGenerationMs": {
+          "p50": null,
+          "p95": null,
+          "samples": 0
+        },
+        "dependencyInstallationMs": {
+          "p50": null,
+          "p95": null,
+          "samples": 0
+        },
+        "compileMs": {
+          "p50": null,
+          "p95": null,
+          "samples": 0
+        },
+        "serverReadinessMs": {
+          "p50": null,
+          "p95": null,
+          "samples": 0
+        },
+        "firstMeaningfulPaintMs": {
+          "p50": null,
+          "p95": null,
+          "samples": 0
+        },
+        "neutralJourneyMs": {
+          "p50": null,
+          "p95": null,
+          "samples": 0
+        },
+        "totalMs": {
+          "p50": null,
+          "p95": null,
+          "samples": 0
+        }
+      },
+      "warm": {
+        "scaffoldGenerationMs": {
+          "p50": null,
+          "p95": null,
+          "samples": 0
+        },
+        "dependencyInstallationMs": {
+          "p50": null,
+          "p95": null,
+          "samples": 0
+        },
+        "compileMs": {
+          "p50": null,
+          "p95": null,
+          "samples": 0
+        },
+        "serverReadinessMs": {
+          "p50": null,
+          "p95": null,
+          "samples": 0
+        },
+        "firstMeaningfulPaintMs": {
+          "p50": null,
+          "p95": null,
+          "samples": 0
+        },
+        "neutralJourneyMs": {
+          "p50": null,
+          "p95": null,
+          "samples": 0
+        },
+        "totalMs": {
+          "p50": null,
+          "p95": null,
+          "samples": 0
+        }
+      }
+    },
+    "windows/pnpm": {
+      "cold": {
+        "scaffoldGenerationMs": {
+          "p50": null,
+          "p95": null,
+          "samples": 0
+        },
+        "dependencyInstallationMs": {
+          "p50": null,
+          "p95": null,
+          "samples": 0
+        },
+        "compileMs": {
+          "p50": null,
+          "p95": null,
+          "samples": 0
+        },
+        "serverReadinessMs": {
+          "p50": null,
+          "p95": null,
+          "samples": 0
+        },
+        "firstMeaningfulPaintMs": {
+          "p50": null,
+          "p95": null,
+          "samples": 0
+        },
+        "neutralJourneyMs": {
+          "p50": null,
+          "p95": null,
+          "samples": 0
+        },
+        "totalMs": {
+          "p50": null,
+          "p95": null,
+          "samples": 0
+        }
+      },
+      "warm": {
+        "scaffoldGenerationMs": {
+          "p50": null,
+          "p95": null,
+          "samples": 0
+        },
+        "dependencyInstallationMs": {
+          "p50": null,
+          "p95": null,
+          "samples": 0
+        },
+        "compileMs": {
+          "p50": null,
+          "p95": null,
+          "samples": 0
+        },
+        "serverReadinessMs": {
+          "p50": null,
+          "p95": null,
+          "samples": 0
+        },
+        "firstMeaningfulPaintMs": {
+          "p50": null,
+          "p95": null,
+          "samples": 0
+        },
+        "neutralJourneyMs": {
+          "p50": null,
+          "p95": null,
+          "samples": 0
+        },
+        "totalMs": {
+          "p50": null,
+          "p95": null,
+          "samples": 0
+        }
+      }
+    },
+    "ubuntu/npm": {
+      "cold": {
+        "scaffoldGenerationMs": {
+          "p50": null,
+          "p95": null,
+          "samples": 0
+        },
+        "dependencyInstallationMs": {
+          "p50": null,
+          "p95": null,
+          "samples": 0
+        },
+        "compileMs": {
+          "p50": null,
+          "p95": null,
+          "samples": 0
+        },
+        "serverReadinessMs": {
+          "p50": null,
+          "p95": null,
+          "samples": 0
+        },
+        "firstMeaningfulPaintMs": {
+          "p50": null,
+          "p95": null,
+          "samples": 0
+        },
+        "neutralJourneyMs": {
+          "p50": null,
+          "p95": null,
+          "samples": 0
+        },
+        "totalMs": {
+          "p50": null,
+          "p95": null,
+          "samples": 0
+        }
+      },
+      "warm": {
+        "scaffoldGenerationMs": {
+          "p50": null,
+          "p95": null,
+          "samples": 0
+        },
+        "dependencyInstallationMs": {
+          "p50": null,
+          "p95": null,
+          "samples": 0
+        },
+        "compileMs": {
+          "p50": null,
+          "p95": null,
+          "samples": 0
+        },
+        "serverReadinessMs": {
+          "p50": null,
+          "p95": null,
+          "samples": 0
+        },
+        "firstMeaningfulPaintMs": {
+          "p50": null,
+          "p95": null,
+          "samples": 0
+        },
+        "neutralJourneyMs": {
+          "p50": null,
+          "p95": null,
+          "samples": 0
+        },
+        "totalMs": {
+          "p50": null,
+          "p95": null,
+          "samples": 0
+        }
+      }
+    },
+    "ubuntu/pnpm": {
+      "cold": {
+        "scaffoldGenerationMs": {
+          "p50": null,
+          "p95": null,
+          "samples": 0
+        },
+        "dependencyInstallationMs": {
+          "p50": null,
+          "p95": null,
+          "samples": 0
+        },
+        "compileMs": {
+          "p50": null,
+          "p95": null,
+          "samples": 0
+        },
+        "serverReadinessMs": {
+          "p50": null,
+          "p95": null,
+          "samples": 0
+        },
+        "firstMeaningfulPaintMs": {
+          "p50": null,
+          "p95": null,
+          "samples": 0
+        },
+        "neutralJourneyMs": {
+          "p50": null,
+          "p95": null,
+          "samples": 0
+        },
+        "totalMs": {
+          "p50": null,
+          "p95": null,
+          "samples": 0
+        }
+      },
+      "warm": {
+        "scaffoldGenerationMs": {
+          "p50": null,
+          "p95": null,
+          "samples": 0
+        },
+        "dependencyInstallationMs": {
+          "p50": null,
+          "p95": null,
+          "samples": 0
+        },
+        "compileMs": {
+          "p50": null,
+          "p95": null,
+          "samples": 0
+        },
+        "serverReadinessMs": {
+          "p50": null,
+          "p95": null,
+          "samples": 0
+        },
+        "firstMeaningfulPaintMs": {
+          "p50": null,
+          "p95": null,
+          "samples": 0
+        },
+        "neutralJourneyMs": {
+          "p50": null,
+          "p95": null,
+          "samples": 0
+        },
+        "totalMs": {
+          "p50": null,
+          "p95": null,
+          "samples": 0
+        }
+      }
+    },
+    "macos/npm": {
+      "cold": {
+        "scaffoldGenerationMs": {
+          "p50": null,
+          "p95": null,
+          "samples": 0
+        },
+        "dependencyInstallationMs": {
+          "p50": null,
+          "p95": null,
+          "samples": 0
+        },
+        "compileMs": {
+          "p50": null,
+          "p95": null,
+          "samples": 0
+        },
+        "serverReadinessMs": {
+          "p50": null,
+          "p95": null,
+          "samples": 0
+        },
+        "firstMeaningfulPaintMs": {
+          "p50": null,
+          "p95": null,
+          "samples": 0
+        },
+        "neutralJourneyMs": {
+          "p50": null,
+          "p95": null,
+          "samples": 0
+        },
+        "totalMs": {
+          "p50": null,
+          "p95": null,
+          "samples": 0
+        }
+      },
+      "warm": {
+        "scaffoldGenerationMs": {
+          "p50": null,
+          "p95": null,
+          "samples": 0
+        },
+        "dependencyInstallationMs": {
+          "p50": null,
+          "p95": null,
+          "samples": 0
+        },
+        "compileMs": {
+          "p50": null,
+          "p95": null,
+          "samples": 0
+        },
+        "serverReadinessMs": {
+          "p50": null,
+          "p95": null,
+          "samples": 0
+        },
+        "firstMeaningfulPaintMs": {
+          "p50": null,
+          "p95": null,
+          "samples": 0
+        },
+        "neutralJourneyMs": {
+          "p50": null,
+          "p95": null,
+          "samples": 0
+        },
+        "totalMs": {
+          "p50": null,
+          "p95": null,
+          "samples": 0
+        }
+      }
+    },
+    "macos/pnpm": {
+      "cold": {
+        "scaffoldGenerationMs": {
+          "p50": null,
+          "p95": null,
+          "samples": 0
+        },
+        "dependencyInstallationMs": {
+          "p50": null,
+          "p95": null,
+          "samples": 0
+        },
+        "compileMs": {
+          "p50": null,
+          "p95": null,
+          "samples": 0
+        },
+        "serverReadinessMs": {
+          "p50": null,
+          "p95": null,
+          "samples": 0
+        },
+        "firstMeaningfulPaintMs": {
+          "p50": null,
+          "p95": null,
+          "samples": 0
+        },
+        "neutralJourneyMs": {
+          "p50": null,
+          "p95": null,
+          "samples": 0
+        },
+        "totalMs": {
+          "p50": null,
+          "p95": null,
+          "samples": 0
+        }
+      },
+      "warm": {
+        "scaffoldGenerationMs": {
+          "p50": null,
+          "p95": null,
+          "samples": 0
+        },
+        "dependencyInstallationMs": {
+          "p50": null,
+          "p95": null,
+          "samples": 0
+        },
+        "compileMs": {
+          "p50": null,
+          "p95": null,
+          "samples": 0
+        },
+        "serverReadinessMs": {
+          "p50": null,
+          "p95": null,
+          "samples": 0
+        },
+        "firstMeaningfulPaintMs": {
+          "p50": null,
+          "p95": null,
+          "samples": 0
+        },
+        "neutralJourneyMs": {
+          "p50": null,
+          "p95": null,
+          "samples": 0
+        },
+        "totalMs": {
+          "p50": null,
+          "p95": null,
+          "samples": 0
+        }
+      }
+    }
+  }
+}

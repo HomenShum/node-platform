@@ -25,6 +25,8 @@
     "presentation:nodekit-proof": "node scripts/generate-nodekit-proof-presentation.mjs",
     "acceptance:factory": "node src/factory-acceptance.mjs",
     "acceptance:agent": "node scripts/run-agent-ease-trial.mjs",
+    "ease:evaluate-developer": "node scripts/evaluate-ease-evidence.mjs developer",
+    "ease:evaluate-humans": "node scripts/evaluate-ease-evidence.mjs humans",
     "registry:check": "node src/cli.mjs registry check --registry-root .",
     "ecosystem:check": "node src/cli.mjs ecosystem check --registry-root . --workspace ..",
     "dashboard": "node src/cli.mjs dashboard --registry-root . --workspace .. --write",
