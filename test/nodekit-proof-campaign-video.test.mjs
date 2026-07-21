@@ -14,6 +14,7 @@ import { fileURLToPath } from "node:url";
 
 import {
   EXPECTED_FEATURE_PROOF_STUDIO_COMMIT,
+  adaptCaptureWaitContract,
   buildRenderCommands,
   durationFrames,
   evaluatePreflight,
@@ -157,6 +158,21 @@ test("package commands are executable without direct .cmd spawning on Windows", 
   } else {
     assert.deepEqual(invocation, { command: "npm", args: ["--version"] });
   }
+});
+
+test("capture adapter adds a bounded visible-text wait to the pinned script contract", (t) => {
+  const temporaryRoot = mkdtempSync(join(tmpdir(), "nodekit-video-capture-adapter-"));
+  t.after(() => rmSync(temporaryRoot, { recursive: true, force: true }));
+  const capturePath = join(temporaryRoot, "capture.mjs");
+  writeFileSync(
+    capturePath,
+    'const run = async (p, a) => {\n  if (a.act === "click") {}\n  else if (a.act === "sleep") { await sleep(p, a.ms); }\n};\n',
+  );
+  const digest = adaptCaptureWaitContract(temporaryRoot, "capture.mjs");
+  const adapted = readFileSync(capturePath, "utf8");
+  assert.match(digest, /^[a-f0-9]{64}$/);
+  assert.match(adapted, /a\.act === "waitForText"/);
+  assert.match(adapted, /timeout: a\.timeoutMs \|\| 10000/);
 });
 
 test("preflight fails closed when deployment, browser, and screenshot proof are absent", (t) => {

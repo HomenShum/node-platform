@@ -752,10 +752,6 @@ const adaptWalkthroughHostLabel = (stageRoot) => {
       "<Chrome accent={wt.accent} />",
       '<Chrome accent={wt.accent} browserLabel={wt.browserLabel || "verified production"} />',
     ],
-    [
-      'else if (a.act === "sleep") { await sleep(p, a.ms); }',
-      'else if (a.act === "sleep") { await sleep(p, a.ms); }\n  else if (a.act === "waitForText") { await loc(p, a.sel).filter({ hasText: new RegExp(a.text, "i") }).waitFor({ state: "visible", timeout: a.timeoutMs || 10000 }); }',
-    ],
   ];
   for (const [before, after] of replacements) {
     if (!source.includes(before)) {
@@ -763,6 +759,19 @@ const adaptWalkthroughHostLabel = (stageRoot) => {
     }
     source = source.replace(before, after);
   }
+  writeFileSync(path, source);
+  return sha256File(path);
+};
+
+export const adaptCaptureWaitContract = (stageRoot, captureEntrypoint) => {
+  const path = join(stageRoot, captureEntrypoint);
+  let source = readFileSync(path, "utf8");
+  const before = 'else if (a.act === "sleep") { await sleep(p, a.ms); }';
+  const after = `${before}\n  else if (a.act === "waitForText") { await loc(p, a.sel).filter({ hasText: new RegExp(a.text, "i") }).waitFor({ state: "visible", timeout: a.timeoutMs || 10000 }); }`;
+  if (!source.includes(before)) {
+    throw new Error(`Feature Proof Studio capture adapter anchor is missing: ${before}`);
+  }
+  source = source.replace(before, after);
   writeFileSync(path, source);
   return sha256File(path);
 };
@@ -825,6 +834,10 @@ const prepareStage = ({ config, paths, fpsRoot, workRoot, deployment }) => {
     config.featureProofStudio.captureEntrypoint,
   );
   const upstreamCaptureSha256 = sha256File(captureScriptPath);
+  const adaptedCaptureSha256 = adaptCaptureWaitContract(
+    stageRoot,
+    config.featureProofStudio.captureEntrypoint,
+  );
   const adaptedWalkthroughSha256 = adaptWalkthroughHostLabel(stageRoot);
   writeFileSync(
     join(stageRoot, config.featureProofStudio.captureSpecSlot),
@@ -842,6 +855,7 @@ const prepareStage = ({ config, paths, fpsRoot, workRoot, deployment }) => {
     stageRoot,
     configHash,
     upstreamCaptureSha256,
+    adaptedCaptureSha256,
     adaptedWalkthroughSha256,
     generatedSpecSha256: sha256File(
       join(stageRoot, config.featureProofStudio.captureSpecSlot),
@@ -987,6 +1001,7 @@ export async function captureCampaign({
     featureProofStudio: {
       commit: config.featureProofStudio.commit,
       upstreamCaptureSha256: stage.upstreamCaptureSha256,
+      adaptedCaptureSha256: stage.adaptedCaptureSha256,
       adaptedWalkthroughSha256: stage.adaptedWalkthroughSha256,
       generatedSpecSha256: stage.generatedSpecSha256,
       remotionRootSha256: stage.remotionRootSha256,
@@ -1049,8 +1064,8 @@ const requireCaptureReceipt = (config, preflight) => {
     const stageBindings = [
       [
         config.featureProofStudio.captureEntrypoint,
-        receipt.featureProofStudio.upstreamCaptureSha256,
-        "upstream capture entrypoint",
+        receipt.featureProofStudio.adaptedCaptureSha256,
+        "adapted capture entrypoint",
       ],
       [
         "src/Walkthrough.jsx",
@@ -1258,6 +1273,10 @@ export function finalizeCampaign({
       commit: config.featureProofStudio.commit,
       captureEntrypoint: config.featureProofStudio.captureEntrypoint,
       remotionEntrypoint: config.featureProofStudio.remotionEntrypoint,
+      upstreamCaptureSha256:
+        captureReceipt.featureProofStudio.upstreamCaptureSha256,
+      adaptedCaptureSha256:
+        captureReceipt.featureProofStudio.adaptedCaptureSha256,
       adaptedWalkthroughSha256:
         captureReceipt.featureProofStudio.adaptedWalkthroughSha256,
       generatedSpecSha256:
