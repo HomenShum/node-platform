@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="A domain-blank, behaviorally figured-out NodeKit application." />
+    <title>__APP_TITLE__ · Guided case</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#artifact">Skip to primary artifact</a>
+    <header>
+      <a class="brand" href="/">N/ <span>__APP_TITLE__</span></a>
+      <div class="status"><i></i><span id="status-label">Case ready</span></div>
+    </header>
+    <main>
+      <section class="orientation" aria-labelledby="case-title">
+        <div>
+          <p class="eyebrow">GUIDED CASE</p>
+          <h1 id="case-title">One clear job.<br><em>Carried all the way through.</em></h1>
+          <p class="lede">__BRIEF_TEXT__</p>
+        </div>
+        <button class="button secondary" id="reset">Reset demonstration</button>
+      </section>
+
+      <div class="progress" aria-label="Case progress" id="progress"></div>
+      <div class="error" id="error" role="alert" hidden></div>
+
+      <section class="workspace">
+        <nav aria-label="Case navigation">
+          <p class="eyebrow">CASE</p>
+          <strong id="case-name">Current case</strong>
+          <a class="active" href="#artifact">Primary artifact</a>
+          <a href="#review">Review</a>
+          <a href="#activity">Activity</a>
+          <div class="case-meta"><span>Next owner</span><strong id="next-owner">user</strong></div>
+        </nav>
+
+        <article class="artifact" id="artifact" tabindex="-1">
+          <div class="section-title"><div><p class="eyebrow">PRIMARY ARTIFACT</p><h2>Primary artifact</h2></div><span class="version" id="artifact-version">v1</span></div>
+          <div class="current-action"><span>Current action</span><strong id="current-action">Confirm the intended outcome</strong></div>
+          <div class="artifact-body" id="artifact-body"></div>
+          <div class="completion" id="completion" hidden><strong>Completion verified</strong><p>The canonical artifact and content-addressed receipt are ready.</p></div>
+        </article>
+
+        <aside id="review">
+          <div class="tabs" role="tablist"><button class="tab active" id="review-tab" role="tab">Review</button><button class="tab" role="tab">Agent activity</button></div>
+          <p class="eyebrow">PENDING DECISION</p>
+          <h2>Review proposal</h2>
+          <p id="review-copy">No generated work is canonical until you approve it.</p>
+          <div class="proposal" id="proposal"><span>Nothing pending.</span></div>
+          <div class="actions">
+            <button class="button primary" id="propose">Prepare proposal</button>
+            <button class="button approve" id="approve" disabled>Approve</button>
+            <button class="button secondary" id="reject" disabled>Reject</button>
+          </div>
+          <details id="activity"><summary>Advanced trace</summary><ol id="events"></ol></details>
+        </aside>
+      </section>
+    </main>
+    <footer><span>Blank in domain. Figured out in behavior.</span><span id="receipt-id">No receipt yet</span></footer>
+    <script type="module" src="/app.js"></script>
+  </body>
+</html>

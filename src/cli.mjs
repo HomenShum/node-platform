@@ -8,7 +8,7 @@ import { compileAgentDefinition, inspectAgentDefinition } from "./lib/agent-defi
 import { pathExists } from "./lib/files.mjs";
 import { checkRepository, commandFor } from "./lib/repo-check.mjs";
 import { loadRegistry, validateRegistry } from "./lib/registry.mjs";
-import { adoptProject, createProject, recordSetupEvent } from "./lib/scaffold.mjs";
+import { adoptProject, createProject, createReferenceProject, recordSetupEvent } from "./lib/scaffold.mjs";
 import {
   importUnderstandAnythingCodeGraph,
   queryUnderstandAnythingCodeGraph,
@@ -48,13 +48,14 @@ function printHelp() {
   console.log(`NodeKit
 
 Usage:
-  nodekit create <directory> --name <slug> --brief <text> [--preset research-loop|smb-lending-fde|agentic-rl-research]
+  nodekit create <directory> --name <slug> --brief <text>
       [--provider openrouter] [--model openai/gpt-4o-mini] [--backend filesystem]
       [--nodekit-specifier <npm-or-file-spec>] [--sponsors <comma-list>]
       [--package-manager npm|pnpm]
       [--launch-started-at <iso>] [--research-ms <number>] [--local-proof]
       [--no-install] [--no-git]
   nodekit adopt [directory] --name <slug> --brief <text>
+  nodekit reference create <reference> <directory> --name <slug> --brief <text>
   nodekit compile [--repo-root <path>] [--check] [--json]
   nodekit inspect [--repo-root <path>] [--json]
   nodekit doctor [--repo-root <path>] [--json]
@@ -256,7 +257,6 @@ async function runCreate(parsed) {
     name: parsed.options.name ?? path.basename(path.resolve(target)),
     nodekitSpecifier,
     packageManager: parsed.options["package-manager"],
-    preset: parsed.options.preset,
     provider: parsed.options.provider,
     researchMs: parsed.options["research-ms"] === undefined ? undefined : Number(parsed.options["research-ms"]),
     secretRef: parsed.options["secret-ref"],
@@ -267,9 +267,7 @@ async function runCreate(parsed) {
   const compiled = await compileAgentDefinition(result.target);
   await recordSetupEvent(result.target, "compile_completed", { configHash: compiled.definition.configHash }, Date.now() - compileStarted);
   if (localProof) {
-    const scripts = ["smb-lending-fde", "agentic-rl-research"].includes(result.preset)
-      ? ["demo.mjs", "eval.mjs", "benchmark.mjs", "proof.mjs"]
-      : ["demo.mjs", "eval.mjs", "proof.mjs"];
+    const scripts = ["demo.mjs", "eval.mjs", "proof.mjs"];
     for (const script of scripts) {
       await new Promise((resolve, reject) => {
         const child = spawn(process.execPath, [path.join(result.target, "scripts", script)], {
@@ -287,6 +285,25 @@ async function runCreate(parsed) {
   }
   console.log(`CREATED ${result.name} at ${result.target}${result.candidateCommit ? ` (${result.candidateCommit.slice(0, 12)})` : ""}`);
   console.log(`NEXT cd ${quoteArgument(result.target)} && ${result.packageManager} run compile && ${result.packageManager} run demo`);
+}
+
+async function runReferenceCreate(parsed) {
+  const reference = parsed.positional[2];
+  const target = parsed.positional[3];
+  if (!reference || !target) throw new Error("reference create requires a reference name and target directory");
+  const result = await createReferenceProject({
+    brief: parsed.options.brief,
+    git: optionEnabled(parsed.options, "git"),
+    install: optionEnabled(parsed.options, "install"),
+    name: parsed.options.name ?? path.basename(path.resolve(target)),
+    nodekitSpecifier: parsed.options["nodekit-specifier"] ?? parsed.options["nodekit-source"],
+    packageManager: parsed.options["package-manager"],
+    reference,
+    target,
+  });
+  await compileAgentDefinition(result.target);
+  console.log(`CREATED REFERENCE ${reference} at ${result.target}`);
+  console.log("This is an explicitly labeled example, not NodeKit's primary application foundation.");
 }
 
 async function runAdopt(parsed) {
@@ -433,6 +450,10 @@ async function main() {
   }
   if (first === "create") {
     await runCreate(parsed);
+    return;
+  }
+  if (first === "reference" && second === "create") {
+    await runReferenceCreate(parsed);
     return;
   }
   if (first === "adopt") {

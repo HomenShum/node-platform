@@ -10,6 +10,7 @@
     "src",
     "schemas",
     "templates",
+    "reference-apps",
     "plugins",
     "ownership.yaml",
     "repositories.yaml",

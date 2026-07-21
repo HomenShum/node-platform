@@ -1,0 +1,24 @@
+schemaVersion: nodekit.capability-plan/v1
+status: available-after-workflow-research
+provider: convex
+authority:
+  authentication: host-application
+  lifecycle: convex-caseflow-adapter
+requiredSemantics:
+  - proposal-before-mutation
+  - base-version-check
+  - owner-scoped-wrapper
+  - reactive-case-progress
+  - immutable-receipt
+candidateComponents:
+  agent: optional
+  workflow: optional
+  workpool: optional
+  persistent-streaming: optional
+  rag: optional
+  presence: optional
+proofRequired:
+  - adapter-conformance
+  - authenticated-owner-scope
+  - browser-journey
+  - exact-commit-deployment

@@ -1,0 +1,5 @@
+{
+  "id": "figured-out-journey",
+  "schemaVersion": "nodekit.eval/v1",
+  "assertions": ["explicit-next-action", "proposal-before-mutation", "receipt-created"]
+}

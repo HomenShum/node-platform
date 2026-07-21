@@ -8,7 +8,6 @@ import { compileAgentDefinition } from "./lib/agent-definition.mjs";
 import { createProject } from "./lib/scaffold.mjs";
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const presets = ["agentic-rl-research", "smb-lending-fde"];
 
 function digest(value) {
   return createHash("sha256").update(JSON.stringify(value)).digest("hex");
@@ -65,36 +64,40 @@ async function readJson(file) {
   return JSON.parse(await readFile(file, "utf8"));
 }
 
-async function acceptPreset(root, preset) {
-  const target = path.join(root, preset);
+async function acceptBase(root) {
+  const target = path.join(root, "domain-blank-base");
   const created = await createProject({
-    brief: `Factory acceptance for ${preset}`,
+    brief: "Carry one bounded user intention to a reviewed and verified artifact.",
     git: true,
     install: true,
-    name: `factory-${preset}`,
+    name: "factory-domain-blank-base",
     packageManager: "npm",
-    preset,
     target,
   });
   const compiled = await compileAgentDefinition(target);
-  for (const script of ["compile", "check", "demo", "eval", "benchmark", "proof"]) {
+  for (const script of ["compile", "check", "demo", "eval", "proof:browser", "proof"]) {
     runNpm(target, script);
   }
 
-  const [packageJson, packageLock, proof, currentIdentity, resolvedDefinition] = await Promise.all([
+  const [packageJson, packageLock, proof, currentIdentity, resolvedDefinition, figuredOut, experience] = await Promise.all([
     readJson(path.join(target, "package.json")),
     readJson(path.join(target, "package-lock.json")),
     readJson(path.join(target, "proof", "release-proof.json")),
     readJson(path.join(target, ".nodeagent", "application-identity.json")),
     readJson(path.join(target, ".nodeagent", "resolved-definition.json")),
+    readFile(path.join(target, "docs", "FIGURED_OUT.md"), "utf8"),
+    readFile(path.join(target, "product", "EXPERIENCE.yaml"), "utf8"),
   ]);
-  const dependency = packageJson.devDependencies?.["@homenshum/nodekit"];
+  const dependency = packageJson.dependencies?.["@homenshum/nodekit"] ?? packageJson.devDependencies?.["@homenshum/nodekit"];
   const installedNodeKitLink = packageLock.packages?.["node_modules/@homenshum/nodekit"];
   const installedNodeKit = packageLock.packages?.["vendor/nodekit"];
   const checks = {
     candidateCommitted: /^[a-f0-9]{40}$/.test(created.candidateCommit ?? ""),
     compileReproducible: currentIdentity.applicationHash === compiled.definition.applicationHash,
-    exactRuntimeInstalled: installedNodeKit?.version === "0.2.0",
+    browserCertified: proof.checks.browserQa === true,
+    domainBlank: !/lending|research-loop|founderquest/i.test(`${figuredOut}\n${experience}`),
+    exactRuntimeInstalled: installedNodeKit?.version === "0.2.1",
+    figuredOutContract: figuredOut.includes("Case -> Run -> Stage -> Artifact -> Proposal -> Approval -> Receipt"),
     proofIdentityBound: proof.applicationHash === currentIdentity.applicationHash
       && proof.configHash === currentIdentity.configHash,
     proofPassed: proof.passed === true && proof.releaseReady === false,
@@ -107,7 +110,7 @@ async function acceptPreset(root, preset) {
       && !path.isAbsolute(String(installedNodeKitLink?.resolved ?? "")),
   };
   if (!Object.values(checks).every(Boolean)) {
-    throw new Error(`${preset} factory acceptance failed: ${JSON.stringify(checks)}`);
+    throw new Error(`domain-blank base factory acceptance failed: ${JSON.stringify(checks)}`);
   }
   return {
     applicationHash: currentIdentity.applicationHash,
@@ -116,6 +119,7 @@ async function acceptPreset(root, preset) {
     configHash: currentIdentity.configHash,
     dependency,
     proofDigest: digest(proof),
+    template: "domain-blank-base",
   };
 }
 
@@ -123,18 +127,15 @@ const started = Date.now();
 const temporaryRoot = await mkdtemp(path.join(os.tmpdir(), "nodekit-factory-acceptance-"));
 let receipt;
 try {
-  const results = {};
-  for (const preset of presets) {
-    console.log(`FACTORY ACCEPTANCE ${preset}`);
-    results[preset] = await acceptPreset(temporaryRoot, preset);
-  }
+  console.log("FACTORY ACCEPTANCE domain-blank-base");
+  const result = await acceptBase(temporaryRoot);
   receipt = {
     durationMs: Date.now() - started,
     generatedAt: new Date().toISOString(),
     nodeVersion: process.version,
     nodekitSourceHash: await nodeKitSourceHash(),
     passed: true,
-    presets: results,
+    base: result,
     schemaVersion: "nodekit.factory-acceptance/v1",
   };
   receipt.receiptDigest = digest(receipt);

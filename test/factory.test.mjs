@@ -6,7 +6,7 @@ import path from "node:path";
 import test from "node:test";
 import { promisify } from "node:util";
 import { compileAgentDefinition, inspectAgentDefinition } from "../src/lib/agent-definition.mjs";
-import { adoptProject, createProject } from "../src/lib/scaffold.mjs";
+import { adoptProject, createProject, createReferenceProject } from "../src/lib/scaffold.mjs";
 
 const execFileAsync = promisify(execFile);
 
@@ -25,8 +25,14 @@ test("create emits a parseable, reproducible application from multiline input", 
     target,
   });
   const packageJson = JSON.parse(await readFile(path.join(target, "package.json"), "utf8"));
-  assert.equal(packageJson.devDependencies["@homenshum/nodekit"], "file:D:/work/node-platform");
-  assert.equal(packageJson.dependencies["@earendil-works/pi-ai"], "0.80.10");
+  assert.equal(packageJson.dependencies["@homenshum/nodekit"], "file:D:/work/node-platform");
+  assert.equal(packageJson.dependencies?.["@earendil-works/pi-ai"], undefined);
+  assert.equal(await readFile(path.join(target, "docs", "FIGURED_OUT.md"), "utf8").then((value) => value.includes("Case -> Run -> Stage -> Artifact -> Proposal -> Approval -> Receipt")), true);
+  assert.equal(await readFile(path.join(target, "product", "SERVICE_BLUEPRINT.md"), "utf8").then(Boolean), true);
+  assert.match(
+    await readFile(path.join(target, "integrations", "convex", "capability-plan.yaml"), "utf8"),
+    /status: available-after-workflow-research/,
+  );
   assert.equal(
     JSON.parse(await readFile(path.join(target, "proof", "build-friction.json"), "utf8")).packageManager,
     "pnpm",
@@ -51,7 +57,7 @@ test("create emits a parseable, reproducible application from multiline input", 
   assert.match(await readFile(path.join(target, ".gitattributes"), "utf8"), /\* text=auto eol=lf/);
   const dockerfile = await readFile(path.join(target, "Dockerfile"), "utf8");
   const renderBlueprint = await readFile(path.join(target, "render.yaml"), "utf8");
-  assert.match(dockerfile, /@earendil-works\/pi-ai@0\.80\.10/);
+  assert.match(dockerfile, /node:22-alpine/);
   assert.match(renderBlueprint, /name: fresh-app/);
   assert.match(renderBlueprint, /healthCheckPath: \/api\/health/);
   assert.equal(`${dockerfile}\n${renderBlueprint}`.includes("__"), false);
@@ -69,7 +75,20 @@ test("create emits a parseable, reproducible application from multiline input", 
     first.definition.applicationHash,
   );
   assert.equal(first.manifest.application.purpose.includes("second line"), true);
-  assert.equal(inspectAgentDefinition(second).secrets[0].name, "OPENROUTER_API_KEY");
+  assert.equal(inspectAgentDefinition(second).secrets[0].name, "NODEKIT_OPTIONAL_MODEL_KEY");
+});
+
+test("primary create rejects domain presets and references remain explicitly separate", async (t) => {
+  const root = await mkdtemp(path.join(os.tmpdir(), "nodekit-no-presets-"));
+  t.after(() => rm(root, { force: true, recursive: true }));
+  await assert.rejects(
+    () => createProject({ git: false, install: false, name: "not-a-preset", preset: "research-loop", target: path.join(root, "bad") }),
+    /no longer accepts --preset/,
+  );
+  const reference = path.join(root, "reference");
+  const created = await createReferenceProject({ git: false, install: false, name: "reference", reference: "research-loop", target: reference });
+  assert.equal(created.reference, "research-loop");
+  assert.match(await readFile(path.join(reference, "README.md"), "utf8"), /research-loop/);
 });
 
 test("compiled hash detects fixture drift and literal secrets fail closed", async (t) => {
@@ -208,11 +227,11 @@ test("create rejects an unsupported package manager before writing files", async
 test("default projects vendor the exact NodeKit runtime without polluting capability discovery", async (t) => {
   const root = await mkdtemp(path.join(os.tmpdir(), "nodekit-vendored-runtime-"));
   t.after(() => rm(root, { force: true, recursive: true }));
-  await createProject({
+  await createReferenceProject({
     git: false,
     install: false,
     name: "portable-runtime",
-    preset: "agentic-rl-research",
+    reference: "agentic-rl-research",
     target: root,
   });
 
@@ -234,12 +253,12 @@ test("default projects vendor the exact NodeKit runtime without polluting capabi
 
   const blankSpecifierTarget = path.join(await mkdtemp(path.join(os.tmpdir(), "nodekit-blank-specifier-")), "app");
   t.after(() => rm(path.dirname(blankSpecifierTarget), { force: true, recursive: true }));
-  await createProject({
+  await createReferenceProject({
     git: false,
     install: false,
     name: "blank-specifier-runtime",
     nodekitSpecifier: "   ",
-    preset: "agentic-rl-research",
+    reference: "agentic-rl-research",
     target: blankSpecifierTarget,
   });
   const blankSpecifierPackage = JSON.parse(await readFile(path.join(blankSpecifierTarget, "package.json"), "utf8"));
@@ -269,11 +288,11 @@ test("agentic RL preset creates an offline FounderQuest lab with protected heldo
   const root = await mkdtemp(path.join(os.tmpdir(), "nodekit-agentic-rl-"));
   const target = path.join(root, "lab");
   t.after(() => rm(root, { force: true, recursive: true }));
-  await createProject({
+  await createReferenceProject({
     git: false,
     install: false,
     name: "FounderQuest RL",
-    preset: "agentic-rl-research",
+    reference: "agentic-rl-research",
     target,
   });
 
@@ -324,7 +343,7 @@ test("adopt is additive, runnable, and reports collisions", async (t) => {
   );
   assert.equal(result.collisions.includes("agent/instructions.md"), true);
   assert.equal(result.collisions.includes(".claude/skills/nodekit-present/SKILL.md"), true);
-  assert.equal(await readFile(path.join(root, "backend", "filesystem", "store.mjs"), "utf8").then(Boolean), true);
+  assert.equal(await readFile(path.join(root, "agent", "workflow.mjs"), "utf8").then(Boolean), true);
 });
 
 test("a fresh no-key Git candidate reaches an honest local-ready proof", async (t) => {
@@ -347,18 +366,18 @@ test("a fresh no-key Git candidate reaches an honest local-ready proof", async (
   assert.equal(receipt.releaseReady, false);
   assert.equal(receipt.applicationHash, compiled.definition.applicationHash);
   assert.equal(receipt.configHash, compiled.definition.configHash);
-  assert.deepEqual(receipt.missingReleaseGates, ["livePi", "browserQa", "deployment"]);
+  assert.deepEqual(receipt.missingReleaseGates, ["browserQa", "deployment"]);
 });
 
 test("agentic RL preset creates an offline FounderQuest lab with protected heldout evaluation", async (t) => {
   const root = await mkdtemp(path.join(os.tmpdir(), "nodekit-agentic-rl-"));
   const target = path.join(root, "lab");
   t.after(() => rm(root, { force: true, recursive: true }));
-  await createProject({
+  await createReferenceProject({
     git: true,
     install: false,
     name: "FounderQuest RL",
-    preset: "agentic-rl-research",
+    reference: "agentic-rl-research",
     target,
   });
 
@@ -400,12 +419,12 @@ test("agentic RL preset creates an offline FounderQuest lab with protected heldo
 test("the SMB lending FDE preset produces a clean-room human-authority proof", async (t) => {
   const root = await mkdtemp(path.join(os.tmpdir(), "nodekit-smb-lending-fde-"));
   t.after(() => rm(root, { force: true, recursive: true }));
-  await createProject({
+  await createReferenceProject({
     brief: "Map a synthetic SMB lending file without making a credit decision.",
     git: true,
     install: false,
     name: "casca-fde-deployment-lab",
-    preset: "smb-lending-fde",
+    reference: "smb-lending-fde",
     target: root,
   });
   const compiled = await compileAgentDefinition(root);

@@ -1,45 +1,30 @@
 {
-  "durationMs": 37221,
-  "generatedAt": "2026-07-21T02:59:29.345Z",
+  "durationMs": 9989,
+  "generatedAt": "2026-07-21T20:01:00.325Z",
   "nodeVersion": "v22.22.2",
-  "nodekitSourceHash": "3c7777258b38b8a501a9e9929b04b8224786168eeb1f2adaf8e5f9f50f67c60e",
+  "nodekitSourceHash": "27e4504faf8bead48a04908504f63995c3fb5a485d0509dff1a496c7e944a204",
   "passed": true,
-  "presets": {
-    "agentic-rl-research": {
-      "applicationHash": "6ec029c45898affba0801095ba6b506d0384f152a423ebe7c674aa9abc23b796",
-      "candidateCommit": "7e4d1c37a2424228361b0038eb4a68a887e19d91",
-      "checks": {
-        "candidateCommitted": true,
-        "compileReproducible": true,
-        "exactRuntimeInstalled": true,
-        "proofIdentityBound": true,
-        "proofPassed": true,
-        "runtimeHashBound": true,
-        "runtimeNotMisclassified": true,
-        "runtimeSpecifierPortable": true
-      },
-      "configHash": "6ec029c45898affba0801095ba6b506d0384f152a423ebe7c674aa9abc23b796",
-      "dependency": "file:vendor/nodekit",
-      "proofDigest": "368b74a7e7378fb8bcced76ae05a55bcbeb49f64078ef72b697fbe323576f2a6"
+  "base": {
+    "applicationHash": "d6ffca439a06e2439e8b65356a82c878db00cb225ffdd41725f6ba04bf5fa809",
+    "candidateCommit": "6afc7b692a4634e76be58e50ef26cce1a289f020",
+    "checks": {
+      "candidateCommitted": true,
+      "compileReproducible": true,
+      "browserCertified": true,
+      "domainBlank": true,
+      "exactRuntimeInstalled": true,
+      "figuredOutContract": true,
+      "proofIdentityBound": true,
+      "proofPassed": true,
+      "runtimeHashBound": true,
+      "runtimeNotMisclassified": true,
+      "runtimeSpecifierPortable": true
     },
-    "smb-lending-fde": {
-      "applicationHash": "7e667aa5d789a22a9c97664b03ce2cb75087d68c29962e08e5095a257ef798d0",
-      "candidateCommit": "6c3a2fd298879a35bfdf8fa3df35ff609153d2ab",
-      "checks": {
-        "candidateCommitted": true,
-        "compileReproducible": true,
-        "exactRuntimeInstalled": true,
-        "proofIdentityBound": true,
-        "proofPassed": true,
-        "runtimeHashBound": true,
-        "runtimeNotMisclassified": true,
-        "runtimeSpecifierPortable": true
-      },
-      "configHash": "7e667aa5d789a22a9c97664b03ce2cb75087d68c29962e08e5095a257ef798d0",
-      "dependency": "file:vendor/nodekit",
-      "proofDigest": "7be9d6cdf6c144910e07d9b1ea7ec85d7567433572c5eaaeda0279f5cf56daba"
-    }
+    "configHash": "d6ffca439a06e2439e8b65356a82c878db00cb225ffdd41725f6ba04bf5fa809",
+    "dependency": "file:vendor/nodekit",
+    "proofDigest": "b77b25b6fc8bfb46441e02d79e36269a20614a75dae8b4a27276da25f2b17a60",
+    "template": "domain-blank-base"
   },
   "schemaVersion": "nodekit.factory-acceptance/v1",
-  "receiptDigest": "3f792e0ddbf7cffe5173b543b96baf3c43a7c81567f746ebfbce1e2cebce9867"
+  "receiptDigest": "15f07f51c287ca3ad8b6db379af5419e819741a0a92a836338876566a7b2c584"
 }

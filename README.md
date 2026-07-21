@@ -1,6 +1,8 @@
 # NodeKit / Node Platform
 
-NodeKit is the portable setup and conformance layer for proof-carrying agent applications. It turns an empty directory or an existing repository into a filesystem-authored agent harness with a compiled definition, capability packs, deterministic fixtures, live-provider gates, browser proof, and phase-by-phase receipts.
+NodeKit is the figured-out product foundation and conformance layer for proof-carrying agent applications. It turns an empty directory or existing repository into a domain-blank application with one guided lifecycle, a compiled definition, deterministic fixtures, browser proof, and receipts.
+
+> Blank in domain. Figured out in behavior. Convex-first, not Convex-locked.
 
 Node Platform remains its ownership layer: it records which repository owns each shared contract and fails CI when a new fork or clear layer violation appears.
 
@@ -13,8 +15,7 @@ Or use the CLI directly:
 ```bash
 node src/cli.mjs create ../my-agent-app \
   --name my-agent-app \
-  --brief "A persistent research agent that users can steer mid-run" \
-  --sponsors pi-ai,convex \
+  --brief "Carry one user intention to a reviewed and verified artifact" \
   --package-manager pnpm \
   --local-proof
 
@@ -24,30 +25,34 @@ npm run eval
 npm run dev
 ```
 
-The first certified preset is `research-loop`: a small reference runtime with an objective held-out metric, deterministic keep/revert decisions, versioned human intervention, interrupted-run recovery, a strict Pi smoke, and sanitized reproduction receipts. It is a reference adapter to the NodeAgent application contract; it is not presented as the still-unfinished extraction of NodeRoom's deeper production runtime.
+The primary creation path has no preset and no silent domain default. It generates the stable product grammar:
 
-`smb-lending-fde` is the first clean-room, domain-specific preset. It generates an independent synthetic forward-deployment lab with a primary restaurant working-capital case and a second medical-practice equipment case. Its agent can only propose a request for an explicitly missing document; a human approval is required before a request is applied, and the starter never makes or simulates a lending decision. Its two-case deterministic conformance harness is not a claim about Casca, a bank, a human operator, an external model, sealed held-out performance, or graph-agent superiority.
-
-```bash
-node src/cli.mjs create ../casca-fde-deployment-lab \
-  --name casca-fde-deployment-lab \
-  --preset smb-lending-fde \
-  --brief "Map a synthetic SMB lending file without making a lending decision" \
-  --local-proof
+```text
+Case -> Run -> Stage -> Artifact -> Proposal -> Approval -> Receipt
 ```
 
-`agentic-rl-research` generates a separate **replay-only** FounderQuest research
+The generated app includes `docs/FIGURED_OUT.md`, a product brief, audience placeholder, user journey, service blueprint, experience contract, design direction, taste contract, a responsive artifact-first UI, and a deterministic in-memory conformance demo.
+
+The older domain templates remain available only as explicitly labeled references. They demonstrate applications of NodeKit; they do not define NodeKit.
+
+`smb-lending-fde` is a clean-room domain reference. It generates an independent synthetic forward-deployment lab and never makes or simulates a lending decision.
+
+```bash
+node src/cli.mjs reference create smb-lending-fde ../casca-fde-deployment-lab \
+  --name casca-fde-deployment-lab \
+  --brief "Map a synthetic SMB lending file without making a lending decision"
+```
+
+`agentic-rl-research` is a separate **replay-only** FounderQuest research
 lab. It has synthetic train, validation, and held-out task files plus a protected
 reward that rejects external/public/financial actions. It is a reproducible
 environment and baseline, not an RL-training result or proof of real-world
 generalization.
 
 ```bash
-node src/cli.mjs create ../founderquest-rl \
+node src/cli.mjs reference create agentic-rl-research ../founderquest-rl \
   --name founderquest-rl \
-  --preset agentic-rl-research \
-  --brief "Evaluate safe next-action selection in synthetic founder journeys" \
-  --local-proof
+  --brief "Evaluate safe next-action selection in synthetic founder journeys"
 ```
 
 `npm run proof` works before credentials exist: it emits a passing `local-ready` receipt after the deterministic demo and evaluation. If live Pi, browser, or deployment receipts are present, every attempted gate must pass; the receipt becomes `release-ready` only when all three are present and green.
@@ -84,22 +89,20 @@ package or immutable Git commit should replace the vendored runtime. The
 bundle is deliberately runtime-only; use the source repository or a future
 published package to scaffold additional projects.
 
-The two production-oriented presets have an executable empty-directory gate:
+The domain-blank base has an executable empty-directory gate:
 
 ```bash
 npm run acceptance:factory
 ```
 
-It creates clean temporary projects for `agentic-rl-research` and
-`smb-lending-fde`, installs their dependencies, compiles them, runs tests,
-deterministic demos, evaluations, benchmarks, and proof, then writes a
-hash-bound summary to `proof/factory-acceptance.json`.
+It creates a clean temporary base application, installs dependencies, compiles it, runs tests, the deterministic guided journey, stale-proposal evaluation, live HTTP/DOM browser contract, and proof, then writes a hash-bound summary to `proof/factory-acceptance.json`.
 
 Factory commands (a `--local-proof` run creates an initial local Git commit so
 receipts have an immutable candidate to bind to):
 
 ```bash
-nodekit create <empty-directory> --name <slug> --brief <text> [--preset research-loop|smb-lending-fde|agentic-rl-research]
+nodekit create <empty-directory> --name <slug> --brief <text>
+nodekit reference create <reference> <empty-directory> --name <slug> --brief <text>
 nodekit adopt <existing-directory> --name <slug> --brief <text>
 nodekit compile --repo-root <directory>
 nodekit inspect --repo-root <directory>
@@ -150,7 +153,7 @@ The earlier planning-only `apiVersion` / `kind` / `metadata` / `spec` envelope i
 
 ## Honest boundary
 
-`planned`, `migration-planned`, and `canonical-unpackaged` remain intentionally distinct from released shared packages. NodeKit now has one end-to-end reference preset; it does not claim that every runtime adapter, backend, template, codemod, or production deployment target is complete. In particular, NodeRoom still contains the deepest live runtime and its extraction into a published NodeAgent package remains separate work.
+`planned`, `migration-planned`, and `canonical-unpackaged` remain intentionally distinct from released shared packages. NodeKit now has a domain-blank base, portable in-memory Caseflow semantics, and explicit reference templates. Convex Caseflow extraction, full Playwright screenshot certification, additional managed-database adapters, and NodeRoom's deeper live-runtime extraction remain separately evidenced work until their gates pass.
 
 See [`docs/DECISIONS.md`](docs/DECISIONS.md) for the ownership split and migration rules.
 The coordinated consumer commits, pull requests, hosted checks, and known limits are recorded in [`docs/P0_ROLLOUT.md`](docs/P0_ROLLOUT.md) and [`proof/p0-rollout.json`](proof/p0-rollout.json).

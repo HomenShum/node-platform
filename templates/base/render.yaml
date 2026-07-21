@@ -1,0 +1,6 @@
+services:
+  - type: web
+    name: __APP_NAME__
+    runtime: docker
+    healthCheckPath: /api/health
+    autoDeploy: false

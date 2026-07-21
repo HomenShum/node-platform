@@ -1,0 +1,31 @@
+schemaVersion: nodekit.repo/v1
+registryMode: external
+repository: local/__APP_NAME__
+lifecycle: experimental
+support: active
+role: agent-application
+commandProfile: application
+canonicalFor: []
+consumes:
+  - nodeplatform.repo-contract
+  - nodeagent.agent-run
+  - proofloop.certification
+commands:
+  dev: { script: dev, mode: service }
+  demo: { script: demo, mode: finite }
+  doctor: { script: doctor, mode: finite }
+  check: { script: check, mode: finite }
+  proof: { script: proof, mode: finite }
+noKey:
+  status: certified
+  command: npm run demo
+  externalAccountsRequired: 0
+  disclosure: The neutral Caseflow demonstration uses an in-memory runtime and no network.
+environment:
+  contractVersion: nodeplatform.env/v1
+  status: aligned
+proof:
+  command: npm run proof
+  receiptSchema: nodekit.proof-receipt/v1
+contractDeclarations: []
+architectureExceptions: []
