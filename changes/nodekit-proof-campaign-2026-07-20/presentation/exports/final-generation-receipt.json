@@ -1,0 +1,480 @@
+{
+  "artifacts": [
+    {
+      "byteSize": 428694,
+      "kind": "snapshot",
+      "path": "changes/nodekit-proof-campaign-2026-07-20/presentation/deck-snapshot.final.json",
+      "publicationStatus": "not-published",
+      "sha256": "3da36f86fc121758bf9facb97954461678900707d81e0a3a9aad0c1fae35c63b",
+      "status": "ready"
+    },
+    {
+      "byteSize": 6457,
+      "kind": "spec",
+      "path": "changes/nodekit-proof-campaign-2026-07-20/presentation/deck-spec.final.json",
+      "publicationStatus": "not-published",
+      "sha256": "bed2a07ed9c9bfa6bb9316b2db7ad7b3be2b6e3720d14b48b139b366d4fefb09",
+      "status": "ready"
+    },
+    {
+      "byteSize": 805245,
+      "kind": "html",
+      "path": "changes/nodekit-proof-campaign-2026-07-20/presentation/exports/nodekit-proof-campaign-2026-07-20.final.html",
+      "publicationStatus": "not-published",
+      "sha256": "a4aae9164578fbb65a4e79afcb10ad137e88acef253ca30c76142be4405642d6",
+      "status": "ready"
+    },
+    {
+      "byteSize": 332005,
+      "editable": true,
+      "kind": "pptx",
+      "path": "changes/nodekit-proof-campaign-2026-07-20/presentation/exports/nodekit-proof-campaign-2026-07-20.final.pptx",
+      "publicationStatus": "not-published",
+      "sha256": "3d0adb5a16f61ba4f55017900ff627c7af7974174da343d08df32eaf31cf8d03",
+      "status": "ready"
+    }
+  ],
+  "changeId": "nodekit-proof-campaign-2026-07-20",
+  "distribution": {
+    "status": "not-published"
+  },
+  "evidence": [
+    {
+      "files": [
+        {
+          "byteSize": 1837,
+          "field": "path",
+          "locator": "proof/factory-acceptance.json",
+          "sha256": "225b0506aecf2d7eee5925094fa7fa194793cf3bff3149784f49de246ca07566"
+        }
+      ],
+      "id": "E1_FACTORY_ACCEPTANCE",
+      "kind": "receipt",
+      "scope": "node-platform@ef23bb0d630c265d21be5443138cd1a5b769ed8c",
+      "urls": []
+    },
+    {
+      "files": [],
+      "id": "E10_GRAPH_OF_LOOPS_SOURCE",
+      "kind": "conceptual-source",
+      "scope": "retrieved 2026-07-20; conceptual inspiration, not product evidence",
+      "urls": [
+        {
+          "field": "url",
+          "url": "https://medium.com/intuitionmachine/from-loop-engineering-to-graph-engineering-d3ebeb08511c"
+        }
+      ]
+    },
+    {
+      "files": [],
+      "id": "E11_RL_CI",
+      "kind": "continuous-integration",
+      "scope": "agentic-rl-research-lab@e1b114c486fbe26703688ab6481331659081b083; offline quality workflow passed",
+      "urls": [
+        {
+          "field": "url",
+          "url": "https://github.com/HomenShum/agentic-rl-research-lab/actions/runs/29799453044"
+        }
+      ]
+    },
+    {
+      "files": [],
+      "id": "E12_FOUNDER_QUEST_PRODUCTION",
+      "kind": "production-browser-proof",
+      "scope": "founder-quest-graph@dc5fba2467576d5ded3d3ac6bf4d142316410c86; evidence 04579137a85f4ce18db61e6e7c0f25ff7b1d42b6; app/config 973ea7cbd8039e963bab1ff604bc0180bf0457f9a334b9b9dc0f77062f103e20; graph ng1_c9334138; 15/15 hosted checks; four isolated desktop/mobile light/dark contexts; zero browser, network, or cross-origin errors; synthetic read-only; no durable or remote Neo4j writes",
+      "urls": [
+        {
+          "field": "url",
+          "url": "https://founder-quest-graph.vercel.app/"
+        }
+      ]
+    },
+    {
+      "files": [],
+      "id": "E13_FOUNDER_QUEST_RELEASE",
+      "kind": "public-release",
+      "scope": "v0.1.1-production-certified; releaseReady=true; hostedDeploymentCertified=true; 18/18 tests; 25/25 artifact-manifest hashes verified byte-for-byte in a fresh Windows worktree; final independent release re-audit found zero remaining issues",
+      "urls": [
+        {
+          "field": "url",
+          "url": "https://github.com/HomenShum/founder-quest-graph/releases/tag/v0.1.1-production-certified"
+        }
+      ]
+    },
+    {
+      "files": [
+        {
+          "byteSize": 3328,
+          "field": "path",
+          "locator": "changes/nodekit-proof-campaign-2026-07-20/video/proof/founder-quest-video-receipt.json",
+          "sha256": "d6371b27e858ed4f32c9904c9ed00a64f1acfa69155ad9a2f9af71f59f365f2e"
+        }
+      ],
+      "id": "E14_FOUNDER_QUEST_VIDEO_PROOF",
+      "kind": "media-proof",
+      "scope": "Feature Proof Studio @ 7aafb3e0a48f3c1e74e69a51d9df506186ea4340; exact Founder Quest deployment dpl_z1dRn48GFzZYuEyBq6oDNKPHdUHP; sampled encoded-frame visual QA passed",
+      "urls": []
+    },
+    {
+      "files": [],
+      "id": "E2_NODEKIT_RELEASE",
+      "kind": "public-release",
+      "scope": "v0.2.0",
+      "urls": [
+        {
+          "field": "url",
+          "url": "https://github.com/HomenShum/node-platform/releases/tag/v0.2.0"
+        }
+      ]
+    },
+    {
+      "files": [
+        {
+          "byteSize": 1103,
+          "field": "externalPath",
+          "locator": "../casca-fde-deployment-lab/proof/release-proof.json",
+          "sha256": "cd0684c2cf2d06484764c7c7c30ec0b698bd8298e0c2d282b080a8ced11b1b66"
+        }
+      ],
+      "id": "E3_CASCA_RELEASE",
+      "kind": "receipt",
+      "scope": "casca-fde-deployment-lab@6c8d7d9f81810509240fe0b2352453bfa04ac924",
+      "urls": []
+    },
+    {
+      "files": [
+        {
+          "byteSize": 8440,
+          "field": "externalPath",
+          "locator": "../casca-fde-deployment-lab/proof/browser-proof.json",
+          "sha256": "53f3427170d55079efe6e796d3c6a07cfbb978c7008456dcfa3fdc614813b704"
+        }
+      ],
+      "id": "E4_CASCA_BROWSER",
+      "kind": "browser-proof",
+      "scope": "local fresh browser",
+      "urls": []
+    },
+    {
+      "files": [
+        {
+          "byteSize": 693,
+          "field": "externalPath",
+          "locator": "../casca-fde-deployment-lab/proof/pi-live-receipt.json",
+          "sha256": "6b73cd6389e29cbe275ba4c7be233b563c36a157a723140bcefdcbcbdaf1dc10"
+        }
+      ],
+      "id": "E5_CASCA_LIVE",
+      "kind": "live-provider-receipt",
+      "scope": "OpenRouter openai/gpt-4o-mini; 36 tokens; $0.00000855",
+      "urls": []
+    },
+    {
+      "files": [
+        {
+          "byteSize": 2159,
+          "field": "externalPath",
+          "locator": "../agentic-rl-research-lab/proof/release-proof.json",
+          "sha256": "ae973133c73517cdb9c0ed8b6f81e426a3cc063230cc4419e3d1752201951d1a"
+        }
+      ],
+      "id": "E6_RL_RELEASE",
+      "kind": "receipt",
+      "scope": "local deterministic behavior-cloning baseline",
+      "urls": [
+        {
+          "field": "publicRelease",
+          "url": "https://github.com/HomenShum/agentic-rl-research-lab/releases/tag/v0.1.0-diagnostic-baselines"
+        }
+      ]
+    },
+    {
+      "files": [
+        {
+          "byteSize": 3712,
+          "field": "externalPath",
+          "locator": "../agentic-rl-research-lab/proof/blind-heldout-receipt.json",
+          "sha256": "523412bb9cd051fdffe1bc7c70367dd7c5c3f071cec87d801e9f373aeb1c8c49"
+        }
+      ],
+      "id": "E7_RL_HELDOUT",
+      "kind": "benchmark-receipt",
+      "scope": "two synthetic heldout tasks",
+      "urls": []
+    },
+    {
+      "files": [
+        {
+          "byteSize": 2108,
+          "field": "externalPath",
+          "locator": "../agentic-rl-research-lab/proof/live-model-baseline-proof.json",
+          "sha256": "d5dd74a0af019730e506bf2c923dfdb583accd287ad76ba0627b99d1978aa049"
+        },
+        {
+          "byteSize": 8265,
+          "field": "receiptPath",
+          "locator": "../agentic-rl-research-lab/proof/live-model-baseline-receipt.json",
+          "sha256": "b6bdb193deccd585a8e9e825484370ef152a8b50b3d21fa2242792bd24e84ea1"
+        }
+      ],
+      "id": "E8_RL_LIVE_BLOCKED",
+      "kind": "live-provider-blocked-receipt",
+      "scope": "Azure-only ZDR OpenRouter route; immutable failed attempt",
+      "urls": [
+        {
+          "field": "publicRelease",
+          "url": "https://github.com/HomenShum/agentic-rl-research-lab/releases/tag/v0.1.0-diagnostic-baselines"
+        }
+      ]
+    },
+    {
+      "files": [],
+      "id": "E9_ANTHROPIC_GRANT_SOURCE",
+      "kind": "official-source",
+      "scope": "retrieved 2026-07-20",
+      "urls": [
+        {
+          "field": "url",
+          "url": "https://www.anthropic.com/news/rare-disease-research-grants"
+        }
+      ]
+    }
+  ],
+  "externalPublishReady": true,
+  "gate": {
+    "claimBindings": [
+      {
+        "claimId": "C1_FACTORY_ACCEPTANCE",
+        "evidenceIds": [
+          "E1_FACTORY_ACCEPTANCE",
+          "E2_NODEKIT_RELEASE"
+        ],
+        "slideId": "S1",
+        "status": "measured"
+      },
+      {
+        "claimId": "C1_FACTORY_ACCEPTANCE",
+        "evidenceIds": [
+          "E1_FACTORY_ACCEPTANCE",
+          "E2_NODEKIT_RELEASE"
+        ],
+        "slideId": "S3",
+        "status": "measured"
+      },
+      {
+        "claimId": "C2_CASCA_LOCAL_PROOF",
+        "evidenceIds": [
+          "E3_CASCA_RELEASE",
+          "E4_CASCA_BROWSER",
+          "E5_CASCA_LIVE"
+        ],
+        "slideId": "S4",
+        "status": "verified"
+      },
+      {
+        "claimId": "C3_RL_LOCAL_BASELINE",
+        "evidenceIds": [
+          "E11_RL_CI",
+          "E6_RL_RELEASE",
+          "E7_RL_HELDOUT"
+        ],
+        "slideId": "S5",
+        "status": "verified"
+      },
+      {
+        "claimId": "C4_RL_LIVE_ROUTE",
+        "evidenceIds": [
+          "E8_RL_LIVE_BLOCKED"
+        ],
+        "slideId": "S5",
+        "status": "observed"
+      },
+      {
+        "claimId": "C5_FOUNDER_QUEST_PRODUCT",
+        "evidenceIds": [
+          "E12_FOUNDER_QUEST_PRODUCTION",
+          "E13_FOUNDER_QUEST_RELEASE"
+        ],
+        "slideId": "S6",
+        "status": "verified"
+      },
+      {
+        "claimId": "C6_ANTHROPIC_GRANT_CASE",
+        "evidenceIds": [
+          "E9_ANTHROPIC_GRANT_SOURCE"
+        ],
+        "slideId": "S7",
+        "status": "verified"
+      },
+      {
+        "claimId": "C8_GRAPH_OF_LOOPS_FRAME",
+        "evidenceIds": [
+          "E10_GRAPH_OF_LOOPS_SOURCE"
+        ],
+        "slideId": "S8",
+        "status": "verified"
+      }
+    ],
+    "distributionStatus": "not-published",
+    "externalPublishReady": true,
+    "mediaProofPassed": true,
+    "nodeSlideValidationPassed": true,
+    "passed": true,
+    "plannedClaimIds": [],
+    "releaseLabeled": "final",
+    "requiredEvidenceIds": [
+      "E10_GRAPH_OF_LOOPS_SOURCE",
+      "E11_RL_CI",
+      "E12_FOUNDER_QUEST_PRODUCTION",
+      "E13_FOUNDER_QUEST_RELEASE",
+      "E14_FOUNDER_QUEST_VIDEO_PROOF",
+      "E1_FACTORY_ACCEPTANCE",
+      "E2_NODEKIT_RELEASE",
+      "E3_CASCA_RELEASE",
+      "E4_CASCA_BROWSER",
+      "E5_CASCA_LIVE",
+      "E6_RL_RELEASE",
+      "E7_RL_HELDOUT",
+      "E8_RL_LIVE_BLOCKED",
+      "E9_ANTHROPIC_GRANT_SOURCE"
+    ]
+  },
+  "generatedAt": "2026-07-20T00:00:00.000Z",
+  "generationIdentity": "00561643bff493710ada99c6564d1c01f85f61693502a8f434f99b948c0f2f60",
+  "inputs": [
+    {
+      "byteSize": 3411,
+      "path": "changes/nodekit-proof-campaign-2026-07-20/change.yaml",
+      "sha256": "b80eaa4807854eac9ea8d3a38e18b78b34e96e1ab385d81896933678859d0c96"
+    },
+    {
+      "byteSize": 8278,
+      "path": "changes/nodekit-proof-campaign-2026-07-20/presentation/slide-design-plans.json",
+      "sha256": "c92e2688ad3b5ab8409ac8d6814f1234825973f9c90c3a7f9d8dcda1a6f9b1f2"
+    },
+    {
+      "byteSize": 3728,
+      "path": "changes/nodekit-proof-campaign-2026-07-20/presentation/speaker-notes.md",
+      "sha256": "57d7dc57e0b3eedaa574d984c3c34467158e5078dbd16feefa07bbc988dd53e1"
+    },
+    {
+      "byteSize": 6706,
+      "path": "changes/nodekit-proof-campaign-2026-07-20/story/claims.json",
+      "sha256": "f250d868853dee139fa7a1c2c8a8e9d550f89fd472cc2564404ba9b09a46d174"
+    },
+    {
+      "byteSize": 5921,
+      "path": "changes/nodekit-proof-campaign-2026-07-20/story/evidence-index.json",
+      "sha256": "a0f04c26c0b4c09477d958a9b5186d14af981d35488e0664de11714667d4be76"
+    },
+    {
+      "byteSize": 1952,
+      "path": "changes/nodekit-proof-campaign-2026-07-20/story/limitations.json",
+      "sha256": "12ff490e7b40cbf8f1e94f76a8c9bd076b98846b5f9bbcd758138c1d1edae806"
+    },
+    {
+      "byteSize": 23406403,
+      "mediaType": "video/mp4",
+      "path": "changes/nodekit-proof-campaign-2026-07-20/video/output/nodekit-founder-quest-technical.mp4",
+      "sha256": "b3b10fcc7ed9bce329aa608ae42294886d6db9b6ff1882bd34e2873ffc1b7ea1"
+    },
+    {
+      "byteSize": 9958725,
+      "mediaType": "video/mp4",
+      "path": "changes/nodekit-proof-campaign-2026-07-20/video/output/nodekit-founder-quest-vertical.mp4",
+      "sha256": "7733c39be6493807459c018931130ccbfed02a6d27659c5a28d60e971591b31d"
+    },
+    {
+      "byteSize": 3328,
+      "path": "changes/nodekit-proof-campaign-2026-07-20/video/proof/founder-quest-video-receipt.json",
+      "sha256": "d6371b27e858ed4f32c9904c9ed00a64f1acfa69155ad9a2f9af71f59f365f2e"
+    },
+    {
+      "byteSize": 217239,
+      "mediaType": "image/png",
+      "path": "optional-founder-quest-screenshot/desktop-dark.png",
+      "sha256": "76c114f69138660c12f710afd883d542407e18a8c76a3053e19cd1e313c45c76"
+    },
+    {
+      "byteSize": 2214,
+      "path": "pinned-nodeslide/package.json",
+      "sha256": "c417919ac1c31423eba14c98be369cc6e8277e6d9ab3c194ba220fe5f0d6754b"
+    },
+    {
+      "byteSize": 23108,
+      "path": "scripts/generate-nodekit-proof-presentation.mjs",
+      "sha256": "04e50d64642b1193ffeb2772fed5d4a7c671f46ee29d9505eed33836505c4bc2"
+    },
+    {
+      "byteSize": 26460,
+      "path": "src/lib/presentation-pipeline.mjs",
+      "sha256": "9eedf4a674c56f2ceb10360d4a628f2b2394212b8ef8914a39840b65665cf089"
+    }
+  ],
+  "mediaProof": {
+    "campaignId": "nodekit-proof-campaign-2026-07-20",
+    "receipt": {
+      "byteSize": 3328,
+      "path": "video/proof/founder-quest-video-receipt.json",
+      "schemaVersion": "nodekit.video-proof-receipt/v1",
+      "sha256": "d6371b27e858ed4f32c9904c9ed00a64f1acfa69155ad9a2f9af71f59f365f2e",
+      "status": "verified",
+      "verifiedAt": "2026-07-21T06:56:17.458Z"
+    },
+    "videos": [
+      {
+        "byteSize": 23406403,
+        "compositionId": "WT-FounderQuestTechnical",
+        "durationSeconds": 180,
+        "height": 1080,
+        "path": "video/output/nodekit-founder-quest-technical.mp4",
+        "profileId": "FounderQuestTechnical",
+        "sha256": "b3b10fcc7ed9bce329aa608ae42294886d6db9b6ff1882bd34e2873ffc1b7ea1",
+        "width": 1920
+      },
+      {
+        "byteSize": 9958725,
+        "compositionId": "WT9-FounderQuestVertical",
+        "durationSeconds": 83,
+        "height": 1920,
+        "path": "video/output/nodekit-founder-quest-vertical.mp4",
+        "profileId": "FounderQuestVertical",
+        "sha256": "7733c39be6493807459c018931130ccbfed02a6d27659c5a28d60e971591b31d",
+        "width": 1080
+      }
+    ]
+  },
+  "nodeSlide": {
+    "commit": "0669be4b1d1fb891ea65e4b30a6a6da90f9e2585",
+    "mode": "local",
+    "repository": "NodeSlide pinned local source",
+    "sourceFiles": [
+      {
+        "path": "convex/lib/nodeslideSeed.ts",
+        "sha256": "97ccd9b56fb7f0a8963fd92681406cdc256b9f4a40adf68e85ec97d245b3cd15"
+      },
+      {
+        "path": "src/domains/nodeslide/slidelang/localAdapter.ts",
+        "sha256": "fc2b6a1b63bd697bca3441afd4c74e55b7b46ecc2a448187de36eaea8818f437"
+      }
+    ],
+    "toolchainVersion": "local-slidelang-adapter/1.1.0"
+  },
+  "pptxVerification": {
+    "editableElementCount": 81,
+    "reopened": true,
+    "slideCount": 8,
+    "staticFallbackElementCount": 1
+  },
+  "receiptDigest": "cdae1c72c4feed64c18a5400403fad49d2a573687e5afb07316b82f020b1e7a7",
+  "schemaVersion": "nodekit.nodeslide-generation-receipt/v1",
+  "status": "ready",
+  "validation": {
+    "cleanOk": true,
+    "id": "validation:deck-nodekit-proof-campaign-2026-07-20-final:v1:0ztntfp",
+    "issues": [],
+    "ok": true,
+    "publishOk": true,
+    "scope": "NodeSlide structural/export validation only; not external publication approval"
+  }
+}

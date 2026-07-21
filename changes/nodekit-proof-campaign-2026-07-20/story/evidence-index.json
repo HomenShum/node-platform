@@ -1,0 +1,120 @@
+{
+  "schemaVersion": "nodekit.evidence-index/v1",
+  "evidence": [
+    {
+      "id": "E1_FACTORY_ACCEPTANCE",
+      "kind": "receipt",
+      "path": "proof/factory-acceptance.json",
+      "sha256": "225b0506aecf2d7eee5925094fa7fa194793cf3bff3149784f49de246ca07566",
+      "receiptDigest": "3f792e0ddbf7cffe5173b543b96baf3c43a7c81567f746ebfbce1e2cebce9867",
+      "scope": "node-platform@ef23bb0d630c265d21be5443138cd1a5b769ed8c"
+    },
+    {
+      "id": "E2_NODEKIT_RELEASE",
+      "kind": "public-release",
+      "url": "https://github.com/HomenShum/node-platform/releases/tag/v0.2.0",
+      "scope": "v0.2.0"
+    },
+    {
+      "id": "E3_CASCA_RELEASE",
+      "kind": "receipt",
+      "externalPath": "../casca-fde-deployment-lab/proof/release-proof.json",
+      "scope": "casca-fde-deployment-lab@6c8d7d9f81810509240fe0b2352453bfa04ac924"
+    },
+    {
+      "id": "E4_CASCA_BROWSER",
+      "kind": "browser-proof",
+      "externalPath": "../casca-fde-deployment-lab/proof/browser-proof.json",
+      "scope": "local fresh browser"
+    },
+    {
+      "id": "E5_CASCA_LIVE",
+      "kind": "live-provider-receipt",
+      "externalPath": "../casca-fde-deployment-lab/proof/pi-live-receipt.json",
+      "scope": "OpenRouter openai/gpt-4o-mini; 36 tokens; $0.00000855"
+    },
+    {
+      "id": "E6_RL_RELEASE",
+      "kind": "receipt",
+      "externalPath": "../agentic-rl-research-lab/proof/release-proof.json",
+      "publicRelease": "https://github.com/HomenShum/agentic-rl-research-lab/releases/tag/v0.1.0-diagnostic-baselines",
+      "scope": "local deterministic behavior-cloning baseline"
+    },
+    {
+      "id": "E7_RL_HELDOUT",
+      "kind": "benchmark-receipt",
+      "externalPath": "../agentic-rl-research-lab/proof/blind-heldout-receipt.json",
+      "scope": "two synthetic heldout tasks"
+    },
+    {
+      "id": "E8_RL_LIVE_BLOCKED",
+      "kind": "live-provider-blocked-receipt",
+      "externalPath": "../agentic-rl-research-lab/proof/live-model-baseline-proof.json",
+      "sha256": "d5dd74a0af019730e506bf2c923dfdb583accd287ad76ba0627b99d1978aa049",
+      "receiptPath": "../agentic-rl-research-lab/proof/live-model-baseline-receipt.json",
+      "receiptSha256": "b6bdb193deccd585a8e9e825484370ef152a8b50b3d21fa2242792bd24e84ea1",
+      "publicRelease": "https://github.com/HomenShum/agentic-rl-research-lab/releases/tag/v0.1.0-diagnostic-baselines",
+      "scope": "Azure-only ZDR OpenRouter route; immutable failed attempt"
+    },
+    {
+      "id": "E9_ANTHROPIC_GRANT_SOURCE",
+      "kind": "official-source",
+      "url": "https://www.anthropic.com/news/rare-disease-research-grants",
+      "scope": "retrieved 2026-07-20"
+    },
+    {
+      "id": "E10_GRAPH_OF_LOOPS_SOURCE",
+      "kind": "conceptual-source",
+      "title": "From Loop Engineering to Graph Engineering?",
+      "author": "Carlos E. Perez",
+      "url": "https://medium.com/intuitionmachine/from-loop-engineering-to-graph-engineering-d3ebeb08511c",
+      "originPost": "https://x.com/steipete/status/2078277297791189132",
+      "scope": "retrieved 2026-07-20; conceptual inspiration, not product evidence"
+    },
+    {
+      "id": "E11_RL_CI",
+      "kind": "continuous-integration",
+      "url": "https://github.com/HomenShum/agentic-rl-research-lab/actions/runs/29799453044",
+      "scope": "agentic-rl-research-lab@e1b114c486fbe26703688ab6481331659081b083; offline quality workflow passed"
+    },
+    {
+      "id": "E12_FOUNDER_QUEST_PRODUCTION",
+      "kind": "production-browser-proof",
+      "url": "https://founder-quest-graph.vercel.app/",
+      "receiptDigest": "023154fb77698b8704932ccaa9a0736a252a6de8b1ea46da3f76675ffac9f49c",
+      "scope": "founder-quest-graph@dc5fba2467576d5ded3d3ac6bf4d142316410c86; evidence 04579137a85f4ce18db61e6e7c0f25ff7b1d42b6; app/config 973ea7cbd8039e963bab1ff604bc0180bf0457f9a334b9b9dc0f77062f103e20; graph ng1_c9334138; 15/15 hosted checks; four isolated desktop/mobile light/dark contexts; zero browser, network, or cross-origin errors; synthetic read-only; no durable or remote Neo4j writes"
+    },
+    {
+      "id": "E13_FOUNDER_QUEST_RELEASE",
+      "kind": "public-release",
+      "url": "https://github.com/HomenShum/founder-quest-graph/releases/tag/v0.1.1-production-certified",
+      "receiptDigest": "3366a2466bfed64e07c70324babbb9d2eb369965e7e1930c9f00909b199bb5a5",
+      "scope": "v0.1.1-production-certified; releaseReady=true; hostedDeploymentCertified=true; 18/18 tests; 25/25 artifact-manifest hashes verified byte-for-byte in a fresh Windows worktree; final independent release re-audit found zero remaining issues"
+    },
+    {
+      "id": "E14_FOUNDER_QUEST_VIDEO_PROOF",
+      "kind": "media-proof",
+      "path": "changes/nodekit-proof-campaign-2026-07-20/video/proof/founder-quest-video-receipt.json",
+      "sha256": "d6371b27e858ed4f32c9904c9ed00a64f1acfa69155ad9a2f9af71f59f365f2e",
+      "visualQaPath": "changes/nodekit-proof-campaign-2026-07-20/video/proof/founder-quest-media-visual-qa.json",
+      "visualQaSha256": "32f31f2746c9d5032267c0997df074e717cd30a50aae35cd4ef6c6e7132ead15",
+      "assets": [
+        {
+          "path": "changes/nodekit-proof-campaign-2026-07-20/video/output/nodekit-founder-quest-vertical.mp4",
+          "sha256": "7733c39be6493807459c018931130ccbfed02a6d27659c5a28d60e971591b31d",
+          "bytes": 9958725,
+          "durationSeconds": 83.050667,
+          "dimensions": "1080x1920"
+        },
+        {
+          "path": "changes/nodekit-proof-campaign-2026-07-20/video/output/nodekit-founder-quest-technical.mp4",
+          "sha256": "b3b10fcc7ed9bce329aa608ae42294886d6db9b6ff1882bd34e2873ffc1b7ea1",
+          "bytes": 23406403,
+          "durationSeconds": 180.053333,
+          "dimensions": "1920x1080"
+        }
+      ],
+      "scope": "Feature Proof Studio @ 7aafb3e0a48f3c1e74e69a51d9df506186ea4340; exact Founder Quest deployment dpl_z1dRn48GFzZYuEyBq6oDNKPHdUHP; sampled encoded-frame visual QA passed"
+    }
+  ]
+}

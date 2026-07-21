@@ -1,5 +1,5 @@
 import { spawn } from "node:child_process";
-import { cp, mkdir, readFile, readdir, rm, stat, writeFile } from "node:fs/promises";
+import { chmod, cp, mkdir, readFile, readdir, rm, stat, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { pathExists } from "./files.mjs";
@@ -76,6 +76,7 @@ async function vendorNodeKitRuntime(target) {
     if (!(await pathExists(source))) throw new Error(`NodeKit distributable entry is missing: ${relative}`);
     await cp(source, path.join(destination, relative), { recursive: true });
   }
+  await chmod(path.join(destination, "src", "cli.mjs"), 0o755);
 }
 
 function resolvePreset(preset) {
@@ -242,6 +243,9 @@ export async function createProject(options) {
   if (options.git !== false) {
     if (!(await pathExists(path.join(target, ".git")))) await runGit(["init"], target);
     await runGit(["add", "--all"], target);
+    if (usesVendoredNodeKitRuntime(options.nodekitSpecifier)) {
+      await runGit(["update-index", "--chmod=+x", "vendor/nodekit/src/cli.mjs"], target);
+    }
     await runGit([
       "-c", "user.name=NodeKit",
       "-c", "user.email=nodekit@local",
@@ -266,7 +270,7 @@ export async function adoptProject(options) {
   }
   const values = substitutions({ ...options, target });
   const collisions = [];
-  const adoptRoots = ["nodekit.yaml", "nodeagent.yaml", "hackathon.yaml", "agent", "packs", "integrations", "backend", "fixtures", "evals", "schemas", "scripts", "adw", "apps"];
+  const adoptRoots = [".gitattributes", "nodekit.yaml", "nodeagent.yaml", "hackathon.yaml", "agent", "packs", "integrations", "backend", "fixtures", "evals", "schemas", "scripts", "adw", "apps"];
   for (const root of adoptRoots) {
     const source = path.join(defaultTemplateRoot, root);
     if (!(await pathExists(source))) continue;

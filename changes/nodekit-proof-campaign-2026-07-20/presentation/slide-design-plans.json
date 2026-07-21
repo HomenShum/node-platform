@@ -1,0 +1,174 @@
+{
+  "schemaVersion": "nodeslide.design-plan/v1",
+  "communicationJob": "By the end, a technical reviewer should understand what NodeKit now proves, which real product slices support the claim, and which artifact and publication gates remain open.",
+  "slides": [
+    {
+      "id": "S1",
+      "job": "Open with the system's concrete promise.",
+      "audienceQuestion": "What is NodeKit?",
+      "takeaway": "NodeKit launches NodeKit.",
+      "body": "From an empty directory to a proof-carrying agent application.",
+      "bullets": [
+        "Two presets; one path",
+        "Local run: 37.221 s",
+        "GitHub source; npm blocked"
+      ],
+      "narrativeRole": "opening",
+      "dominantVisual": "One clean lifecycle from brief to public proof with receipt checkpoints.",
+      "claimIds": ["C1_FACTORY_ACCEPTANCE"],
+      "evidenceIds": ["E1_FACTORY_ACCEPTANCE", "E2_NODEKIT_RELEASE"],
+      "density": "low"
+    },
+    {
+      "id": "S2",
+      "job": "Show why code generation alone is insufficient.",
+      "audienceQuestion": "What pain is this solving?",
+      "takeaway": "The hard part is keeping every proof gate on one execution path.",
+      "body": "Parity breaks when benchmark, browser, deployment, and public claims follow different implementations.",
+      "bullets": [
+        "One implementation must serve every gate",
+        "Receipts bind the exact revision",
+        "Failed gates stay visible"
+      ],
+      "narrativeRole": "stakes",
+      "dominantVisual": "Fragmented parallel paths collapsing into one compiled definition.",
+      "claimIds": [],
+      "evidenceIds": [],
+      "density": "medium"
+    },
+    {
+      "id": "S3",
+      "job": "Prove the factory rather than describe it.",
+      "audienceQuestion": "Does the empty-directory path actually work?",
+      "takeaway": "Two presets passed the full factory path in 37.221 seconds.",
+      "body": "From empty directories, NodeKit installed, compiled, ran, evaluated, benchmarked, and proof-checked both presets.",
+      "bullets": [
+        "Agentic RL preset: passed",
+        "SMB lending FDE preset: passed",
+        "Local benchmark, not production latency"
+      ],
+      "narrativeRole": "evidence",
+      "dominantVisual": "Two receipt cards joined to one factory-acceptance digest.",
+      "claimIds": ["C1_FACTORY_ACCEPTANCE"],
+      "evidenceIds": ["E1_FACTORY_ACCEPTANCE", "E2_NODEKIT_RELEASE"],
+      "metric": {
+        "value": "37.221 s",
+        "label": "deterministic local factory acceptance"
+      },
+      "density": "medium"
+    },
+    {
+      "id": "S4",
+      "job": "Show the consequential artifact vertical.",
+      "audienceQuestion": "Can the system survive a real agentic product journey?",
+      "takeaway": "The Casca lab passed every local gate without making a credit decision.",
+      "body": "On commit 6c8d7d9, the synthetic lab passed deterministic, live-provider, browser, reload, export, and identity gates.",
+      "bullets": [
+        "One bounded live-provider call",
+        "Fresh browser plus reload",
+        "Deployment gate still open"
+      ],
+      "narrativeRole": "case-study",
+      "dominantVisual": "Product screenshot annotated with graph query, proposal, and receipt checkpoints.",
+      "claimIds": ["C2_CASCA_LOCAL_PROOF"],
+      "evidenceIds": ["E3_CASCA_RELEASE", "E4_CASCA_BROWSER", "E5_CASCA_LIVE"],
+      "formula": {
+        "expression": "query -> proposal -> approval -> export",
+        "display": "query → proposal → approval → export",
+        "description": "Synthetic local workflow only; no automated credit decision."
+      },
+      "density": "medium"
+    },
+    {
+      "id": "S5",
+      "job": "Explain the research and learning boundary.",
+      "audienceQuestion": "How does NodeKit approach Agentic RL responsibly?",
+      "takeaway": "Protect the scorer first; train only after its boundaries are credible.",
+      "body": "The current baseline is behavior cloning, not RL. It passed protected local evaluation; the strict Azure-only live route failed closed with no fallback.",
+      "bullets": [
+        "Behavior cloning only",
+        "Nine reward attacks blocked",
+        "Azure/ZDR route: HTTP 404; no fallback"
+      ],
+      "narrativeRole": "technical-decision",
+      "dominantVisual": "Trajectory to protected reward to shadow candidate flow, with behavior cloning labeled as the current stage.",
+      "claimIds": ["C3_RL_LOCAL_BASELINE", "C4_RL_LIVE_ROUTE"],
+      "evidenceIds": ["E6_RL_RELEASE", "E7_RL_HELDOUT", "E8_RL_LIVE_BLOCKED", "E11_RL_CI"],
+      "metric": {
+        "value": "9",
+        "label": "adversarial reward attacks blocked"
+      },
+      "chart": {
+        "labels": ["reward attacks", "heldout tasks", "fallbacks"],
+        "values": [9, 2, 0],
+        "unit": "count"
+      },
+      "density": "high"
+    },
+    {
+      "id": "S6",
+      "job": "Introduce Founder Quest as the connected product surface.",
+      "audienceQuestion": "What does the graph make possible for a user?",
+      "takeaway": "Founder Quest passed all 15 hosted checks on one exact production revision.",
+      "body": "Read-only Founder Quest connects quests, a bounded graph, sourced answers, authority boundaries, and proof in four isolated browser contexts.",
+      "bullets": [
+        "Source dc5fba2 · evidence 0457913",
+        "App/config 973ea7cb · graph ng1_c9334138",
+        "18 / 18 tests · 25 / 25 artifact hashes"
+      ],
+      "narrativeRole": "product-reveal",
+      "dominantVisual": "Verified production Founder Quest view with quest rail, bounded graph, answer panel, and proof strip.",
+      "claimIds": ["C5_FOUNDER_QUEST_PRODUCT"],
+      "evidenceIds": ["E12_FOUNDER_QUEST_PRODUCTION", "E13_FOUNDER_QUEST_RELEASE"],
+      "metric": {
+        "value": "15 / 15",
+        "label": "hosted checks passed; synthetic and read-only"
+      },
+      "density": "medium"
+    },
+    {
+      "id": "S7",
+      "job": "Connect the external rare-disease grant scenario.",
+      "audienceQuestion": "How would a researcher use this today?",
+      "takeaway": "A real grant scenario tests the graph without claiming biological proof.",
+      "body": "Anthropic's rare-disease grant is an independent forcing function for mapping research, novelty, evaluation, authority, and readiness, not an affiliation.",
+      "bullets": [
+        "Official grant announcement",
+        "No affiliation or endorsement",
+        "Research synthesis does not prove biology"
+      ],
+      "narrativeRole": "external-use-case",
+      "dominantVisual": "Disease-gene-phenotype-mechanism-paper-trial-hypothesis graph with source ledger.",
+      "claimIds": ["C6_ANTHROPIC_GRANT_CASE"],
+      "evidenceIds": ["E9_ANTHROPIC_GRANT_SOURCE"],
+      "formula": {
+        "expression": "source -> claim -> evaluation -> application readiness",
+        "display": "source → claim → evaluation → application readiness",
+        "description": "Research synthesis informs an application; it does not prove biology."
+      },
+      "density": "medium"
+    },
+    {
+      "id": "S8",
+      "job": "Explain the graph of loops and close with a falsifiable invitation.",
+      "audienceQuestion": "How do the pieces improve, and what should reviewers do next?",
+      "takeaway": "Loops need external anchors. Bring one workflow and inspect the proof.",
+      "body": "Research, build, evaluation, proof, presentation, and feedback can watch one another. Only external anchors close the graph.",
+      "bullets": [
+        "Researcher, builder, or operator",
+        "Sources, commits, exports, and outcomes",
+        "Inspect pass, fail, and human-review status"
+      ],
+      "narrativeRole": "synthesis",
+      "dominantVisual": "Loop graph with external reality anchors and three reviewer entry points.",
+      "claimIds": ["C8_GRAPH_OF_LOOPS_FRAME"],
+      "evidenceIds": ["E1_FACTORY_ACCEPTANCE", "E2_NODEKIT_RELEASE", "E4_CASCA_BROWSER", "E10_GRAPH_OF_LOOPS_SOURCE"],
+      "formula": {
+        "expression": "research <-> build <-> evaluation <-> proof",
+        "display": "research ↔ build ↔ evaluation ↔ proof",
+        "description": "External sources, commits, artifacts, and observed outcomes close the loop."
+      },
+      "density": "low"
+    }
+  ]
+}

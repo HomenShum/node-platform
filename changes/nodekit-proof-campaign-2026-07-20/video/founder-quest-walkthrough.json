@@ -1,0 +1,465 @@
+{
+  "schemaVersion": "nodekit.campaign-video/v1",
+  "campaignId": "nodekit-proof-campaign-2026-07-20",
+  "journeyId": "founder-quest-critical-path-v1",
+  "title": "Founder Quest Graph: from blocker to proof",
+  "sourceApplication": {
+    "appId": "founder-quest-graph",
+    "mode": "read-only-synthetic",
+    "productionUrlToken": "{{PRODUCTION_URL}}",
+    "requiredClaimId": "C5_FOUNDER_QUEST_PRODUCT"
+  },
+  "productionProof": {
+    "sourceCommit": "dc5fba2467576d5ded3d3ac6bf4d142316410c86",
+    "evidenceCommit": "04579137a85f4ce18db61e6e7c0f25ff7b1d42b6",
+    "configHash": "973ea7cbd8039e963bab1ff604bc0180bf0457f9a334b9b9dc0f77062f103e20",
+    "appHash": "973ea7cbd8039e963bab1ff604bc0180bf0457f9a334b9b9dc0f77062f103e20",
+    "graphRevision": "ng1_c9334138",
+    "receiptDigest": "023154fb77698b8704932ccaa9a0736a252a6de8b1ea46da3f76675ffac9f49c",
+    "unifiedReleaseReceiptDigest": "3366a2466bfed64e07c70324babbb9d2eb369965e7e1930c9f00909b199bb5a5",
+    "releaseLevel": "production-certified",
+    "releaseReady": true,
+    "hostedDeploymentCertified": true,
+    "hostedChecksPassed": 15,
+    "isolatedBrowserContexts": 4,
+    "consoleErrors": 0,
+    "pageErrors": 0,
+    "networkErrors": 0,
+    "crossOriginErrors": 0,
+    "artifactManifestHashesVerified": 25,
+    "testsPassed": 18,
+    "releaseAuditIssues": 0,
+    "readOnlySynthetic": true,
+    "durableWrites": false,
+    "remoteNeo4jWrites": false
+  },
+  "featureProofStudio": {
+    "repositoryPathHint": "../../../../../feature-proof-studio",
+    "commit": "7aafb3e0a48f3c1e74e69a51d9df506186ea4340",
+    "captureEntrypoint": "walkthrough.solo-founder.mjs",
+    "captureSpecSlot": "walkthrough.solo-founder.specs.mjs",
+    "remotionEntrypoint": "src/nodekit-campaign-index.js",
+    "captureViewport": {
+      "width": 1280,
+      "height": 800,
+      "deviceScaleFactor": 2
+    }
+  },
+  "paths": {
+    "campaignRoot": "..",
+    "claims": "story/claims.json",
+    "evidenceIndex": "story/evidence-index.json",
+    "deploymentReceipt": "proof/founder-quest/deployment-proof.json",
+    "browserProofReceipt": "proof/founder-quest/browser-proof.json",
+    "screenshotManifest": "proof/founder-quest/screenshots.json",
+    "captureManifest": "video/proof/founder-quest-capture-manifest.json",
+    "finalReceipt": "video/proof/founder-quest-video-receipt.json",
+    "outputDirectory": "video/output"
+  },
+  "identityContract": {
+    "deploymentStatus": "deployed",
+    "browserProofStatus": "pass",
+    "requiredScreenshotIds": [
+      "quest-shell",
+      "blocked-quest",
+      "graph-path",
+      "source-backed-answer",
+      "source-detail",
+      "proof-surface",
+      "limitations"
+    ],
+    "requireFreshUser": true,
+    "requireReadOnlySynthetic": true,
+    "maxConsoleErrors": 0,
+    "maxNetworkErrors": 0
+  },
+  "safety": {
+    "mutationsAllowed": false,
+    "publishingAllowed": false,
+    "deploymentAllowed": false,
+    "prohibitedSelectorTerms": [
+      "approve",
+      "apply",
+      "delete",
+      "deploy",
+      "edit",
+      "publish",
+      "submit",
+      "upload",
+      "write"
+    ]
+  },
+  "profiles": [
+    {
+      "id": "FounderQuestVertical",
+      "compositionId": "WT9-FounderQuestVertical",
+      "format": "vertical-social",
+      "width": 1080,
+      "height": 1920,
+      "fps": 30,
+      "minimumSeconds": 60,
+      "maximumSeconds": 90,
+      "outputFile": "nodekit-founder-quest-vertical.mp4",
+      "title": "Founder Quest Graph \u00b7 83-second proof",
+      "accent": "#22c55e",
+      "retries": 1,
+      "steps": [
+        {
+          "act": "goto",
+          "url": "{{PRODUCTION_URL}}"
+        },
+        {
+          "act": "sleep",
+          "ms": 1200
+        },
+        {
+          "cap": "Start with the synthetic read-only journey that passed all 15 hosted checks",
+          "hold": 180
+        },
+        {
+          "cap": "Select the blocked banking quest",
+          "cursor": "[data-panel=\"quests\"] [data-node-id=\"quest:bank-readiness\"]",
+          "click": true,
+          "hold": 180
+        },
+        {
+          "act": "click",
+          "sel": "[data-panel=\"quests\"] [data-node-id=\"quest:bank-readiness\"]"
+        },
+        {
+          "cap": "The graph exposes the exact blocker instead of inventing progress",
+          "cursor": "[data-panel=\"graph\"] [data-node-id=\"blocker:missing-ownership-agreement\"]",
+          "click": true,
+          "hold": 210
+        },
+        {
+          "act": "click",
+          "sel": "[data-panel=\"graph\"] [data-node-id=\"blocker:missing-ownership-agreement\"]"
+        },
+        {
+          "act": "click",
+          "sel": "[data-panel=\"quests\"] [data-node-id=\"quest:bank-readiness\"]"
+        },
+        {
+          "cap": "Ask why the quest is blocked, what the agent can do, and what proves it",
+          "cursor": "textarea[placeholder=\"Why is the bank quest blocked?\"]",
+          "click": true,
+          "hold": 160
+        },
+        {
+          "act": "fill",
+          "sel": "textarea[placeholder=\"Why is the bank quest blocked?\"]",
+          "value": "Why is banking readiness blocked, what can the agent safely do next, and which evidence proves it?"
+        },
+        {
+          "act": "click",
+          "sel": "[data-query-operation=\"blocker\"]"
+        },
+        {
+          "act": "waitForText",
+          "sel": ".answer-verdict strong",
+          "text": "blocked",
+          "timeoutMs": 10000
+        },
+        {
+          "cap": "The deterministic runtime traverses the bounded graph and retrieves sources",
+          "burst": {
+            "ms": 2800,
+            "every": 400
+          },
+          "hold": 240
+        },
+        {
+          "act": "sleep",
+          "ms": 1200
+        },
+        {
+          "cap": "The answer names the blocker, next action, authority boundary, and limitation",
+          "cursor": "#answer-card",
+          "hold": 240
+        },
+        {
+          "cap": "Every material answer points to inspectable source evidence",
+          "cursor": ".answer-sources a",
+          "click": false,
+          "hold": 180
+        },
+        {
+          "act": "click",
+          "sel": "[data-query-operation=\"authority\"]"
+        },
+        {
+          "act": "waitForText",
+          "sel": ".answer-verdict strong",
+          "text": "human authority required",
+          "timeoutMs": 10000
+        },
+        {
+          "act": "sleep",
+          "ms": 1200
+        },
+        {
+          "cap": "Separate agent-safe preparation from human or professional authority",
+          "cursor": "#answer-card",
+          "hold": 200
+        },
+        {
+          "act": "scrollY",
+          "y": 760
+        },
+        {
+          "cap": "Move from explanation to the proof surface",
+          "cursor": "[data-panel=\"proof\"]",
+          "click": false,
+          "hold": 180
+        },
+        {
+          "cap": "The receipt binds source dc5fba2, graph ng1_c9334138, and four isolated browser contexts",
+          "cursor": ".proof-metrics",
+          "hold": 180
+        },
+        {
+          "act": "click",
+          "sel": "#open-neo4j-plan"
+        },
+        {
+          "cap": "The Neo4j-ready plan is inspectable and was never executed",
+          "cursor": "#plan-dialog",
+          "hold": 180
+        },
+        {
+          "act": "click",
+          "sel": "#close-dialog"
+        },
+        {
+          "act": "scrollY",
+          "y": 1400
+        },
+        {
+          "cap": "Synthetic readiness is not external approval, and the limitation stays visible",
+          "cursor": "footer",
+          "hold": 180
+        },
+        {
+          "act": "scrollTop"
+        },
+        {
+          "cap": "Verdict: explain the path, preserve authority, and keep the proof",
+          "hold": 180
+        }
+      ]
+    },
+    {
+      "id": "FounderQuestTechnical",
+      "compositionId": "WT-FounderQuestTechnical",
+      "format": "technical-landscape",
+      "width": 1920,
+      "height": 1080,
+      "fps": 30,
+      "minimumSeconds": 120,
+      "maximumSeconds": 180,
+      "outputFile": "nodekit-founder-quest-technical.mp4",
+      "title": "Founder Quest Graph \u00b7 technical proof walkthrough",
+      "accent": "#38bdf8",
+      "retries": 1,
+      "steps": [
+        {
+          "act": "goto",
+          "url": "{{PRODUCTION_URL}}"
+        },
+        {
+          "act": "sleep",
+          "ms": 1200
+        },
+        {
+          "cap": "Premise: 15 hosted checks passed for one synthetic read-only production journey",
+          "hold": 300
+        },
+        {
+          "cap": "The quest rail separates complete, blocked, waiting, and human-required work",
+          "cursor": "[data-panel=\"quests\"] [data-node-id=\"quest:bank-readiness\"]",
+          "click": true,
+          "hold": 260
+        },
+        {
+          "act": "click",
+          "sel": "[data-panel=\"quests\"] [data-node-id=\"quest:bank-readiness\"]"
+        },
+        {
+          "cap": "Selected quest: banking readiness is blocked by missing verified evidence",
+          "cursor": "[data-panel=\"quests\"] [data-node-id=\"quest:bank-readiness\"]",
+          "hold": 260
+        },
+        {
+          "cap": "Inspect the bounded dependency path",
+          "cursor": "[data-panel=\"graph\"] [data-node-id=\"blocker:missing-ownership-agreement\"]",
+          "click": true,
+          "hold": 300
+        },
+        {
+          "act": "click",
+          "sel": "[data-panel=\"graph\"] [data-node-id=\"blocker:missing-ownership-agreement\"]"
+        },
+        {
+          "cap": "The graph distinguishes prerequisite, evidence, authority, and unlock edges",
+          "cursor": "[aria-label=\"Interactive founder lifecycle graph\"]",
+          "hold": 240
+        },
+        {
+          "cap": "Switch to the current critical path instead of rendering the entire graph",
+          "cursor": "[data-graph-view=\"critical\"]",
+          "click": true,
+          "hold": 330
+        },
+        {
+          "act": "click",
+          "sel": "[data-graph-view=\"critical\"]"
+        },
+        {
+          "act": "click",
+          "sel": "[data-panel=\"quests\"] [data-node-id=\"quest:bank-readiness\"]"
+        },
+        {
+          "cap": "Ask one operational question against the selected graph context",
+          "cursor": "textarea[placeholder=\"Why is the bank quest blocked?\"]",
+          "click": true,
+          "hold": 300
+        },
+        {
+          "act": "fill",
+          "sel": "textarea[placeholder=\"Why is the bank quest blocked?\"]",
+          "value": "Why is banking readiness blocked, what can the agent safely do next, and which evidence proves it?"
+        },
+        {
+          "act": "click",
+          "sel": "[data-query-operation=\"blocker\"]"
+        },
+        {
+          "act": "waitForText",
+          "sel": ".answer-verdict strong",
+          "text": "blocked",
+          "timeoutMs": 10000
+        },
+        {
+          "cap": "The trace shows bounded graph retrieval and source lookup",
+          "burst": {
+            "ms": 3200,
+            "every": 400
+          },
+          "hold": 240
+        },
+        {
+          "act": "sleep",
+          "ms": 1200
+        },
+        {
+          "cap": "The direct answer identifies the blocker without claiming external approval",
+          "cursor": "#answer-card",
+          "hold": 300
+        },
+        {
+          "act": "click",
+          "sel": "[data-query-operation=\"authority\"]"
+        },
+        {
+          "act": "waitForText",
+          "sel": ".answer-verdict strong",
+          "text": "human authority required",
+          "timeoutMs": 10000
+        },
+        {
+          "act": "sleep",
+          "ms": 1200
+        },
+        {
+          "cap": "Next actions are divided into agent-safe, human-required, and professional-review work",
+          "cursor": "#answer-card",
+          "hold": 300
+        },
+        {
+          "act": "click",
+          "sel": "[data-query-operation=\"evidence\"]"
+        },
+        {
+          "act": "waitForText",
+          "sel": ".answer-verdict strong",
+          "text": "source backed process claim",
+          "timeoutMs": 10000
+        },
+        {
+          "act": "sleep",
+          "ms": 1200
+        },
+        {
+          "cap": "The answer carries a precise source link",
+          "cursor": ".answer-sources a",
+          "click": false,
+          "hold": 300
+        },
+        {
+          "cap": "The agent can prepare evidence, but it cannot manufacture institutional approval",
+          "cursor": ".answer-limit",
+          "click": false,
+          "hold": 300
+        },
+        {
+          "act": "scrollY",
+          "y": 760
+        },
+        {
+          "cap": "Proof starts with the exact production deployment identity",
+          "cursor": "[data-panel=\"proof\"]",
+          "click": false,
+          "hold": 300
+        },
+        {
+          "cap": "Four desktop/mobile light/dark contexts recorded zero browser or cross-origin errors",
+          "cursor": ".proof-metrics",
+          "click": false,
+          "hold": 300
+        },
+        {
+          "cap": "The receipt binds source dc5fba2, evidence 0457913, and app/config 973ea7cb",
+          "cursor": "#trace-summary",
+          "click": true,
+          "hold": 300
+        },
+        {
+          "act": "click",
+          "sel": "#open-neo4j-plan"
+        },
+        {
+          "cap": "The parameterized Neo4j plan is inspectable and never executed",
+          "cursor": "#plan-dialog",
+          "hold": 300
+        },
+        {
+          "act": "click",
+          "sel": "#close-dialog"
+        },
+        {
+          "act": "scrollY",
+          "y": 1400
+        },
+        {
+          "cap": "Known limitations remain part of the product story",
+          "cursor": "footer",
+          "click": false,
+          "hold": 300
+        },
+        {
+          "act": "scrollTop"
+        },
+        {
+          "cap": "The final verdict says what passed, what remains synthetic, and what is next",
+          "click": false,
+          "hold": 300
+        },
+        {
+          "cap": "NodeKit turns the graph journey into a proof-carrying technical artifact",
+          "hold": 170
+        }
+      ]
+    }
+  ]
+}

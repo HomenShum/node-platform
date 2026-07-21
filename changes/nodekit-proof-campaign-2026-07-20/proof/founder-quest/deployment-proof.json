@@ -1,0 +1,12 @@
+{
+  "status": "deployed",
+  "production": true,
+  "appId": "founder-quest-graph",
+  "deploymentId": "dpl_z1dRn48GFzZYuEyBq6oDNKPHdUHP",
+  "url": "https://founder-quest-graph.vercel.app/",
+  "commit": "dc5fba2467576d5ded3d3ac6bf4d142316410c86",
+  "configHash": "973ea7cbd8039e963bab1ff604bc0180bf0457f9a334b9b9dc0f77062f103e20",
+  "appHash": "973ea7cbd8039e963bab1ff604bc0180bf0457f9a334b9b9dc0f77062f103e20",
+  "receiptDigest": "023154fb77698b8704932ccaa9a0736a252a6de8b1ea46da3f76675ffac9f49c",
+  "deployedAt": "2026-07-21T05:05:13.959Z"
+}

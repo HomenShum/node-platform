@@ -48,6 +48,7 @@ test("create emits a parseable, reproducible application from multiline input", 
     await readFile(path.join(target, ".codex", "skills", "nodekit-qa", "references", "qa-contract.md"), "utf8"),
     /must describe the same run/,
   );
+  assert.match(await readFile(path.join(target, ".gitattributes"), "utf8"), /\* text=auto eol=lf/);
   const dockerfile = await readFile(path.join(target, "Dockerfile"), "utf8");
   const renderBlueprint = await readFile(path.join(target, "render.yaml"), "utf8");
   assert.match(dockerfile, /@earendil-works\/pi-ai@0\.80\.10/);
@@ -106,6 +107,13 @@ test("compiled hash binds the shipped app, workflow, dependency, and deployment 
   const root = await mkdtemp(path.join(os.tmpdir(), "nodekit-shipped-identity-"));
   t.after(() => rm(root, { force: true, recursive: true }));
   await createProject({ git: false, install: false, name: "identity-test", target: root });
+  await mkdir(path.join(root, "src"), { recursive: true });
+  await mkdir(path.join(root, "api"), { recursive: true });
+  await writeFile(path.join(root, "src", "domain.mjs"), "export const domainIdentity = 'original';\n");
+  await writeFile(path.join(root, "api", "index.mjs"), "export const apiIdentity = 'original';\n");
+  await writeFile(path.join(root, "server.ts"), "import './apps/web/server.mjs';\n");
+  await writeFile(path.join(root, ".dockerignore"), ".env*\n");
+  await writeFile(path.join(root, ".gitattributes"), "* text=auto eol=lf\n");
 
   const assertDrift = async (relative, replacement) => {
     await compileAgentDefinition(root);
@@ -119,6 +127,11 @@ test("compiled hash binds the shipped app, workflow, dependency, and deployment 
   };
 
   await assertDrift("apps/web/server.mjs", "export const serverIdentity = 'changed';\n");
+  await assertDrift("api/index.mjs", "export const apiIdentity = 'changed';\n");
+  await assertDrift("src/domain.mjs", "export const domainIdentity = 'changed';\n");
+  await assertDrift("server.ts", "import './apps/web/changed-server.mjs';\n");
+  await assertDrift(".dockerignore", ".env*\nproof/\n");
+  await assertDrift(".gitattributes", "* text=auto eol=crlf\n");
   await assertDrift("scripts/demo.mjs", "console.log('changed demo');\n");
   await assertDrift("adw/workflows/launch.yaml", "schemaVersion: nodekit.workflow/v1\nname: changed\n");
   await assertDrift("hackathon.yaml", "schemaVersion: nodekit.hackathon/v1\nname: changed\n");
@@ -207,7 +220,7 @@ test("default projects vendor the exact NodeKit runtime without polluting capabi
   const vendoredPackage = JSON.parse(await readFile(path.join(root, "vendor", "nodekit", "package.json"), "utf8"));
   assert.equal(packageJson.devDependencies["@homenshum/nodekit"], "file:vendor/nodekit");
   assert.equal(vendoredPackage.name, "@homenshum/nodekit");
-  assert.equal(vendoredPackage.version, "0.2.0");
+  assert.equal(vendoredPackage.version, "0.2.1");
 
   const compiled = await compileAgentDefinition(root);
   assert.equal(compiled.files.some((file) => file.path === "vendor/nodekit/src/cli.mjs"), true);
@@ -319,6 +332,8 @@ test("a fresh no-key Git candidate reaches an honest local-ready proof", async (
   t.after(() => rm(root, { force: true, recursive: true }));
   const created = await createProject({ git: true, install: false, name: "local-proof", target: root });
   assert.match(created.candidateCommit, /^[a-f0-9]{40}$/);
+  const { stdout: vendoredCliMode } = await execFileAsync("git", ["ls-files", "-s", "vendor/nodekit/src/cli.mjs"], { cwd: root });
+  assert.match(vendoredCliMode, /^100755 /);
   const compiled = await compileAgentDefinition(root);
 
   for (const script of ["demo.mjs", "eval.mjs", "proof.mjs"]) {

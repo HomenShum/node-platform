@@ -17,6 +17,7 @@ const APPLICATION_SCHEMA = CONTRACT_VERSIONS.application;
 // whole repository would make generated proof artifacts and editor state part
 // of the application identity.
 const DISCOVERY_ROOTS = [
+  "api",
   "agent",
   "packs",
   "integrations",
@@ -25,6 +26,7 @@ const DISCOVERY_ROOTS = [
   "evals",
   "fixtures",
   "schemas",
+  "src",
   "apps",
   "scripts",
   "adw",
@@ -42,6 +44,12 @@ const IDENTITY_ONLY_ROOTS = ["vendor"];
 // dependency resolution, deployment, browser behavior, or the workflow that
 // is being certified. They must therefore be bound to configHash as well.
 const APPLICATION_ROOT_FILES = [
+  ".dockerignore",
+  ".gitattributes",
+  ".gitignore",
+  ".npmrc",
+  ".nvmrc",
+  ".vercelignore",
   "nodekit.yaml",
   "hackathon.yaml",
   "package.json",
@@ -50,6 +58,9 @@ const APPLICATION_ROOT_FILES = [
   "yarn.lock",
   "bun.lockb",
   "Dockerfile",
+  "server.ts",
+  "server.js",
+  "server.mjs",
   "docker-compose.yml",
   "docker-compose.yaml",
   "render.yaml",

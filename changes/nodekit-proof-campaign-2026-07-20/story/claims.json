@@ -1,0 +1,137 @@
+{
+  "schemaVersion": "nodekit.claim-ledger/v1",
+  "claims": [
+    {
+      "id": "C1_FACTORY_ACCEPTANCE",
+      "text": "NodeKit v0.2.0 generated, installed, compiled, checked, demonstrated, evaluated, benchmarked, and proof-verified both the Agentic RL and SMB-lending presets from empty directories in 37.221 seconds.",
+      "status": "measured",
+      "evidenceIds": ["E1_FACTORY_ACCEPTANCE", "E2_NODEKIT_RELEASE"],
+      "scope": {
+        "commit": "ef23bb0d630c265d21be5443138cd1a5b769ed8c",
+        "tag": "v0.2.0"
+      },
+      "limitations": [
+        "The timed acceptance is deterministic and local; it is not a production deployment benchmark.",
+        "The npm registry package is not published."
+      ]
+    },
+    {
+      "id": "C2_CASCA_LOCAL_PROOF",
+      "text": "The Casca FDE Deployment Lab passed its deterministic, live-provider, adversarial browser, reload, export, and identity-binding gates on one exact commit.",
+      "status": "verified",
+      "evidenceIds": ["E3_CASCA_RELEASE", "E4_CASCA_BROWSER", "E5_CASCA_LIVE"],
+      "scope": {
+        "commit": "6c8d7d9f81810509240fe0b2352453bfa04ac924",
+        "releaseLevel": "local-ready"
+      },
+      "limitations": [
+        "The application is synthetic and unaffiliated with Casca.",
+        "Deployment remains an explicitly missing release gate."
+      ]
+    },
+    {
+      "id": "C3_RL_LOCAL_BASELINE",
+      "text": "The Agentic RL research lab exports step trajectories, trains a deterministic behavior-cloning baseline, blocks nine adversarial reward attacks, and evaluates a label-free process-separated heldout split.",
+      "status": "verified",
+      "evidenceIds": ["E6_RL_RELEASE", "E7_RL_HELDOUT", "E11_RL_CI"],
+      "scope": {
+        "commit": "d6826837920d828edd4d7026c4fc17388f27b8b9",
+        "releaseLevel": "local-learning-baseline-ready"
+      },
+      "limitations": [
+        "This is not policy-gradient RL, preference optimization, online learning, GPU training, or a weight update.",
+        "The two-task heldout set is diagnostic and too small for generalization claims."
+      ]
+    },
+    {
+      "id": "C4_RL_LIVE_ROUTE",
+      "text": "The preregistered Agentic RL live-model baseline failed closed when the Azure-only, zero-data-retention OpenRouter route returned HTTP 404; no retry, fallback, token usage, or cost was accepted.",
+      "status": "observed",
+      "evidenceIds": ["E8_RL_LIVE_BLOCKED"],
+      "scope": {
+        "commit": "353d825767682eaacda989551270747a95bcffc4",
+        "releaseLevel": "blocked"
+      },
+      "limitations": [
+        "The live baseline produced no candidate completions and therefore proves enforcement, not model quality."
+      ]
+    },
+    {
+      "id": "C5_FOUNDER_QUEST_PRODUCT",
+      "text": "Founder Quest Graph provides a read-only synthetic quest rail, bounded graph workspace, source-backed answer panel, and proof surface on an exact production revision that passed all 15 hosted checks.",
+      "status": "verified",
+      "evidenceIds": ["E12_FOUNDER_QUEST_PRODUCTION", "E13_FOUNDER_QUEST_RELEASE"],
+      "scope": {
+        "commit": "dc5fba2467576d5ded3d3ac6bf4d142316410c86",
+        "evidenceCommit": "04579137a85f4ce18db61e6e7c0f25ff7b1d42b6",
+        "configHash": "973ea7cbd8039e963bab1ff604bc0180bf0457f9a334b9b9dc0f77062f103e20",
+        "appHash": "973ea7cbd8039e963bab1ff604bc0180bf0457f9a334b9b9dc0f77062f103e20",
+        "graphRevision": "ng1_c9334138",
+        "productionUrl": "https://founder-quest-graph.vercel.app/",
+        "productionReceiptDigest": "023154fb77698b8704932ccaa9a0736a252a6de8b1ea46da3f76675ffac9f49c",
+        "unifiedReleaseReceiptDigest": "3366a2466bfed64e07c70324babbb9d2eb369965e7e1930c9f00909b199bb5a5",
+        "releaseLevel": "production-certified",
+        "releaseReady": true,
+        "hostedDeploymentCertified": true,
+        "hostedChecksPassed": 15,
+        "isolatedBrowserContexts": 4,
+        "artifactManifestHashesVerified": 25,
+        "testsPassed": 18,
+        "releaseAuditIssues": 0
+      },
+      "limitations": [
+        "The journey is synthetic and read-only; no durable writes or remote Neo4j writes occur.",
+        "The 15 hosted checks and four isolated browser contexts prove this bounded production journey, not government, bank, legal, tax, regulatory, or other external approval."
+      ]
+    },
+    {
+      "id": "C6_ANTHROPIC_GRANT_CASE",
+      "text": "NodeKit uses Anthropic's rare-disease research grants as an independent external scenario for mapping current research, novelty, execution, evaluation, and application readiness.",
+      "status": "verified",
+      "evidenceIds": ["E9_ANTHROPIC_GRANT_SOURCE"],
+      "scope": {
+        "retrievedAt": "2026-07-20"
+      },
+      "limitations": [
+        "NodeKit is not affiliated with or endorsed by Anthropic and has not received this grant."
+      ]
+    },
+    {
+      "id": "C7_RECURSIVE_LAUNCH",
+      "text": "NodeKit directed the research, product proofs, editable deck, walkthrough video, and browser-assisted publication of this campaign.",
+      "status": "planned",
+      "evidenceIds": [],
+      "scope": {},
+      "limitations": [
+        "Past tense is prohibited until all artifact, publication, and public-URL receipts exist."
+      ]
+    },
+    {
+      "id": "C8_GRAPH_OF_LOOPS_FRAME",
+      "text": "NodeKit applies Carlos E. Perez's graph-of-loops framing to a proof-carrying product workflow, with explicit attribution to Perez's essay and Peter Steinberger's originating prompt.",
+      "status": "verified",
+      "evidenceIds": ["E10_GRAPH_OF_LOOPS_SOURCE"],
+      "scope": {
+        "retrievedAt": "2026-07-20"
+      },
+      "limitations": [
+        "The loop and graph mechanics predate the current phrase; NodeKit claims an application of the framing, not ownership of the underlying architecture."
+      ]
+    },
+    {
+      "id": "C9_MEDIA_PROOF",
+      "text": "NodeKit produced and verified an 83-second vertical walkthrough and a 180-second technical walkthrough from the exact Founder Quest production capture, with burned-in narrative text and content-addressed receipts.",
+      "status": "verified",
+      "evidenceIds": ["E14_FOUNDER_QUEST_VIDEO_PROOF"],
+      "scope": {
+        "campaignCommit": "f002870ab08faaf992677589216d4384211fd1e1",
+        "verticalSha256": "7733c39be6493807459c018931130ccbfed02a6d27659c5a28d60e971591b31d",
+        "technicalSha256": "b3b10fcc7ed9bce329aa608ae42294886d6db9b6ff1882bd34e2873ffc1b7ea1"
+      },
+      "limitations": [
+        "Both videos use silent AAC tracks and burned-in captions.",
+        "The walkthrough proves one synthetic read-only production journey, not an external outcome or publication."
+      ]
+    }
+  ]
+}

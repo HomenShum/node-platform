@@ -1,0 +1,61 @@
+schemaVersion: nodekit.change-story/v1
+id: nodekit-proof-campaign-2026-07-20
+title: NodeKit launches NodeKit through proof-carrying product work
+changeType: release-campaign
+presentationTier: 4
+audience:
+  - agent builders
+  - applied AI researchers
+  - forward-deployed engineers
+  - technical founders and investors
+communicationJob: >-
+  By the end, a technical reviewer should understand that NodeKit is a
+  portable application contract and verification path, see exactly which
+  product slices have passed which gates, and know where the remaining
+  release boundaries are local, blocked, or pending publication.
+previousState:
+  - Agent application scaffolding, runtime, domain evaluation, browser QA, and release evidence were rebuilt manually per project.
+  - A generated application could appear complete without proving that its benchmark, product, and release paths shared the same implementation.
+userPain:
+  - Empty-directory to proof required repeated repository-specific coordination.
+  - Polished demos could outrun their actual runtime, browser, deployment, or artifact evidence.
+decision:
+  - Use one thin NodeKit manifest, filesystem-discovered capabilities, composed evaluations, and content-addressed proof receipts.
+  - Prove the system through independent generated applications and preserve failed gates as first-class evidence.
+  - Make the launch itself a governed NodeKit workflow whose public claims resolve to exact receipts.
+alternatives:
+  - name: Build another general agent runtime
+    rejectedBecause: Existing runtimes already cover generic orchestration; the missing value is application composition, artifact governance, and certification.
+  - name: Publish a concept announcement before product proof
+    rejectedBecause: It would make the deck the source of truth instead of a projection of executed evidence.
+affectedSystems:
+  - NodeKit factory
+  - Casca FDE Deployment Lab
+  - FounderQuest Agentic RL research lab
+  - Founder Quest Graph product
+  - NodeSlide presentation pipeline
+  - Feature Proof Studio video pipeline
+  - Chrome/CDP publication workflow
+requiredProof:
+  - exact commits and application/config hashes
+  - no-key deterministic factory acceptance
+  - strict paid-provider receipts with no fallback
+  - browser journeys with console and network health
+  - exact deployment identity and fresh-user production proof where claimed
+  - editable deck export and reopen verification
+  - public URL verification and distribution receipts
+approvalBoundaries:
+  productionDeployment: authorized
+  paidLiveProvider: authorized
+  exactPublicCampaign: authorized
+  destructiveCleanup: not_in_scope
+  directMessagesRepliesOrPaidPromotion: prohibited
+honestLimitations:
+  - NodeKit v0.2.0 is source-released on GitHub; npm publication is blocked by registry authentication.
+  - The Casca lab is local-ready, not production-proven.
+  - The current Agentic RL lab trains a deterministic behavior-cloning baseline; it does not perform gradient-based reinforcement learning.
+  - Founder Quest Graph is production-proven only as a synthetic, read-only workflow with no durable writes or remote Neo4j writes; it does not prove any external approval.
+nextMilestone: >-
+  Regenerate the evidence-bound deck and walkthrough from the verified Founder
+  Quest production receipt, then publish only the exact approved campaign and
+  preserve the resulting public-URL receipts.
