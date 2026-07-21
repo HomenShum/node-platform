@@ -17,6 +17,7 @@ const APPLICATION_SCHEMA = CONTRACT_VERSIONS.application;
 // whole repository would make generated proof artifacts and editor state part
 // of the application identity.
 const DISCOVERY_ROOTS = [
+  "api",
   "agent",
   "packs",
   "integrations",

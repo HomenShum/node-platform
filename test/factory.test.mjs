@@ -107,7 +107,9 @@ test("compiled hash binds the shipped app, workflow, dependency, and deployment 
   t.after(() => rm(root, { force: true, recursive: true }));
   await createProject({ git: false, install: false, name: "identity-test", target: root });
   await mkdir(path.join(root, "src"), { recursive: true });
+  await mkdir(path.join(root, "api"), { recursive: true });
   await writeFile(path.join(root, "src", "domain.mjs"), "export const domainIdentity = 'original';\n");
+  await writeFile(path.join(root, "api", "index.mjs"), "export const apiIdentity = 'original';\n");
   await writeFile(path.join(root, "server.ts"), "import './apps/web/server.mjs';\n");
   await writeFile(path.join(root, ".dockerignore"), ".env*\n");
 
@@ -123,6 +125,7 @@ test("compiled hash binds the shipped app, workflow, dependency, and deployment 
   };
 
   await assertDrift("apps/web/server.mjs", "export const serverIdentity = 'changed';\n");
+  await assertDrift("api/index.mjs", "export const apiIdentity = 'changed';\n");
   await assertDrift("src/domain.mjs", "export const domainIdentity = 'changed';\n");
   await assertDrift("server.ts", "import './apps/web/changed-server.mjs';\n");
   await assertDrift(".dockerignore", ".env*\nproof/\n");
