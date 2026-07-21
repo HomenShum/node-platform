@@ -25,6 +25,10 @@
 
       <div class="progress" aria-label="Case progress" id="progress"></div>
       <div class="error" id="error" role="alert" hidden></div>
+      <section class="state-banner" id="state-banner" aria-live="polite">
+        <span class="state-kind" id="state-kind">ORIENTATION</span>
+        <div><strong id="state-title">Ready for your direction</strong><p id="state-message">Confirm the outcome before the run begins.</p></div>
+      </section>
 
       <section class="workspace">
         <nav aria-label="Case navigation">
@@ -39,6 +43,11 @@
         <article class="artifact" id="artifact" tabindex="-1">
           <div class="section-title"><div><p class="eyebrow">PRIMARY ARTIFACT</p><h2>Primary artifact</h2></div><span class="version" id="artifact-version">v1</span></div>
           <div class="current-action"><span>Current action</span><strong id="current-action">Confirm the intended outcome</strong></div>
+          <form class="primary-input" id="primary-input" novalidate>
+            <label for="outcome">Outcome for this case</label>
+            <div><input id="outcome" name="outcome" value="__BRIEF_TEXT__" required><button class="button secondary" type="submit">Confirm outcome</button></div>
+            <small id="input-help">Saved locally in this deterministic demonstration.</small>
+          </form>
           <div class="artifact-body" id="artifact-body"></div>
           <div class="completion" id="completion" hidden><strong>Completion verified</strong><p>The canonical artifact and content-addressed receipt are ready.</p></div>
         </article>
@@ -49,6 +58,8 @@
           <h2>Review proposal</h2>
           <p id="review-copy">No generated work is canonical until you approve it.</p>
           <div class="proposal" id="proposal"><span>Nothing pending.</span></div>
+          <div class="exception" id="exception" hidden></div>
+          <div class="receipt-detail" id="receipt-detail" hidden></div>
           <div class="actions">
             <button class="button primary" id="propose">Prepare proposal</button>
             <button class="button approve" id="approve" disabled>Approve</button>

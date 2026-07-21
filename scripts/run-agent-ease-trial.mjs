@@ -1,6 +1,6 @@
 import { createHash, randomUUID } from "node:crypto";
 import { spawnSync } from "node:child_process";
-import { cp, mkdir, mkdtemp, readFile, writeFile } from "node:fs/promises";
+import { cp, mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -18,6 +18,8 @@ const task = tasks.tasks.find((entry) => entry.id === taskId);
 if (!task) throw new Error(`unknown held-out task ${taskId}; available: ${tasks.tasks.map((entry) => entry.id).join(", ")}`);
 const runId = String(args.run ?? `agent_${taskId}_${randomUUID().replaceAll("-", "").slice(0, 12)}`);
 const packageManager = String(args.packageManager ?? "npm");
+const executor = String(args.executor ?? "native");
+if (!new Set(["native", "docker"]).has(executor)) throw new Error(`unsupported executor ${executor}`);
 const evidenceRoot = path.join(repoRoot, "proof", "ease", "agents", runId);
 const candidateRoot = path.join(await mkdtemp(path.join(os.tmpdir(), "nodekit-agent-ease-")), "candidate");
 const commandLedger = [];
@@ -28,10 +30,12 @@ function sha256(value) { return createHash("sha256").update(value).digest("hex")
 function run(command, commandArgs, cwd, options = {}) {
   const startedAt = new Date().toISOString();
   const started = performance.now();
+  const childEnv = { ...process.env, CI: "1", ...(options.env ?? {}) };
+  for (const key of options.unsetEnv ?? []) delete childEnv[key];
   const result = spawnSync(command, commandArgs, {
     cwd,
     encoding: "utf8",
-    env: { ...process.env, CI: "1", ...(options.env ?? {}) },
+    env: childEnv,
     maxBuffer: 50 * 1024 * 1024,
     shell: process.platform === "win32" && new Set(["npm", "npx", "pnpm"]).has(command),
     timeout: options.timeout ?? 300_000,
@@ -71,8 +75,22 @@ commandLedger.push({ command: "nodekit create", durationMs: Math.round(performan
 const installArgs = packageManager === "pnpm" ? ["install", "--prefer-offline"] : ["install", "--prefer-offline", "--no-audit", "--no-fund"];
 requirePass(run(packageManager, installArgs, candidateRoot, { timeout: 300_000 }), "dependency installation");
 
+const writeProbePath = path.join(candidateRoot, ".nodekit-agent-write-probe");
+await writeFile(writeProbePath, `${runId}\n`);
+const writeProbeMatched = (await readFile(writeProbePath, "utf8")) === `${runId}\n`;
+await rm(writeProbePath);
+if (!writeProbeMatched) throw new Error("candidate write preflight did not round-trip");
+await writeFile(path.join(evidenceRoot, "agent", "environment.json"), `${JSON.stringify({
+  inheritedParentThread: false,
+  requestedSandbox: "workspace-write",
+  userConfigLoaded: false,
+  userExecPolicyLoaded: false,
+  writePreflight: "passed",
+}, null, 2)}\n`);
+
 const sessionPath = path.join(evidenceRoot, "agent", "session.jsonl");
 const finalPath = path.join(evidenceRoot, "agent", "final-report.md");
+const candidateFinalPath = path.join(candidateRoot, ".nodekit-agent-final-report.md");
 const codexWrapper = process.platform === "win32"
   ? spawnSync("where.exe", ["codex.cmd"], { encoding: "utf8" }).stdout.split(/\r?\n/).find(Boolean)
   : undefined;
@@ -81,10 +99,38 @@ const agentPrefixArgs = process.platform === "win32"
   ? [path.join(path.dirname(codexWrapper ?? ""), "node_modules", "@openai", "codex", "bin", "codex.js")]
   : [];
 if (process.platform === "win32" && !codexWrapper) throw new Error("codex.cmd was not found");
-const agent = run(agentCommand, [...agentPrefixArgs,
-  "exec", "--ephemeral", "--ignore-user-config", "--sandbox", "workspace-write", "--json",
+const dockerImage = String(args.dockerImage ?? "nodekit-ease-agent:codex-0.142.5");
+const authPath = path.join(os.homedir(), ".codex", "auth.json");
+const nativeAgentArgs = [...agentPrefixArgs,
+  "exec", "--ephemeral", "--ignore-user-config", "--ignore-rules", "--sandbox", "workspace-write", "--json",
   "--output-last-message", finalPath, "-C", candidateRoot, task.goal,
-], candidateRoot, { timeout: Number(args.timeoutMs ?? 1_800_000) });
+];
+const dockerAgentArgs = [
+  "run", "--rm",
+  "--mount", `type=bind,source=${candidateRoot},target=/workspace`,
+  "--mount", `type=bind,source=${authPath},target=/root/.codex/auth.json,readonly`,
+  "--workdir", "/workspace",
+  "--env", "CODEX_HOME=/root/.codex",
+  "--env", "CI=1",
+  dockerImage,
+  "codex", "exec", "--ephemeral", "--ignore-user-config", "--ignore-rules", "--sandbox", "workspace-write", "--json",
+  "--output-last-message", "/workspace/.nodekit-agent-final-report.md", "-C", "/workspace", task.goal,
+];
+const agent = executor === "docker"
+  ? run("docker", dockerAgentArgs, candidateRoot, { timeout: Number(args.timeoutMs ?? 1_800_000) })
+  : run(agentCommand, nativeAgentArgs, candidateRoot, {
+      timeout: Number(args.timeoutMs ?? 1_800_000),
+      unsetEnv: [
+        "CODEX_INTERNAL_ORIGINATOR_OVERRIDE",
+        "CODEX_PERMISSION_PROFILE",
+        "CODEX_SHELL",
+        "CODEX_THREAD_ID",
+      ],
+    });
+if (executor === "docker") {
+  await writeFile(finalPath, await readFile(candidateFinalPath, "utf8").catch(() => ""));
+  await rm(candidateFinalPath, { force: true });
+}
 await writeFile(sessionPath, agent.stdout ?? "");
 await writeFile(path.join(evidenceRoot, "agent", "stderr.txt"), agent.stderr ?? "");
 
@@ -149,11 +195,14 @@ await writeFile(path.join(evidenceRoot, "commands.jsonl"), commandLedger.map((en
 
 const receipt = {
   agentExitCode: agent.status,
-  agentVersion: run(agentCommand, [...agentPrefixArgs, "--version"], repoRoot).stdout.trim(),
+  agentVersion: executor === "docker"
+    ? run("docker", ["run", "--rm", dockerImage, "codex", "--version"], repoRoot).stdout.trim()
+    : run(agentCommand, [...agentPrefixArgs, "--version"], repoRoot).stdout.trim(),
   candidateRoot,
   changedFiles,
   checks,
   durationMs: Math.round(performance.now() - trialStarted),
+  executor,
   generatedAt: new Date().toISOString(),
   interventions: 0,
   packageManager,

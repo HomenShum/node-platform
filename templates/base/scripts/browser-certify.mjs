@@ -116,33 +116,40 @@ try {
         if (message.type() === "error") observations.consoleErrors.push({ text: message.text(), type: message.type() });
       });
       page.on("requestfailed", (request) => observations.failedRequests.push({ error: request.failure()?.errorText ?? "unknown", url: request.url() }));
-      await page.goto(baseUrl, { waitUntil: "networkidle" });
-      await page.locator("#case-title").waitFor();
-      if (firstMeaningfulPaintMs === null) firstMeaningfulPaintMs = Math.round(performance.now() - started);
-      await capture(page, "first_arrival", viewport, theme, observations);
-
-      if (viewport.id === "mobile-portrait") {
-        await page.locator("#propose").focus();
-        await page.keyboard.press("Enter");
-      } else {
-        await page.locator("#propose").click();
-      }
-      await page.locator("#proposal strong").waitFor();
-      await capture(page, "proposal_pending", viewport, theme, observations);
-
-      if (viewport.id === "mobile-portrait") {
-        await page.locator("#approve").focus();
-        await page.keyboard.press("Enter");
-      } else {
-        await page.locator("#approve").click();
-      }
-      await page.locator("#completion").waitFor({ state: "visible" });
-      await capture(page, "completed_receipt", viewport, theme, observations);
-      const receiptBeforeReload = await page.locator("#receipt-id").innerText();
-      await page.reload({ waitUntil: "networkidle" });
-      const receiptAfterReload = await page.locator("#receipt-id").innerText();
-      if (!receiptBeforeReload.startsWith("Receipt ") || receiptAfterReload !== receiptBeforeReload) {
-        throw new Error(`receipt did not survive reload for ${viewport.id}/${theme}`);
+      for (const state of requiredStates) {
+        await page.goto(`${baseUrl}/?scenario=${state}`, { waitUntil: "networkidle" });
+        await page.locator("#case-title").waitFor();
+        await page.locator(`body[data-scenario="${state}"]`).waitFor();
+        if (firstMeaningfulPaintMs === null) firstMeaningfulPaintMs = Math.round(performance.now() - started);
+        if (state === "validation_error") {
+          await page.locator("#outcome").fill("");
+          await page.locator("#primary-input button").click();
+          await page.locator("#error").waitFor({ state: "visible" });
+        }
+        if (state === "approval") await page.locator("#approve").focus();
+        if (state === "receipt_inspection" || state === "export_share") await page.locator("#receipt-detail").waitFor({ state: "visible" });
+        if (state === "recoverable_failure" || state === "external_wait") await page.locator("#exception").waitFor({ state: "visible" });
+        if (state === "conflict") {
+          const copy = await page.locator("#proposal").innerText();
+          if (!copy.includes("conflicted")) throw new Error(`conflict state was not visible for ${viewport.id}/${theme}`);
+        }
+        await capture(page, state, viewport, theme, observations);
+        if (state === "reload_resume") {
+          const proposalBeforeReload = await page.locator("#proposal").innerText();
+          await page.reload({ waitUntil: "networkidle" });
+          const proposalAfterReload = await page.locator("#proposal").innerText();
+          if (!proposalBeforeReload.includes("Proposed change") || proposalAfterReload !== proposalBeforeReload) {
+            throw new Error(`proposal did not survive reload for ${viewport.id}/${theme}`);
+          }
+        }
+        if (state === "completed_receipt") {
+          const receiptBeforeReload = await page.locator("#receipt-id").innerText();
+          await page.reload({ waitUntil: "networkidle" });
+          const receiptAfterReload = await page.locator("#receipt-id").innerText();
+          if (!receiptBeforeReload.startsWith("Receipt ") || receiptAfterReload !== receiptBeforeReload) {
+            throw new Error(`receipt did not survive reload for ${viewport.id}/${theme}`);
+          }
+        }
       }
       globalConsole.push(...observations.consoleErrors.map((entry) => ({ ...entry, theme, viewport: viewport.id })));
       globalNetwork.push(...observations.failedRequests.map((entry) => ({ ...entry, theme, viewport: viewport.id })));
@@ -150,7 +157,7 @@ try {
       await fetch(`${baseUrl}/api/reset`, { method: "POST" });
     }
   }
-  passed = screenshots.length === viewports.length * 2 * 3
+  passed = screenshots.length === viewports.length * 2 * requiredStates.length
     && screenshots.every((entry) => entry.consoleErrors === 0 && entry.failedRequests === 0 && entry.horizontalOverflowPx === 0 && entry.mojibakeDetected === false);
 } catch (caught) {
   error = caught instanceof Error ? caught.stack ?? caught.message : String(caught);
