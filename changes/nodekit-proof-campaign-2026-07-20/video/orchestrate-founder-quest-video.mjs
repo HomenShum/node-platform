@@ -50,8 +50,13 @@ export const sha256File = (path) =>
   sha256Bytes(readFileSync(path));
 
 const loadJson = (path) => JSON.parse(readFileSync(path, "utf8"));
-const commandName = (name) =>
-  process.platform === "win32" ? `${name}.cmd` : name;
+export const packageCommand = (name, args = []) =>
+  process.platform === "win32"
+    ? {
+        command: process.env.ComSpec || "cmd.exe",
+        args: ["/d", "/s", "/c", `${name}.cmd`, ...args],
+      }
+    : { command: name, args };
 
 const exec = (command, args, options = {}) =>
   execFileSync(command, args, {
@@ -917,7 +922,8 @@ export async function captureCampaign({
     deployment: preflight.deployment,
   });
   if (!skipInstall) {
-    exec(commandName("npm"), ["ci", "--ignore-scripts=false"], {
+    const install = packageCommand("npm", ["ci", "--ignore-scripts=false"]);
+    exec(install.command, install.args, {
       cwd: stage.stageRoot,
     });
   }
@@ -1104,10 +1110,8 @@ const requireCaptureReceipt = (config, preflight) => {
 };
 
 export function buildRenderCommands(config, stageRoot, outputDirectory) {
-  return config.profiles.map((profile) => ({
-    profileId: profile.id,
-    command: commandName("npx"),
-    args: [
+  return config.profiles.map((profile) => {
+    const invocation = packageCommand("npx", [
       "remotion",
       "render",
       config.featureProofStudio.remotionEntrypoint,
@@ -1115,9 +1119,13 @@ export function buildRenderCommands(config, stageRoot, outputDirectory) {
       join(outputDirectory, profile.outputFile),
       "--codec=h264",
       "--concurrency=2",
-    ],
-    cwd: stageRoot,
-  }));
+    ]);
+    return {
+      profileId: profile.id,
+      ...invocation,
+      cwd: stageRoot,
+    };
+  });
 }
 
 export function renderCampaign({

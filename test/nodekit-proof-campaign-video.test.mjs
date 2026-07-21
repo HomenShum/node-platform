@@ -18,6 +18,7 @@ import {
   durationFrames,
   evaluatePreflight,
   lintCampaignConfig,
+  packageCommand,
   validateClaimBinding,
 } from "../changes/nodekit-proof-campaign-2026-07-20/video/orchestrate-founder-quest-video.mjs";
 
@@ -111,14 +112,21 @@ test("Remotion commands call the pinned Feature Proof Studio stage", () => {
   assert.equal(commands.length, 2);
   for (const [index, command] of commands.entries()) {
     assert.equal(command.cwd, stageRoot);
-    assert.equal(command.args[0], "remotion");
-    assert.equal(command.args[1], "render");
+    const commandOffset = process.platform === "win32" ? 4 : 0;
+    if (process.platform === "win32") {
+      assert.equal(command.command.toLowerCase(), (process.env.ComSpec || "cmd.exe").toLowerCase());
+      assert.deepEqual(command.args.slice(0, 4), ["/d", "/s", "/c", "npx.cmd"]);
+    } else {
+      assert.equal(command.command, "npx");
+    }
+    assert.equal(command.args[commandOffset], "remotion");
+    assert.equal(command.args[commandOffset + 1], "render");
     assert.equal(
-      command.args[2],
+      command.args[commandOffset + 2],
       config.featureProofStudio.remotionEntrypoint,
     );
-    assert.equal(command.args[3], config.profiles[index].compositionId);
-    assert.match(command.args[4], new RegExp(`${config.profiles[index].outputFile}$`));
+    assert.equal(command.args[commandOffset + 3], config.profiles[index].compositionId);
+    assert.match(command.args[commandOffset + 4], new RegExp(`${config.profiles[index].outputFile}$`));
   }
 
   const rootSource = readFileSync(join(VIDEO_ROOT, "feature-proof-root.jsx"), "utf8");
@@ -126,6 +134,16 @@ test("Remotion commands call the pinned Feature Proof Studio stage", () => {
   assert.match(rootSource, /from "\.\/walkthrough\.data\.js"/);
   assert.match(rootSource, /WT9-FounderQuestVertical/);
   assert.match(rootSource, /WT-FounderQuestTechnical/);
+});
+
+test("package commands are executable without direct .cmd spawning on Windows", () => {
+  const invocation = packageCommand("npm", ["--version"]);
+  if (process.platform === "win32") {
+    assert.equal(invocation.command.toLowerCase(), (process.env.ComSpec || "cmd.exe").toLowerCase());
+    assert.deepEqual(invocation.args, ["/d", "/s", "/c", "npm.cmd", "--version"]);
+  } else {
+    assert.deepEqual(invocation, { command: "npm", args: ["--version"] });
+  }
 });
 
 test("preflight fails closed when deployment, browser, and screenshot proof are absent", (t) => {
