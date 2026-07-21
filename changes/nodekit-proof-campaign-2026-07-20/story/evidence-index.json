@@ -95,21 +95,21 @@
       "id": "E14_FOUNDER_QUEST_VIDEO_PROOF",
       "kind": "media-proof",
       "path": "changes/nodekit-proof-campaign-2026-07-20/video/proof/founder-quest-video-receipt.json",
-      "sha256": "25f92d97dcadb31b4b8adee496adee076b0779552bf21cf5c2991f387ed0fb08",
+      "sha256": "d6371b27e858ed4f32c9904c9ed00a64f1acfa69155ad9a2f9af71f59f365f2e",
       "visualQaPath": "changes/nodekit-proof-campaign-2026-07-20/video/proof/founder-quest-media-visual-qa.json",
-      "visualQaSha256": "e4131e974a8b6b2ada07ea2c08ffad97364327a695bc44edaf95ba44ca3704f5",
+      "visualQaSha256": "32f31f2746c9d5032267c0997df074e717cd30a50aae35cd4ef6c6e7132ead15",
       "assets": [
         {
           "path": "changes/nodekit-proof-campaign-2026-07-20/video/output/nodekit-founder-quest-vertical.mp4",
-          "sha256": "4cd8e5c9e5ecfc3b93abaa3e9f8e60dd819c024e6ad147002637bd6e68b12ae3",
-          "bytes": 9771396,
+          "sha256": "7733c39be6493807459c018931130ccbfed02a6d27659c5a28d60e971591b31d",
+          "bytes": 9958725,
           "durationSeconds": 83.050667,
           "dimensions": "1080x1920"
         },
         {
           "path": "changes/nodekit-proof-campaign-2026-07-20/video/output/nodekit-founder-quest-technical.mp4",
-          "sha256": "d0e2d13ed29fc82d6528c988cd6afabf81d464c00d1a80857951377cc8d07e18",
-          "bytes": 23095701,
+          "sha256": "b3b10fcc7ed9bce329aa608ae42294886d6db9b6ff1882bd34e2873ffc1b7ea1",
+          "bytes": 23406403,
           "durationSeconds": 180.053333,
           "dimensions": "1920x1080"
         }

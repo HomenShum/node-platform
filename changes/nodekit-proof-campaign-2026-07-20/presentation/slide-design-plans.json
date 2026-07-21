@@ -6,8 +6,8 @@
       "id": "S1",
       "job": "Open with the system's concrete promise.",
       "audienceQuestion": "What is NodeKit?",
-      "takeaway": "Empty directory. Proof-carrying application.",
-      "body": "One manifest connects runtime, evaluation, browser QA, and proof.",
+      "takeaway": "NodeKit launches NodeKit.",
+      "body": "From an empty directory to a proof-carrying agent application.",
       "bullets": [
         "Two presets; one path",
         "Local run: 37.221 s",

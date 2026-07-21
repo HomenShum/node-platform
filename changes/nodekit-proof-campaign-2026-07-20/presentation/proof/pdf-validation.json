@@ -1,0 +1,34 @@
+{
+  "schemaVersion": "nodekit.presentation-pdf-proof/v1",
+  "status": "verified",
+  "verifiedAt": "2026-07-21T08:15:00.000Z",
+  "sourcePptx": {
+    "path": "presentation/exports/nodekit-proof-campaign-2026-07-20.final.pptx",
+    "sha256": "3d0adb5a16f61ba4f55017900ff627c7af7974174da343d08df32eaf31cf8d03"
+  },
+  "carouselPdf": {
+    "path": "presentation/output/pdf/nodekit-proof-campaign-2026-07-20-carousel.pdf",
+    "sha256": "c94e9463a104295fc9641d099fd21d80bd342e2fb33cbe70d4949210ea18f0f9",
+    "pageCount": 8
+  },
+  "checks": {
+    "slidesTestOverflow": "pass",
+    "fullDeckMontageInspected": true,
+    "unexpectedOverlap": false,
+    "clipping": false,
+    "unresolvedPlaceholders": false
+  },
+  "renderedPageHashes": [
+    "529ca00b3b133f36a893af84a30f5fba21f313115265731a7db065109f2e9e07",
+    "30f5eca99aa50b38feccbe1fd52c9e49c459bc2f2ad1a1e532a0a0d2d107debd",
+    "019d077664cd6d948cb4efd5458b4130e91775e84b371a26fc8bd0d399e5e660",
+    "5568def97927df0fa740cf233124b98017c1d747cc25b249c319291e9c47c436",
+    "5f652093d4e128f9bdb11b38fe2ed7af2d8c0773d9918c19cd1e28a2f89d9619",
+    "9e185fcce5f30da1eea776f72858b35e5912f0c4fb75112feacdba4b49ef03b6",
+    "fee16c759147e81090ff1c6413871c74ac7fa54521b5f22915a3ec4e8cd0c319",
+    "f2658503fb209b45414bd3a4448d233e2043e0b9a72df5377ce8ca921537578c"
+  ],
+  "limitations": [
+    "This receipt verifies the local PPTX-to-PDF carousel and its rendered pages; it does not prove social-platform publication."
+  ]
+}

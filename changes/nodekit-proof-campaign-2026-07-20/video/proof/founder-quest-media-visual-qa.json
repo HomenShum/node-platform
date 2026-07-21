@@ -1,16 +1,16 @@
 {
   "schemaVersion": "nodekit.media-visual-qa/v1",
   "status": "verified",
-  "verifiedAt": "2026-07-21T06:17:49.5951211Z",
+  "verifiedAt": "2026-07-21T06:57:15.4722803Z",
   "campaignId": "nodekit-proof-campaign-2026-07-20",
   "journeyId": "founder-quest-critical-path-v1",
-  "videoReceiptSha256": "25f92d97dcadb31b4b8adee496adee076b0779552bf21cf5c2991f387ed0fb08",
+  "videoReceiptSha256": "d6371b27e858ed4f32c9904c9ed00a64f1acfa69155ad9a2f9af71f59f365f2e",
   "seekMethod": "ffmpeg -i <input> -ss <timestamp> -frames:v 1",
   "videos": [
     {
       "path": "video/output/nodekit-founder-quest-vertical.mp4",
-      "sha256": "4cd8e5c9e5ecfc3b93abaa3e9f8e60dd819c024e6ad147002637bd6e68b12ae3",
-      "bytes": 9771396,
+      "sha256": "7733c39be6493807459c018931130ccbfed02a6d27659c5a28d60e971591b31d",
+      "bytes": 9958725,
       "width": 1080,
       "height": 1920,
       "durationSeconds": 83.050667,
@@ -25,13 +25,14 @@
       "observations": [
         "The first production frame resolves by second 1; the opening fixture is visibly synthetic and read-only.",
         "The blocked bank quest, official source links, exact graph revision, receipt data, and non-approval limitation are readable.",
-        "No stale placeholder answer appears in the sampled encoded frames."
+        "No stale placeholder answer appears in the sampled encoded frames.",
+        "The closing result frame shows the complete product surface without camera clipping."
       ]
     },
     {
       "path": "video/output/nodekit-founder-quest-technical.mp4",
-      "sha256": "d0e2d13ed29fc82d6528c988cd6afabf81d464c00d1a80857951377cc8d07e18",
-      "bytes": 23095701,
+      "sha256": "b3b10fcc7ed9bce329aa608ae42294886d6db9b6ff1882bd34e2873ffc1b7ea1",
+      "bytes": 23406403,
       "width": 1920,
       "height": 1080,
       "durationSeconds": 180.053333,
@@ -46,7 +47,8 @@
       "observations": [
         "The encoded walkthrough visibly shows blocker, human-authority, evidence, receipt, and Neo4j plan-only states.",
         "The Neo4j modal explicitly says the plan was generated and never executed.",
-        "Synthetic, read-only, and no-external-approval boundaries remain visible throughout the sampled sequence."
+        "Synthetic, read-only, and no-external-approval boundaries remain visible throughout the sampled sequence.",
+        "The closing result frames retain the complete hero, readiness summary, and three-column product surface."
       ]
     }
   ],
@@ -54,22 +56,22 @@
     {
       "path": "video/proof/visual-qa/vertical-001.png",
       "sourceTimestampSeconds": 1,
-      "sha256": "954983bf26a9c98a7989c02c224b90534e805f7a19bdc2465431f4c6f378c6ae",
-      "bytes": 183527,
+      "sha256": "9c8991b1560d0e736e42cbc3a82b1fd8cd6e6bd2fcb9c3402be5143c1b8f78ea",
+      "bytes": 534607,
       "verifies": "production fixture and synthetic/read-only framing"
     },
     {
       "path": "video/proof/visual-qa/vertical-045.png",
       "sourceTimestampSeconds": 45,
-      "sha256": "270243b941c821c1dd1222bdf6e900e63f481477f7687be8a492d7879374705d",
-      "bytes": 169584,
+      "sha256": "92e7f80ed302b651163c9ab0d54ed8a6e1fa1867b7cf0cbd4ee881606004a31c",
+      "bytes": 500172,
       "verifies": "blocked answer and inspectable official evidence"
     },
     {
       "path": "video/proof/visual-qa/vertical-082.png",
       "sourceTimestampSeconds": 82,
-      "sha256": "eee54766d323cc5d6393563246ed8b2b900bf82232748308f9d55d159dc6b52a",
-      "bytes": 164580,
+      "sha256": "d9d5887030af411f53e6173d4a1e0a4a9aba48a0a7778bb0c022f18de37039f0",
+      "bytes": 540584,
       "verifies": "closing verdict and preserved authority boundary"
     },
     {
@@ -82,8 +84,8 @@
     {
       "path": "video/proof/visual-qa/technical-090.png",
       "sourceTimestampSeconds": 90,
-      "sha256": "3463f45f3731b2924e933fd603e671f780032b63e37bb577f225e015537148f6",
-      "bytes": 174195,
+      "sha256": "6440d1ff1b7cffcfc6a31c4ddf8b75c98dd99cdb02da4b4f326eb9db307eb4bd",
+      "bytes": 174475,
       "verifies": "human authority required answer"
     },
     {
@@ -96,9 +98,16 @@
     {
       "path": "video/proof/visual-qa/technical-175.png",
       "sourceTimestampSeconds": 175,
-      "sha256": "f06f39b0d6c68ddc8fd646c4e8c38e59ba8a27303ffdc5fc6fa9305406b9cfca",
-      "bytes": 172801,
+      "sha256": "b41fb6bd90b035049e753c9ebd3e3445cb0d1ad8c070038caaa8de09334bc6a9",
+      "bytes": 190219,
       "verifies": "final proof-carrying artifact verdict"
+    },
+    {
+      "path": "video/proof/visual-qa/technical-179.png",
+      "sourceTimestampSeconds": 179,
+      "sha256": "af4c64f6e5ed64863e827718878af206b00dbcf5d3e76380fdc095ec4d83174d",
+      "bytes": 191000,
+      "verifies": "complete product surface at the encoded end state"
     }
   ],
   "limitations": [

@@ -526,10 +526,10 @@ async function runGenerator(options) {
     gate: {
       ...claimEvidenceGate,
       distributionStatus: finalMode ? "not-published" : undefined,
-      draftLabeled: !finalMode,
       externalPublishReady: finalMode,
       mediaProofPassed: finalMode ? true : undefined,
       nodeSlideValidationPassed: true,
+      ...(finalMode ? { releaseLabeled: "final" } : { draftLabeled: true }),
     },
     generatedAt,
     inputs,

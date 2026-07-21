@@ -90,7 +90,10 @@ test("Founder Quest production identity stays synchronized across campaign input
   assert.equal(nodeSlideGate.staticFallbackElements, 1);
   assert.equal(nodeSlideGate.reopened, true);
   assert.equal(nodeSlideGate.structuralValidation, "passed");
-  assert.equal(nodeSlideGate.externalPublishReady, false);
+  assert.equal(nodeSlideGate.externalPublishReady, true);
+  assert.equal(approval.releaseGates.videoVisualProof.status, "passed");
+  assert.equal(approval.releaseGates.exactLinkCheck, "passed");
+  assert.equal(approval.releaseGates.secretScan, "passed-zero-high-confidence-findings");
 });
 
 test("public drafts contain no unresolved tokens and preserve platform and scope boundaries", async () => {

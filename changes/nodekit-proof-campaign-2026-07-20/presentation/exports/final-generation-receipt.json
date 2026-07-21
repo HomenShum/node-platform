@@ -5,7 +5,7 @@
       "kind": "snapshot",
       "path": "changes/nodekit-proof-campaign-2026-07-20/presentation/deck-snapshot.final.json",
       "publicationStatus": "not-published",
-      "sha256": "255e109373d48b4877b69851ffb0026d1c324b1ad8cd04c5bfdeef9b27871761",
+      "sha256": "3da36f86fc121758bf9facb97954461678900707d81e0a3a9aad0c1fae35c63b",
       "status": "ready"
     },
     {
@@ -21,16 +21,16 @@
       "kind": "html",
       "path": "changes/nodekit-proof-campaign-2026-07-20/presentation/exports/nodekit-proof-campaign-2026-07-20.final.html",
       "publicationStatus": "not-published",
-      "sha256": "61796ab666ebca9ac1611ec0bbd1535fd0bb371a713ef875591e41b57261a776",
+      "sha256": "a4aae9164578fbb65a4e79afcb10ad137e88acef253ca30c76142be4405642d6",
       "status": "ready"
     },
     {
-      "byteSize": 331988,
+      "byteSize": 332005,
       "editable": true,
       "kind": "pptx",
       "path": "changes/nodekit-proof-campaign-2026-07-20/presentation/exports/nodekit-proof-campaign-2026-07-20.final.pptx",
       "publicationStatus": "not-published",
-      "sha256": "072c1713e49dc3f27274cdb3d97af27e3cb8d87c302c1bb104917abd50c85ede",
+      "sha256": "3d0adb5a16f61ba4f55017900ff627c7af7974174da343d08df32eaf31cf8d03",
       "status": "ready"
     }
   ],
@@ -107,7 +107,7 @@
           "byteSize": 3328,
           "field": "path",
           "locator": "changes/nodekit-proof-campaign-2026-07-20/video/proof/founder-quest-video-receipt.json",
-          "sha256": "25f92d97dcadb31b4b8adee496adee076b0779552bf21cf5c2991f387ed0fb08"
+          "sha256": "d6371b27e858ed4f32c9904c9ed00a64f1acfa69155ad9a2f9af71f59f365f2e"
         }
       ],
       "id": "E14_FOUNDER_QUEST_VIDEO_PROOF",
@@ -316,12 +316,12 @@
       }
     ],
     "distributionStatus": "not-published",
-    "draftLabeled": false,
     "externalPublishReady": true,
     "mediaProofPassed": true,
     "nodeSlideValidationPassed": true,
     "passed": true,
     "plannedClaimIds": [],
+    "releaseLabeled": "final",
     "requiredEvidenceIds": [
       "E10_GRAPH_OF_LOOPS_SOURCE",
       "E11_RL_CI",
@@ -340,7 +340,7 @@
     ]
   },
   "generatedAt": "2026-07-20T00:00:00.000Z",
-  "generationIdentity": "1d2247c1a6053d7b54039b2308f34e96d3d675d0462e8daa7137c1df047e4405",
+  "generationIdentity": "00561643bff493710ada99c6564d1c01f85f61693502a8f434f99b948c0f2f60",
   "inputs": [
     {
       "byteSize": 3411,
@@ -360,12 +360,12 @@
     {
       "byteSize": 6706,
       "path": "changes/nodekit-proof-campaign-2026-07-20/story/claims.json",
-      "sha256": "921f127cb40cb6b134718f4e67149ba158a65601554a540e6a08b7f7cc2a3e1d"
+      "sha256": "f250d868853dee139fa7a1c2c8a8e9d550f89fd472cc2564404ba9b09a46d174"
     },
     {
       "byteSize": 5921,
       "path": "changes/nodekit-proof-campaign-2026-07-20/story/evidence-index.json",
-      "sha256": "ff7681aaeec15d8dc38912674c5c8041f56652ce3514e4f3fbf5f7e2d7f6e1b1"
+      "sha256": "a0f04c26c0b4c09477d958a9b5186d14af981d35488e0664de11714667d4be76"
     },
     {
       "byteSize": 1952,
@@ -373,21 +373,21 @@
       "sha256": "12ff490e7b40cbf8f1e94f76a8c9bd076b98846b5f9bbcd758138c1d1edae806"
     },
     {
-      "byteSize": 23095701,
+      "byteSize": 23406403,
       "mediaType": "video/mp4",
       "path": "changes/nodekit-proof-campaign-2026-07-20/video/output/nodekit-founder-quest-technical.mp4",
-      "sha256": "d0e2d13ed29fc82d6528c988cd6afabf81d464c00d1a80857951377cc8d07e18"
+      "sha256": "b3b10fcc7ed9bce329aa608ae42294886d6db9b6ff1882bd34e2873ffc1b7ea1"
     },
     {
-      "byteSize": 9771396,
+      "byteSize": 9958725,
       "mediaType": "video/mp4",
       "path": "changes/nodekit-proof-campaign-2026-07-20/video/output/nodekit-founder-quest-vertical.mp4",
-      "sha256": "4cd8e5c9e5ecfc3b93abaa3e9f8e60dd819c024e6ad147002637bd6e68b12ae3"
+      "sha256": "7733c39be6493807459c018931130ccbfed02a6d27659c5a28d60e971591b31d"
     },
     {
       "byteSize": 3328,
       "path": "changes/nodekit-proof-campaign-2026-07-20/video/proof/founder-quest-video-receipt.json",
-      "sha256": "25f92d97dcadb31b4b8adee496adee076b0779552bf21cf5c2991f387ed0fb08"
+      "sha256": "d6371b27e858ed4f32c9904c9ed00a64f1acfa69155ad9a2f9af71f59f365f2e"
     },
     {
       "byteSize": 217239,
@@ -401,9 +401,9 @@
       "sha256": "c417919ac1c31423eba14c98be369cc6e8277e6d9ab3c194ba220fe5f0d6754b"
     },
     {
-      "byteSize": 23063,
+      "byteSize": 23108,
       "path": "scripts/generate-nodekit-proof-presentation.mjs",
-      "sha256": "9c62a3abc2b60ab3953157aa20e8cd374a9716d60762d9124fea90864648ff41"
+      "sha256": "04e50d64642b1193ffeb2772fed5d4a7c671f46ee29d9505eed33836505c4bc2"
     },
     {
       "byteSize": 26460,
@@ -417,29 +417,29 @@
       "byteSize": 3328,
       "path": "video/proof/founder-quest-video-receipt.json",
       "schemaVersion": "nodekit.video-proof-receipt/v1",
-      "sha256": "25f92d97dcadb31b4b8adee496adee076b0779552bf21cf5c2991f387ed0fb08",
+      "sha256": "d6371b27e858ed4f32c9904c9ed00a64f1acfa69155ad9a2f9af71f59f365f2e",
       "status": "verified",
-      "verifiedAt": "2026-07-21T06:10:03.951Z"
+      "verifiedAt": "2026-07-21T06:56:17.458Z"
     },
     "videos": [
       {
-        "byteSize": 23095701,
+        "byteSize": 23406403,
         "compositionId": "WT-FounderQuestTechnical",
         "durationSeconds": 180,
         "height": 1080,
         "path": "video/output/nodekit-founder-quest-technical.mp4",
         "profileId": "FounderQuestTechnical",
-        "sha256": "d0e2d13ed29fc82d6528c988cd6afabf81d464c00d1a80857951377cc8d07e18",
+        "sha256": "b3b10fcc7ed9bce329aa608ae42294886d6db9b6ff1882bd34e2873ffc1b7ea1",
         "width": 1920
       },
       {
-        "byteSize": 9771396,
+        "byteSize": 9958725,
         "compositionId": "WT9-FounderQuestVertical",
         "durationSeconds": 83,
         "height": 1920,
         "path": "video/output/nodekit-founder-quest-vertical.mp4",
         "profileId": "FounderQuestVertical",
-        "sha256": "4cd8e5c9e5ecfc3b93abaa3e9f8e60dd819c024e6ad147002637bd6e68b12ae3",
+        "sha256": "7733c39be6493807459c018931130ccbfed02a6d27659c5a28d60e971591b31d",
         "width": 1080
       }
     ]
@@ -466,7 +466,7 @@
     "slideCount": 8,
     "staticFallbackElementCount": 1
   },
-  "receiptDigest": "ad59479d4a21dbb35160a6f71a7d3bce517c9c85b4b6fc207931f4436c33a8fc",
+  "receiptDigest": "cdae1c72c4feed64c18a5400403fad49d2a573687e5afb07316b82f020b1e7a7",
   "schemaVersion": "nodekit.nodeslide-generation-receipt/v1",
   "status": "ready",
   "validation": {

@@ -1,0 +1,27 @@
+{
+  "schemaVersion": "nodekit.publication-preflight/v1",
+  "status": "passed",
+  "verifiedAt": "2026-07-21T08:18:00.000Z",
+  "secretScan": {
+    "scope": "campaign text and machine-readable artifacts; binary media excluded",
+    "highConfidenceFindings": 0,
+    "patterns": [
+      "provider API keys",
+      "GitHub tokens",
+      "AWS access keys",
+      "Slack tokens",
+      "JWT-like tokens",
+      "private-key headers"
+    ]
+  },
+  "links": [
+    { "url": "https://founder-quest-graph.vercel.app/", "status": "verified", "httpStatus": 200 },
+    { "url": "https://github.com/HomenShum/node-platform/releases/tag/v0.2.0", "status": "verified", "httpStatus": 200 },
+    { "url": "https://github.com/HomenShum/founder-quest-graph/releases/tag/v0.1.1-production-certified", "status": "verified", "httpStatus": 200 },
+    { "url": "https://www.anthropic.com/news/rare-disease-research-grants", "status": "verified", "httpStatus": 200 },
+    { "url": "https://medium.com/intuitionmachine/from-loop-engineering-to-graph-engineering-d3ebeb08511c", "status": "verified-by-browser-fetch", "headStatus": 403 }
+  ],
+  "limitations": [
+    "This preflight verifies links and high-confidence secret patterns. It does not verify social-account identity or final rendered platform drafts."
+  ]
+}

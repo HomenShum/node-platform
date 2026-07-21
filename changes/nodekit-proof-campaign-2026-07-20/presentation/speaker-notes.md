@@ -1,8 +1,8 @@
 # NodeKit proof campaign speaker notes
 
-These notes remain a draft until the regenerated deck, video, and distribution
-receipts exist. Founder Quest production claims may use past tense only at the
-scope recorded by E12 and E13; the recursive publication claim remains planned.
+These notes are bound to the regenerated deck and verified media receipts. The
+recursive publication claim remains planned until exact public URLs and
+distribution receipts exist.
 
 ## S1 — NodeKit turns intent into proof-carrying operation
 

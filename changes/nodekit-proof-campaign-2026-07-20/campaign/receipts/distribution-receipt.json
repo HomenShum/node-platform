@@ -1,0 +1,67 @@
+{
+  "schemaVersion": "nodekit.distribution-receipt/v1",
+  "campaignId": "nodekit-proof-campaign-2026-07-20",
+  "status": "published-and-verified",
+  "observedAt": "2026-07-21T08:46:06.6223286Z",
+  "publications": [
+    {
+      "channel": "linkedin",
+      "account": "Homen Shum",
+      "publicUrl": "https://www.linkedin.com/feed/update/urn:li:ugcPost:7485250306453266432/",
+      "contentSha256": "54a35f605de2be75b14802f7ab3098e538d08acc7f31971905f42ec760e928d0",
+      "asset": {
+        "path": "presentation/output/pdf/nodekit-proof-campaign-2026-07-20-carousel.pdf",
+        "sha256": "c94e9463a104295fc9641d099fd21d80bd342e2fb33cbe70d4949210ea18f0f9",
+        "kind": "pdf-carousel",
+        "pageCount": 8,
+        "title": "NodeKit: A Proof-Carrying Graph of Loops"
+      },
+      "browserReceipt": {
+        "path": "campaign/receipts/linkedin-public-7485250306453266432.png",
+        "sha256": "6dc877b24f86d1bf095bd24b2ab66489e1e03d080de0ba5de06fd5710f549588",
+        "bytes": 224717
+      },
+      "verification": "rendered public post matched the approved copy and showed the eight-page document"
+    },
+    {
+      "channel": "x",
+      "account": "@HomenShum",
+      "publicUrl": "https://x.com/HomenShum/status/2079486475352297544",
+      "contentSha256": "632aa9052270a3f570fd82d8513cf33e07576fca3e2ffcd9b2f3cd33bee18905",
+      "orderedPostCount": 8,
+      "asset": {
+        "path": "video/output/nodekit-founder-quest-vertical.mp4",
+        "sha256": "7733c39be6493807459c018931130ccbfed02a6d27659c5a28d60e971591b31d",
+        "kind": "vertical-video",
+        "durationSeconds": 83
+      },
+      "browserReceipt": {
+        "path": "campaign/receipts/x-public-2079486475352297544.png",
+        "sha256": "48778a6a3b0110368effef02ad5b318968bbbb5cf71900e8a38682f8132de72b",
+        "bytes": 155380
+      },
+      "verification": "platform confirmed the eight-post thread; the public root rendered the approved opening copy, video, and first reply"
+    },
+    {
+      "channel": "github",
+      "account": "HomenShum",
+      "publicUrl": "https://github.com/HomenShum/node-platform/pull/6",
+      "contentPath": "campaign/GITHUB_RELEASE.md",
+      "contentSha256": "e200c3c4593d1bd2aa178d40317ab009414a3dcb44ce2fc62ab5e002defd2a41",
+      "verification": "public pull request carries the campaign implementation and proof artifacts"
+    }
+  ],
+  "scopeCompliance": {
+    "directMessages": 0,
+    "automatedReplies": 0,
+    "paidPromotion": 0,
+    "automatedEngagement": 0,
+    "unapprovedChannels": 0
+  },
+  "limitations": [
+    "The Founder Quest production proof is a read-only synthetic application.",
+    "No durable graph writes or remote Neo4j writes were performed.",
+    "The campaign does not claim affiliation with Anthropic or Casca.",
+    "The GitHub publication is a public pull request until repository review and merge complete."
+  ]
+}
