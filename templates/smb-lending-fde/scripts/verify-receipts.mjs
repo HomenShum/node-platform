@@ -1,6 +1,7 @@
 import { createHash } from "node:crypto";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
+import { requireCurrentApplicationIdentity } from "./lib/application-identity.mjs";
 import { requireCleanCandidate } from "./lib/candidate.mjs";
 
 function digest(value) { return createHash("sha256").update(JSON.stringify(value)).digest("hex"); }
@@ -22,7 +23,7 @@ async function verifyFixtureReference(sourceRef) {
   requireCondition(createHash("sha256").update(raw).digest("hex") === sourceRef.sha256, `fixture hash mismatch for ${sourceRef.path}`);
 }
 
-const identity = await readJson(".nodeagent/application-identity.json");
+const identity = requireCurrentApplicationIdentity();
 const candidate = requireCleanCandidate();
 const [demo, evaluation, conformance] = await Promise.all([
   readJson("proof/demo-receipt.json"), readJson("proof/eval-receipt.json"), readJson("proof/benchmark-receipt.json"),

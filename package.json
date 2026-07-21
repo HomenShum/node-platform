@@ -21,6 +21,7 @@
     "doctor": "node src/cli.mjs registry check --registry-root .",
     "audit:prod": "npm audit --omit=dev",
     "test": "node --test test/*.test.mjs",
+    "acceptance:factory": "node src/factory-acceptance.mjs",
     "registry:check": "node src/cli.mjs registry check --registry-root .",
     "ecosystem:check": "node src/cli.mjs ecosystem check --registry-root . --workspace ..",
     "dashboard": "node src/cli.mjs dashboard --registry-root . --workspace .. --write",

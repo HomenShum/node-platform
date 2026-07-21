@@ -1,5 +1,5 @@
 import { spawn } from "node:child_process";
-import { mkdir, readFile, readdir, rm, stat, writeFile } from "node:fs/promises";
+import { cp, mkdir, readFile, readdir, rm, stat, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { pathExists } from "./files.mjs";
@@ -13,6 +13,12 @@ const PRESETS = Object.freeze({
 const defaultTemplateRoot = path.join(packageRoot, "templates", PRESETS["research-loop"]);
 const pluginSkillsRoot = path.join(packageRoot, "plugins", "nodekit", "skills");
 const projectedSkillNames = ["nodekit-launch", "nodekit-present", "nodekit-qa"];
+const vendoredNodeKitSpecifier = "file:vendor/nodekit";
+const nodeKitRuntimeEntries = ["src", "schemas", "LICENSE"];
+
+function usesVendoredNodeKitRuntime(value) {
+  return value === undefined || value === null || String(value).trim() === "";
+}
 
 function titleCase(value) {
   return value.split(/[-_\s]+/).filter(Boolean).map((part) => `${part[0].toUpperCase()}${part.slice(1)}`).join(" ");
@@ -34,7 +40,11 @@ function normalizedSponsors(options = {}, presetName = options.preset) {
 
 function substitutions(options) {
   const slug = slugify(options.name || path.basename(options.target));
-  const nodekitSpecifier = String(options.nodekitSpecifier ?? "github:HomenShum/node-platform").replaceAll("\\", "/");
+  const nodekitSpecifier = String(
+    usesVendoredNodeKitRuntime(options.nodekitSpecifier)
+      ? vendoredNodeKitSpecifier
+      : options.nodekitSpecifier,
+  ).replaceAll("\\", "/");
   const sponsors = normalizedSponsors(options, options.preset);
   return {
     "__APP_NAME__": slug,
@@ -49,6 +59,23 @@ function substitutions(options) {
     "__SECRET_REF__": options.secretRef ?? "OPENROUTER_API_KEY",
     "__SPONSORS_YAML__": sponsors.map((sponsor) => `  - id: ${sponsor}\n    intendedUse: ${sponsor === "pi-ai" ? "Provider-neutral live hypothesis generation." : "Sponsor capability selected during launch research."}`).join("\n"),
   };
+}
+
+async function vendorNodeKitRuntime(target) {
+  const packageJson = JSON.parse(await readFile(path.join(packageRoot, "package.json"), "utf8"));
+  const destination = path.join(target, "vendor", "nodekit");
+  await mkdir(destination, { recursive: true });
+  const runtimePackage = {
+    ...packageJson,
+    files: nodeKitRuntimeEntries,
+    nodekitBundle: "generated-runtime-only",
+  };
+  await writeFile(path.join(destination, "package.json"), `${JSON.stringify(runtimePackage, null, 2)}\n`);
+  for (const relative of nodeKitRuntimeEntries) {
+    const source = path.join(packageRoot, relative);
+    if (!(await pathExists(source))) throw new Error(`NodeKit distributable entry is missing: ${relative}`);
+    await cp(source, path.join(destination, relative), { recursive: true });
+  }
 }
 
 function resolvePreset(preset) {
@@ -163,6 +190,9 @@ export async function createProject(options) {
   await mkdir(target, { recursive: true });
   await applyPresetTemplate(preset, target, values);
   await projectCodingAgentSkills(target, values);
+  if (usesVendoredNodeKitRuntime(options.nodekitSpecifier)) {
+    await vendorNodeKitRuntime(target);
+  }
   const sponsors = normalizedSponsors(options, preset.name);
   for (const sponsor of sponsors.filter((entry) => entry !== "pi-ai")) {
     const integrationRoot = path.join(target, "integrations", sponsor);

@@ -32,6 +32,11 @@ const DISCOVERY_ROOTS = [
   "tests",
   "e2e",
 ];
+// Generated applications vendor the exact NodeKit runtime that created them
+// until a versioned package release is available. The runtime affects the
+// meaning of compile/check/proof, so it belongs in identity, but not in the
+// application's authored capability discovery.
+const IDENTITY_ONLY_ROOTS = ["vendor"];
 
 // Root files are not beneath a discovered directory but can materially change
 // dependency resolution, deployment, browser behavior, or the workflow that
@@ -104,7 +109,7 @@ function containedPath(repoRoot, candidate, label) {
 
 function discoveryRoots(repoRoot, manifest) {
   const roots = new Map();
-  for (const root of DISCOVERY_ROOTS) {
+  for (const root of [...DISCOVERY_ROOTS, ...IDENTITY_ONLY_ROOTS]) {
     const resolved = containedPath(repoRoot, root, `discovery root ${root}`);
     roots.set(resolved.relative, resolved.absolute);
   }
@@ -205,13 +210,14 @@ export function validateAgentManifest(manifest) {
 }
 
 function classify(files, manifest) {
-  const matching = (fragment, suffix) => files
+  const authoredFiles = files.filter((file) => !file.path.startsWith("vendor/"));
+  const matching = (fragment, suffix) => authoredFiles
     .filter((file) => file.path.includes(fragment) && (!suffix || file.path.endsWith(suffix)))
     .map((file) => file.path);
   const authoringRoot = normalizePath(manifest.authoring?.directory ?? "agent").replace(/^\.\//, "");
-  const skills = files.filter((file) => file.path.endsWith("SKILL.md")).map((file) => file.path);
+  const skills = authoredFiles.filter((file) => file.path.endsWith("SKILL.md")).map((file) => file.path);
   const subagentRoot = `${authoringRoot}/subagents/`;
-  const subagents = files
+  const subagents = authoredFiles
     .filter((file) => file.path.startsWith(subagentRoot) && /\/agent\.(?:yaml|ts|js)$/.test(file.path))
     .map((file) => file.path);
   return {
@@ -295,12 +301,15 @@ export async function compileAgentDefinition(repoRoot, { check = false, write = 
   if (errors.length > 0) throw new Error(errors.join("\n"));
 
   const files = await discoverFiles(repoRoot, manifest);
-  const manifestDigest = hash(manifestText);
+  const manifestDigest = hash(Buffer.from(manifestText.replace(/\r\n?/g, "\n"), "utf8"));
   const contracts = resolveRuntimeContracts(manifest);
+  const resolvedDirectories = discoveryRoots(repoRoot, manifest).map(([relative]) => relative);
   const identity = {
     files,
     roots: {
       directories: DISCOVERY_ROOTS,
+      identityOnlyDirectories: IDENTITY_ONLY_ROOTS,
+      resolvedDirectories,
       files: APPLICATION_ROOT_FILES,
     },
   };
@@ -347,7 +356,7 @@ export async function compileAgentDefinition(repoRoot, { check = false, write = 
   if (write) {
     await mkdir(outputRoot, { recursive: true });
     await writeFile(path.join(outputRoot, "discovery.json"), `${JSON.stringify({ files, schemaVersion: "nodeagent.discovery/v1" }, null, 2)}\n`);
-    await writeFile(path.join(outputRoot, "application-identity.json"), `${JSON.stringify({ applicationHash, configHash, identity, schemaVersion: "nodeagent.application-identity/v1" }, null, 2)}\n`);
+    await writeFile(path.join(outputRoot, "application-identity.json"), `${JSON.stringify({ applicationHash, configHash, identity, manifestDigest, schemaVersion: "nodeagent.application-identity/v1" }, null, 2)}\n`);
     await writeFile(path.join(outputRoot, "application-hash.txt"), `${applicationHash}\n`);
     await writeFile(path.join(outputRoot, "resolved-definition.json"), `${JSON.stringify(definition, null, 2)}\n`);
     await writeFile(path.join(outputRoot, "evaluation-plan.json"), `${JSON.stringify({ required: manifest.evaluations?.required ?? [], schemaVersion: "nodeagent.evaluation-plan/v1" }, null, 2)}\n`);

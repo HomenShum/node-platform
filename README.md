@@ -75,6 +75,26 @@ npm run ecosystem:check
 npm run dashboard
 ```
 
+By default, `nodekit create` vendors the exact compile/check runtime that generated
+the project under `vendor/nodekit` and records `file:vendor/nodekit` in
+`package.json`. This keeps a fresh clone installable and prevents a later
+GitHub branch change from silently changing compile or proof semantics. Pass
+`--nodekit-specifier <exact-specifier>` only when an externally versioned
+package or immutable Git commit should replace the vendored runtime. The
+bundle is deliberately runtime-only; use the source repository or a future
+published package to scaffold additional projects.
+
+The two production-oriented presets have an executable empty-directory gate:
+
+```bash
+npm run acceptance:factory
+```
+
+It creates clean temporary projects for `agentic-rl-research` and
+`smb-lending-fde`, installs their dependencies, compiles them, runs tests,
+deterministic demos, evaluations, benchmarks, and proof, then writes a
+hash-bound summary to `proof/factory-acceptance.json`.
+
 Factory commands (a `--local-proof` run creates an initial local Git commit so
 receipts have an immutable candidate to bind to):
 
@@ -96,7 +116,11 @@ npx --yes @homenshum/nodekit check
 npx --yes @homenshum/nodekit proof
 ```
 
-`@homenshum/nodekit` 0.2.0 is not yet published. Until it is tagged and released, use an immutable Git or packed-tarball reference for portable handoff; a normalized local `file:` spec is appropriate only for local dogfooding. The unscoped `nodekit` npm name belongs to an unrelated project.
+`@homenshum/nodekit` 0.2.0 is not yet published. Generated projects remain
+portable because they carry the exact runtime under `vendor/nodekit`. External
+consumers that do not use `nodekit create` should use an immutable Git or
+packed-tarball reference until the package is released. The unscoped `nodekit`
+npm name belongs to an unrelated project.
 
 ## Contracts
 

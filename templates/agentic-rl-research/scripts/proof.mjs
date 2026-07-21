@@ -1,6 +1,7 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { recordFriction } from "./lib/friction.mjs";
+import { requireCurrentApplicationIdentity } from "./lib/application-identity.mjs";
 import { digest, sealReceipt, verifyReceiptSeal } from "./lib/proof-bindings.mjs";
 
 const started = Date.now();
@@ -13,12 +14,12 @@ async function readJson(name) {
   }
 }
 
-const [demo, evaluation, benchmark, friction, applicationIdentity] = await Promise.all([
+const applicationIdentity = requireCurrentApplicationIdentity();
+const [demo, evaluation, benchmark, friction] = await Promise.all([
   readJson("demo-receipt.json"),
   readJson("eval-receipt.json"),
   readJson("agentic-rl-benchmark.json"),
   readJson("build-friction.json"),
-  readFile(path.resolve(".nodeagent", "application-identity.json"), "utf8").then(JSON.parse),
 ]);
 const secretPattern = /(?:sk-[A-Za-z0-9_-]{12,}|AIza[A-Za-z0-9_-]{20,}|-----BEGIN [A-Z ]+PRIVATE KEY-----)/;
 const checks = {

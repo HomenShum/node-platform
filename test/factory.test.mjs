@@ -192,6 +192,47 @@ test("create rejects an unsupported package manager before writing files", async
   assert.deepEqual(await readdir(root), []);
 });
 
+test("default projects vendor the exact NodeKit runtime without polluting capability discovery", async (t) => {
+  const root = await mkdtemp(path.join(os.tmpdir(), "nodekit-vendored-runtime-"));
+  t.after(() => rm(root, { force: true, recursive: true }));
+  await createProject({
+    git: false,
+    install: false,
+    name: "portable-runtime",
+    preset: "agentic-rl-research",
+    target: root,
+  });
+
+  const packageJson = JSON.parse(await readFile(path.join(root, "package.json"), "utf8"));
+  const vendoredPackage = JSON.parse(await readFile(path.join(root, "vendor", "nodekit", "package.json"), "utf8"));
+  assert.equal(packageJson.devDependencies["@homenshum/nodekit"], "file:vendor/nodekit");
+  assert.equal(vendoredPackage.name, "@homenshum/nodekit");
+  assert.equal(vendoredPackage.version, "0.2.0");
+
+  const compiled = await compileAgentDefinition(root);
+  assert.equal(compiled.files.some((file) => file.path === "vendor/nodekit/src/cli.mjs"), true);
+  assert.equal(
+    Object.values(compiled.definition.discovered).flat().some((entry) => entry.startsWith("vendor/")),
+    false,
+  );
+  await writeFile(path.join(root, "vendor", "nodekit", "src", "cli.mjs"), "throw new Error('tampered runtime');\n");
+  const changed = await compileAgentDefinition(root, { write: false });
+  assert.notEqual(changed.definition.applicationHash, compiled.definition.applicationHash);
+
+  const blankSpecifierTarget = path.join(await mkdtemp(path.join(os.tmpdir(), "nodekit-blank-specifier-")), "app");
+  t.after(() => rm(path.dirname(blankSpecifierTarget), { force: true, recursive: true }));
+  await createProject({
+    git: false,
+    install: false,
+    name: "blank-specifier-runtime",
+    nodekitSpecifier: "   ",
+    preset: "agentic-rl-research",
+    target: blankSpecifierTarget,
+  });
+  const blankSpecifierPackage = JSON.parse(await readFile(path.join(blankSpecifierTarget, "package.json"), "utf8"));
+  assert.equal(blankSpecifierPackage.devDependencies["@homenshum/nodekit"], "file:vendor/nodekit");
+});
+
 test("create --local-proof emits the deterministic receipt in one CLI workflow", async (t) => {
   const root = await mkdtemp(path.join(os.tmpdir(), "nodekit-cli-proof-"));
   const target = path.join(root, "app");
@@ -219,7 +260,6 @@ test("agentic RL preset creates an offline FounderQuest lab with protected heldo
     git: false,
     install: false,
     name: "FounderQuest RL",
-    nodekitSpecifier: "file:D:/node-platform",
     preset: "agentic-rl-research",
     target,
   });
@@ -303,7 +343,6 @@ test("agentic RL preset creates an offline FounderQuest lab with protected heldo
     git: true,
     install: false,
     name: "FounderQuest RL",
-    nodekitSpecifier: "file:D:/node-platform",
     preset: "agentic-rl-research",
     target,
   });
@@ -329,6 +368,18 @@ test("agentic RL preset creates an offline FounderQuest lab with protected heldo
   assert.equal(benchmark.assertions.unsafeActionRejected, true);
   assert.equal(proof.passed, true);
   assert.equal(proof.releaseReady, false);
+
+  await writeFile(path.join(target, "agent", "instructions.md"), "drift after proof\n");
+  await execFileAsync("git", ["add", "agent/instructions.md"], { cwd: target });
+  await execFileAsync("git", [
+    "-c", "user.name=NodeKit",
+    "-c", "user.email=nodekit@local",
+    "commit", "-m", "test: introduce stale compiled identity",
+  ], { cwd: target });
+  await assert.rejects(
+    () => execFileAsync(process.execPath, [path.join(target, "scripts", "proof.mjs")], { cwd: target }),
+    /compiled application identity is stale/,
+  );
 });
 
 test("the SMB lending FDE preset produces a clean-room human-authority proof", async (t) => {
@@ -368,4 +419,18 @@ test("the SMB lending FDE preset produces a clean-room human-authority proof", a
   assert.equal(proof.applicationHash, compiled.definition.applicationHash);
   assert.match(proof.receiptVerification.candidateCommit, /^[a-f0-9]{40}$/);
   assert.match(instructions, /Never make, recommend, approve, decline, or simulate a credit decision/);
+
+  await writeFile(path.join(root, "agent", "instructions.md"), "drift after proof\n");
+  await execFileAsync("git", ["add", "agent/instructions.md"], { cwd: root });
+  await execFileAsync("git", [
+    "-c", "user.name=NodeKit",
+    "-c", "user.email=nodekit@local",
+    "commit", "-m", "test: introduce stale compiled identity",
+  ], { cwd: root });
+  await assert.rejects(
+    () => execFileAsync(process.execPath, [path.join(root, "scripts", "proof.mjs")], { cwd: root }),
+  );
+  const staleProof = JSON.parse(await readFile(path.join(root, "proof", "release-proof.json"), "utf8"));
+  assert.equal(staleProof.checks.receiptsVerified, false);
+  assert.match(staleProof.receiptVerification.error, /compiled application identity is stale/);
 });
