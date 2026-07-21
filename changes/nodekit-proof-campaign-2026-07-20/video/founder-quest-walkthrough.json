@@ -1,0 +1,410 @@
+{
+  "schemaVersion": "nodekit.campaign-video/v1",
+  "campaignId": "nodekit-proof-campaign-2026-07-20",
+  "journeyId": "founder-quest-critical-path-v1",
+  "title": "Founder Quest Graph: from blocker to proof",
+  "sourceApplication": {
+    "appId": "founder-quest-graph",
+    "mode": "read-only-synthetic",
+    "productionUrlToken": "{{PRODUCTION_URL}}",
+    "requiredClaimId": "C5_FOUNDER_QUEST_PRODUCT"
+  },
+  "featureProofStudio": {
+    "repositoryPathHint": "../../../../../feature-proof-studio",
+    "commit": "7aafb3e0a48f3c1e74e69a51d9df506186ea4340",
+    "captureEntrypoint": "walkthrough.solo-founder.mjs",
+    "captureSpecSlot": "walkthrough.solo-founder.specs.mjs",
+    "remotionEntrypoint": "src/nodekit-campaign-index.js",
+    "captureViewport": {
+      "width": 1280,
+      "height": 800,
+      "deviceScaleFactor": 2
+    }
+  },
+  "paths": {
+    "campaignRoot": "..",
+    "claims": "story/claims.json",
+    "evidenceIndex": "story/evidence-index.json",
+    "deploymentReceipt": "proof/founder-quest/deployment-proof.json",
+    "browserProofReceipt": "proof/founder-quest/browser-proof.json",
+    "screenshotManifest": "proof/founder-quest/screenshots.json",
+    "captureManifest": "video/proof/founder-quest-capture-manifest.json",
+    "finalReceipt": "video/proof/founder-quest-video-receipt.json",
+    "outputDirectory": "video/output"
+  },
+  "identityContract": {
+    "deploymentStatus": "deployed",
+    "browserProofStatus": "pass",
+    "requiredScreenshotIds": [
+      "quest-shell",
+      "blocked-quest",
+      "graph-path",
+      "source-backed-answer",
+      "source-detail",
+      "proof-surface",
+      "limitations"
+    ],
+    "requireFreshUser": true,
+    "requireReadOnlySynthetic": true,
+    "maxConsoleErrors": 0,
+    "maxNetworkErrors": 0
+  },
+  "safety": {
+    "mutationsAllowed": false,
+    "publishingAllowed": false,
+    "deploymentAllowed": false,
+    "prohibitedSelectorTerms": [
+      "approve",
+      "apply",
+      "delete",
+      "deploy",
+      "edit",
+      "publish",
+      "submit",
+      "upload",
+      "write"
+    ]
+  },
+  "profiles": [
+    {
+      "id": "FounderQuestVertical",
+      "compositionId": "WT9-FounderQuestVertical",
+      "format": "vertical-social",
+      "width": 1080,
+      "height": 1920,
+      "fps": 30,
+      "minimumSeconds": 60,
+      "maximumSeconds": 90,
+      "outputFile": "nodekit-founder-quest-vertical.mp4",
+      "title": "Founder Quest Graph · 83-second proof",
+      "accent": "#22c55e",
+      "retries": 1,
+      "steps": [
+        {
+          "act": "goto",
+          "url": "{{PRODUCTION_URL}}"
+        },
+        {
+          "act": "sleep",
+          "ms": 1200
+        },
+        {
+          "act": "click",
+          "sel": "testid:founder-quest-shell"
+        },
+        {
+          "cap": "Start with the synthetic founder journey and its honest readiness state",
+          "hold": 180
+        },
+        {
+          "cap": "Select the blocked banking quest",
+          "cursor": "testid:quest-banking-readiness",
+          "click": true,
+          "hold": 180
+        },
+        {
+          "act": "click",
+          "sel": "testid:quest-banking-readiness"
+        },
+        {
+          "cap": "The graph exposes the exact blocker instead of inventing progress",
+          "cursor": "testid:quest-graph-blocker-path",
+          "click": true,
+          "hold": 210
+        },
+        {
+          "act": "click",
+          "sel": "testid:quest-graph-blocker-path"
+        },
+        {
+          "cap": "Ask why the quest is blocked, what the agent can do, and what proves it",
+          "cursor": "testid:quest-question-input",
+          "click": true,
+          "hold": 160
+        },
+        {
+          "act": "fill",
+          "sel": "testid:quest-question-input",
+          "value": "Why is banking readiness blocked, what can the agent safely do next, and which evidence proves it?",
+          "commit": "Enter"
+        },
+        {
+          "cap": "NodeAgent traverses the bounded graph and retrieves sources",
+          "burst": {
+            "ms": 2800,
+            "every": 400
+          },
+          "hold": 240
+        },
+        {
+          "act": "sleep",
+          "ms": 4200
+        },
+        {
+          "act": "click",
+          "sel": "testid:quest-answer-card"
+        },
+        {
+          "cap": "The answer names the blocker, next action, authority boundary, and limitation",
+          "hold": 240
+        },
+        {
+          "cap": "Every material answer points to inspectable source evidence",
+          "cursor": "testid:quest-answer-source",
+          "click": true,
+          "hold": 180
+        },
+        {
+          "act": "click",
+          "sel": "testid:quest-answer-source"
+        },
+        {
+          "act": "click",
+          "sel": "testid:quest-source-detail"
+        },
+        {
+          "cap": "Open the source detail and verify provenance and freshness",
+          "hold": 180
+        },
+        {
+          "cap": "Separate agent-safe preparation from human or professional authority",
+          "cursor": "testid:quest-authority-overlay",
+          "click": true,
+          "hold": 200
+        },
+        {
+          "act": "click",
+          "sel": "testid:quest-authority-overlay"
+        },
+        {
+          "cap": "Move from explanation to the proof surface",
+          "cursor": "testid:quest-proof-tab",
+          "click": true,
+          "hold": 180
+        },
+        {
+          "act": "click",
+          "sel": "testid:quest-proof-tab"
+        },
+        {
+          "act": "click",
+          "sel": "testid:quest-proof-receipt"
+        },
+        {
+          "cap": "The receipt binds the journey to one deployment, commit, config, and browser run",
+          "hold": 180
+        },
+        {
+          "act": "click",
+          "sel": "testid:quest-proof-limitations"
+        },
+        {
+          "cap": "Synthetic readiness is not external approval, and the limitation stays visible",
+          "hold": 180
+        },
+        {
+          "act": "click",
+          "sel": "testid:quest-proof-verdict"
+        },
+        {
+          "cap": "Verdict: explain the path, preserve authority, and keep the proof",
+          "hold": 180
+        }
+      ]
+    },
+    {
+      "id": "FounderQuestTechnical",
+      "compositionId": "WT-FounderQuestTechnical",
+      "format": "technical-landscape",
+      "width": 1920,
+      "height": 1080,
+      "fps": 30,
+      "minimumSeconds": 120,
+      "maximumSeconds": 180,
+      "outputFile": "nodekit-founder-quest-technical.mp4",
+      "title": "Founder Quest Graph · technical proof walkthrough",
+      "accent": "#38bdf8",
+      "retries": 1,
+      "steps": [
+        {
+          "act": "goto",
+          "url": "{{PRODUCTION_URL}}"
+        },
+        {
+          "act": "sleep",
+          "ms": 1200
+        },
+        {
+          "act": "click",
+          "sel": "testid:founder-quest-shell"
+        },
+        {
+          "cap": "Premise: a synthetic founder journey with receipt-backed readiness",
+          "hold": 300
+        },
+        {
+          "cap": "The quest rail separates complete, blocked, waiting, and human-required work",
+          "cursor": "testid:quest-banking-readiness",
+          "click": true,
+          "hold": 260
+        },
+        {
+          "act": "click",
+          "sel": "testid:quest-banking-readiness"
+        },
+        {
+          "cap": "Selected quest: banking readiness is blocked by missing verified evidence",
+          "hold": 260
+        },
+        {
+          "cap": "Inspect the bounded dependency path",
+          "cursor": "testid:quest-graph-blocker-path",
+          "click": true,
+          "hold": 300
+        },
+        {
+          "act": "click",
+          "sel": "testid:quest-graph-blocker-path"
+        },
+        {
+          "cap": "The graph distinguishes prerequisite, evidence, authority, and unlock edges",
+          "hold": 240
+        },
+        {
+          "cap": "Switch to the current critical path instead of rendering the entire graph",
+          "cursor": "testid:quest-graph-critical-path",
+          "click": true,
+          "hold": 330
+        },
+        {
+          "act": "click",
+          "sel": "testid:quest-graph-critical-path"
+        },
+        {
+          "cap": "Ask one operational question against the selected graph context",
+          "cursor": "testid:quest-question-input",
+          "click": true,
+          "hold": 300
+        },
+        {
+          "act": "fill",
+          "sel": "testid:quest-question-input",
+          "value": "Why is banking readiness blocked, what can the agent safely do next, and which evidence proves it?",
+          "commit": "Enter"
+        },
+        {
+          "cap": "The trace shows bounded graph retrieval and source lookup",
+          "burst": {
+            "ms": 3200,
+            "every": 400
+          },
+          "hold": 240
+        },
+        {
+          "act": "sleep",
+          "ms": 4200
+        },
+        {
+          "act": "click",
+          "sel": "testid:quest-answer-card"
+        },
+        {
+          "cap": "The direct answer identifies the blocker without claiming external approval",
+          "hold": 300
+        },
+        {
+          "cap": "Next actions are divided into agent-safe, human-required, and professional-review work",
+          "cursor": "testid:quest-authority-overlay",
+          "click": true,
+          "hold": 300
+        },
+        {
+          "act": "click",
+          "sel": "testid:quest-authority-overlay"
+        },
+        {
+          "cap": "The answer carries a precise source link",
+          "cursor": "testid:quest-answer-source",
+          "click": true,
+          "hold": 300
+        },
+        {
+          "act": "click",
+          "sel": "testid:quest-answer-source"
+        },
+        {
+          "act": "click",
+          "sel": "testid:quest-source-detail"
+        },
+        {
+          "cap": "Source detail exposes the locator, retrieval time, and freshness state",
+          "hold": 300
+        },
+        {
+          "cap": "The agent can prepare evidence, but it cannot manufacture institutional approval",
+          "cursor": "testid:quest-proof-tab",
+          "click": true,
+          "hold": 300
+        },
+        {
+          "act": "click",
+          "sel": "testid:quest-proof-tab"
+        },
+        {
+          "cap": "Proof starts with the exact production deployment identity",
+          "cursor": "testid:quest-proof-release-identity",
+          "click": true,
+          "hold": 300
+        },
+        {
+          "act": "click",
+          "sel": "testid:quest-proof-release-identity"
+        },
+        {
+          "cap": "Fresh-user browser evidence records console, network, and journey health",
+          "cursor": "testid:quest-proof-browser",
+          "click": true,
+          "hold": 300
+        },
+        {
+          "act": "click",
+          "sel": "testid:quest-proof-browser"
+        },
+        {
+          "cap": "The artifact receipt binds screenshots and source hashes to that revision",
+          "cursor": "testid:quest-proof-receipt",
+          "click": true,
+          "hold": 300
+        },
+        {
+          "act": "click",
+          "sel": "testid:quest-proof-receipt"
+        },
+        {
+          "cap": "Known limitations remain part of the product story",
+          "cursor": "testid:quest-proof-limitations",
+          "click": true,
+          "hold": 300
+        },
+        {
+          "act": "click",
+          "sel": "testid:quest-proof-limitations"
+        },
+        {
+          "cap": "The final verdict says what passed, what remains synthetic, and what is next",
+          "cursor": "testid:quest-proof-verdict",
+          "click": true,
+          "hold": 300
+        },
+        {
+          "act": "click",
+          "sel": "testid:quest-proof-verdict"
+        },
+        {
+          "cap": "NodeKit turns the graph journey into a proof-carrying technical artifact",
+          "hold": 170
+        }
+      ]
+    }
+  ]
+}

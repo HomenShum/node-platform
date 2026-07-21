@@ -1,0 +1,201 @@
+import assert from "node:assert/strict";
+import {
+  existsSync,
+  mkdirSync,
+  mkdtempSync,
+  readFileSync,
+  rmSync,
+  writeFileSync,
+} from "node:fs";
+import { tmpdir } from "node:os";
+import { dirname, join, resolve } from "node:path";
+import test from "node:test";
+import { fileURLToPath } from "node:url";
+
+import {
+  EXPECTED_FEATURE_PROOF_STUDIO_COMMIT,
+  buildRenderCommands,
+  durationFrames,
+  evaluatePreflight,
+  lintCampaignConfig,
+  validateClaimBinding,
+} from "../changes/nodekit-proof-campaign-2026-07-20/video/orchestrate-founder-quest-video.mjs";
+
+const HERE = dirname(fileURLToPath(import.meta.url));
+const REPOSITORY_ROOT = resolve(HERE, "..");
+const VIDEO_ROOT = join(
+  REPOSITORY_ROOT,
+  "changes",
+  "nodekit-proof-campaign-2026-07-20",
+  "video",
+);
+const CONFIG_PATH = join(VIDEO_ROOT, "founder-quest-walkthrough.json");
+const config = JSON.parse(readFileSync(CONFIG_PATH, "utf8"));
+
+test("Founder Quest video spec is claim-safe and duration-bounded", () => {
+  const result = lintCampaignConfig(config);
+  assert.deepEqual(result.errors, []);
+  assert.equal(result.passed, true);
+  assert.equal(
+    config.featureProofStudio.commit,
+    EXPECTED_FEATURE_PROOF_STUDIO_COMMIT,
+  );
+
+  const vertical = config.profiles.find(
+    (profile) => profile.format === "vertical-social",
+  );
+  const technical = config.profiles.find(
+    (profile) => profile.format === "technical-landscape",
+  );
+  assert.ok(vertical);
+  assert.ok(technical);
+  assert.equal(vertical.width, 1080);
+  assert.equal(vertical.height, 1920);
+  assert.ok(durationFrames(vertical) >= 60 * vertical.fps);
+  assert.ok(durationFrames(vertical) <= 90 * vertical.fps);
+  assert.equal(technical.width, 1920);
+  assert.equal(technical.height, 1080);
+  assert.ok(durationFrames(technical) >= 120 * technical.fps);
+  assert.ok(durationFrames(technical) <= 180 * technical.fps);
+});
+
+test("checked-in spec contains no literal, local, or synthetic production URL", () => {
+  const source = readFileSync(CONFIG_PATH, "utf8");
+  assert.doesNotMatch(source, /https?:\/\//i);
+  assert.doesNotMatch(source, /localhost|127\.0\.0\.1|\.invalid\b|\.example\b|\.test\b/i);
+  assert.match(source, /\{\{PRODUCTION_URL\}\}/);
+});
+
+test("walkthrough remains read-only and traverses graph, answer, sources, and proof", () => {
+  const serialized = JSON.stringify(config.profiles);
+  for (const requiredSelector of [
+    "testid:quest-banking-readiness",
+    "testid:quest-graph-blocker-path",
+    "testid:quest-question-input",
+    "testid:quest-answer-source",
+    "testid:quest-source-detail",
+    "testid:quest-authority-overlay",
+    "testid:quest-proof-tab",
+    "testid:quest-proof-receipt",
+    "testid:quest-proof-limitations",
+    "testid:quest-proof-verdict",
+  ]) {
+    assert.match(serialized, new RegExp(requiredSelector));
+  }
+  assert.equal(config.safety.mutationsAllowed, false);
+  assert.equal(config.safety.publishingAllowed, false);
+  assert.equal(config.safety.deploymentAllowed, false);
+  assert.equal(
+    config.profiles.some((profile) =>
+      profile.steps.some((step) => step.act === "upload"),
+    ),
+    false,
+  );
+});
+
+test("Remotion commands call the pinned Feature Proof Studio stage", () => {
+  const stageRoot = resolve(REPOSITORY_ROOT, ".tmp", "fps-stage-contract");
+  const outputRoot = resolve(REPOSITORY_ROOT, ".tmp", "video-output-contract");
+  const commands = buildRenderCommands(config, stageRoot, outputRoot);
+  assert.equal(commands.length, 2);
+  for (const [index, command] of commands.entries()) {
+    assert.equal(command.cwd, stageRoot);
+    assert.equal(command.args[0], "remotion");
+    assert.equal(command.args[1], "render");
+    assert.equal(
+      command.args[2],
+      config.featureProofStudio.remotionEntrypoint,
+    );
+    assert.equal(command.args[3], config.profiles[index].compositionId);
+    assert.match(command.args[4], new RegExp(`${config.profiles[index].outputFile}$`));
+  }
+
+  const rootSource = readFileSync(join(VIDEO_ROOT, "feature-proof-root.jsx"), "utf8");
+  assert.match(rootSource, /from "\.\/Walkthrough\.jsx"/);
+  assert.match(rootSource, /from "\.\/walkthrough\.data\.js"/);
+  assert.match(rootSource, /WT9-FounderQuestVertical/);
+  assert.match(rootSource, /WT-FounderQuestTechnical/);
+});
+
+test("preflight fails closed when deployment, browser, and screenshot proof are absent", (t) => {
+  const prefix = join(tmpdir(), "nodekit-video-gate-");
+  const temporaryRoot = mkdtempSync(prefix);
+  assert.ok(temporaryRoot.startsWith(tmpdir()));
+  t.after(() => rmSync(temporaryRoot, { recursive: true, force: true }));
+
+  const campaignRoot = join(temporaryRoot, "campaign");
+  const videoRoot = join(campaignRoot, "video");
+  const storyRoot = join(campaignRoot, "story");
+  mkdirSync(videoRoot, { recursive: true });
+  mkdirSync(storyRoot, { recursive: true });
+  const isolatedConfigPath = join(videoRoot, "founder-quest-walkthrough.json");
+  writeFileSync(isolatedConfigPath, `${JSON.stringify(config, null, 2)}\n`);
+  writeFileSync(
+    join(storyRoot, "claims.json"),
+    JSON.stringify({
+      claims: [
+        {
+          id: "C5_FOUNDER_QUEST_PRODUCT",
+          status: "planned",
+          evidenceIds: [],
+          scope: {},
+        },
+      ],
+    }),
+  );
+  writeFileSync(join(storyRoot, "evidence-index.json"), "{\"evidence\":[]}");
+
+  const report = evaluatePreflight({
+    config,
+    configPath: isolatedConfigPath,
+    checkRepository: false,
+  });
+  assert.equal(report.passed, false);
+  assert.ok(
+    report.errors.some((message) => message.includes("deployment receipt is missing")),
+  );
+  assert.ok(
+    report.errors.some((message) => message.includes("browser proof receipt is missing")),
+  );
+  assert.ok(
+    report.errors.some((message) => message.includes("screenshot manifest is missing")),
+  );
+  assert.equal(existsSync(join(campaignRoot, config.paths.finalReceipt)), false);
+  assert.equal(existsSync(join(campaignRoot, config.paths.outputDirectory)), false);
+});
+
+test("planned Founder Quest claim cannot authorize a final capture", () => {
+  const digest = "a".repeat(64);
+  const deployment = {
+    appId: "founder-quest-graph",
+    deploymentId: "deployment-identity-contract",
+    commit: "b".repeat(40),
+    configHash: digest,
+    appHash: digest,
+  };
+  const report = validateClaimBinding({
+    config,
+    deployment,
+    claims: {
+      claims: [
+        {
+          id: "C5_FOUNDER_QUEST_PRODUCT",
+          status: "planned",
+          evidenceIds: [],
+          scope: {},
+        },
+      ],
+    },
+    evidenceIndex: { evidence: [] },
+  });
+  assert.equal(report.passed, false);
+  assert.ok(
+    report.errors.some((message) =>
+      message.includes("must be verified or measured before capture"),
+    ),
+  );
+  assert.ok(report.errors.some((message) => message.includes("has no evidence")));
+  assert.ok(
+    report.errors.some((message) => message.includes("scope.commit does not match")),
+  );
+});
