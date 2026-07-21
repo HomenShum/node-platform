@@ -1,0 +1,39 @@
+schemaVersion: nodekit.campaign-approval/v1
+campaignId: nodekit-proof-campaign-2026-07-20
+status: draft
+authorization:
+  grantedBy: user
+  grantedAtConversationDate: "2026-07-20"
+  scope:
+    - production deployment
+    - paid live-provider actions
+    - Chrome/CDP publication
+  prohibited:
+    - direct messages
+    - automated replies
+    - paid promotion
+    - automated engagement
+publications:
+  - channel: linkedin
+    account: pending-browser-verification
+    textPath: campaign/posts/linkedin.final.md
+    contentSha256: pending
+    assets: []
+    publicUrl: pending
+  - channel: x
+    account: pending-browser-verification
+    textPath: campaign/posts/x-thread.final.md
+    contentSha256: pending
+    assets: []
+    publicUrl: pending
+  - channel: github
+    account: HomenShum
+    target: https://github.com/HomenShum/node-platform/pull/6
+    contentSha256: pending
+    publicUrl: pending
+releaseGates:
+  founderQuestProductionProof: pending
+  nodeSlideExportReopen: pending
+  videoVisualProof: pending
+  exactLinkCheck: pending
+  secretScan: pending
