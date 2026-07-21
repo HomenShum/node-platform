@@ -43,6 +43,11 @@ const IDENTITY_ONLY_ROOTS = ["vendor"];
 // dependency resolution, deployment, browser behavior, or the workflow that
 // is being certified. They must therefore be bound to configHash as well.
 const APPLICATION_ROOT_FILES = [
+  ".dockerignore",
+  ".gitignore",
+  ".npmrc",
+  ".nvmrc",
+  ".vercelignore",
   "nodekit.yaml",
   "hackathon.yaml",
   "package.json",

@@ -109,6 +109,7 @@ test("compiled hash binds the shipped app, workflow, dependency, and deployment 
   await mkdir(path.join(root, "src"), { recursive: true });
   await writeFile(path.join(root, "src", "domain.mjs"), "export const domainIdentity = 'original';\n");
   await writeFile(path.join(root, "server.ts"), "import './apps/web/server.mjs';\n");
+  await writeFile(path.join(root, ".dockerignore"), ".env*\n");
 
   const assertDrift = async (relative, replacement) => {
     await compileAgentDefinition(root);
@@ -124,6 +125,7 @@ test("compiled hash binds the shipped app, workflow, dependency, and deployment 
   await assertDrift("apps/web/server.mjs", "export const serverIdentity = 'changed';\n");
   await assertDrift("src/domain.mjs", "export const domainIdentity = 'changed';\n");
   await assertDrift("server.ts", "import './apps/web/changed-server.mjs';\n");
+  await assertDrift(".dockerignore", ".env*\nproof/\n");
   await assertDrift("scripts/demo.mjs", "console.log('changed demo');\n");
   await assertDrift("adw/workflows/launch.yaml", "schemaVersion: nodekit.workflow/v1\nname: changed\n");
   await assertDrift("hackathon.yaml", "schemaVersion: nodekit.hackathon/v1\nname: changed\n");
