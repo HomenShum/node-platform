@@ -1,6 +1,7 @@
 name: NodeKit EaseProof
 
 on:
+  pull_request:
   workflow_dispatch:
     inputs:
       cache_class:
@@ -34,7 +35,7 @@ jobs:
       - name: Run fresh generated-candidate journey
         run: npm run acceptance:factory
         env:
-          NODEKIT_CACHE_CLASS: ${{ inputs.cache_class }}
+          NODEKIT_CACHE_CLASS: ${{ inputs.cache_class || 'warm-or-unknown' }}
           NODEKIT_PACKAGE_MANAGER: ${{ matrix.package_manager }}
       - uses: actions/upload-artifact@v4
         if: always()
