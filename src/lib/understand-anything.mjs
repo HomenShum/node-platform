@@ -1,9 +1,12 @@
 import { createHash } from "node:crypto";
+import { execFile } from "node:child_process";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
+import { promisify } from "node:util";
 import { normalizePath, pathExists } from "./files.mjs";
 
 const SNAPSHOT_SCHEMA = "nodekit.code-graph-snapshot/v1";
+const execFileAsync = promisify(execFile);
 
 function hash(value) {
   return createHash("sha256").update(value).digest("hex");
@@ -57,6 +60,21 @@ function namespaceId(namespace, id) {
   return `${namespace}:${id}`;
 }
 
+async function resolveGitHead(repoRoot) {
+  try {
+    const { stdout } = await execFileAsync("git", ["rev-parse", "HEAD"], { cwd: repoRoot });
+    return stdout.trim().toLowerCase();
+  } catch {
+    throw new Error("Understand Anything imports require a committed Git HEAD");
+  }
+}
+
+function sameCommit(left, right) {
+  const a = string(left).trim().toLowerCase();
+  const b = string(right).trim().toLowerCase();
+  return a.length >= 7 && b.length >= 7 && (a === b || a.startsWith(b) || b.startsWith(a));
+}
+
 function normalizeTerms(query) {
   return String(query ?? "")
     .toLowerCase()
@@ -79,7 +97,7 @@ function scoreNode(node, terms) {
 }
 
 export async function importUnderstandAnythingCodeGraph(repoRoot, {
-  commitSha = "uncommitted",
+  commitSha,
   graphDir = ".understand-anything",
   repoId = path.basename(path.resolve(repoRoot)),
   write = true,
@@ -98,7 +116,18 @@ export async function importUnderstandAnythingCodeGraph(repoRoot, {
   }
   validateGraph(graph, normalizePath(path.relative(repoRoot, graphPath)));
 
-  const namespace = `codebase:${repoId}@${commitSha}`;
+  const actualHead = await resolveGitHead(repoRoot);
+  const graphCommit = string(graph.project.gitCommitHash);
+  if (!graphCommit) throw new Error("Understand Anything graph is missing project.gitCommitHash");
+  if (commitSha && !sameCommit(commitSha, actualHead)) {
+    throw new Error(`requested code graph commit ${commitSha} does not match repository HEAD ${actualHead}`);
+  }
+  if (!sameCommit(graphCommit, actualHead)) {
+    throw new Error(`Understand Anything graph commit ${graphCommit} does not match repository HEAD ${actualHead}`);
+  }
+  const pinnedCommit = actualHead;
+
+  const namespace = `codebase:${repoId}@${pinnedCommit}`;
   const nodes = graph.nodes.map((node) => ({
     ...node,
     id: namespaceId(namespace, node.id),
@@ -123,7 +152,7 @@ export async function importUnderstandAnythingCodeGraph(repoRoot, {
     nodeIds: step.nodeIds.map((nodeId) => namespaceId(namespace, nodeId)),
   }));
   const snapshot = {
-    commitSha,
+    commitSha: pinnedCommit,
     contentHash: hash(sourceBytes),
     generatedAt: new Date().toISOString(),
     kind: "codebase",

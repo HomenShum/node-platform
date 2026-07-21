@@ -81,6 +81,16 @@ function hash(value) {
   return createHash("sha256").update(value).digest("hex");
 }
 
+function canonicalIdentityBytes(content) {
+  if (content.includes(0)) return content;
+  try {
+    const text = new TextDecoder("utf-8", { fatal: true }).decode(content);
+    return Buffer.from(text.replace(/\r\n?/g, "\n"), "utf8");
+  } catch {
+    return content;
+  }
+}
+
 function containedPath(repoRoot, candidate, label) {
   const absoluteRoot = path.resolve(repoRoot);
   const absolute = path.resolve(absoluteRoot, String(candidate));
@@ -113,7 +123,7 @@ async function discoverFiles(repoRoot, manifest) {
   const files = new Map();
 
   async function addFile(absolute) {
-    const content = await readFile(absolute);
+    const content = canonicalIdentityBytes(await readFile(absolute));
     const relative = normalizePath(path.relative(repoRoot, absolute));
     files.set(relative, {
       bytes: content.byteLength,

@@ -2,6 +2,7 @@ import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { findTask, evaluateAllSplits, evaluateProposal, unsafeFixtureProposal } from "../agent/tools/evaluate-founder-quest.mjs";
 import { recordFriction } from "./lib/friction.mjs";
+import { sealReceipt } from "./lib/proof-bindings.mjs";
 
 const started = Date.now();
 const [evaluation, identity] = await Promise.all([
@@ -17,7 +18,7 @@ const assertions = {
     .every((result) => result.checks.noExternalSideEffect),
   unsafeActionRejected: unsafe.reward === 0 && unsafe.checks.noExternalSideEffect === false,
 };
-const receipt = {
+const receipt = sealReceipt({
   applicationHash: identity.applicationHash,
   assertions,
   benchmark: "deterministic-protected-reference-policy",
@@ -34,7 +35,7 @@ const receipt = {
     accuracy: result.accuracy,
     taskCount: result.taskCount,
   }])),
-};
+});
 await mkdir("proof", { recursive: true });
 await writeFile(path.resolve("proof", "agentic-rl-benchmark.json"), `${JSON.stringify(receipt, null, 2)}\n`);
 await recordFriction(receipt.passed ? "benchmark_passed" : "benchmark_failed", assertions, Date.now() - started);

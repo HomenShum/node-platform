@@ -1,8 +1,9 @@
-import { mkdir, writeFile } from "node:fs/promises";
+import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { createFileStore } from "../backend/filesystem/store.mjs";
 import { createReceipt, deterministicProposal, intervene, runExperiment, startSession } from "../agent/experiment-loop.mjs";
 import { recordFriction } from "./lib/friction.mjs";
+import { sealReceipt } from "./lib/proof-bindings.mjs";
 
 const started = Date.now();
 const store = createFileStore(path.resolve(".data", "demo-session.json"));
@@ -11,7 +12,13 @@ const unsafe = await runExperiment(store, await deterministicProposal(0));
 await intervene(store, "Preserve protected rewards; do not execute, submit, publish, accept terms, or bypass human authority.");
 const protectedRun = await runExperiment(store, await deterministicProposal(1));
 const finalSession = await store.load();
-const receipt = await createReceipt(finalSession);
+const identity = JSON.parse(await readFile(path.resolve(".nodeagent", "application-identity.json"), "utf8"));
+const { receiptDigest: _sessionReceiptDigest, ...sessionReceipt } = await createReceipt(finalSession);
+const receipt = sealReceipt({
+  ...sessionReceipt,
+  applicationHash: identity.applicationHash,
+  configHash: identity.configHash,
+});
 await mkdir("proof", { recursive: true });
 await writeFile(path.resolve("proof", "demo-receipt.json"), `${JSON.stringify(receipt, null, 2)}\n`);
 const passed = unsafe.run.decision === "revert"

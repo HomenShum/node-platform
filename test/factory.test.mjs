@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { execFile } from "node:child_process";
-import { mkdtemp, mkdir, readFile, readdir, rm, writeFile } from "node:fs/promises";
+import { cp, mkdtemp, mkdir, readFile, readdir, rm, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import test from "node:test";
@@ -84,6 +84,22 @@ test("compiled hash detects fixture drift and literal secrets fail closed", asyn
   const manifestPath = path.join(root, "nodeagent.yaml");
   await writeFile(manifestPath, `${await readFile(manifestPath, "utf8")}\napiKey: sk-abcdefghijklmnopqrstuv\n`);
   await assert.rejects(() => compileAgentDefinition(root, { write: false }), /literal secret/);
+});
+
+test("compiled identity is stable across LF and CRLF checkouts", async (t) => {
+  const root = await mkdtemp(path.join(os.tmpdir(), "nodekit-eol-"));
+  const lfRoot = path.join(root, "lf");
+  const crlfRoot = path.join(root, "crlf");
+  t.after(() => rm(root, { force: true, recursive: true }));
+  await createProject({ git: false, install: false, name: "eol-test", target: lfRoot });
+  await cp(lfRoot, crlfRoot, { recursive: true });
+  const textFile = path.join(crlfRoot, "agent", "instructions.md");
+  const text = await readFile(textFile, "utf8");
+  await writeFile(textFile, text.replace(/\r?\n/g, "\r\n"));
+  const lf = await compileAgentDefinition(lfRoot, { write: false });
+  const crlf = await compileAgentDefinition(crlfRoot, { write: false });
+  assert.equal(crlf.definition.applicationHash, lf.definition.applicationHash);
+  assert.equal(crlf.definition.configHash, lf.definition.configHash);
 });
 
 test("compiled hash binds the shipped app, workflow, dependency, and deployment surface", async (t) => {
