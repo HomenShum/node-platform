@@ -1,0 +1,108 @@
+{
+  "schema": "proofloop.receipt/v1",
+  "schemaVersion": 1,
+  "receiptId": "ease-ease_3f8133e3d5a5408bb13e",
+  "kind": "nodekit-ease-integrity",
+  "createdAt": "2026-07-21T22:14:21.734Z",
+  "producer": {
+    "id": "proofloop",
+    "version": "0.3.0",
+    "configHash": "1c2ea960302fdf03f21d5095316fdd04dfe6cd9e26e2aceba7412348bf3c1283"
+  },
+  "subject": {
+    "type": "run",
+    "id": "ease_3f8133e3d5a5408bb13e",
+    "runId": "ease_3f8133e3d5a5408bb13e",
+    "repository": {
+      "candidateCommit": "20191ac8fa8d7f7e9868117675185c4f5134e977",
+      "dirty": false
+    }
+  },
+  "claim": {
+    "text": "The supplied NodeKit EaseProof evidence is internally bound; this receipt does not certify ease, human usability, deployment, or submission readiness.",
+    "boundary": "proxy",
+    "tier": "local_ready"
+  },
+  "verdict": {
+    "status": "passed",
+    "authority": "authoritative",
+    "decisionMethod": "deterministic_gate",
+    "decisiveCheckIds": [
+      "ease-integrity"
+    ],
+    "summary": "Local EaseProof hashes and identities verified."
+  },
+  "checks": [
+    {
+      "id": "ease-integrity",
+      "status": "passed",
+      "role": "decisive",
+      "method": "deterministic",
+      "summary": "180 screenshot(s) and the candidate/timer manifests were checked; Ease certification=false.",
+      "evidenceRefs": [
+        "ease-manifest",
+        "browser-manifest",
+        "candidate-archive"
+      ]
+    }
+  ],
+  "evidence": [
+    {
+      "id": "ease-manifest",
+      "kind": "ease-manifest",
+      "path": "manifest.json",
+      "sha256": "28fd4a5c29014ae825ec94e57ece535f5eae18ff2763c64a6a6a1587fb9e64c7",
+      "hashMethod": "raw-bytes-sha256"
+    },
+    {
+      "id": "browser-manifest",
+      "kind": "screenshot-manifest",
+      "path": "browser/screenshot-manifest.json",
+      "sha256": "b4cef7fc2f8146c4a637fd6284244a7d7598e3659074d608fe5a2db2bad29732",
+      "hashMethod": "raw-bytes-sha256"
+    },
+    {
+      "id": "candidate-archive",
+      "kind": "generated-candidate",
+      "path": "candidate.tar.gz",
+      "sha256": "c94a60b7113ca692b2914e963372fb6e511b09bb788862848eb02f1459fd63c6",
+      "hashMethod": "raw-bytes-sha256"
+    }
+  ],
+  "payload": {
+    "schema": "nodekit.ease-verification/v1",
+    "version": 1,
+    "mode": "inline",
+    "data": {
+      "easeCertified": false,
+      "errors": [],
+      "warnings": [
+        "Evidence integrity may pass, but NodeKit Ease is not certified and submission remains blocked."
+      ],
+      "checkedScreenshots": 180,
+      "runId": "ease_3f8133e3d5a5408bb13e"
+    },
+    "sha256": "37d3435d18f41cb2add05a109f48e181ca136030118ffc3ccb7a58157eac164f",
+    "hashMethod": "canonical-json-sha256"
+  },
+  "timing": {
+    "startedAt": "2026-07-21T22:08:58.431Z",
+    "completedAt": "2026-07-21T22:11:17.183Z",
+    "durationMs": 138751
+  },
+  "privacy": {
+    "visibility": "private",
+    "redacted": true,
+    "externalEgress": false
+  },
+  "extensions": {
+    "easeCertified": false,
+    "submissionBlockers": [
+      "freshAgentHeldout",
+      "freshHumanUsability",
+      "threeConvexConsumers",
+      "previewDeployment",
+      "proofloopEaseVerification"
+    ]
+  }
+}
