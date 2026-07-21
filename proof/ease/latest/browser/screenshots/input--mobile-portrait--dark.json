@@ -1,0 +1,23 @@
+{
+  "applicationHash": "04ec1a957dffddd02a896957949799e33013efc265f1f97c7fee713e515a2255",
+  "capturedAt": "2026-07-21T22:10:48.205Z",
+  "configHash": "04ec1a957dffddd02a896957949799e33013efc265f1f97c7fee713e515a2255",
+  "consoleErrors": 0,
+  "elapsedMs": 97907,
+  "failedRequests": 0,
+  "generatedCandidateCommit": "20191ac8fa8d7f7e9868117675185c4f5134e977",
+  "horizontalOverflowPx": 0,
+  "mojibakeDetected": false,
+  "nodekitCommit": "4bdc60d0b0e224f7d4884d7857b6f968bb3a901d",
+  "nodekitSourceHash": "1c2ea960302fdf03f21d5095316fdd04dfe6cd9e26e2aceba7412348bf3c1283",
+  "pageUrl": "http://127.0.0.1:43144/?scenario=input",
+  "pngSha256": "0ed732340cb7411d068b7a0445858accb1cc7e02da4b96ed5f4f28495bf5c9f3",
+  "runId": "ease_3f8133e3d5a5408bb13e",
+  "schemaVersion": "nodekit.screenshot-proof/v1",
+  "state": "input",
+  "theme": "dark",
+  "viewport": {
+    "height": 844,
+    "width": 390
+  }
+}
