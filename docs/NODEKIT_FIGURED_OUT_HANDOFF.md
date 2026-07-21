@@ -44,7 +44,7 @@ Every new app receives:
 
 The empty-directory acceptance runs installation, compilation, generated tests, deterministic demo, stale-proposal evaluation, live HTTP/DOM browser assertions, and proof generation. Its current receipt is `proof/factory-acceptance.json`.
 
-The rendered QA packet is `.qa/evidence/nodekit-base-20260721-1949/`. It includes desktop, tablet, and mobile screenshots in light and dark themes plus pending-proposal and completed-receipt states. The pass found and fixed one dark-theme contrast issue. QA memory is append-only under `.qa/memory/`.
+The canonical rendered QA packet is `proof/ease/latest/`. It contains 180 screenshots and sidecars covering 15 required states across six viewport/theme combinations. The browser manifest reports zero missing states, serious/critical Axe violations, console errors, failed requests, horizontal overflow, or detected mojibake. Independent ProofLoop verification re-hashed all 180 screenshots and the candidate/timer manifests. QA memory is append-only under `.qa/memory/`.
 
 The current audience-facing proof deck is `outputs/nodekit-figured-out-proof.pptx`. It replaces the obsolete two-preset story with the neutral base, portable Caseflow, reference-app boundary, and Convex-first portability decision. Its byte hash, exact-template fidelity, overflow result, and per-slide visual inspection are recorded in `proof/nodekit-figured-out-presentation.json`.
 
@@ -61,6 +61,8 @@ The component extraction begins only after three materially different consumers 
 1. Adapt NodeRoom/NodeSheet, NodeSlide, and NodeVideo to the portable Caseflow contract in isolated, reviewed changes.
 2. Extract the repeated Convex implementation and cover it with `convex-test` only after those consumers agree.
 3. Add generic PostgreSQL semantics, then the Supabase managed profile.
-4. Promote the structural browser gate to a packaged Playwright journey with screenshots in CI.
-5. Add visible exception/restore/receipt-inspection surfaces to raise the remaining Agentic UI Bar dimensions.
+4. Repair the isolated fresh-agent executor in a new QA pass and run all three held-out tasks.
+5. Run the five-person usability study and an authorized shareable-preview journey.
+
+The live checklist, exact evidence counts, and submission order are maintained in `docs/EASE_SUBMISSION_READINESS.md`.
 These are explicit future gates, not hidden claims about the current release.
