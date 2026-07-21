@@ -137,6 +137,10 @@
           "sel": "[data-panel=\"graph\"] [data-node-id=\"blocker:missing-ownership-agreement\"]"
         },
         {
+          "act": "click",
+          "sel": "[data-panel=\"quests\"] [data-node-id=\"quest:bank-readiness\"]"
+        },
+        {
           "cap": "Ask why the quest is blocked, what the agent can do, and what proves it",
           "cursor": "textarea[placeholder=\"Why is the bank quest blocked?\"]",
           "click": true,
@@ -150,6 +154,12 @@
         {
           "act": "click",
           "sel": "[data-query-operation=\"blocker\"]"
+        },
+        {
+          "act": "waitForText",
+          "sel": ".answer-verdict strong",
+          "text": "blocked",
+          "timeoutMs": 10000
         },
         {
           "cap": "NodeAgent traverses the bounded graph and retrieves sources",
@@ -177,6 +187,12 @@
         {
           "act": "click",
           "sel": "[data-query-operation=\"authority\"]"
+        },
+        {
+          "act": "waitForText",
+          "sel": ".answer-verdict strong",
+          "text": "human authority required",
+          "timeoutMs": 10000
         },
         {
           "act": "sleep",
@@ -301,6 +317,10 @@
           "sel": "[data-graph-view=\"critical\"]"
         },
         {
+          "act": "click",
+          "sel": "[data-panel=\"quests\"] [data-node-id=\"quest:bank-readiness\"]"
+        },
+        {
           "cap": "Ask one operational question against the selected graph context",
           "cursor": "textarea[placeholder=\"Why is the bank quest blocked?\"]",
           "click": true,
@@ -314,6 +334,12 @@
         {
           "act": "click",
           "sel": "[data-query-operation=\"blocker\"]"
+        },
+        {
+          "act": "waitForText",
+          "sel": ".answer-verdict strong",
+          "text": "blocked",
+          "timeoutMs": 10000
         },
         {
           "cap": "The trace shows bounded graph retrieval and source lookup",
@@ -337,6 +363,12 @@
           "sel": "[data-query-operation=\"authority\"]"
         },
         {
+          "act": "waitForText",
+          "sel": ".answer-verdict strong",
+          "text": "human authority required",
+          "timeoutMs": 10000
+        },
+        {
           "act": "sleep",
           "ms": 1200
         },
@@ -348,6 +380,12 @@
         {
           "act": "click",
           "sel": "[data-query-operation=\"evidence\"]"
+        },
+        {
+          "act": "waitForText",
+          "sel": ".answer-verdict strong",
+          "text": "source backed process claim",
+          "timeoutMs": 10000
         },
         {
           "act": "sleep",

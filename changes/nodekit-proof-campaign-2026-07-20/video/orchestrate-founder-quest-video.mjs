@@ -33,6 +33,7 @@ const ALLOWED_ACTIONS = new Set([
   "scrollTop",
   "scrollY",
   "sleep",
+  "waitForText",
 ]);
 
 export class GateBlockedError extends Error {
@@ -264,6 +265,18 @@ export function lintCampaignConfig(config) {
       }
       if (step.act === "fill" && step.commit && step.commit !== "Enter") {
         errors.push(`${label}.steps[${index}] uses an unsupported fill commit`);
+      }
+      if (step.act === "waitForText") {
+        if (!step.sel || !step.text) {
+          errors.push(`${label}.steps[${index}] waitForText requires sel and text`);
+        }
+        if (
+          !Number.isInteger(step.timeoutMs) ||
+          step.timeoutMs < 1000 ||
+          step.timeoutMs > 15000
+        ) {
+          errors.push(`${label}.steps[${index}] waitForText timeout must be 1000-15000ms`);
+        }
       }
       if (step.sel) {
         const selector = String(step.sel).toLowerCase();
@@ -738,6 +751,10 @@ const adaptWalkthroughHostLabel = (stageRoot) => {
     [
       "<Chrome accent={wt.accent} />",
       '<Chrome accent={wt.accent} browserLabel={wt.browserLabel || "verified production"} />',
+    ],
+    [
+      'else if (a.act === "sleep") { await sleep(p, a.ms); }',
+      'else if (a.act === "sleep") { await sleep(p, a.ms); }\n  else if (a.act === "waitForText") { await loc(p, a.sel).filter({ hasText: new RegExp(a.text, "i") }).waitFor({ state: "visible", timeout: a.timeoutMs || 10000 }); }',
     ],
   ];
   for (const [before, after] of replacements) {

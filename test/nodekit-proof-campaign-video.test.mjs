@@ -110,6 +110,12 @@ test("walkthrough remains read-only and traverses graph, answer, sources, and pr
     ),
     false,
   );
+  for (const profile of config.profiles) {
+    const waits = profile.steps.filter((step) => step.act === "waitForText");
+    assert.ok(waits.length >= 2);
+    assert.ok(waits.every((step) => step.sel === ".answer-verdict strong"));
+    assert.ok(waits.every((step) => step.timeoutMs === 10000));
+  }
 });
 
 test("Remotion commands call the pinned Feature Proof Studio stage", () => {
