@@ -1,0 +1,109 @@
+{
+  "schemaVersion": "nodekit.media-visual-qa/v1",
+  "status": "verified",
+  "verifiedAt": "2026-07-21T06:17:49.5951211Z",
+  "campaignId": "nodekit-proof-campaign-2026-07-20",
+  "journeyId": "founder-quest-critical-path-v1",
+  "videoReceiptSha256": "25f92d97dcadb31b4b8adee496adee076b0779552bf21cf5c2991f387ed0fb08",
+  "seekMethod": "ffmpeg -i <input> -ss <timestamp> -frames:v 1",
+  "videos": [
+    {
+      "path": "video/output/nodekit-founder-quest-vertical.mp4",
+      "sha256": "4cd8e5c9e5ecfc3b93abaa3e9f8e60dd819c024e6ad147002637bd6e68b12ae3",
+      "bytes": 9771396,
+      "width": 1080,
+      "height": 1920,
+      "durationSeconds": 83.050667,
+      "fps": 30,
+      "audio": {
+        "codec": "aac",
+        "meanVolumeDb": -91,
+        "maxVolumeDb": -91,
+        "classification": "silent track; all narrative text is burned in"
+      },
+      "visualVerdict": "pass",
+      "observations": [
+        "The first production frame resolves by second 1; the opening fixture is visibly synthetic and read-only.",
+        "The blocked bank quest, official source links, exact graph revision, receipt data, and non-approval limitation are readable.",
+        "No stale placeholder answer appears in the sampled encoded frames."
+      ]
+    },
+    {
+      "path": "video/output/nodekit-founder-quest-technical.mp4",
+      "sha256": "d0e2d13ed29fc82d6528c988cd6afabf81d464c00d1a80857951377cc8d07e18",
+      "bytes": 23095701,
+      "width": 1920,
+      "height": 1080,
+      "durationSeconds": 180.053333,
+      "fps": 30,
+      "audio": {
+        "codec": "aac",
+        "meanVolumeDb": -91,
+        "maxVolumeDb": -91,
+        "classification": "silent track; all narrative text is burned in"
+      },
+      "visualVerdict": "pass",
+      "observations": [
+        "The encoded walkthrough visibly shows blocker, human-authority, evidence, receipt, and Neo4j plan-only states.",
+        "The Neo4j modal explicitly says the plan was generated and never executed.",
+        "Synthetic, read-only, and no-external-approval boundaries remain visible throughout the sampled sequence."
+      ]
+    }
+  ],
+  "sampledFrames": [
+    {
+      "path": "video/proof/visual-qa/vertical-001.png",
+      "sourceTimestampSeconds": 1,
+      "sha256": "954983bf26a9c98a7989c02c224b90534e805f7a19bdc2465431f4c6f378c6ae",
+      "bytes": 183527,
+      "verifies": "production fixture and synthetic/read-only framing"
+    },
+    {
+      "path": "video/proof/visual-qa/vertical-045.png",
+      "sourceTimestampSeconds": 45,
+      "sha256": "270243b941c821c1dd1222bdf6e900e63f481477f7687be8a492d7879374705d",
+      "bytes": 169584,
+      "verifies": "blocked answer and inspectable official evidence"
+    },
+    {
+      "path": "video/proof/visual-qa/vertical-082.png",
+      "sourceTimestampSeconds": 82,
+      "sha256": "eee54766d323cc5d6393563246ed8b2b900bf82232748308f9d55d159dc6b52a",
+      "bytes": 164580,
+      "verifies": "closing verdict and preserved authority boundary"
+    },
+    {
+      "path": "video/proof/visual-qa/technical-030.png",
+      "sourceTimestampSeconds": 30,
+      "sha256": "acf458cf416cfff2766dd41772392065c975482d4d52ccdb18e21a1489c6740c",
+      "bytes": 167356,
+      "verifies": "bounded graph dependency path"
+    },
+    {
+      "path": "video/proof/visual-qa/technical-090.png",
+      "sourceTimestampSeconds": 90,
+      "sha256": "3463f45f3731b2924e933fd603e671f780032b63e37bb577f225e015537148f6",
+      "bytes": 174195,
+      "verifies": "human authority required answer"
+    },
+    {
+      "path": "video/proof/visual-qa/technical-150.png",
+      "sourceTimestampSeconds": 150,
+      "sha256": "9953a4c201236efea3a666fc1414e585cc1694de1e6a419826f92f06c00ef9f7",
+      "bytes": 148276,
+      "verifies": "Neo4j plan-only contract and zero execution"
+    },
+    {
+      "path": "video/proof/visual-qa/technical-175.png",
+      "sourceTimestampSeconds": 175,
+      "sha256": "f06f39b0d6c68ddc8fd646c4e8c38e59ba8a27303ffdc5fc6fa9305406b9cfca",
+      "bytes": 172801,
+      "verifies": "final proof-carrying artifact verdict"
+    }
+  ],
+  "limitations": [
+    "The silent AAC tracks are intentional; both walkthroughs are designed for muted autoplay with burned-in captions.",
+    "The review validates selected raw captures and encoded timestamps, not every video frame.",
+    "The walkthrough proves a synthetic read-only product journey, not an external institutional outcome."
+  ]
+}

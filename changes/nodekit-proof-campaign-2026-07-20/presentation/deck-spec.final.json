@@ -1,0 +1,145 @@
+{
+  "narrative": [
+    "By the end, a technical reviewer should understand what NodeKit now proves, which real product slices support the claim, and which artifact and publication gates remain open.",
+    "Use one thin NodeKit manifest, filesystem-discovered capabilities, composed evaluations, and content-addressed proof receipts.",
+    "Verified product and media artifacts remain distinct from pending publication claims.",
+    "NodeKit v0.2.0 is source-released on GitHub; npm publication is blocked by registry authentication.",
+    "Regenerate the evidence-bound deck and walkthrough from the verified Founder Quest production receipt, then publish only the exact approved campaign and preserve the resulting…"
+  ],
+  "slides": [
+    {
+      "body": "One manifest connects runtime, evaluation, browser QA, and proof.",
+      "bullets": [
+        "Two presets; one path",
+        "Local run: 37.221 s",
+        "GitHub source; npm blocked"
+      ],
+      "headline": "Empty directory. Proof-carrying application.",
+      "section": "opening / 01",
+      "title": "What is NodeKit?"
+    },
+    {
+      "body": "Parity breaks when benchmark, browser, deployment, and public claims follow different implementations.",
+      "bullets": [
+        "One implementation must serve every gate",
+        "Receipts bind the exact revision",
+        "Failed gates stay visible"
+      ],
+      "headline": "The hard part is keeping every proof gate on one execution path.",
+      "section": "stakes / 02",
+      "title": "What pain is this solving?"
+    },
+    {
+      "body": "From empty directories, NodeKit installed, compiled, ran, evaluated, benchmarked, and proof-checked both presets.",
+      "bullets": [
+        "Agentic RL preset: passed",
+        "SMB lending FDE preset: passed",
+        "Local benchmark, not production latency"
+      ],
+      "headline": "Two presets passed the full factory path in 37.221 seconds.",
+      "metric": "37.221 s",
+      "metricLabel": "deterministic local factory acceptance",
+      "section": "evidence / 03",
+      "title": "Does the empty-directory path actually work?"
+    },
+    {
+      "body": "On commit 6c8d7d9, the synthetic lab passed deterministic, live-provider, browser, reload, export, and identity gates.",
+      "bullets": [
+        "One bounded live-provider call",
+        "Fresh browser plus reload",
+        "Deployment gate still open"
+      ],
+      "formula": {
+        "description": "Synthetic local workflow only; no automated credit decision.",
+        "display": "query → proposal → approval → export",
+        "expression": "query -> proposal -> approval -> export",
+        "syntax": "plain",
+        "variables": []
+      },
+      "headline": "The Casca lab passed every local gate without making a credit decision.",
+      "section": "case study / 04",
+      "title": "Can the system survive a real agentic product journey?"
+    },
+    {
+      "body": "The current baseline is behavior cloning, not RL. It passed protected local evaluation; the strict Azure-only live route failed closed with no fallback.",
+      "bullets": [
+        "Behavior cloning only",
+        "Nine reward attacks blocked",
+        "Azure/ZDR route: HTTP 404; no fallback"
+      ],
+      "chart": {
+        "labels": [
+          "reward attacks",
+          "heldout tasks",
+          "fallbacks"
+        ],
+        "unit": "count",
+        "values": [
+          9,
+          2,
+          0
+        ]
+      },
+      "headline": "Protect the scorer first; train only after its boundaries are credible.",
+      "metric": "9",
+      "metricLabel": "adversarial reward attacks blocked",
+      "section": "technical decision / 05",
+      "title": "How does NodeKit approach Agentic RL responsibly?"
+    },
+    {
+      "body": "Read-only Founder Quest connects quests, a bounded graph, sourced answers, authority boundaries, and proof in four isolated browser contexts.",
+      "bullets": [
+        "Source dc5fba2 · evidence 0457913",
+        "App/config 973ea7cb · graph ng1_c9334138",
+        "18 / 18 tests · 25 / 25 artifact hashes"
+      ],
+      "headline": "Founder Quest passed all 15 hosted checks on one exact production revision.",
+      "image": {
+        "altText": "Founder Quest verified read-only production product view",
+        "caption": "Production screenshot; verified scope remains synthetic and read-only.",
+        "credit": "Synthetic read-only production"
+      },
+      "metric": "15 / 15",
+      "metricLabel": "hosted checks passed; synthetic and read-only",
+      "section": "product reveal / 06",
+      "title": "What does the graph make possible for a user?"
+    },
+    {
+      "body": "Anthropic's rare-disease grant is an independent forcing function for mapping research, novelty, evaluation, authority, and readiness, not an affiliation.",
+      "bullets": [
+        "Official grant announcement",
+        "No affiliation or endorsement",
+        "Research synthesis does not prove biology"
+      ],
+      "formula": {
+        "description": "Research synthesis informs an application; it does not prove biology.",
+        "display": "source → claim → evaluation → application readiness",
+        "expression": "source -> claim -> evaluation -> application readiness",
+        "syntax": "plain",
+        "variables": []
+      },
+      "headline": "A real grant scenario tests the graph without claiming biological proof.",
+      "section": "external use case / 07",
+      "title": "How would a researcher use this today?"
+    },
+    {
+      "body": "Research, build, evaluation, proof, presentation, and feedback can watch one another. Only external anchors close the graph.",
+      "bullets": [
+        "Researcher, builder, or operator",
+        "Sources, commits, exports, and outcomes",
+        "Inspect pass, fail, and human-review status"
+      ],
+      "formula": {
+        "description": "External sources, commits, artifacts, and observed outcomes close the loop.",
+        "display": "research ↔ build ↔ evaluation ↔ proof",
+        "expression": "research <-> build <-> evaluation <-> proof",
+        "syntax": "plain",
+        "variables": []
+      },
+      "headline": "Loops need external anchors. Bring one workflow and inspect the proof.",
+      "section": "synthesis / 08",
+      "title": "How do the pieces improve, and what should reviewers do next?"
+    }
+  ],
+  "title": "NodeKit launches NodeKit through proof-carrying product work"
+}

@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
-import { readFile } from "node:fs/promises";
+import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { tmpdir } from "node:os";
 import path from "node:path";
 import test from "node:test";
 import { fileURLToPath } from "node:url";
@@ -10,6 +11,7 @@ import {
   buildCampaignDeckSpec,
   buildGenerationReceipt,
   canonicalJson,
+  resolveFinalPresentationMediaProof,
   sha256,
 } from "../src/lib/presentation-pipeline.mjs";
 
@@ -147,6 +149,111 @@ test("verified Founder Quest slide carries production copy without erasing the s
     { dataUrl: "data:image/png;base64,QUJDRA==" },
   );
   assert.equal(elementId, "s6-image");
+
+  const finalSpec = buildCampaignDeckSpec({
+    change: parse(changeYaml),
+    claims,
+    evidenceIndex,
+    releaseMode: "final",
+    slidePlans,
+  });
+  assert.equal(finalSpec.title, "NodeKit launches NodeKit through proof-carrying product work");
+  assert.doesNotMatch(JSON.stringify(finalSpec), /\bDRAFT\b/);
+  assert.match(
+    finalSpec.narrative.join(" "),
+    /verified product and media artifacts remain distinct from pending publication claims/i,
+  );
+});
+
+test("final media gate validates the receipt contract and re-hashes both current MP4s", async () => {
+  const root = await mkdtemp(path.join(tmpdir(), "nodekit-final-media-"));
+  const output = path.join(root, "video", "output");
+  const proof = path.join(root, "video", "proof");
+  await Promise.all([mkdir(output, { recursive: true }), mkdir(proof, { recursive: true })]);
+  const vertical = Buffer.from("vertical-video-bytes");
+  const technical = Buffer.from("technical-video-bytes");
+  await Promise.all([
+    writeFile(path.join(output, "nodekit-founder-quest-vertical.mp4"), vertical),
+    writeFile(path.join(output, "nodekit-founder-quest-technical.mp4"), technical),
+  ]);
+  const receiptPath = path.join(proof, "founder-quest-video-receipt.json");
+  const videoReceipt = {
+    campaignId: "nodekit-proof-campaign-2026-07-20",
+    schemaVersion: "nodekit.video-proof-receipt/v1",
+    status: "verified",
+    verifiedAt: "2026-07-21T06:10:03.951Z",
+    videos: [
+      {
+        bytes: vertical.byteLength,
+        compositionId: "WT9-FounderQuestVertical",
+        durationSeconds: 83,
+        height: 1920,
+        path: "video/output/nodekit-founder-quest-vertical.mp4",
+        profileId: "FounderQuestVertical",
+        sha256: sha256(vertical),
+        width: 1080,
+      },
+      {
+        bytes: technical.byteLength,
+        compositionId: "WT-FounderQuestTechnical",
+        durationSeconds: 180,
+        height: 1080,
+        path: "video/output/nodekit-founder-quest-technical.mp4",
+        profileId: "FounderQuestTechnical",
+        sha256: sha256(technical),
+        width: 1920,
+      },
+    ],
+  };
+  await writeFile(receiptPath, canonicalJson(videoReceipt));
+
+  try {
+    const resolved = await resolveFinalPresentationMediaProof({
+      campaignRoot: root,
+      expectedCampaignId: videoReceipt.campaignId,
+      receiptPath,
+    });
+    assert.equal(resolved.receipt.status, "verified");
+    assert.equal(resolved.videos.length, 2);
+    assert.deepEqual(
+      Object.fromEntries(resolved.videos.map((video) => [video.profileId, video.sha256])),
+      {
+        FounderQuestTechnical: sha256(technical),
+        FounderQuestVertical: sha256(vertical),
+      },
+    );
+
+    for (const [override, pattern] of [
+      [{ schemaVersion: "nodekit.video-proof-receipt/v0" }, /video receipt schema must be/],
+      [{ status: "draft" }, /video receipt status must be verified/],
+      [{ campaignId: "different-campaign" }, /video receipt campaign id must be/],
+    ]) {
+      await writeFile(receiptPath, canonicalJson({ ...videoReceipt, ...override }));
+      await assert.rejects(
+        () =>
+          resolveFinalPresentationMediaProof({
+            campaignRoot: root,
+            expectedCampaignId: videoReceipt.campaignId,
+            receiptPath,
+          }),
+        pattern,
+      );
+    }
+    await writeFile(receiptPath, canonicalJson(videoReceipt));
+
+    await writeFile(path.join(output, "nodekit-founder-quest-vertical.mp4"), "tampered");
+    await assert.rejects(
+      () =>
+        resolveFinalPresentationMediaProof({
+          campaignRoot: root,
+          expectedCampaignId: videoReceipt.campaignId,
+          receiptPath,
+        }),
+      /FounderQuestVertical (?:byte count|hash) mismatch/,
+    );
+  } finally {
+    await rm(root, { force: true, recursive: true });
+  }
 });
 
 function receiptFixture() {
@@ -172,7 +279,7 @@ function receiptFixture() {
   };
 }
 
-test("generation receipt is canonical, deterministic, hash-bound, and always draft-only", () => {
+test("default generation receipt remains canonical, deterministic, hash-bound, and draft-only", () => {
   const input = receiptFixture();
   const first = buildGenerationReceipt(input);
   const second = buildGenerationReceipt({
@@ -194,4 +301,47 @@ test("generation receipt is canonical, deterministic, hash-bound, and always dra
   const changed = buildGenerationReceipt(tampered);
   assert.notEqual(changed.generationIdentity, first.generationIdentity);
   assert.notEqual(changed.receiptDigest, first.receiptDigest);
+});
+
+test("final generation receipt is media-bound, ready, and explicitly not published", () => {
+  const mediaProof = {
+    campaignId: "change-2026-07-20",
+    receipt: {
+      byteSize: 50,
+      path: "video/proof/receipt.json",
+      schemaVersion: "nodekit.video-proof-receipt/v1",
+      sha256: "1".repeat(64),
+      status: "verified",
+    },
+    videos: [
+      {
+        byteSize: 100,
+        path: "video/output/technical.mp4",
+        profileId: "FounderQuestTechnical",
+        sha256: "2".repeat(64),
+      },
+      {
+        byteSize: 80,
+        path: "video/output/vertical.mp4",
+        profileId: "FounderQuestVertical",
+        sha256: "3".repeat(64),
+      },
+    ],
+  };
+  const receipt = buildGenerationReceipt({
+    ...receiptFixture(),
+    artifacts: receiptFixture().artifacts.map((artifact) => ({
+      ...artifact,
+      publicationStatus: "not-published",
+      status: "ready",
+    })),
+    mediaProof,
+    releaseMode: "final",
+  });
+  assert.equal(receipt.status, "ready");
+  assert.equal(receipt.externalPublishReady, true);
+  assert.equal(receipt.distribution.status, "not-published");
+  assert.equal(receipt.mediaProof.receipt.sha256, "1".repeat(64));
+  assert.equal(receipt.gate.passed, true);
+  assert.deepEqual(receipt.generationIdentity.length, 64);
 });

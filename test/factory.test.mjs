@@ -220,7 +220,7 @@ test("default projects vendor the exact NodeKit runtime without polluting capabi
   const vendoredPackage = JSON.parse(await readFile(path.join(root, "vendor", "nodekit", "package.json"), "utf8"));
   assert.equal(packageJson.devDependencies["@homenshum/nodekit"], "file:vendor/nodekit");
   assert.equal(vendoredPackage.name, "@homenshum/nodekit");
-  assert.equal(vendoredPackage.version, "0.2.0");
+  assert.equal(vendoredPackage.version, "0.2.1");
 
   const compiled = await compileAgentDefinition(root);
   assert.equal(compiled.files.some((file) => file.path === "vendor/nodekit/src/cli.mjs"), true);

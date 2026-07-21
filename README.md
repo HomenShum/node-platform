@@ -116,7 +116,7 @@ npx --yes @homenshum/nodekit check
 npx --yes @homenshum/nodekit proof
 ```
 
-`@homenshum/nodekit` 0.2.0 is not yet published. Generated projects remain
+`@homenshum/nodekit` 0.2.1 is not yet published. Generated projects remain
 portable because they carry the exact runtime under `vendor/nodekit`. External
 consumers that do not use `nodekit create` should use an immutable Git or
 packed-tarball reference until the package is released. The unscoped `nodekit`

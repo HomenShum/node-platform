@@ -90,6 +90,31 @@
       "url": "https://github.com/HomenShum/founder-quest-graph/releases/tag/v0.1.1-production-certified",
       "receiptDigest": "3366a2466bfed64e07c70324babbb9d2eb369965e7e1930c9f00909b199bb5a5",
       "scope": "v0.1.1-production-certified; releaseReady=true; hostedDeploymentCertified=true; 18/18 tests; 25/25 artifact-manifest hashes verified byte-for-byte in a fresh Windows worktree; final independent release re-audit found zero remaining issues"
+    },
+    {
+      "id": "E14_FOUNDER_QUEST_VIDEO_PROOF",
+      "kind": "media-proof",
+      "path": "changes/nodekit-proof-campaign-2026-07-20/video/proof/founder-quest-video-receipt.json",
+      "sha256": "25f92d97dcadb31b4b8adee496adee076b0779552bf21cf5c2991f387ed0fb08",
+      "visualQaPath": "changes/nodekit-proof-campaign-2026-07-20/video/proof/founder-quest-media-visual-qa.json",
+      "visualQaSha256": "e4131e974a8b6b2ada07ea2c08ffad97364327a695bc44edaf95ba44ca3704f5",
+      "assets": [
+        {
+          "path": "changes/nodekit-proof-campaign-2026-07-20/video/output/nodekit-founder-quest-vertical.mp4",
+          "sha256": "4cd8e5c9e5ecfc3b93abaa3e9f8e60dd819c024e6ad147002637bd6e68b12ae3",
+          "bytes": 9771396,
+          "durationSeconds": 83.050667,
+          "dimensions": "1080x1920"
+        },
+        {
+          "path": "changes/nodekit-proof-campaign-2026-07-20/video/output/nodekit-founder-quest-technical.mp4",
+          "sha256": "d0e2d13ed29fc82d6528c988cd6afabf81d464c00d1a80857951377cc8d07e18",
+          "bytes": 23095701,
+          "durationSeconds": 180.053333,
+          "dimensions": "1920x1080"
+        }
+      ],
+      "scope": "Feature Proof Studio @ 7aafb3e0a48f3c1e74e69a51d9df506186ea4340; exact Founder Quest deployment dpl_z1dRn48GFzZYuEyBq6oDNKPHdUHP; sampled encoded-frame visual QA passed"
     }
   ]
 }

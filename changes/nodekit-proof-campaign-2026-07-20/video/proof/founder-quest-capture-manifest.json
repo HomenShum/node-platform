@@ -1,0 +1,320 @@
+{
+  "schemaVersion": "nodekit.video-capture-receipt/v1",
+  "status": "captured",
+  "capturedAt": "2026-07-21T06:02:02.529Z",
+  "campaignId": "nodekit-proof-campaign-2026-07-20",
+  "journeyId": "founder-quest-critical-path-v1",
+  "campaignCommit": "7ca02bc3bb73b55ea5c9991276ca1c36268551f8",
+  "configSha256": "420556ca1ee9bfe550ded24655ed5a6bb9a3d27fb34e614d40ab2d2fd079d34c",
+  "deployment": {
+    "appId": "founder-quest-graph",
+    "deploymentId": "dpl_z1dRn48GFzZYuEyBq6oDNKPHdUHP",
+    "url": "https://founder-quest-graph.vercel.app/",
+    "commit": "dc5fba2467576d5ded3d3ac6bf4d142316410c86",
+    "configHash": "973ea7cbd8039e963bab1ff604bc0180bf0457f9a334b9b9dc0f77062f103e20",
+    "appHash": "973ea7cbd8039e963bab1ff604bc0180bf0457f9a334b9b9dc0f77062f103e20"
+  },
+  "featureProofStudio": {
+    "commit": "7aafb3e0a48f3c1e74e69a51d9df506186ea4340",
+    "upstreamCaptureSha256": "c6eab5d5288cea5d4ebb47395abdffe3f571d579523d782cfdb28c0d2ae37311",
+    "adaptedCaptureSha256": "c759dec24442a584672c3305080673478f3db11ec94ccf36d8c8ab8f532f1f1c",
+    "adaptedWalkthroughSha256": "334ad1c52f71c9262dfb79829377ff7c550786e33af1a325ff1f341bd57aa6a5",
+    "generatedSpecSha256": "c7f2b99622c7931887b086b5888b40f6322a47fa3b7b6984c036f06f6b5e5c4b",
+    "remotionRootSha256": "42bfe85de1520794c44bdb8852b768a8de1ccc489c4f6628955cb8a16d8641e7",
+    "packageLockSha256": "6a33d78acda3ec895b0da45c76cca3fc4875b6d89f74f0709bfff098d126e2d4",
+    "walkthroughDataSha256": "5db93de076521fc95af46248b566ca772d50951ae010076c79bebf29092b283a",
+    "stageRoot": "D:\\VSCode Projects\\cafecorner_nodebench\\nodebench_ai4\\.tmp-nodekit-video-render-7ca02bc\\420556ca1ee9-dpl-z1dRn48GFzZYuEyBq6oDNKPHdUHP"
+  },
+  "prerequisiteEvidence": {
+    "deploymentReceiptSha256": "ddafa68fc53ca807fa0c20726812b58a62b3a99d9410e69469bec1a327d43882",
+    "browserProofReceiptSha256": "207fd8ff18591f44c67771b4c1df13a0804cc19c47052f6687c8a27deb3bb4d0",
+    "screenshotManifestSha256": "76ec15fc2baada6f02518296cbd082249959b06a7a25c06dfdd0a6d0edfa9e2d"
+  },
+  "profiles": [
+    {
+      "id": "FounderQuestVertical",
+      "expectedCaptures": 13,
+      "durationFrames": 2490,
+      "durationSeconds": 83
+    },
+    {
+      "id": "FounderQuestTechnical",
+      "expectedCaptures": 19,
+      "durationFrames": 5400,
+      "durationSeconds": 180
+    }
+  ],
+  "frames": [
+    {
+      "profileId": "FounderQuestVertical",
+      "path": "public/wt/FounderQuestVertical/00.png",
+      "sha256": "28ac188e5e5adbb2552bf39cff5a94c990ed00203159fa860be300992855020c",
+      "bytes": 278621
+    },
+    {
+      "profileId": "FounderQuestVertical",
+      "path": "public/wt/FounderQuestVertical/01.png",
+      "sha256": "86cb9ec2b23afe8d4c251e88c3c3e4895fa89743903166c393e8d013a1d367ec",
+      "bytes": 278127
+    },
+    {
+      "profileId": "FounderQuestVertical",
+      "path": "public/wt/FounderQuestVertical/02.png",
+      "sha256": "86cb9ec2b23afe8d4c251e88c3c3e4895fa89743903166c393e8d013a1d367ec",
+      "bytes": 278127
+    },
+    {
+      "profileId": "FounderQuestVertical",
+      "path": "public/wt/FounderQuestVertical/03.png",
+      "sha256": "86cb9ec2b23afe8d4c251e88c3c3e4895fa89743903166c393e8d013a1d367ec",
+      "bytes": 278127
+    },
+    {
+      "profileId": "FounderQuestVertical",
+      "path": "public/wt/FounderQuestVertical/04_00.png",
+      "sha256": "dfc4dc8a3b3170e23b4e1f267e7d86c9003dfe518efc4f2dfc5f1d2f15117281",
+      "bytes": 332513
+    },
+    {
+      "profileId": "FounderQuestVertical",
+      "path": "public/wt/FounderQuestVertical/04_01.png",
+      "sha256": "dfc4dc8a3b3170e23b4e1f267e7d86c9003dfe518efc4f2dfc5f1d2f15117281",
+      "bytes": 332513
+    },
+    {
+      "profileId": "FounderQuestVertical",
+      "path": "public/wt/FounderQuestVertical/04_02.png",
+      "sha256": "dfc4dc8a3b3170e23b4e1f267e7d86c9003dfe518efc4f2dfc5f1d2f15117281",
+      "bytes": 332513
+    },
+    {
+      "profileId": "FounderQuestVertical",
+      "path": "public/wt/FounderQuestVertical/04_03.png",
+      "sha256": "dfc4dc8a3b3170e23b4e1f267e7d86c9003dfe518efc4f2dfc5f1d2f15117281",
+      "bytes": 332513
+    },
+    {
+      "profileId": "FounderQuestVertical",
+      "path": "public/wt/FounderQuestVertical/04_04.png",
+      "sha256": "dfc4dc8a3b3170e23b4e1f267e7d86c9003dfe518efc4f2dfc5f1d2f15117281",
+      "bytes": 332513
+    },
+    {
+      "profileId": "FounderQuestVertical",
+      "path": "public/wt/FounderQuestVertical/04_05.png",
+      "sha256": "dfc4dc8a3b3170e23b4e1f267e7d86c9003dfe518efc4f2dfc5f1d2f15117281",
+      "bytes": 332513
+    },
+    {
+      "profileId": "FounderQuestVertical",
+      "path": "public/wt/FounderQuestVertical/04_06.png",
+      "sha256": "dfc4dc8a3b3170e23b4e1f267e7d86c9003dfe518efc4f2dfc5f1d2f15117281",
+      "bytes": 332513
+    },
+    {
+      "profileId": "FounderQuestVertical",
+      "path": "public/wt/FounderQuestVertical/05.png",
+      "sha256": "dfc4dc8a3b3170e23b4e1f267e7d86c9003dfe518efc4f2dfc5f1d2f15117281",
+      "bytes": 332513
+    },
+    {
+      "profileId": "FounderQuestVertical",
+      "path": "public/wt/FounderQuestVertical/06.png",
+      "sha256": "dfc4dc8a3b3170e23b4e1f267e7d86c9003dfe518efc4f2dfc5f1d2f15117281",
+      "bytes": 332513
+    },
+    {
+      "profileId": "FounderQuestVertical",
+      "path": "public/wt/FounderQuestVertical/07.png",
+      "sha256": "b4aeb02de57beaa0b78a591b0ac4cdeb761f344420e83b35440700081feec66e",
+      "bytes": 322777
+    },
+    {
+      "profileId": "FounderQuestVertical",
+      "path": "public/wt/FounderQuestVertical/08.png",
+      "sha256": "9188fa08fbd59fa6be1bb73a19ba8cb19c619899ddef0b48a76f7d031c70638e",
+      "bytes": 301981
+    },
+    {
+      "profileId": "FounderQuestVertical",
+      "path": "public/wt/FounderQuestVertical/09.png",
+      "sha256": "9188fa08fbd59fa6be1bb73a19ba8cb19c619899ddef0b48a76f7d031c70638e",
+      "bytes": 301981
+    },
+    {
+      "profileId": "FounderQuestVertical",
+      "path": "public/wt/FounderQuestVertical/10.png",
+      "sha256": "fe323cffa6dfd40840a125313ee197b9f479b6f84dac930d75bf65dc40a07abd",
+      "bytes": 302762
+    },
+    {
+      "profileId": "FounderQuestVertical",
+      "path": "public/wt/FounderQuestVertical/11.png",
+      "sha256": "9188fa08fbd59fa6be1bb73a19ba8cb19c619899ddef0b48a76f7d031c70638e",
+      "bytes": 301981
+    },
+    {
+      "profileId": "FounderQuestVertical",
+      "path": "public/wt/FounderQuestVertical/12.png",
+      "sha256": "f6524837db2707af926783e79f8c1e8fa3d2c368bfff3bd3e09fe6b88b789ced",
+      "bytes": 289937
+    },
+    {
+      "profileId": "FounderQuestTechnical",
+      "path": "public/wt/FounderQuestTechnical/00.png",
+      "sha256": "28ac188e5e5adbb2552bf39cff5a94c990ed00203159fa860be300992855020c",
+      "bytes": 278621
+    },
+    {
+      "profileId": "FounderQuestTechnical",
+      "path": "public/wt/FounderQuestTechnical/01.png",
+      "sha256": "86cb9ec2b23afe8d4c251e88c3c3e4895fa89743903166c393e8d013a1d367ec",
+      "bytes": 278127
+    },
+    {
+      "profileId": "FounderQuestTechnical",
+      "path": "public/wt/FounderQuestTechnical/02.png",
+      "sha256": "86cb9ec2b23afe8d4c251e88c3c3e4895fa89743903166c393e8d013a1d367ec",
+      "bytes": 278127
+    },
+    {
+      "profileId": "FounderQuestTechnical",
+      "path": "public/wt/FounderQuestTechnical/03.png",
+      "sha256": "86cb9ec2b23afe8d4c251e88c3c3e4895fa89743903166c393e8d013a1d367ec",
+      "bytes": 278127
+    },
+    {
+      "profileId": "FounderQuestTechnical",
+      "path": "public/wt/FounderQuestTechnical/04.png",
+      "sha256": "a468af1caad7e00925a68350b5eabdc7a4273ca9d8d2636d633de083f8664eca",
+      "bytes": 284505
+    },
+    {
+      "profileId": "FounderQuestTechnical",
+      "path": "public/wt/FounderQuestTechnical/05.png",
+      "sha256": "f158f060129f0a368ea2ff9ee3e5bef3f32fd6b2856d09a3bb805a559e22ecd4",
+      "bytes": 295461
+    },
+    {
+      "profileId": "FounderQuestTechnical",
+      "path": "public/wt/FounderQuestTechnical/06.png",
+      "sha256": "0398662720a2ae960231aab3818ca47285461ecb4d872dbdbe2915f3e4f330cc",
+      "bytes": 219874
+    },
+    {
+      "profileId": "FounderQuestTechnical",
+      "path": "public/wt/FounderQuestTechnical/07_00.png",
+      "sha256": "e2bdab8ec4dc01eb42a9e979818befac14d1d061c12ad0d36d18e3028873b0dc",
+      "bytes": 279920
+    },
+    {
+      "profileId": "FounderQuestTechnical",
+      "path": "public/wt/FounderQuestTechnical/07_01.png",
+      "sha256": "e2bdab8ec4dc01eb42a9e979818befac14d1d061c12ad0d36d18e3028873b0dc",
+      "bytes": 279920
+    },
+    {
+      "profileId": "FounderQuestTechnical",
+      "path": "public/wt/FounderQuestTechnical/07_02.png",
+      "sha256": "e2bdab8ec4dc01eb42a9e979818befac14d1d061c12ad0d36d18e3028873b0dc",
+      "bytes": 279920
+    },
+    {
+      "profileId": "FounderQuestTechnical",
+      "path": "public/wt/FounderQuestTechnical/07_03.png",
+      "sha256": "e2bdab8ec4dc01eb42a9e979818befac14d1d061c12ad0d36d18e3028873b0dc",
+      "bytes": 279920
+    },
+    {
+      "profileId": "FounderQuestTechnical",
+      "path": "public/wt/FounderQuestTechnical/07_04.png",
+      "sha256": "e2bdab8ec4dc01eb42a9e979818befac14d1d061c12ad0d36d18e3028873b0dc",
+      "bytes": 279920
+    },
+    {
+      "profileId": "FounderQuestTechnical",
+      "path": "public/wt/FounderQuestTechnical/07_05.png",
+      "sha256": "e2bdab8ec4dc01eb42a9e979818befac14d1d061c12ad0d36d18e3028873b0dc",
+      "bytes": 279920
+    },
+    {
+      "profileId": "FounderQuestTechnical",
+      "path": "public/wt/FounderQuestTechnical/07_06.png",
+      "sha256": "e2bdab8ec4dc01eb42a9e979818befac14d1d061c12ad0d36d18e3028873b0dc",
+      "bytes": 279920
+    },
+    {
+      "profileId": "FounderQuestTechnical",
+      "path": "public/wt/FounderQuestTechnical/07_07.png",
+      "sha256": "e2bdab8ec4dc01eb42a9e979818befac14d1d061c12ad0d36d18e3028873b0dc",
+      "bytes": 279920
+    },
+    {
+      "profileId": "FounderQuestTechnical",
+      "path": "public/wt/FounderQuestTechnical/08.png",
+      "sha256": "e2bdab8ec4dc01eb42a9e979818befac14d1d061c12ad0d36d18e3028873b0dc",
+      "bytes": 279920
+    },
+    {
+      "profileId": "FounderQuestTechnical",
+      "path": "public/wt/FounderQuestTechnical/09.png",
+      "sha256": "8c68d198b945cadc954a2eed7c9e85bb7cf5020d10e962ffb16ccc050f18c8bf",
+      "bytes": 265685
+    },
+    {
+      "profileId": "FounderQuestTechnical",
+      "path": "public/wt/FounderQuestTechnical/10.png",
+      "sha256": "a090ec948be649c0ce80acb0d9c7e846637c77f6b562e2be1cf6bc35a456a5ab",
+      "bytes": 279533
+    },
+    {
+      "profileId": "FounderQuestTechnical",
+      "path": "public/wt/FounderQuestTechnical/11.png",
+      "sha256": "a090ec948be649c0ce80acb0d9c7e846637c77f6b562e2be1cf6bc35a456a5ab",
+      "bytes": 279533
+    },
+    {
+      "profileId": "FounderQuestTechnical",
+      "path": "public/wt/FounderQuestTechnical/12.png",
+      "sha256": "058bf9f5d407abd91e1ffa1badb121acf38ffdbba49717d502ccc0e88bfa0503",
+      "bytes": 271861
+    },
+    {
+      "profileId": "FounderQuestTechnical",
+      "path": "public/wt/FounderQuestTechnical/13.png",
+      "sha256": "058bf9f5d407abd91e1ffa1badb121acf38ffdbba49717d502ccc0e88bfa0503",
+      "bytes": 271861
+    },
+    {
+      "profileId": "FounderQuestTechnical",
+      "path": "public/wt/FounderQuestTechnical/14.png",
+      "sha256": "058bf9f5d407abd91e1ffa1badb121acf38ffdbba49717d502ccc0e88bfa0503",
+      "bytes": 271861
+    },
+    {
+      "profileId": "FounderQuestTechnical",
+      "path": "public/wt/FounderQuestTechnical/15.png",
+      "sha256": "957497fdbf0463dfbc0c02fbacd817e895a6161359cac2be5805459c0509117f",
+      "bytes": 309648
+    },
+    {
+      "profileId": "FounderQuestTechnical",
+      "path": "public/wt/FounderQuestTechnical/16.png",
+      "sha256": "058bf9f5d407abd91e1ffa1badb121acf38ffdbba49717d502ccc0e88bfa0503",
+      "bytes": 271861
+    },
+    {
+      "profileId": "FounderQuestTechnical",
+      "path": "public/wt/FounderQuestTechnical/17.png",
+      "sha256": "29c7bf56ab502223c5523adc6aa4e3b7630ccee3703d6989d39a44b08a23e41e",
+      "bytes": 258013
+    },
+    {
+      "profileId": "FounderQuestTechnical",
+      "path": "public/wt/FounderQuestTechnical/18.png",
+      "sha256": "29c7bf56ab502223c5523adc6aa4e3b7630ccee3703d6989d39a44b08a23e41e",
+      "bytes": 258013
+    }
+  ],
+  "durableCaptureRoot": "video/output/capture"
+}

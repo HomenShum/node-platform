@@ -1,6 +1,6 @@
 {
   "name": "@homenshum/nodekit",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Portable agent-application scaffolding, compilation, conformance, and proof tooling",
   "type": "module",
   "bin": {

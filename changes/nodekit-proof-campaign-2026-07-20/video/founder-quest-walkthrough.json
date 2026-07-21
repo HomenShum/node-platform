@@ -162,7 +162,7 @@
           "timeoutMs": 10000
         },
         {
-          "cap": "NodeAgent traverses the bounded graph and retrieves sources",
+          "cap": "The deterministic runtime traverses the bounded graph and retrieves sources",
           "burst": {
             "ms": 2800,
             "every": 400
@@ -245,7 +245,6 @@
         },
         {
           "cap": "Verdict: explain the path, preserve authority, and keep the proof",
-          "cursor": "[aria-label=\"Readiness summary\"]",
           "hold": 180
         }
       ]
@@ -453,13 +452,11 @@
         },
         {
           "cap": "The final verdict says what passed, what remains synthetic, and what is next",
-          "cursor": "[aria-label=\"Readiness summary\"]",
           "click": false,
           "hold": 300
         },
         {
           "cap": "NodeKit turns the graph journey into a proof-carrying technical artifact",
-          "cursor": "[aria-label=\"Runtime boundaries\"]",
           "hold": 170
         }
       ]

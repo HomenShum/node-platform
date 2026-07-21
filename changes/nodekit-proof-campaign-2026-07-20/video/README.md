@@ -122,6 +122,12 @@ already provisioned isolated stage; it never relaxes evidence gates.
   configuration, and prerequisite proof hashes.
 - `video/proof/founder-quest-video-receipt.json`: probed dimensions and durations,
   output hashes, exact deployment identity, and limitations.
+- `video/proof/founder-quest-media-visual-qa.json`: accurate-seek encoded-frame
+  samples, visual findings, audio-level findings, and content hashes.
+
+Both exports contain a silent AAC track and burned-in narrative text. They are
+designed for muted autoplay; the receipt records that accessibility limitation
+explicitly instead of implying spoken narration.
 
 The final receipt marks the recursive-launch claim only as `partial`: publication
 still requires separately approved public posts, verified URLs, and distribution

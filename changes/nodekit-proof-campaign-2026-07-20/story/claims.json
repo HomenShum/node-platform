@@ -117,6 +117,21 @@
       "limitations": [
         "The loop and graph mechanics predate the current phrase; NodeKit claims an application of the framing, not ownership of the underlying architecture."
       ]
+    },
+    {
+      "id": "C9_MEDIA_PROOF",
+      "text": "NodeKit produced and verified an 83-second vertical walkthrough and a 180-second technical walkthrough from the exact Founder Quest production capture, with burned-in narrative text and content-addressed receipts.",
+      "status": "verified",
+      "evidenceIds": ["E14_FOUNDER_QUEST_VIDEO_PROOF"],
+      "scope": {
+        "campaignCommit": "7ca02bc3bb73b55ea5c9991276ca1c36268551f8",
+        "verticalSha256": "4cd8e5c9e5ecfc3b93abaa3e9f8e60dd819c024e6ad147002637bd6e68b12ae3",
+        "technicalSha256": "d0e2d13ed29fc82d6528c988cd6afabf81d464c00d1a80857951377cc8d07e18"
+      },
+      "limitations": [
+        "Both videos use silent AAC tracks and burned-in captions.",
+        "The walkthrough proves one synthetic read-only production journey, not an external outcome or publication."
+      ]
     }
   ]
 }

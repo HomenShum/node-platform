@@ -10,6 +10,13 @@ const CLAIM_STATUSES = new Set([
   "planned",
 ]);
 
+const PRESENTATION_RELEASE_MODES = new Set(["draft", "final"]);
+const VIDEO_PROOF_SCHEMA_VERSION = "nodekit.video-proof-receipt/v1";
+const REQUIRED_FINAL_VIDEOS = new Map([
+  ["FounderQuestVertical", "video/output/nodekit-founder-quest-vertical.mp4"],
+  ["FounderQuestTechnical", "video/output/nodekit-founder-quest-technical.mp4"],
+]);
+
 const FUTURE_LANGUAGE =
   /\b(?:planned|proposal|proposed|future|will|would|could|intended|target|once|after|before|until|next milestone)\b/i;
 
@@ -50,6 +57,143 @@ export function sha256(value) {
 
 export async function sha256File(target) {
   return sha256(await readFile(target));
+}
+
+function assertReleaseMode(releaseMode) {
+  if (!PRESENTATION_RELEASE_MODES.has(releaseMode)) {
+    throw new PresentationGateError([
+      `presentation release mode must be draft or final, received ${String(releaseMode)}`,
+    ]);
+  }
+}
+
+function normalizedRelativePath(value) {
+  return String(value ?? "").replaceAll("\\", "/").replace(/^\.\//, "");
+}
+
+/**
+ * Resolve and re-hash the verified Founder Quest video receipt used by final
+ * presentation mode. The receipt is necessary but not sufficient: the current
+ * MP4 bytes must still match every bound hash and byte count.
+ */
+export async function resolveFinalPresentationMediaProof({
+  campaignRoot,
+  expectedCampaignId,
+  receiptPath,
+}) {
+  const issues = [];
+  const absoluteCampaignRoot = path.resolve(campaignRoot);
+  const absoluteReceiptPath = path.resolve(receiptPath);
+  let receiptBytes;
+  let receipt;
+
+  try {
+    receiptBytes = await readFile(absoluteReceiptPath);
+    receipt = JSON.parse(receiptBytes.toString("utf8"));
+  } catch (error) {
+    throw new PresentationGateError([
+      `final presentation video receipt is unavailable or invalid JSON: ${error.message}`,
+    ]);
+  }
+
+  if (receipt?.schemaVersion !== VIDEO_PROOF_SCHEMA_VERSION) {
+    issues.push(
+      `video receipt schema must be ${VIDEO_PROOF_SCHEMA_VERSION}, received ${String(receipt?.schemaVersion)}`,
+    );
+  }
+  if (receipt?.status !== "verified") {
+    issues.push(`video receipt status must be verified, received ${String(receipt?.status)}`);
+  }
+  if (receipt?.campaignId !== expectedCampaignId) {
+    issues.push(
+      `video receipt campaign id must be ${expectedCampaignId}, received ${String(receipt?.campaignId)}`,
+    );
+  }
+
+  const videos = Array.isArray(receipt?.videos) ? receipt.videos : [];
+  if (videos.length !== REQUIRED_FINAL_VIDEOS.size) {
+    issues.push(
+      `video receipt must bind exactly ${REQUIRED_FINAL_VIDEOS.size} final videos, received ${videos.length}`,
+    );
+  }
+  const profileIds = videos.map((video) => video?.profileId).filter(Boolean);
+  if (new Set(profileIds).size !== profileIds.length) {
+    issues.push("video receipt contains duplicate profile ids");
+  }
+
+  const resolvedVideos = [];
+  for (const [profileId, expectedPath] of REQUIRED_FINAL_VIDEOS) {
+    const video = videos.find((candidate) => candidate?.profileId === profileId);
+    if (!video) {
+      issues.push(`video receipt is missing required profile ${profileId}`);
+      continue;
+    }
+    const declaredPath = normalizedRelativePath(video.path);
+    if (declaredPath !== expectedPath) {
+      issues.push(
+        `video ${profileId} path must be ${expectedPath}, received ${declaredPath || "<missing>"}`,
+      );
+      continue;
+    }
+    if (!/^[a-f0-9]{64}$/i.test(String(video.sha256 ?? ""))) {
+      issues.push(`video ${profileId} has no valid sha256`);
+      continue;
+    }
+
+    const absoluteVideoPath = path.resolve(absoluteCampaignRoot, ...declaredPath.split("/"));
+    const relativeFromCampaign = path.relative(absoluteCampaignRoot, absoluteVideoPath);
+    if (
+      relativeFromCampaign.startsWith(`..${path.sep}`) ||
+      relativeFromCampaign === ".." ||
+      path.isAbsolute(relativeFromCampaign)
+    ) {
+      issues.push(`video ${profileId} resolves outside the campaign root`);
+      continue;
+    }
+
+    try {
+      const metadata = await stat(absoluteVideoPath);
+      if (!metadata.isFile()) throw new Error("not a file");
+      const actualSha256 = await sha256File(absoluteVideoPath);
+      if (actualSha256.toLowerCase() !== video.sha256.toLowerCase()) {
+        issues.push(
+          `video ${profileId} hash mismatch: expected ${video.sha256}, received ${actualSha256}`,
+        );
+      }
+      if (metadata.size !== video.bytes) {
+        issues.push(
+          `video ${profileId} byte count mismatch: expected ${String(video.bytes)}, received ${metadata.size}`,
+        );
+      }
+      resolvedVideos.push({
+        byteSize: metadata.size,
+        compositionId: video.compositionId,
+        durationSeconds: video.durationSeconds,
+        height: video.height,
+        path: declaredPath,
+        profileId,
+        sha256: actualSha256,
+        width: video.width,
+      });
+    } catch (error) {
+      issues.push(`video ${profileId} is unavailable at ${declaredPath}: ${error.message}`);
+    }
+  }
+
+  if (issues.length > 0) throw new PresentationGateError([...new Set(issues)].sort());
+
+  return {
+    campaignId: receipt.campaignId,
+    receipt: {
+      byteSize: receiptBytes.byteLength,
+      path: normalizedRelativePath(path.relative(absoluteCampaignRoot, absoluteReceiptPath)),
+      schemaVersion: receipt.schemaVersion,
+      sha256: sha256(receiptBytes),
+      status: receipt.status,
+      verifiedAt: receipt.verifiedAt,
+    },
+    videos: resolvedVideos.sort((left, right) => left.profileId.localeCompare(right.profileId)),
+  };
 }
 
 function nonEmptyArray(value) {
@@ -331,7 +475,7 @@ function contextualBody(change, slide) {
   return clip(`${slide.job} ${slide.dominantVisual}`, 340);
 }
 
-function fallbackBullets(change, slide, claims) {
+function fallbackBullets(change, slide, claims, releaseMode) {
   const claimLimitations = claims.flatMap((claim) => nonEmptyArray(claim.limitations));
   if (claimLimitations.length > 0) return claimLimitations;
   if (slide.narrativeRole === "stakes") {
@@ -345,7 +489,13 @@ function fallbackBullets(change, slide, claims) {
       "Require receipts before accepting the pitch",
     ];
   }
-  return [slide.audienceQuestion, slide.job, "No external publish readiness is asserted"];
+  return [
+    slide.audienceQuestion,
+    slide.job,
+    releaseMode === "final"
+      ? "Publication remains a separate receipt gate"
+      : "No external publish readiness is asserted",
+  ];
 }
 
 /** Materialize the deterministic NodeSlide raw spec from the governed story inputs. */
@@ -355,7 +505,10 @@ export function buildCampaignDeckSpec({
   evidenceIndex,
   slidePlans,
   founderQuestScreenshot,
+  releaseMode = "draft",
 }) {
+  assertReleaseMode(releaseMode);
+  const finalMode = releaseMode === "final";
   const claimsById = new Map((claimsDocument.claims ?? []).map((claim) => [claim.id, claim]));
   const evidenceById = new Map((evidenceIndex.evidence ?? []).map((entry) => [entry.id, entry]));
   const slides = slidePlans.slides.map((slide, index) => {
@@ -365,7 +518,9 @@ export function buildCampaignDeckSpec({
       ? clip(slide.body, 240)
       : planned
         ? clip(
-            `Planned only. ${slide.takeaway} This draft does not assert hosted or fresh-user proof.`,
+            finalMode
+              ? `Planned only. ${slide.takeaway} Publication remains unverified until public URL receipts exist.`
+              : `Planned only. ${slide.takeaway} This draft does not assert hosted or fresh-user proof.`,
             240,
           )
       : boundClaims.length > 0
@@ -379,7 +534,7 @@ export function buildCampaignDeckSpec({
       ? slide.bullets
       : evidenceBullets.length > 0
         ? evidenceBullets
-        : fallbackBullets(change, slide, boundClaims)
+        : fallbackBullets(change, slide, boundClaims, releaseMode)
     )
       .map((entry) => clip(entry, 72))
       .filter(Boolean)
@@ -389,7 +544,9 @@ export function buildCampaignDeckSpec({
         [
           "Evidence stays bound to the exact source",
           "Limitations remain visible",
-          "External publish readiness remains false",
+          finalMode
+            ? "Publication remains a separate receipt gate"
+            : "External publish readiness remains false",
         ][bullets.length],
       );
     }
@@ -453,14 +610,16 @@ export function buildCampaignDeckSpec({
     narrative: [
       slidePlans.communicationJob,
       change.decision?.[0],
-      "Verified product slices remain distinct from pending artifact and publication claims.",
+      finalMode
+        ? "Verified product and media artifacts remain distinct from pending publication claims."
+        : "Verified product slices remain distinct from pending artifact and publication claims.",
       change.honestLimitations?.[0],
       change.nextMilestone,
     ]
       .filter(Boolean)
       .map((entry) => clip(entry, 180)),
     slides,
-    title: `DRAFT — ${change.title}`,
+    title: finalMode ? change.title : `DRAFT — ${change.title}`,
   };
 }
 
@@ -521,7 +680,7 @@ function sortRecords(records, key) {
   return [...records].map(canonicalize).sort((left, right) => String(left[key]).localeCompare(String(right[key])));
 }
 
-/** Build a deterministic receipt. It deliberately hard-codes draft-only release semantics. */
+/** Build a deterministic draft or media-bound final presentation receipt. */
 export function buildGenerationReceipt({
   artifacts,
   changeId,
@@ -531,8 +690,17 @@ export function buildGenerationReceipt({
   inputs,
   nodeSlide,
   pptxVerification,
+  releaseMode = "draft",
+  mediaProof,
   validation,
 }) {
+  assertReleaseMode(releaseMode);
+  const finalMode = releaseMode === "final";
+  if (finalMode && (!mediaProof?.receipt?.sha256 || mediaProof?.videos?.length !== 2)) {
+    throw new PresentationGateError([
+      "final presentation receipt requires a verified receipt hash and exactly two re-hashed videos",
+    ]);
+  }
   const normalizedArtifacts = sortRecords(artifacts, "path");
   const normalizedInputs = sortRecords(inputs, "path");
   const normalizedEvidence = sortRecords(evidence, "id");
@@ -541,20 +709,30 @@ export function buildGenerationReceipt({
     changeId,
     inputHashes: Object.fromEntries(normalizedInputs.map((input) => [input.path, input.sha256])),
     nodeSlideCommit: nodeSlide.commit,
+    ...(finalMode
+      ? {
+          mediaReceiptHash: mediaProof.receipt.sha256,
+          videoHashes: Object.fromEntries(
+            mediaProof.videos.map((video) => [video.profileId, video.sha256]),
+          ),
+        }
+      : {}),
   };
   const receipt = {
     artifacts: normalizedArtifacts,
     changeId,
     evidence: normalizedEvidence,
-    externalPublishReady: false,
+    ...(finalMode ? { distribution: { status: "not-published" } } : {}),
+    externalPublishReady: finalMode,
     gate: canonicalize(gate),
     generatedAt,
     generationIdentity: sha256(canonicalJson(identity)),
     inputs: normalizedInputs,
+    ...(finalMode ? { mediaProof: canonicalize(mediaProof) } : {}),
     nodeSlide: canonicalize(nodeSlide),
     pptxVerification: canonicalize(pptxVerification),
     schemaVersion: "nodekit.nodeslide-generation-receipt/v1",
-    status: "draft",
+    status: finalMode ? "ready" : "draft",
     validation: canonicalize(validation),
   };
   return {

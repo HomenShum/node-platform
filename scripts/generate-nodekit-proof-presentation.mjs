@@ -13,6 +13,7 @@ import {
   buildGenerationReceipt,
   canonicalJson,
   parseSpeakerNotes,
+  resolveFinalPresentationMediaProof,
   resolveCampaignEvidence,
   sha256,
 } from "../src/lib/presentation-pipeline.mjs";
@@ -24,6 +25,12 @@ const repositoryRoot = path.resolve(path.dirname(scriptPath), "..");
 const changeRoot = path.join(repositoryRoot, "changes", CHANGE_ID);
 const presentationRoot = path.join(changeRoot, "presentation");
 const storyRoot = path.join(changeRoot, "story");
+const videoReceiptPath = path.join(
+  changeRoot,
+  "video",
+  "proof",
+  "founder-quest-video-receipt.json",
+);
 
 const SOURCE_PATHS = {
   change: path.join(changeRoot, "change.yaml"),
@@ -44,9 +51,10 @@ Options:
   --nodeslide-root <path>            Pinned NodeSlide checkout (defaults to the sibling checkout)
   --evidence-root <path>             Base for evidence-index externalPath values
   --founder-quest-screenshot <path>  Optional PNG/JPEG/WebP product screenshot
+  --final                            Emit media-bound final artifacts; fail closed on video proof
   --help                             Show this help
 
-The generator always emits draft-labeled artifacts and never publishes or deploys.`);
+Without --final the generator preserves the draft-only output path. Neither mode publishes or deploys.`);
 }
 
 function parseArguments(values) {
@@ -55,6 +63,10 @@ function parseArguments(values) {
     const value = values[index];
     if (value === "--help" || value === "-h") {
       options.help = true;
+      continue;
+    }
+    if (value === "--final") {
+      options.final = true;
       continue;
     }
     const [flag, inline] = value.split("=", 2);
@@ -268,7 +280,7 @@ async function verifyPptx(pptxBytes, nodeslideRoot, expectedSlides, capabilityRe
   };
 }
 
-function attachSpeakerNotes(snapshot, slidePlans, markdown) {
+function attachSpeakerNotes(snapshot, slidePlans, markdown, releaseMode) {
   const notes = parseSpeakerNotes(markdown);
   for (let index = 0; index < snapshot.slides.length; index += 1) {
     const slide = snapshot.slides[index];
@@ -276,14 +288,16 @@ function attachSpeakerNotes(snapshot, slidePlans, markdown) {
     if (!slide || !planned) continue;
     const speakerNote = notes.get(planned.id) ?? planned.job;
     slide.notes = [
-      "DRAFT PRESENTATION — external publish readiness is not asserted.",
+      ...(releaseMode === "draft"
+        ? ["DRAFT PRESENTATION — external publish readiness is not asserted."]
+        : ["MEDIA-BOUND FINAL — publication remains a separate receipt gate."]),
       speakerNote,
       `Evidence IDs: ${(planned.evidenceIds ?? []).join(", ") || "none; planned content only"}.`,
     ].join("\n\n");
   }
 }
 
-async function inputReceipts(rawInputs, screenshot, nodeslideRoot) {
+async function inputReceipts(rawInputs, screenshot, nodeslideRoot, mediaProof) {
   const inputs = Object.entries(SOURCE_PATHS).map(([key, target]) => ({
     byteSize: rawInputs[key].byteLength,
     path: rel(target),
@@ -307,19 +321,43 @@ async function inputReceipts(rawInputs, screenshot, nodeslideRoot) {
     path: "pinned-nodeslide/package.json",
     sha256: sha256(packageJson),
   });
+  if (mediaProof) {
+    inputs.push({
+      byteSize: mediaProof.receipt.byteSize,
+      path: rel(path.join(changeRoot, ...mediaProof.receipt.path.split("/"))),
+      sha256: mediaProof.receipt.sha256,
+    });
+    for (const video of mediaProof.videos) {
+      inputs.push({
+        byteSize: video.byteSize,
+        mediaType: "video/mp4",
+        path: rel(path.join(changeRoot, ...video.path.split("/"))),
+        sha256: video.sha256,
+      });
+    }
+  }
   return inputs;
 }
 
 async function runGenerator(options) {
+  const releaseMode = options.final ? "final" : "draft";
+  const finalMode = releaseMode === "final";
   const nodeslideRoot = path.resolve(options.nodeslideRoot ?? process.env.NODEKIT_NODESLIDE_ROOT);
   const nodeSlideCommit = verifyNodeSlideCheckout(nodeslideRoot);
   const externalEvidenceRoot = path.resolve(options.evidenceRoot ?? canonicalCheckoutRoot());
   const timestamp = timestampForChange();
   const generatedAt = new Date(timestamp).toISOString();
-  const [{ parsed, raw }, founderQuestScreenshot, nodeSlide] = await Promise.all([
+  const [{ parsed, raw }, founderQuestScreenshot, nodeSlide, mediaProof] = await Promise.all([
     readInputs(),
     loadFounderQuestScreenshot(options.founderQuestScreenshot),
     importNodeSlide(nodeslideRoot),
+    finalMode
+      ? resolveFinalPresentationMediaProof({
+          campaignRoot: changeRoot,
+          expectedCampaignId: CHANGE_ID,
+          receiptPath: videoReceiptPath,
+        })
+      : Promise.resolve(null),
   ]);
 
   const structuralGate = assertCampaignPresentationGate({
@@ -345,6 +383,7 @@ async function runGenerator(options) {
     claims: parsed.claims,
     evidenceIndex: parsed.evidence,
     founderQuestScreenshot,
+    releaseMode,
     slidePlans: parsed.slidePlans,
   });
   const urls = parsed.evidence.evidence
@@ -355,15 +394,21 @@ async function runGenerator(options) {
     prompt: [
       parsed.change.communicationJob,
       "Every material claim must remain bound to the supplied Change Story evidence.",
-      "This deck is a draft because video and publication receipts remain separate gates.",
+      finalMode
+        ? "Both walkthrough videos are verified and hash-bound; publication remains a separate receipt gate."
+        : "This deck is a draft because video and publication receipts remain separate gates.",
       ...urls,
     ].join("\n"),
-    purpose: `${parsed.change.communicationJob} Draft-only until every artifact and publication gate passes.`,
+    purpose: finalMode
+      ? `${parsed.change.communicationJob} Media-ready and not yet published.`
+      : `${parsed.change.communicationJob} Draft-only until every artifact and publication gate passes.`,
     successCriteria: [
       ...parsed.change.requiredProof,
       "Bind Founder Quest production copy to E12 and E13",
       "Keep the recursive publication claim in explicit future tense",
-      "Keep external publish readiness false",
+      finalMode
+        ? "Bind the exact verified video receipt and retain not-published distribution status"
+        : "Keep external publish readiness false",
     ],
   };
   const attachments = [
@@ -390,7 +435,7 @@ async function runGenerator(options) {
   const built = nodeSlide.buildBriefNodeSlide({
     attachments,
     brief,
-    deckId: `deck-${CHANGE_ID}-draft`,
+    deckId: `deck-${CHANGE_ID}-${releaseMode}`,
     now: timestamp,
     plan: parsed.slidePlans.slides.map(
       (slide, index) => `${index + 1}. ${slide.job} Evidence: ${(slide.evidenceIds ?? []).join(", ") || "planned only"}.`,
@@ -406,7 +451,7 @@ async function runGenerator(options) {
     ]);
   }
   const snapshot = structuredClone(built.snapshot);
-  snapshot.deck.status = "draft";
+  snapshot.deck.status = finalMode ? "ready" : "draft";
   snapshot.deck.title = deckSpec.title;
   attachFounderQuestScreenshot(snapshot, founderQuestScreenshot);
   for (const element of snapshot.elements) {
@@ -416,11 +461,11 @@ async function runGenerator(options) {
     if (element.style?.fontFamily === "JetBrains Mono Variable") {
       element.style.fontFamily = "Courier New";
     }
-    if (element.role === "footer" && typeof element.content === "string") {
+    if (!finalMode && element.role === "footer" && typeof element.content === "string") {
       element.content = `DRAFT · ${element.content}`;
     }
   }
-  attachSpeakerNotes(snapshot, parsed.slidePlans, parsed.speakerNotes);
+  attachSpeakerNotes(snapshot, parsed.slidePlans, parsed.speakerNotes, releaseMode);
 
   const validation = nodeSlide.localSlideLangAdapter.validate(snapshot);
   if (!validation.ok || !validation.publishOk) {
@@ -446,11 +491,17 @@ async function runGenerator(options) {
 
   const exportsRoot = path.join(presentationRoot, "exports");
   const outputPaths = {
-    html: path.join(exportsRoot, `${CHANGE_ID}.draft.html`),
-    pptx: path.join(exportsRoot, `${CHANGE_ID}.draft.pptx`),
-    receipt: path.join(exportsRoot, "generation-receipt.json"),
-    snapshot: path.join(presentationRoot, "deck-snapshot.json"),
-    spec: path.join(presentationRoot, "deck-spec.json"),
+    html: path.join(exportsRoot, `${CHANGE_ID}.${releaseMode}.html`),
+    pptx: path.join(exportsRoot, `${CHANGE_ID}.${releaseMode}.pptx`),
+    receipt: path.join(
+      exportsRoot,
+      finalMode ? "final-generation-receipt.json" : "generation-receipt.json",
+    ),
+    snapshot: path.join(
+      presentationRoot,
+      finalMode ? "deck-snapshot.final.json" : "deck-snapshot.json",
+    ),
+    spec: path.join(presentationRoot, finalMode ? "deck-spec.final.json" : "deck-spec.json"),
   };
   const artifactBytes = {
     html: Buffer.from(html, "utf8"),
@@ -464,17 +515,20 @@ async function runGenerator(options) {
     kind,
     path: rel(outputPaths[kind]),
     sha256: sha256(bytes),
-    status: "draft",
+    ...(finalMode ? { publicationStatus: "not-published" } : {}),
+    status: finalMode ? "ready" : "draft",
   }));
-  const inputs = await inputReceipts(raw, founderQuestScreenshot, nodeslideRoot);
+  const inputs = await inputReceipts(raw, founderQuestScreenshot, nodeslideRoot, mediaProof);
   const receipt = buildGenerationReceipt({
     artifacts,
     changeId: CHANGE_ID,
     evidence: resolvedEvidence,
     gate: {
       ...claimEvidenceGate,
-      draftLabeled: true,
-      externalPublishReady: false,
+      distributionStatus: finalMode ? "not-published" : undefined,
+      draftLabeled: !finalMode,
+      externalPublishReady: finalMode,
+      mediaProofPassed: finalMode ? true : undefined,
       nodeSlideValidationPassed: true,
     },
     generatedAt,
@@ -487,6 +541,8 @@ async function runGenerator(options) {
       toolchainVersion: snapshot.deck.toolchainVersion,
     },
     pptxVerification,
+    releaseMode,
+    mediaProof,
     validation: {
       cleanOk: validation.cleanOk,
       id: validation.id,
@@ -508,11 +564,20 @@ async function runGenerator(options) {
 
   console.log(
     canonicalJson({
-      artifacts: [...artifacts, { kind: "receipt", path: rel(outputPaths.receipt), status: "draft" }],
-      externalPublishReady: false,
+      artifacts: [
+        ...artifacts,
+        {
+          kind: "receipt",
+          path: rel(outputPaths.receipt),
+          ...(finalMode ? { publicationStatus: "not-published" } : {}),
+          status: finalMode ? "ready" : "draft",
+        },
+      ],
+      distributionStatus: finalMode ? "not-published" : undefined,
+      externalPublishReady: finalMode,
       nodeSlideCommit,
       receiptDigest: receipt.receiptDigest,
-      status: "draft",
+      status: finalMode ? "ready" : "draft",
       validation: { cleanOk: validation.cleanOk, ok: validation.ok, publishOk: validation.publishOk },
     }).trim(),
   );
