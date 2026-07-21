@@ -45,6 +45,7 @@ const IDENTITY_ONLY_ROOTS = ["vendor"];
 // is being certified. They must therefore be bound to configHash as well.
 const APPLICATION_ROOT_FILES = [
   ".dockerignore",
+  ".gitattributes",
   ".gitignore",
   ".npmrc",
   ".nvmrc",

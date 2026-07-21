@@ -8,11 +8,11 @@ We're testing a harder question: can one system carry a product from an empty di
 
 ## 2
 
-NodeKit v0.2.0 now generates a full agent application from an empty directory.
+NodeKit v0.2.0 generates a full agent app from an empty directory.
 
-Its deterministic acceptance run created two different apps, installed them, compiled each definition twice, ran demos + evals + benchmarks, and verified their receipts in 37.2s.
+In a deterministic 37.2s acceptance run, two apps installed, compiled twice, ran demos, evals, and benchmarks, and verified their receipts.
 
-{{NODEKIT_RELEASE_URL}}
+https://github.com/HomenShum/node-platform/releases/tag/v0.2.0
 
 ## 3
 
@@ -24,33 +24,29 @@ Honest boundary: local-ready, not production-proven.
 
 ## 4
 
-The Agentic RL lab is equally explicit about what it is not.
+Agentic RL lab: step trajectories, protected rewards, behavior cloning, and blind heldout evaluation.
 
-Today: step trajectories + protected rewards + behavior cloning + blind heldout evaluation.
+Not gradient RL or broad model-quality evidence.
 
-Not today: gradient RL or a broad model-quality claim.
-
-Its strict live route returned 404 and failed closed. No fallback. No retry. $0.
+Its strict live route returned 404 and failed closed: no fallback, retry, or spend.
 
 ## 5
 
-{{FOUNDERQUEST_STATUS_POST}}
+Founder Quest is live, synthetic, and read-only.
 
-Founder Quest Graph connects a quest map, bounded knowledge graph, source-backed QA, authority boundaries, and proof in one public synthetic product.
+15 checks passed in four browser contexts with zero browser/network/cross-origin errors. Release-ready; 25/25 hashes verified. No durable or remote Neo4j writes. No external approval claim.
 
-{{FOUNDERQUEST_URL}}
+https://founder-quest-graph.vercel.app/
 
 ## 6
 
-Anthropic's rare-disease research grants became our external forcing function.
+Anthropic's rare-disease grant is an external test: can NodeKit map the latest work, expose novelty risk, design a benchmark, and prepare a six-month project without confusing synthesis with biological proof?
 
-Could NodeKit help a researcher map the latest work, expose novelty risk, design a benchmark, and prepare an executable six-month project—without confusing research synthesis with biological proof?
-
-Independent project; no Anthropic affiliation or endorsement.
+Independent; no affiliation or endorsement.
 
 ## 7
 
-Carlos E. Perez described the emerging shape as a graph of loops.
+Carlos E. Perez described the shape as a graph of loops.
 
 Research watches the premise.
 Evaluation watches the build.
@@ -58,14 +54,14 @@ Proof watches evaluation.
 Distribution watches reality.
 Memory turns failures into the next constraints.
 
-The edges matter. The external anchors matter more.
+The edges matter. External anchors matter more.
 
 ## 8
 
-This campaign is recursive dogfooding: {{RECURSIVE_LAUNCH_STATUS_POST}}
+Recursive dogfood: NodeKit directed the research and product proofs. Media and publication receipts are still pending.
 
 NodeKit launches NodeKit.
 
-Bring a consequential workflow. Inspect the receipts, limitations, and failed gates—not just the demo.
+Bring one workflow. Inspect the proof.
 
-{{PROOF_URL}}
+https://github.com/HomenShum/founder-quest-graph/releases/tag/v0.1.1-production-certified

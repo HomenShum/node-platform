@@ -76,6 +76,20 @@
       "kind": "continuous-integration",
       "url": "https://github.com/HomenShum/agentic-rl-research-lab/actions/runs/29799453044",
       "scope": "agentic-rl-research-lab@e1b114c486fbe26703688ab6481331659081b083; offline quality workflow passed"
+    },
+    {
+      "id": "E12_FOUNDER_QUEST_PRODUCTION",
+      "kind": "production-browser-proof",
+      "url": "https://founder-quest-graph.vercel.app/",
+      "receiptDigest": "023154fb77698b8704932ccaa9a0736a252a6de8b1ea46da3f76675ffac9f49c",
+      "scope": "founder-quest-graph@dc5fba2467576d5ded3d3ac6bf4d142316410c86; evidence 04579137a85f4ce18db61e6e7c0f25ff7b1d42b6; app/config 973ea7cbd8039e963bab1ff604bc0180bf0457f9a334b9b9dc0f77062f103e20; graph ng1_c9334138; 15/15 hosted checks; four isolated desktop/mobile light/dark contexts; zero browser, network, or cross-origin errors; synthetic read-only; no durable or remote Neo4j writes"
+    },
+    {
+      "id": "E13_FOUNDER_QUEST_RELEASE",
+      "kind": "public-release",
+      "url": "https://github.com/HomenShum/founder-quest-graph/releases/tag/v0.1.1-production-certified",
+      "receiptDigest": "3366a2466bfed64e07c70324babbb9d2eb369965e7e1930c9f00909b199bb5a5",
+      "scope": "v0.1.1-production-certified; releaseReady=true; hostedDeploymentCertified=true; 18/18 tests; 25/25 artifact-manifest hashes verified byte-for-byte in a fresh Windows worktree; final independent release re-audit found zero remaining issues"
     }
   ]
 }

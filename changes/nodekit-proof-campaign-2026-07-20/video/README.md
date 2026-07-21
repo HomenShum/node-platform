@@ -20,6 +20,13 @@ The implementation adapts Feature Proof Studio at commit
 
 The production URL is never checked into the specification. It is read from the
 exact deployment receipt and must match the browser and screenshot proof identities.
+The checked-in `productionProof` contract pins source
+`dc5fba2467576d5ded3d3ac6bf4d142316410c86`, evidence
+`04579137a85f4ce18db61e6e7c0f25ff7b1d42b6`, app/config hash
+`973ea7cbd8039e963bab1ff604bc0180bf0457f9a334b9b9dc0f77062f103e20`, graph
+`ng1_c9334138`, production receipt
+`023154fb77698b8704932ccaa9a0736a252a6de8b1ea46da3f76675ffac9f49c`, and unified
+release receipt `3366a2466bfed64e07c70324babbb9d2eb369965e7e1930c9f00909b199bb5a5`.
 
 ## Inputs that must exist before capture
 
@@ -37,6 +44,7 @@ Paths are relative to `changes/nodekit-proof-campaign-2026-07-20/`.
   "commit": "full 40-character application commit",
   "configHash": "64-character sha256",
   "appHash": "64-character sha256",
+  "receiptDigest": "64-character sha256",
   "deployedAt": "ISO-8601 timestamp"
 }
 ```
@@ -73,8 +81,11 @@ campaign directory and hashes must match the bytes. Required IDs are:
 - `limitations`
 
 The `C5_FOUNDER_QUEST_PRODUCT` claim must also be `verified` or `measured`, cite
-existing evidence-index entries, and bind the same commit, deployment ID, config
-hash, and app hash in its `scope`.
+existing evidence-index entries, and bind the checked-in source commit, evidence
+commit, config/app hash, graph revision, production URL, production receipt digest,
+hosted-check count, and isolated-browser-context count in its `scope`. The provider
+deployment ID remains receipt-internal and is cross-checked between deployment,
+browser, and screenshot evidence.
 
 ## Commands
 

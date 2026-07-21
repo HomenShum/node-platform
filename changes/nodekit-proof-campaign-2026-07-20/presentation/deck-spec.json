@@ -1,10 +1,10 @@
 {
   "narrative": [
-    "By the end, a technical reviewer should understand what NodeKit now proves, which real product slices support the claim, and which release gates remain open.",
+    "By the end, a technical reviewer should understand what NodeKit now proves, which real product slices support the claim, and which artifact and publication gates remain open.",
     "Use one thin NodeKit manifest, filesystem-discovered capabilities, composed evaluations, and content-addressed proof receipts.",
-    "Verified product slices remain distinct from planned deployment claims.",
+    "Verified product slices remain distinct from pending artifact and publication claims.",
     "NodeKit v0.2.0 is source-released on GitHub; npm publication is blocked by registry authentication.",
-    "Deploy and production-prove the read-only synthetic Founder Quest Graph, then export and publish an evidence-bound deck, video, and campaign."
+    "Regenerate the evidence-bound deck and walkthrough from the verified Founder Quest production receipt, then publish only the exact approved campaign and preserve the resulting…"
   ],
   "slides": [
     {
@@ -87,20 +87,20 @@
       "title": "How does NodeKit approach Agentic RL responsibly?"
     },
     {
-      "body": "After an exact hosted revision and fresh-user journey pass, the planned read-only demo will connect quests, sources, and proof.",
+      "body": "Read-only Founder Quest connects quests, a bounded graph, sourced answers, authority boundaries, and proof in four isolated browser contexts.",
       "bullets": [
-        "Quest rail plus bounded graph",
-        "Source-backed answer plus authority class",
-        "No hosted-revision proof yet"
+        "Source dc5fba2 · evidence 0457913",
+        "App/config 973ea7cb · graph ng1_c9334138",
+        "18 / 18 tests · 25 / 25 artifact hashes"
       ],
-      "headline": "Founder Quest remains planned until hosted and fresh-user proof pass.",
+      "headline": "Founder Quest passed all 15 hosted checks on one exact production revision.",
       "image": {
-        "altText": "Founder Quest product view, draft placeholder",
-        "caption": "Draft placeholder; hosted screenshot not supplied.",
-        "credit": "Synthetic draft"
+        "altText": "Founder Quest verified read-only production product view",
+        "caption": "Production screenshot; verified scope remains synthetic and read-only.",
+        "credit": "Synthetic read-only production"
       },
-      "metric": "PLANNED",
-      "metricLabel": "hosted revision and fresh-user proof still required",
+      "metric": "15 / 15",
+      "metricLabel": "hosted checks passed; synthetic and read-only",
       "section": "product reveal / 06",
       "title": "What does the graph make possible for a user?"
     },
@@ -123,7 +123,7 @@
       "title": "How would a researcher use this today?"
     },
     {
-      "body": "Research, build, evaluation, proof, presentation, and feedback can watch one another; only external sources, commits, artifacts, and outcomes close the graph.",
+      "body": "Research, build, evaluation, proof, presentation, and feedback can watch one another. Only external anchors close the graph.",
       "bullets": [
         "Researcher, builder, or operator",
         "Sources, commits, exports, and outcomes",

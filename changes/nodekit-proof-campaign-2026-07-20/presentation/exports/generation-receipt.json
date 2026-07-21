@@ -1,32 +1,32 @@
 {
   "artifacts": [
     {
-      "byteSize": 127114,
+      "byteSize": 426299,
       "kind": "snapshot",
       "path": "changes/nodekit-proof-campaign-2026-07-20/presentation/deck-snapshot.json",
-      "sha256": "36f1e1dd4ba7a1f2080c75fe3919c5cb54db5ceac9b13f13a1d88103ff3d56e0",
+      "sha256": "296a366d3375d288f3fb66870e19a1727b2bab89d9dc12fb0b73de7b4754fe4b",
       "status": "draft"
     },
     {
-      "byteSize": 6356,
+      "byteSize": 6467,
       "kind": "spec",
       "path": "changes/nodekit-proof-campaign-2026-07-20/presentation/deck-spec.json",
-      "sha256": "eee29a1c03a8c01f976c3d2f45341cca4268eaf34e13f2ce629b7ad1ac985c13",
+      "sha256": "9a716a29a2ffc6eb5b6d1893a11c0b779ac33c8ee9766ab7f4a89121bcdb2834",
       "status": "draft"
     },
     {
-      "byteSize": 438826,
+      "byteSize": 781027,
       "kind": "html",
       "path": "changes/nodekit-proof-campaign-2026-07-20/presentation/exports/nodekit-proof-campaign-2026-07-20.draft.html",
-      "sha256": "30e9c79e921af5da690880355cb503520b7c735550746ec4ebf905821cf88cc1",
+      "sha256": "23722906333d7d69b9fe2e46a374646a9d37ca298bb036623db0d0c7238f6c65",
       "status": "draft"
     },
     {
-      "byteSize": 108005,
+      "byteSize": 326730,
       "editable": true,
       "kind": "pptx",
       "path": "changes/nodekit-proof-campaign-2026-07-20/presentation/exports/nodekit-proof-campaign-2026-07-20.draft.pptx",
-      "sha256": "6365873abd96bd91cb3ea84d5b64494e94c78484b748d3f89a8af6e149954381",
+      "sha256": "ec4c20704033f7e1cf8b38f9463f2e0643a026456c0f1f047b8d382c53aacac7",
       "status": "draft"
     }
   ],
@@ -67,6 +67,30 @@
         {
           "field": "url",
           "url": "https://github.com/HomenShum/agentic-rl-research-lab/actions/runs/29799453044"
+        }
+      ]
+    },
+    {
+      "files": [],
+      "id": "E12_FOUNDER_QUEST_PRODUCTION",
+      "kind": "production-browser-proof",
+      "scope": "founder-quest-graph@dc5fba2467576d5ded3d3ac6bf4d142316410c86; evidence 04579137a85f4ce18db61e6e7c0f25ff7b1d42b6; app/config 973ea7cbd8039e963bab1ff604bc0180bf0457f9a334b9b9dc0f77062f103e20; graph ng1_c9334138; 15/15 hosted checks; four isolated desktop/mobile light/dark contexts; zero browser, network, or cross-origin errors; synthetic read-only; no durable or remote Neo4j writes",
+      "urls": [
+        {
+          "field": "url",
+          "url": "https://founder-quest-graph.vercel.app/"
+        }
+      ]
+    },
+    {
+      "files": [],
+      "id": "E13_FOUNDER_QUEST_RELEASE",
+      "kind": "public-release",
+      "scope": "v0.1.1-production-certified; releaseReady=true; hostedDeploymentCertified=true; 18/18 tests; 25/25 artifact-manifest hashes verified byte-for-byte in a fresh Windows worktree; final independent release re-audit found zero remaining issues",
+      "urls": [
+        {
+          "field": "url",
+          "url": "https://github.com/HomenShum/founder-quest-graph/releases/tag/v0.1.1-production-certified"
         }
       ]
     },
@@ -246,9 +270,12 @@
       },
       {
         "claimId": "C5_FOUNDER_QUEST_PRODUCT",
-        "evidenceIds": [],
+        "evidenceIds": [
+          "E12_FOUNDER_QUEST_PRODUCTION",
+          "E13_FOUNDER_QUEST_RELEASE"
+        ],
         "slideId": "S6",
-        "status": "planned"
+        "status": "verified"
       },
       {
         "claimId": "C6_ANTHROPIC_GRANT_CASE",
@@ -271,12 +298,12 @@
     "externalPublishReady": false,
     "nodeSlideValidationPassed": true,
     "passed": true,
-    "plannedClaimIds": [
-      "C5_FOUNDER_QUEST_PRODUCT"
-    ],
+    "plannedClaimIds": [],
     "requiredEvidenceIds": [
       "E10_GRAPH_OF_LOOPS_SOURCE",
       "E11_RL_CI",
+      "E12_FOUNDER_QUEST_PRODUCTION",
+      "E13_FOUNDER_QUEST_RELEASE",
       "E1_FACTORY_ACCEPTANCE",
       "E2_NODEKIT_RELEASE",
       "E3_CASCA_RELEASE",
@@ -289,37 +316,43 @@
     ]
   },
   "generatedAt": "2026-07-20T00:00:00.000Z",
-  "generationIdentity": "2475cf5010e08bcdf17813b7c624a395ae87da097cf233b06e65d986733c0691",
+  "generationIdentity": "1fa261f7fa1190aee85a88878132f1da75e9f25a7f6f035668c3ee00f77872cf",
   "inputs": [
     {
-      "byteSize": 3262,
+      "byteSize": 3411,
       "path": "changes/nodekit-proof-campaign-2026-07-20/change.yaml",
-      "sha256": "5fbb2a6819e230986f211897fb79889abe6b715f338eda33fe5e9d1f025d26e2"
+      "sha256": "b80eaa4807854eac9ea8d3a38e18b78b34e96e1ab385d81896933678859d0c96"
     },
     {
-      "byteSize": 8206,
+      "byteSize": 8278,
       "path": "changes/nodekit-proof-campaign-2026-07-20/presentation/slide-design-plans.json",
-      "sha256": "a516e24e556f54a0fbd8107a6c14e9fc3dbf8b3cd73ac16b42a1e847c1a4d3d4"
+      "sha256": "c92e2688ad3b5ab8409ac8d6814f1234825973f9c90c3a7f9d8dcda1a6f9b1f2"
     },
     {
-      "byteSize": 3017,
+      "byteSize": 3728,
       "path": "changes/nodekit-proof-campaign-2026-07-20/presentation/speaker-notes.md",
-      "sha256": "49ad701318761f1899b2cbcc80b47579a791699c6088076e1769ba074fd88f39"
+      "sha256": "57d7dc57e0b3eedaa574d984c3c34467158e5078dbd16feefa07bbc988dd53e1"
     },
     {
-      "byteSize": 4637,
+      "byteSize": 5847,
       "path": "changes/nodekit-proof-campaign-2026-07-20/story/claims.json",
-      "sha256": "266077bbf059b689939964e814adbe0d503c45e62da623a6181bb896ad506b2d"
+      "sha256": "d01258f858330b7ec71b0dbd3ea978d2304efe0d6b41c6baad6827d5b1547553"
     },
     {
-      "byteSize": 3392,
+      "byteSize": 4577,
       "path": "changes/nodekit-proof-campaign-2026-07-20/story/evidence-index.json",
-      "sha256": "631654a16830cc91d834a179d722e48c13199cd3719ba80bbe84719abb10e12b"
+      "sha256": "2e1e972d5dda11b27e929086150b34114fb2821c0d7e0cb1b52e1eddbdd5230c"
     },
     {
-      "byteSize": 1852,
+      "byteSize": 1952,
       "path": "changes/nodekit-proof-campaign-2026-07-20/story/limitations.json",
-      "sha256": "5637d52e7457bd39d10455e5f2232ea39b47f9b4d28c5d4df24fbae6deabbd04"
+      "sha256": "12ff490e7b40cbf8f1e94f76a8c9bd076b98846b5f9bbcd758138c1d1edae806"
+    },
+    {
+      "byteSize": 217239,
+      "mediaType": "image/png",
+      "path": "optional-founder-quest-screenshot/desktop-dark.png",
+      "sha256": "76c114f69138660c12f710afd883d542407e18a8c76a3053e19cd1e313c45c76"
     },
     {
       "byteSize": 2214,
@@ -327,14 +360,14 @@
       "sha256": "c417919ac1c31423eba14c98be369cc6e8277e6d9ab3c194ba220fe5f0d6754b"
     },
     {
-      "byteSize": 20496,
+      "byteSize": 20661,
       "path": "scripts/generate-nodekit-proof-presentation.mjs",
-      "sha256": "dd61acaf52d95cfcd223405f20de636f7fa3a623d4a995c9ba1c197e9408a45f"
+      "sha256": "a20ccdcc60be1c016537b5be18759bcd552531aa06355694009ad3e4eadc7c8f"
     },
     {
-      "byteSize": 18081,
+      "byteSize": 19919,
       "path": "src/lib/presentation-pipeline.mjs",
-      "sha256": "5eaaa3c654450a5069ab82e016472c1fa0dc65d286b5441812a80f27d9b56dcb"
+      "sha256": "60f4cc135d1b76c06e9bcf6a1e6550ad491ce97f5a7d2a7cc98ea5474fbd8abd"
     }
   ],
   "nodeSlide": {
@@ -354,12 +387,12 @@
     "toolchainVersion": "local-slidelang-adapter/1.1.0"
   },
   "pptxVerification": {
-    "editableElementCount": 82,
+    "editableElementCount": 81,
     "reopened": true,
     "slideCount": 8,
-    "staticFallbackElementCount": 0
+    "staticFallbackElementCount": 1
   },
-  "receiptDigest": "0db7371035b02a40b9d7ebd056ed9307e89e393ebce7f17aa25ca670cabe71d4",
+  "receiptDigest": "0c025e8f5f01e70217d950a3410124b467a08c6c7df1458ee4968bbb1a33f173",
   "schemaVersion": "nodekit.nodeslide-generation-receipt/v1",
   "status": "draft",
   "validation": {

@@ -114,6 +114,69 @@ export function lintCampaignConfig(config) {
   if (config.sourceApplication?.mode !== "read-only-synthetic") {
     errors.push("sourceApplication.mode must be read-only-synthetic");
   }
+  const productionProof = config.productionProof;
+  if (!GIT_SHA.test(productionProof?.sourceCommit || "")) {
+    errors.push("productionProof.sourceCommit must be a full git SHA");
+  }
+  if (!GIT_SHA.test(productionProof?.evidenceCommit || "")) {
+    errors.push("productionProof.evidenceCommit must be a full git SHA");
+  }
+  for (const key of [
+    "configHash",
+    "appHash",
+    "receiptDigest",
+    "unifiedReleaseReceiptDigest",
+  ]) {
+    if (!SHA256.test(productionProof?.[key] || "")) {
+      errors.push(`productionProof.${key} must be sha256`);
+    }
+  }
+  if (productionProof?.graphRevision !== "ng1_c9334138") {
+    errors.push("productionProof.graphRevision must match the verified graph revision");
+  }
+  if (productionProof?.hostedChecksPassed !== 15) {
+    errors.push("productionProof.hostedChecksPassed must be 15");
+  }
+  if (productionProof?.isolatedBrowserContexts !== 4) {
+    errors.push("productionProof.isolatedBrowserContexts must be 4");
+  }
+  if (productionProof?.releaseLevel !== "production-certified") {
+    errors.push("productionProof.releaseLevel must be production-certified");
+  }
+  if (productionProof?.releaseReady !== true) {
+    errors.push("productionProof.releaseReady must be true");
+  }
+  if (productionProof?.hostedDeploymentCertified !== true) {
+    errors.push("productionProof.hostedDeploymentCertified must be true");
+  }
+  if (productionProof?.artifactManifestHashesVerified !== 25) {
+    errors.push("productionProof.artifactManifestHashesVerified must be 25");
+  }
+  if (productionProof?.testsPassed !== 18) {
+    errors.push("productionProof.testsPassed must be 18");
+  }
+  if (productionProof?.releaseAuditIssues !== 0) {
+    errors.push("productionProof.releaseAuditIssues must be 0");
+  }
+  for (const key of [
+    "consoleErrors",
+    "pageErrors",
+    "networkErrors",
+    "crossOriginErrors",
+  ]) {
+    if (productionProof?.[key] !== 0) {
+      errors.push(`productionProof.${key} must be 0`);
+    }
+  }
+  if (productionProof?.readOnlySynthetic !== true) {
+    errors.push("productionProof.readOnlySynthetic must be true");
+  }
+  if (productionProof?.durableWrites !== false) {
+    errors.push("productionProof.durableWrites must be false");
+  }
+  if (productionProof?.remoteNeo4jWrites !== false) {
+    errors.push("productionProof.remoteNeo4jWrites must be false");
+  }
   if (config.safety?.mutationsAllowed !== false) {
     errors.push("mutationsAllowed must be false");
   }
@@ -302,6 +365,7 @@ const assertReceiptIdentityShape = (deployment, expectedAppId, errors) => {
       "commit",
       "configHash",
       "appHash",
+      "receiptDigest",
       "deployedAt",
     ],
     "deployment",
@@ -315,6 +379,9 @@ const assertReceiptIdentityShape = (deployment, expectedAppId, errors) => {
   if (!GIT_SHA.test(deployment?.commit || "")) errors.push("deployment.commit must be a full git SHA");
   if (!SHA256.test(deployment?.configHash || "")) errors.push("deployment.configHash must be sha256");
   if (!SHA256.test(deployment?.appHash || "")) errors.push("deployment.appHash must be sha256");
+  if (!SHA256.test(deployment?.receiptDigest || "")) {
+    errors.push("deployment.receiptDigest must be sha256");
+  }
   if (!deployment?.deploymentId || typeof deployment.deploymentId !== "string") {
     errors.push("deployment.deploymentId must be non-empty");
   }
@@ -440,14 +507,40 @@ const validateClaim = (claims, evidenceIndex, deployment, config, errors) => {
   for (const id of asArray(claim.evidenceIds)) {
     if (!evidenceIds.has(id)) errors.push(`claim ${claim.id} references missing evidence ${id}`);
   }
-  for (const [key, value] of Object.entries({
-    commit: deployment?.commit,
-    deploymentId: deployment?.deploymentId,
-    configHash: deployment?.configHash,
-    appHash: deployment?.appHash,
-  })) {
+  const expectedScope = {
+    commit: config.productionProof?.sourceCommit,
+    evidenceCommit: config.productionProof?.evidenceCommit,
+    configHash: config.productionProof?.configHash,
+    appHash: config.productionProof?.appHash,
+    graphRevision: config.productionProof?.graphRevision,
+    productionUrl: deployment?.url,
+    productionReceiptDigest: config.productionProof?.receiptDigest,
+    unifiedReleaseReceiptDigest:
+      config.productionProof?.unifiedReleaseReceiptDigest,
+    releaseLevel: config.productionProof?.releaseLevel,
+    releaseReady: config.productionProof?.releaseReady,
+    hostedDeploymentCertified:
+      config.productionProof?.hostedDeploymentCertified,
+    hostedChecksPassed: config.productionProof?.hostedChecksPassed,
+    isolatedBrowserContexts: config.productionProof?.isolatedBrowserContexts,
+    artifactManifestHashesVerified:
+      config.productionProof?.artifactManifestHashesVerified,
+    testsPassed: config.productionProof?.testsPassed,
+    releaseAuditIssues: config.productionProof?.releaseAuditIssues,
+  };
+  for (const [key, value] of Object.entries(expectedScope)) {
     if (claim.scope?.[key] !== value) {
       errors.push(`claim ${claim.id} scope.${key} does not match deployment evidence`);
+    }
+  }
+  for (const [key, value] of Object.entries({
+    commit: config.productionProof?.sourceCommit,
+    configHash: config.productionProof?.configHash,
+    appHash: config.productionProof?.appHash,
+    receiptDigest: config.productionProof?.receiptDigest,
+  })) {
+    if (deployment?.[key] !== value) {
+      errors.push(`deployment.${key} does not match the checked-in production proof`);
     }
   }
   return claim;

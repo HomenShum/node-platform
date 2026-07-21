@@ -1,6 +1,6 @@
 {
   "schemaVersion": "nodeslide.design-plan/v1",
-  "communicationJob": "By the end, a technical reviewer should understand what NodeKit now proves, which real product slices support the claim, and which release gates remain open.",
+  "communicationJob": "By the end, a technical reviewer should understand what NodeKit now proves, which real product slices support the claim, and which artifact and publication gates remain open.",
   "slides": [
     {
       "id": "S1",
@@ -109,20 +109,20 @@
       "id": "S6",
       "job": "Introduce Founder Quest as the connected product surface.",
       "audienceQuestion": "What does the graph make possible for a user?",
-      "takeaway": "Founder Quest remains planned until hosted and fresh-user proof pass.",
-      "body": "After an exact hosted revision and fresh-user journey pass, the planned read-only demo will connect quests, sources, and proof.",
+      "takeaway": "Founder Quest passed all 15 hosted checks on one exact production revision.",
+      "body": "Read-only Founder Quest connects quests, a bounded graph, sourced answers, authority boundaries, and proof in four isolated browser contexts.",
       "bullets": [
-        "Quest rail plus bounded graph",
-        "Source-backed answer plus authority class",
-        "No hosted-revision proof yet"
+        "Source dc5fba2 · evidence 0457913",
+        "App/config 973ea7cb · graph ng1_c9334138",
+        "18 / 18 tests · 25 / 25 artifact hashes"
       ],
       "narrativeRole": "product-reveal",
-      "dominantVisual": "Optional draft Founder Quest screenshot with quest rail, bounded graph, answer panel, and proof strip.",
+      "dominantVisual": "Verified production Founder Quest view with quest rail, bounded graph, answer panel, and proof strip.",
       "claimIds": ["C5_FOUNDER_QUEST_PRODUCT"],
-      "evidenceIds": [],
+      "evidenceIds": ["E12_FOUNDER_QUEST_PRODUCTION", "E13_FOUNDER_QUEST_RELEASE"],
       "metric": {
-        "value": "PLANNED",
-        "label": "hosted revision and fresh-user proof still required"
+        "value": "15 / 15",
+        "label": "hosted checks passed; synthetic and read-only"
       },
       "density": "medium"
     },
@@ -153,7 +153,7 @@
       "job": "Explain the graph of loops and close with a falsifiable invitation.",
       "audienceQuestion": "How do the pieces improve, and what should reviewers do next?",
       "takeaway": "Loops need external anchors. Bring one workflow and inspect the proof.",
-      "body": "Research, build, evaluation, proof, presentation, and feedback can watch one another; only external sources, commits, artifacts, and outcomes close the graph.",
+      "body": "Research, build, evaluation, proof, presentation, and feedback can watch one another. Only external anchors close the graph.",
       "bullets": [
         "Researcher, builder, or operator",
         "Sources, commits, exports, and outcomes",

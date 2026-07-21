@@ -8,6 +8,7 @@ import { fileURLToPath } from "node:url";
 import {
   PresentationGateError,
   assertCampaignPresentationGate,
+  attachFounderQuestScreenshot,
   buildCampaignDeckSpec,
   buildGenerationReceipt,
   canonicalJson,
@@ -42,7 +43,7 @@ Usage:
 Options:
   --nodeslide-root <path>            Pinned NodeSlide checkout (defaults to the sibling checkout)
   --evidence-root <path>             Base for evidence-index externalPath values
-  --founder-quest-screenshot <path>  Optional PNG/JPEG/WebP draft product screenshot
+  --founder-quest-screenshot <path>  Optional PNG/JPEG/WebP product screenshot
   --help                             Show this help
 
 The generator always emits draft-labeled artifacts and never publishes or deploys.`);
@@ -354,13 +355,14 @@ async function runGenerator(options) {
     prompt: [
       parsed.change.communicationJob,
       "Every material claim must remain bound to the supplied Change Story evidence.",
-      "This deck is a draft and does not assert external publish readiness.",
+      "This deck is a draft because video and publication receipts remain separate gates.",
       ...urls,
     ].join("\n"),
-    purpose: `${parsed.change.communicationJob} Draft-only until every deployment and publication gate passes.`,
+    purpose: `${parsed.change.communicationJob} Draft-only until every artifact and publication gate passes.`,
     successCriteria: [
       ...parsed.change.requiredProof,
-      "Keep planned Founder Quest content in explicit future tense",
+      "Bind Founder Quest production copy to E12 and E13",
+      "Keep the recursive publication claim in explicit future tense",
       "Keep external publish readiness false",
     ],
   };
@@ -406,6 +408,7 @@ async function runGenerator(options) {
   const snapshot = structuredClone(built.snapshot);
   snapshot.deck.status = "draft";
   snapshot.deck.title = deckSpec.title;
+  attachFounderQuestScreenshot(snapshot, founderQuestScreenshot);
   for (const element of snapshot.elements) {
     if (element.style?.fontFamily === "Geist Variable") {
       element.style.fontFamily = "Arial";

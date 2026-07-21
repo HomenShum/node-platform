@@ -6,6 +6,8 @@ import { fileURLToPath } from "node:url";
 import {
   PresentationGateError,
   assertCampaignPresentationGate,
+  attachFounderQuestScreenshot,
+  buildCampaignDeckSpec,
   buildGenerationReceipt,
   canonicalJson,
   sha256,
@@ -83,15 +85,68 @@ test("claim/evidence gate fails closed on missing required evidence", () => {
   );
 });
 
-test("campaign slide plan keeps Founder Quest planned and evidence bindings complete", async () => {
+test("campaign slide plan binds verified Founder Quest production evidence and keeps publication separate", async () => {
   const [claims, evidenceIndex, slidePlans] = await Promise.all([
     readFile(path.join(storyRoot, "claims.json"), "utf8").then(JSON.parse),
     readFile(path.join(storyRoot, "evidence-index.json"), "utf8").then(JSON.parse),
     readFile(path.join(presentationRoot, "slide-design-plans.json"), "utf8").then(JSON.parse),
   ]);
   const result = assertCampaignPresentationGate({ claims, evidenceIndex, slidePlans });
-  assert.equal(result.plannedClaimIds.includes("C5_FOUNDER_QUEST_PRODUCT"), true);
+  assert.equal(result.plannedClaimIds.includes("C5_FOUNDER_QUEST_PRODUCT"), false);
+  const founderQuestBinding = result.claimBindings.find(
+    (binding) => binding.claimId === "C5_FOUNDER_QUEST_PRODUCT",
+  );
+  assert.deepEqual(founderQuestBinding?.evidenceIds, [
+    "E12_FOUNDER_QUEST_PRODUCTION",
+    "E13_FOUNDER_QUEST_RELEASE",
+  ]);
   assert.equal(result.claimBindings.some((binding) => binding.claimId === "C7_RECURSIVE_LAUNCH"), false);
+});
+
+test("verified Founder Quest slide carries production copy without erasing the synthetic boundary", async () => {
+  const changeRoot = path.resolve(presentationRoot, "..");
+  const [changeYaml, claims, evidenceIndex, slidePlans] = await Promise.all([
+    readFile(path.join(changeRoot, "change.yaml"), "utf8"),
+    readFile(path.join(storyRoot, "claims.json"), "utf8").then(JSON.parse),
+    readFile(path.join(storyRoot, "evidence-index.json"), "utf8").then(JSON.parse),
+    readFile(path.join(presentationRoot, "slide-design-plans.json"), "utf8").then(JSON.parse),
+  ]);
+  const { parse } = await import("yaml");
+  const spec = buildCampaignDeckSpec({
+    change: parse(changeYaml),
+    claims,
+    evidenceIndex,
+    slidePlans,
+  });
+  const founderQuestSlide = spec.slides[5];
+  assert.match(founderQuestSlide.headline, /passed all 15 hosted checks/i);
+  assert.equal(founderQuestSlide.metric, "15 / 15");
+  assert.match(founderQuestSlide.image.caption, /verified production proof/i);
+  assert.match(founderQuestSlide.image.credit, /synthetic read-only production/i);
+  assert.equal(founderQuestSlide.image.imageUrl, undefined);
+
+  const elementId = attachFounderQuestScreenshot(
+    {
+      slides: [
+        {},
+        {},
+        {},
+        {},
+        {},
+        { elementOrder: ["s6-image"] },
+      ],
+      elements: [
+        {
+          id: "s6-image",
+          kind: "image",
+          image: { placeholder: true },
+          exportCapabilities: [],
+        },
+      ],
+    },
+    { dataUrl: "data:image/png;base64,QUJDRA==" },
+  );
+  assert.equal(elementId, "s6-image");
 });
 
 function receiptFixture() {

@@ -1,7 +1,8 @@
 # NodeKit proof campaign speaker notes
 
-These notes are a draft until the Founder Quest deployment, deck export, video,
-and distribution receipts exist. Do not convert planned claims to past tense.
+These notes remain a draft until the regenerated deck, video, and distribution
+receipts exist. Founder Quest production claims may use past tense only at the
+scope recorded by E12 and E13; the recursive publication claim remains planned.
 
 ## S1 — NodeKit turns intent into proof-carrying operation
 
@@ -39,9 +40,17 @@ milestone is a larger preregistered corpus and a shadow-only trained-policy comp
 
 ## S6 — Founder Quest is the user-facing graph
 
-Replace this note with exact production evidence only after the public read-only demo
-passes. The product should show applicable quests, a bounded graph neighborhood, a
-source-backed answer, authority class, and evidence/proof status.
+The public read-only synthetic product passed all 15 hosted checks on source commit
+dc5fba2467576d5ded3d3ac6bf4d142316410c86 and evidence commit
+04579137a85f4ce18db61e6e7c0f25ff7b1d42b6. The same app/config hash is
+973ea7cbd8039e963bab1ff604bc0180bf0457f9a334b9b9dc0f77062f103e20, and the graph
+revision is ng1_c9334138. Four isolated desktop/mobile light/dark contexts recorded
+zero browser, network, or cross-origin errors. The unified release receipt is
+production-certified, release-ready, and hosted-deployment-certified; a fresh Windows
+worktree verified all 25 artifact-manifest hashes byte-for-byte. The final independent
+release re-audit found zero remaining issues, and the suite passed 18/18 tests. Keep
+the boundary explicit: the journey is synthetic and read-only, with no durable writes
+or remote Neo4j writes, and it does not prove external approval.
 
 ## S7 — The grant is a real external forcing function
 

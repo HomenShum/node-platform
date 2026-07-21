@@ -58,12 +58,30 @@
     },
     {
       "id": "C5_FOUNDER_QUEST_PRODUCT",
-      "text": "Founder Quest Graph provides a read-only synthetic quest rail, bounded graph workspace, source-backed answer panel, and proof surface on an exact hosted revision.",
-      "status": "planned",
-      "evidenceIds": [],
-      "scope": {},
+      "text": "Founder Quest Graph provides a read-only synthetic quest rail, bounded graph workspace, source-backed answer panel, and proof surface on an exact production revision that passed all 15 hosted checks.",
+      "status": "verified",
+      "evidenceIds": ["E12_FOUNDER_QUEST_PRODUCTION", "E13_FOUNDER_QUEST_RELEASE"],
+      "scope": {
+        "commit": "dc5fba2467576d5ded3d3ac6bf4d142316410c86",
+        "evidenceCommit": "04579137a85f4ce18db61e6e7c0f25ff7b1d42b6",
+        "configHash": "973ea7cbd8039e963bab1ff604bc0180bf0457f9a334b9b9dc0f77062f103e20",
+        "appHash": "973ea7cbd8039e963bab1ff604bc0180bf0457f9a334b9b9dc0f77062f103e20",
+        "graphRevision": "ng1_c9334138",
+        "productionUrl": "https://founder-quest-graph.vercel.app/",
+        "productionReceiptDigest": "023154fb77698b8704932ccaa9a0736a252a6de8b1ea46da3f76675ffac9f49c",
+        "unifiedReleaseReceiptDigest": "3366a2466bfed64e07c70324babbb9d2eb369965e7e1930c9f00909b199bb5a5",
+        "releaseLevel": "production-certified",
+        "releaseReady": true,
+        "hostedDeploymentCertified": true,
+        "hostedChecksPassed": 15,
+        "isolatedBrowserContexts": 4,
+        "artifactManifestHashesVerified": 25,
+        "testsPassed": 18,
+        "releaseAuditIssues": 0
+      },
       "limitations": [
-        "This claim must remain future tense until deployment and fresh-user browser proof pass."
+        "The journey is synthetic and read-only; no durable writes or remote Neo4j writes occur.",
+        "The 15 hosted checks and four isolated browser contexts prove this bounded production journey, not government, bank, legal, tax, regulatory, or other external approval."
       ]
     },
     {

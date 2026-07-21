@@ -11,8 +11,8 @@ audience:
 communicationJob: >-
   By the end, a technical reviewer should understand that NodeKit is a
   portable application contract and verification path, see exactly which
-  product slices have passed which gates, and know where the system remains
-  local, blocked, or planned.
+  product slices have passed which gates, and know where the remaining
+  release boundaries are local, blocked, or pending publication.
 previousState:
   - Agent application scaffolding, runtime, domain evaluation, browser QA, and release evidence were rebuilt manually per project.
   - A generated application could appear complete without proving that its benchmark, product, and release paths shared the same implementation.
@@ -54,7 +54,8 @@ honestLimitations:
   - NodeKit v0.2.0 is source-released on GitHub; npm publication is blocked by registry authentication.
   - The Casca lab is local-ready, not production-proven.
   - The current Agentic RL lab trains a deterministic behavior-cloning baseline; it does not perform gradient-based reinforcement learning.
-  - Founder Quest Graph claims remain planned until its exact deployed revision passes the fresh-user journey.
+  - Founder Quest Graph is production-proven only as a synthetic, read-only workflow with no durable writes or remote Neo4j writes; it does not prove any external approval.
 nextMilestone: >-
-  Deploy and production-prove the read-only synthetic Founder Quest Graph,
-  then export and publish an evidence-bound deck, video, and campaign.
+  Regenerate the evidence-bound deck and walkthrough from the verified Founder
+  Quest production receipt, then publish only the exact approved campaign and
+  preserve the resulting public-URL receipts.

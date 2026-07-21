@@ -9,6 +9,30 @@
     "productionUrlToken": "{{PRODUCTION_URL}}",
     "requiredClaimId": "C5_FOUNDER_QUEST_PRODUCT"
   },
+  "productionProof": {
+    "sourceCommit": "dc5fba2467576d5ded3d3ac6bf4d142316410c86",
+    "evidenceCommit": "04579137a85f4ce18db61e6e7c0f25ff7b1d42b6",
+    "configHash": "973ea7cbd8039e963bab1ff604bc0180bf0457f9a334b9b9dc0f77062f103e20",
+    "appHash": "973ea7cbd8039e963bab1ff604bc0180bf0457f9a334b9b9dc0f77062f103e20",
+    "graphRevision": "ng1_c9334138",
+    "receiptDigest": "023154fb77698b8704932ccaa9a0736a252a6de8b1ea46da3f76675ffac9f49c",
+    "unifiedReleaseReceiptDigest": "3366a2466bfed64e07c70324babbb9d2eb369965e7e1930c9f00909b199bb5a5",
+    "releaseLevel": "production-certified",
+    "releaseReady": true,
+    "hostedDeploymentCertified": true,
+    "hostedChecksPassed": 15,
+    "isolatedBrowserContexts": 4,
+    "consoleErrors": 0,
+    "pageErrors": 0,
+    "networkErrors": 0,
+    "crossOriginErrors": 0,
+    "artifactManifestHashesVerified": 25,
+    "testsPassed": 18,
+    "releaseAuditIssues": 0,
+    "readOnlySynthetic": true,
+    "durableWrites": false,
+    "remoteNeo4jWrites": false
+  },
   "featureProofStudio": {
     "repositoryPathHint": "../../../../../feature-proof-studio",
     "commit": "7aafb3e0a48f3c1e74e69a51d9df506186ea4340",
@@ -76,7 +100,7 @@
       "minimumSeconds": 60,
       "maximumSeconds": 90,
       "outputFile": "nodekit-founder-quest-vertical.mp4",
-      "title": "Founder Quest Graph · 83-second proof",
+      "title": "Founder Quest Graph \u00b7 83-second proof",
       "accent": "#22c55e",
       "retries": 1,
       "steps": [
@@ -93,7 +117,7 @@
           "sel": "testid:founder-quest-shell"
         },
         {
-          "cap": "Start with the synthetic founder journey and its honest readiness state",
+          "cap": "Start with the synthetic read-only journey that passed all 15 hosted checks",
           "hold": 180
         },
         {
@@ -191,7 +215,7 @@
           "sel": "testid:quest-proof-receipt"
         },
         {
-          "cap": "The receipt binds the journey to one deployment, commit, config, and browser run",
+          "cap": "The receipt binds source dc5fba2, graph ng1_c9334138, and four isolated browser contexts",
           "hold": 180
         },
         {
@@ -222,7 +246,7 @@
       "minimumSeconds": 120,
       "maximumSeconds": 180,
       "outputFile": "nodekit-founder-quest-technical.mp4",
-      "title": "Founder Quest Graph · technical proof walkthrough",
+      "title": "Founder Quest Graph \u00b7 technical proof walkthrough",
       "accent": "#38bdf8",
       "retries": 1,
       "steps": [
@@ -239,7 +263,7 @@
           "sel": "testid:founder-quest-shell"
         },
         {
-          "cap": "Premise: a synthetic founder journey with receipt-backed readiness",
+          "cap": "Premise: 15 hosted checks passed for one synthetic read-only production journey",
           "hold": 300
         },
         {
@@ -361,7 +385,7 @@
           "sel": "testid:quest-proof-release-identity"
         },
         {
-          "cap": "Fresh-user browser evidence records console, network, and journey health",
+          "cap": "Four desktop/mobile light/dark contexts recorded zero browser or cross-origin errors",
           "cursor": "testid:quest-proof-browser",
           "click": true,
           "hold": 300
@@ -371,7 +395,7 @@
           "sel": "testid:quest-proof-browser"
         },
         {
-          "cap": "The artifact receipt binds screenshots and source hashes to that revision",
+          "cap": "The receipt binds source dc5fba2, evidence 0457913, and app/config 973ea7cb",
           "cursor": "testid:quest-proof-receipt",
           "click": true,
           "hold": 300

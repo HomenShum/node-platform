@@ -1,0 +1,46 @@
+{
+  "status": "pass",
+  "appId": "founder-quest-graph",
+  "deploymentId": "dpl_z1dRn48GFzZYuEyBq6oDNKPHdUHP",
+  "url": "https://founder-quest-graph.vercel.app/",
+  "commit": "dc5fba2467576d5ded3d3ac6bf4d142316410c86",
+  "configHash": "973ea7cbd8039e963bab1ff604bc0180bf0457f9a334b9b9dc0f77062f103e20",
+  "appHash": "973ea7cbd8039e963bab1ff604bc0180bf0457f9a334b9b9dc0f77062f103e20",
+  "screenshots": [
+    {
+      "id": "quest-shell",
+      "path": "proof/founder-quest/screenshots/quest-shell.png",
+      "sha256": "c4b4f755bb78a5427a395d62ee5244a40de5340bf68483290cec0271e083904c"
+    },
+    {
+      "id": "blocked-quest",
+      "path": "proof/founder-quest/screenshots/blocked-quest.png",
+      "sha256": "eff404f06fa6272a4b5fe781a0fc9eac0d9b73cb0bd9991ab761c9b5bb1d2696"
+    },
+    {
+      "id": "graph-path",
+      "path": "proof/founder-quest/screenshots/graph-path.png",
+      "sha256": "5634b08b29cea186fcf22e985453597f875778c91c54ff28db709f43f3837d89"
+    },
+    {
+      "id": "source-backed-answer",
+      "path": "proof/founder-quest/screenshots/source-backed-answer.png",
+      "sha256": "dde187f75afde2607297548d0994c0cc605509f0c2dc3b03c9f112458cdef2c7"
+    },
+    {
+      "id": "source-detail",
+      "path": "proof/founder-quest/screenshots/source-detail.png",
+      "sha256": "3c5ac2aa93bc6d01e4765f41ca1964622c94627efa1bd3dd9c0c519357580cfd"
+    },
+    {
+      "id": "proof-surface",
+      "path": "proof/founder-quest/screenshots/proof-surface.png",
+      "sha256": "8b94493e504986a105c66983f1b4fc0a98dfa7165111cc3953712f7574640ce8"
+    },
+    {
+      "id": "limitations",
+      "path": "proof/founder-quest/screenshots/limitations.png",
+      "sha256": "caa0dde07eae39a5e329f2cacdb7be89a6a86da016552e454714ff1a363eaff1"
+    }
+  ]
+}

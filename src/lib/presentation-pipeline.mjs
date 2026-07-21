@@ -424,13 +424,26 @@ export function buildCampaignDeckSpec({
         : {}),
     };
     if (slide.id === "S6") {
+      const founderQuestClaim = boundClaims.find(
+        (claim) => claim.id === "C5_FOUNDER_QUEST_PRODUCT",
+      );
+      const founderQuestVerified = ["verified", "measured"].includes(
+        founderQuestClaim?.status,
+      );
       plannedSlide.image = {
-        altText: "Founder Quest product view, draft placeholder",
+        altText: founderQuestVerified
+          ? "Founder Quest verified read-only production product view"
+          : "Founder Quest product view, draft placeholder",
         caption: founderQuestScreenshot
-          ? "Draft screenshot; hosted-revision and fresh-user proof remain required."
-          : "Draft placeholder; hosted screenshot not supplied.",
-        credit: "Synthetic draft",
-        ...(founderQuestScreenshot ? { imageUrl: founderQuestScreenshot.dataUrl } : {}),
+          ? founderQuestVerified
+            ? "Production screenshot; verified scope remains synthetic and read-only."
+            : "Draft screenshot; hosted-revision and fresh-user proof remain required."
+          : founderQuestVerified
+            ? "Verified production proof; product screenshot not embedded."
+            : "Draft placeholder; hosted screenshot not supplied.",
+        credit: founderQuestVerified
+          ? "Synthetic read-only production"
+          : "Synthetic draft",
       };
     }
     return plannedSlide;
@@ -440,7 +453,7 @@ export function buildCampaignDeckSpec({
     narrative: [
       slidePlans.communicationJob,
       change.decision?.[0],
-      "Verified product slices remain distinct from planned deployment claims.",
+      "Verified product slices remain distinct from pending artifact and publication claims.",
       change.honestLimitations?.[0],
       change.nextMilestone,
     ]
@@ -449,6 +462,38 @@ export function buildCampaignDeckSpec({
     slides,
     title: `DRAFT — ${change.title}`,
   };
+}
+
+/**
+ * NodeSlide deliberately bounds authored media URLs. Campaign screenshots are
+ * already byte-bounded and hash-bound inputs, so attach the complete data URL to
+ * the materialized snapshot after the authored spec has been safely coerced.
+ */
+export function attachFounderQuestScreenshot(snapshot, screenshot) {
+  if (!screenshot) return null;
+  if (!/^data:image\/(?:png|jpe?g|webp);base64,[A-Za-z0-9+/=\s]+$/i.test(screenshot.dataUrl)) {
+    throw new PresentationGateError(["Founder Quest screenshot is not a supported embedded raster image"]);
+  }
+  const slide = snapshot?.slides?.[5];
+  const elementIds = new Set(slide?.elementOrder ?? []);
+  const imageElement = snapshot?.elements?.find(
+    (element) => elementIds.has(element.id) && element.kind === "image",
+  );
+  if (!imageElement) {
+    throw new PresentationGateError(["Founder Quest slide has no materialized image element"]);
+  }
+  imageElement.imageUrl = screenshot.dataUrl;
+  imageElement.image = {
+    ...(imageElement.image ?? {}),
+    placeholder: false,
+  };
+  imageElement.altText = "Founder Quest verified read-only production product view";
+  imageElement.exportCapabilities = [
+    "web_native",
+    "pptx_static_fallback",
+    "google_importable",
+  ];
+  return imageElement.id;
 }
 
 export function parseSpeakerNotes(markdown) {

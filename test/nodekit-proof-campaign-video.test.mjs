@@ -40,6 +40,17 @@ test("Founder Quest video spec is claim-safe and duration-bounded", () => {
     config.featureProofStudio.commit,
     EXPECTED_FEATURE_PROOF_STUDIO_COMMIT,
   );
+  assert.equal(config.productionProof.hostedChecksPassed, 15);
+  assert.equal(config.productionProof.isolatedBrowserContexts, 4);
+  assert.equal(config.productionProof.releaseLevel, "production-certified");
+  assert.equal(config.productionProof.releaseReady, true);
+  assert.equal(config.productionProof.hostedDeploymentCertified, true);
+  assert.equal(config.productionProof.artifactManifestHashesVerified, 25);
+  assert.equal(config.productionProof.testsPassed, 18);
+  assert.equal(config.productionProof.releaseAuditIssues, 0);
+  assert.equal(config.productionProof.readOnlySynthetic, true);
+  assert.equal(config.productionProof.durableWrites, false);
+  assert.equal(config.productionProof.remoteNeo4jWrites, false);
 
   const vertical = config.profiles.find(
     (profile) => profile.format === "vertical-social",
@@ -198,4 +209,54 @@ test("planned Founder Quest claim cannot authorize a final capture", () => {
   assert.ok(
     report.errors.some((message) => message.includes("scope.commit does not match")),
   );
+});
+
+test("verified Founder Quest claim is bound to the exact checked-in production proof", () => {
+  const deployment = {
+    appId: "founder-quest-graph",
+    deploymentId: "vercel-production-proof",
+    url: "https://founder-quest-graph.vercel.app/",
+    commit: config.productionProof.sourceCommit,
+    configHash: config.productionProof.configHash,
+    appHash: config.productionProof.appHash,
+    receiptDigest: config.productionProof.receiptDigest,
+  };
+  const claim = {
+    id: "C5_FOUNDER_QUEST_PRODUCT",
+    status: "verified",
+    evidenceIds: ["E12_FOUNDER_QUEST_PRODUCTION", "E13_FOUNDER_QUEST_RELEASE"],
+    scope: {
+      commit: config.productionProof.sourceCommit,
+      evidenceCommit: config.productionProof.evidenceCommit,
+      configHash: config.productionProof.configHash,
+      appHash: config.productionProof.appHash,
+      graphRevision: config.productionProof.graphRevision,
+      productionUrl: deployment.url,
+      productionReceiptDigest: config.productionProof.receiptDigest,
+      unifiedReleaseReceiptDigest:
+        config.productionProof.unifiedReleaseReceiptDigest,
+      releaseLevel: config.productionProof.releaseLevel,
+      releaseReady: config.productionProof.releaseReady,
+      hostedDeploymentCertified:
+        config.productionProof.hostedDeploymentCertified,
+      hostedChecksPassed: config.productionProof.hostedChecksPassed,
+      isolatedBrowserContexts: config.productionProof.isolatedBrowserContexts,
+      artifactManifestHashesVerified:
+        config.productionProof.artifactManifestHashesVerified,
+      testsPassed: config.productionProof.testsPassed,
+      releaseAuditIssues: config.productionProof.releaseAuditIssues,
+    },
+  };
+  const report = validateClaimBinding({
+    config,
+    deployment,
+    claims: { claims: [claim] },
+    evidenceIndex: {
+      evidence: [
+        { id: "E12_FOUNDER_QUEST_PRODUCTION" },
+        { id: "E13_FOUNDER_QUEST_RELEASE" },
+      ],
+    },
+  });
+  assert.equal(report.passed, true, report.errors.join("\n"));
 });

@@ -1,0 +1,15 @@
+{
+  "status": "pass",
+  "journeyId": "founder-quest-critical-path-v1",
+  "appId": "founder-quest-graph",
+  "deploymentId": "dpl_z1dRn48GFzZYuEyBq6oDNKPHdUHP",
+  "url": "https://founder-quest-graph.vercel.app/",
+  "commit": "dc5fba2467576d5ded3d3ac6bf4d142316410c86",
+  "configHash": "973ea7cbd8039e963bab1ff604bc0180bf0457f9a334b9b9dc0f77062f103e20",
+  "appHash": "973ea7cbd8039e963bab1ff604bc0180bf0457f9a334b9b9dc0f77062f103e20",
+  "freshUser": true,
+  "readOnlySynthetic": true,
+  "consoleErrors": 0,
+  "networkErrors": 0,
+  "verifiedAt": "2026-07-21T05:05:55.645Z"
+}

@@ -16,13 +16,13 @@ authorization:
 publications:
   - channel: linkedin
     account: pending-browser-verification
-    textPath: campaign/posts/linkedin.final.md
+    textPath: campaign/posts/linkedin.draft.md
     contentSha256: pending
     assets: []
     publicUrl: pending
   - channel: x
     account: pending-browser-verification
-    textPath: campaign/posts/x-thread.final.md
+    textPath: campaign/posts/x-thread.draft.md
     contentSha256: pending
     assets: []
     publicUrl: pending
@@ -32,8 +32,39 @@ publications:
     contentSha256: pending
     publicUrl: pending
 releaseGates:
-  founderQuestProductionProof: pending
-  nodeSlideExportReopen: pending
-  videoVisualProof: pending
+  founderQuestProductionProof:
+    status: passed
+    productionUrl: https://founder-quest-graph.vercel.app/
+    sourceCommit: dc5fba2467576d5ded3d3ac6bf4d142316410c86
+    evidenceCommit: 04579137a85f4ce18db61e6e7c0f25ff7b1d42b6
+    appConfigHash: 973ea7cbd8039e963bab1ff604bc0180bf0457f9a334b9b9dc0f77062f103e20
+    graphRevision: ng1_c9334138
+    receiptDigest: 023154fb77698b8704932ccaa9a0736a252a6de8b1ea46da3f76675ffac9f49c
+    unifiedReleaseReceiptDigest: 3366a2466bfed64e07c70324babbb9d2eb369965e7e1930c9f00909b199bb5a5
+    releaseLevel: production-certified
+    releaseReady: true
+    hostedDeploymentCertified: true
+    hostedChecks: 15
+    isolatedBrowserContexts: 4
+    browserErrors: 0
+    artifactManifestHashesVerified: 25
+    testsPassed: 18
+    releaseAuditIssues: 0
+    readOnlySynthetic: true
+    durableWrites: false
+    remoteNeo4jWrites: false
+  nodeSlideExportReopen:
+    status: passed
+    receiptDigest: 0c025e8f5f01e70217d950a3410124b467a08c6c7df1458ee4968bbb1a33f173
+    nodeSlideCommit: 0669be4b1d1fb891ea65e4b30a6a6da90f9e2585
+    pptxSha256: ec4c20704033f7e1cf8b38f9463f2e0643a026456c0f1f047b8d382c53aacac7
+    htmlSha256: 23722906333d7d69b9fe2e46a374646a9d37ca298bb036623db0d0c7238f6c65
+    slideCount: 8
+    editableElements: 81
+    staticFallbackElements: 1
+    reopened: true
+    structuralValidation: passed
+    externalPublishReady: false
+  videoVisualProof: pending-regeneration
   exactLinkCheck: pending
   secretScan: pending

@@ -24,7 +24,7 @@
     {
       "id": "L5_FOUNDERQUEST_SYNTHETIC",
       "severity": "product-boundary",
-      "text": "Founder Quest Graph uses a fictional California LLC. Synthetic receipts may prove workflow readiness but never government, bank, insurance, payment-provider, legal, tax, or regulatory approval."
+      "text": "Founder Quest Graph uses a fictional California LLC in a read-only production journey. It performs no durable writes or remote Neo4j writes. Its receipts prove the bounded hosted workflow, never government, bank, insurance, payment-provider, legal, tax, regulatory, or other external approval."
     },
     {
       "id": "L6_NO_ANTHROPIC_AFFILIATION",
