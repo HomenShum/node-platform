@@ -79,20 +79,27 @@ test("checked-in spec contains no literal, local, or synthetic production URL", 
 });
 
 test("walkthrough remains read-only and traverses graph, answer, sources, and proof", () => {
-  const serialized = JSON.stringify(config.profiles);
+  const selectors = config.profiles.flatMap((profile) =>
+    profile.steps.flatMap((step) => [step.sel, step.cursor]).filter(Boolean),
+  );
   for (const requiredSelector of [
-    "testid:quest-banking-readiness",
-    "testid:quest-graph-blocker-path",
-    "testid:quest-question-input",
-    "testid:quest-answer-source",
-    "testid:quest-source-detail",
-    "testid:quest-authority-overlay",
-    "testid:quest-proof-tab",
-    "testid:quest-proof-receipt",
-    "testid:quest-proof-limitations",
-    "testid:quest-proof-verdict",
+    "quest:bank-readiness",
+    "blocker:missing-ownership-agreement",
+    "Why is the bank quest blocked?",
+    "[data-query-operation=\"blocker\"]",
+    "#answer-card",
+    ".answer-sources",
+    "[data-query-operation=\"authority\"]",
+    "[data-graph-view=\"critical\"]",
+    "[data-panel=\"proof\"]",
+    "#open-neo4j-plan",
+    "#plan-dialog",
+    "footer",
   ]) {
-    assert.match(serialized, new RegExp(requiredSelector));
+    assert.ok(
+      selectors.some((selector) => selector.includes(requiredSelector)),
+      `missing selector contract: ${requiredSelector}`,
+    );
   }
   assert.equal(config.safety.mutationsAllowed, false);
   assert.equal(config.safety.publishingAllowed, false);

@@ -113,44 +113,43 @@
           "ms": 1200
         },
         {
-          "act": "click",
-          "sel": "testid:founder-quest-shell"
-        },
-        {
           "cap": "Start with the synthetic read-only journey that passed all 15 hosted checks",
           "hold": 180
         },
         {
           "cap": "Select the blocked banking quest",
-          "cursor": "testid:quest-banking-readiness",
+          "cursor": "[data-panel=\"quests\"] [data-node-id=\"quest:bank-readiness\"]",
           "click": true,
           "hold": 180
         },
         {
           "act": "click",
-          "sel": "testid:quest-banking-readiness"
+          "sel": "[data-panel=\"quests\"] [data-node-id=\"quest:bank-readiness\"]"
         },
         {
           "cap": "The graph exposes the exact blocker instead of inventing progress",
-          "cursor": "testid:quest-graph-blocker-path",
+          "cursor": "[data-panel=\"graph\"] [data-node-id=\"blocker:missing-ownership-agreement\"]",
           "click": true,
           "hold": 210
         },
         {
           "act": "click",
-          "sel": "testid:quest-graph-blocker-path"
+          "sel": "[data-panel=\"graph\"] [data-node-id=\"blocker:missing-ownership-agreement\"]"
         },
         {
           "cap": "Ask why the quest is blocked, what the agent can do, and what proves it",
-          "cursor": "testid:quest-question-input",
+          "cursor": "textarea[placeholder=\"Why is the bank quest blocked?\"]",
           "click": true,
           "hold": 160
         },
         {
           "act": "fill",
-          "sel": "testid:quest-question-input",
-          "value": "Why is banking readiness blocked, what can the agent safely do next, and which evidence proves it?",
-          "commit": "Enter"
+          "sel": "textarea[placeholder=\"Why is the bank quest blocked?\"]",
+          "value": "Why is banking readiness blocked, what can the agent safely do next, and which evidence proves it?"
+        },
+        {
+          "act": "click",
+          "sel": "[data-query-operation=\"blocker\"]"
         },
         {
           "cap": "NodeAgent traverses the bounded graph and retrieves sources",
@@ -162,76 +161,75 @@
         },
         {
           "act": "sleep",
-          "ms": 4200
-        },
-        {
-          "act": "click",
-          "sel": "testid:quest-answer-card"
+          "ms": 1200
         },
         {
           "cap": "The answer names the blocker, next action, authority boundary, and limitation",
+          "cursor": "#answer-card",
           "hold": 240
         },
         {
           "cap": "Every material answer points to inspectable source evidence",
-          "cursor": "testid:quest-answer-source",
-          "click": true,
+          "cursor": ".answer-sources a",
+          "click": false,
           "hold": 180
         },
         {
           "act": "click",
-          "sel": "testid:quest-answer-source"
+          "sel": "[data-query-operation=\"authority\"]"
         },
         {
-          "act": "click",
-          "sel": "testid:quest-source-detail"
-        },
-        {
-          "cap": "Open the source detail and verify provenance and freshness",
-          "hold": 180
+          "act": "sleep",
+          "ms": 1200
         },
         {
           "cap": "Separate agent-safe preparation from human or professional authority",
-          "cursor": "testid:quest-authority-overlay",
-          "click": true,
+          "cursor": "#answer-card",
           "hold": 200
         },
         {
-          "act": "click",
-          "sel": "testid:quest-authority-overlay"
+          "act": "scrollY",
+          "y": 760
         },
         {
           "cap": "Move from explanation to the proof surface",
-          "cursor": "testid:quest-proof-tab",
-          "click": true,
+          "cursor": "[data-panel=\"proof\"]",
+          "click": false,
           "hold": 180
-        },
-        {
-          "act": "click",
-          "sel": "testid:quest-proof-tab"
-        },
-        {
-          "act": "click",
-          "sel": "testid:quest-proof-receipt"
         },
         {
           "cap": "The receipt binds source dc5fba2, graph ng1_c9334138, and four isolated browser contexts",
+          "cursor": ".proof-metrics",
           "hold": 180
         },
         {
           "act": "click",
-          "sel": "testid:quest-proof-limitations"
+          "sel": "#open-neo4j-plan"
+        },
+        {
+          "cap": "The Neo4j-ready plan is inspectable and was never executed",
+          "cursor": "#plan-dialog",
+          "hold": 180
+        },
+        {
+          "act": "click",
+          "sel": "#close-dialog"
+        },
+        {
+          "act": "scrollY",
+          "y": 1400
         },
         {
           "cap": "Synthetic readiness is not external approval, and the limitation stays visible",
+          "cursor": "footer",
           "hold": 180
         },
         {
-          "act": "click",
-          "sel": "testid:quest-proof-verdict"
+          "act": "scrollTop"
         },
         {
           "cap": "Verdict: explain the path, preserve authority, and keep the proof",
+          "cursor": "[aria-label=\"Readiness summary\"]",
           "hold": 180
         }
       ]
@@ -259,62 +257,63 @@
           "ms": 1200
         },
         {
-          "act": "click",
-          "sel": "testid:founder-quest-shell"
-        },
-        {
           "cap": "Premise: 15 hosted checks passed for one synthetic read-only production journey",
           "hold": 300
         },
         {
           "cap": "The quest rail separates complete, blocked, waiting, and human-required work",
-          "cursor": "testid:quest-banking-readiness",
+          "cursor": "[data-panel=\"quests\"] [data-node-id=\"quest:bank-readiness\"]",
           "click": true,
           "hold": 260
         },
         {
           "act": "click",
-          "sel": "testid:quest-banking-readiness"
+          "sel": "[data-panel=\"quests\"] [data-node-id=\"quest:bank-readiness\"]"
         },
         {
           "cap": "Selected quest: banking readiness is blocked by missing verified evidence",
+          "cursor": "[data-panel=\"quests\"] [data-node-id=\"quest:bank-readiness\"]",
           "hold": 260
         },
         {
           "cap": "Inspect the bounded dependency path",
-          "cursor": "testid:quest-graph-blocker-path",
+          "cursor": "[data-panel=\"graph\"] [data-node-id=\"blocker:missing-ownership-agreement\"]",
           "click": true,
           "hold": 300
         },
         {
           "act": "click",
-          "sel": "testid:quest-graph-blocker-path"
+          "sel": "[data-panel=\"graph\"] [data-node-id=\"blocker:missing-ownership-agreement\"]"
         },
         {
           "cap": "The graph distinguishes prerequisite, evidence, authority, and unlock edges",
+          "cursor": "[aria-label=\"Interactive founder lifecycle graph\"]",
           "hold": 240
         },
         {
           "cap": "Switch to the current critical path instead of rendering the entire graph",
-          "cursor": "testid:quest-graph-critical-path",
+          "cursor": "[data-graph-view=\"critical\"]",
           "click": true,
           "hold": 330
         },
         {
           "act": "click",
-          "sel": "testid:quest-graph-critical-path"
+          "sel": "[data-graph-view=\"critical\"]"
         },
         {
           "cap": "Ask one operational question against the selected graph context",
-          "cursor": "testid:quest-question-input",
+          "cursor": "textarea[placeholder=\"Why is the bank quest blocked?\"]",
           "click": true,
           "hold": 300
         },
         {
           "act": "fill",
-          "sel": "testid:quest-question-input",
-          "value": "Why is banking readiness blocked, what can the agent safely do next, and which evidence proves it?",
-          "commit": "Enter"
+          "sel": "textarea[placeholder=\"Why is the bank quest blocked?\"]",
+          "value": "Why is banking readiness blocked, what can the agent safely do next, and which evidence proves it?"
+        },
+        {
+          "act": "click",
+          "sel": "[data-query-operation=\"blocker\"]"
         },
         {
           "cap": "The trace shows bounded graph retrieval and source lookup",
@@ -326,106 +325,103 @@
         },
         {
           "act": "sleep",
-          "ms": 4200
-        },
-        {
-          "act": "click",
-          "sel": "testid:quest-answer-card"
+          "ms": 1200
         },
         {
           "cap": "The direct answer identifies the blocker without claiming external approval",
+          "cursor": "#answer-card",
           "hold": 300
+        },
+        {
+          "act": "click",
+          "sel": "[data-query-operation=\"authority\"]"
+        },
+        {
+          "act": "sleep",
+          "ms": 1200
         },
         {
           "cap": "Next actions are divided into agent-safe, human-required, and professional-review work",
-          "cursor": "testid:quest-authority-overlay",
-          "click": true,
+          "cursor": "#answer-card",
           "hold": 300
         },
         {
           "act": "click",
-          "sel": "testid:quest-authority-overlay"
+          "sel": "[data-query-operation=\"evidence\"]"
+        },
+        {
+          "act": "sleep",
+          "ms": 1200
         },
         {
           "cap": "The answer carries a precise source link",
-          "cursor": "testid:quest-answer-source",
-          "click": true,
-          "hold": 300
-        },
-        {
-          "act": "click",
-          "sel": "testid:quest-answer-source"
-        },
-        {
-          "act": "click",
-          "sel": "testid:quest-source-detail"
-        },
-        {
-          "cap": "Source detail exposes the locator, retrieval time, and freshness state",
+          "cursor": ".answer-sources a",
+          "click": false,
           "hold": 300
         },
         {
           "cap": "The agent can prepare evidence, but it cannot manufacture institutional approval",
-          "cursor": "testid:quest-proof-tab",
-          "click": true,
+          "cursor": ".answer-limit",
+          "click": false,
           "hold": 300
         },
         {
-          "act": "click",
-          "sel": "testid:quest-proof-tab"
+          "act": "scrollY",
+          "y": 760
         },
         {
           "cap": "Proof starts with the exact production deployment identity",
-          "cursor": "testid:quest-proof-release-identity",
-          "click": true,
+          "cursor": "[data-panel=\"proof\"]",
+          "click": false,
           "hold": 300
-        },
-        {
-          "act": "click",
-          "sel": "testid:quest-proof-release-identity"
         },
         {
           "cap": "Four desktop/mobile light/dark contexts recorded zero browser or cross-origin errors",
-          "cursor": "testid:quest-proof-browser",
-          "click": true,
+          "cursor": ".proof-metrics",
+          "click": false,
           "hold": 300
-        },
-        {
-          "act": "click",
-          "sel": "testid:quest-proof-browser"
         },
         {
           "cap": "The receipt binds source dc5fba2, evidence 0457913, and app/config 973ea7cb",
-          "cursor": "testid:quest-proof-receipt",
+          "cursor": "#trace-summary",
           "click": true,
           "hold": 300
         },
         {
           "act": "click",
-          "sel": "testid:quest-proof-receipt"
+          "sel": "#open-neo4j-plan"
+        },
+        {
+          "cap": "The parameterized Neo4j plan is inspectable and never executed",
+          "cursor": "#plan-dialog",
+          "hold": 300
+        },
+        {
+          "act": "click",
+          "sel": "#close-dialog"
+        },
+        {
+          "act": "scrollY",
+          "y": 1400
         },
         {
           "cap": "Known limitations remain part of the product story",
-          "cursor": "testid:quest-proof-limitations",
-          "click": true,
+          "cursor": "footer",
+          "click": false,
           "hold": 300
         },
         {
-          "act": "click",
-          "sel": "testid:quest-proof-limitations"
+          "act": "scrollTop"
         },
         {
           "cap": "The final verdict says what passed, what remains synthetic, and what is next",
-          "cursor": "testid:quest-proof-verdict",
-          "click": true,
+          "cursor": "[aria-label=\"Readiness summary\"]",
+          "click": false,
           "hold": 300
         },
         {
-          "act": "click",
-          "sel": "testid:quest-proof-verdict"
-        },
-        {
           "cap": "NodeKit turns the graph journey into a proof-carrying technical artifact",
+          "cursor": "[aria-label=\"Runtime boundaries\"]",
           "hold": 170
         }
       ]
