@@ -1,0 +1,41 @@
+schemaVersion: nodeagent.application/v1
+application:
+  id: __APP_NAME__
+  name: __APP_TITLE__
+  purpose: __BRIEF_JSON__
+authoring:
+  directory: ./agent
+runtime:
+  engine: nodekit-founderquest-rl
+  profile: replay-only
+provider:
+  adapter: deterministic-fixture
+  package: node:builtins
+  model:
+    provider: local
+    id: protected-reference-policy/v1
+  # Required by the portable manifest schema. This sentinel is never read as a
+  # credential and this preset has no network or model-call implementation.
+  secretRef: NODEKIT_OFFLINE_SENTINEL
+backend:
+  adapter: filesystem
+contracts:
+  event: nodeagent.event/v1
+  trace: nodeagent.trace/v1
+orchestration:
+  mode: protected-step-evaluation
+  maxConcurrentExperiments: 1
+  training: prohibited-in-starter
+packs:
+  - ./packs/primary/pack.yaml
+policies:
+  tools: deny-by-default
+  maxModelCallsPerStep: 0
+  maxExperimentSeconds: 10
+  requireProtectedReward: true
+  requireReceipt: true
+evaluations:
+  required:
+    - deterministic-foundation
+    - protected-reward
+    - heldout-stability

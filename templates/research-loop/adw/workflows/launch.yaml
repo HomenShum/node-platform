@@ -1,0 +1,15 @@
+schemaVersion: nodekit.development-workflow/v1
+id: launch
+planningPolicy: proportional-to-reversibility
+steps:
+  - research
+  - compile
+  - deterministic-demo
+  - conformance
+  - live-smoke
+  - browser-proof
+  - receipt
+  - evidence-bound-presentation
+approvals:
+  productionDeployment: human
+  publicSubmission: human

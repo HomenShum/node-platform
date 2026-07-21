@@ -1,0 +1,14 @@
+schemaVersion: nodekit.development-workflow/v1
+id: founderquest-rl-replay
+planningPolicy: proportional-to-reversibility
+steps:
+  - compile
+  - deterministic-demo
+  - protected-reward-eval
+  - heldout-benchmark
+  - local-proof
+approvals:
+  weightTraining: human
+  externalEnvironment: human
+  productionDeployment: human
+  publicSubmission: human

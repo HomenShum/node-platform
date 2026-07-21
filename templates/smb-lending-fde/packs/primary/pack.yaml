@@ -1,0 +1,21 @@
+schemaVersion: nodeagent.pack/v1
+id: smb-lending-deployment
+version: 0.1.0
+skill: ../../agent/skills/autoresearch-live/SKILL.md
+artifacts:
+  - lending-file-session
+  - document-request-proposal
+  - readiness-receipt
+tools:
+  - lending.inspect-file
+  - lending.propose-document-request
+  - lending.approve-proposal
+validators:
+  - synthetic-data-only
+  - human-authority-boundary
+  - document-request-is-missing
+  - receipt-is-secret-free
+evals:
+  - ../../evals/deterministic-smoke.json
+  - ../../evals/human-authority-boundary.json
+  - ../../evals/interrupted-proposal-recovery.json

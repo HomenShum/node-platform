@@ -17,6 +17,64 @@ concepts:
       - NodeMem
       - NodeProof
       - agentic-ui-qa
+      - NodeTasks
+      - BetterPRHandoff
+      - FeatureClipStudio
+
+  nodeplatform.change-story:
+    owner: node-platform
+    package: "@homenshum/nodekit"
+    targetPackage: "@homenshum/nodekit"
+    status: canonical
+    contractVersion: nodekit.change-story/v1
+    consumers:
+      - BetterPRHandoff
+      - FeatureClipStudio
+
+  featureclip.evidence-manifest:
+    owner: FeatureClipStudio
+    package: null
+    targetPackage: null
+    status: canonical-domain
+    contractVersion: featureclip.evidence-manifest/v1
+    consumers:
+      - node-platform
+
+  featureclip.evidence-receipt:
+    owner: FeatureClipStudio
+    package: null
+    targetPackage: null
+    status: canonical-domain
+    contractVersion: featureclip.evidence-receipt/v1
+    consumers:
+      - node-platform
+
+  betterprhandoff.handoff:
+    owner: BetterPRHandoff
+    package: "@homenshum/easier-to-read-submissions"
+    targetPackage: "@homenshum/easier-to-read-submissions"
+    status: canonical
+    contractVersion: betterprhandoff.handoff/v1
+    consumers:
+      - node-platform
+
+  betterprhandoff.nodekit-present-receipt:
+    owner: BetterPRHandoff
+    package: "@homenshum/easier-to-read-submissions"
+    targetPackage: "@homenshum/easier-to-read-submissions"
+    status: canonical
+    contractVersion: betterprhandoff.nodekit-present-receipt/v1
+    consumers:
+      - node-platform
+
+  nodetasks.corpus-receipt:
+    owner: NodeTasks
+    package: null
+    targetPackage: null
+    status: canonical-domain
+    contractVersion: nodetasks.corpus-receipt/v1
+    consumers:
+      - node-platform
 
   nodeplatform.environment:
     owner: node-platform
@@ -33,7 +91,7 @@ concepts:
 
   nodeagent.agent-run:
     owner: NodeAgent
-    package: nodeagent
+    package: "@homenshum/nodeagent"
     targetPackage: "@nodeagent/runtime"
     status: canonical-unpackaged
     contractVersion: nodeagent.run/v1
@@ -49,11 +107,12 @@ concepts:
 
   nodeagent.policy-context:
     owner: NodeAgent
-    package: nodeagent
+    package: "@homenshum/nodeagent"
     targetPackage: "@nodeagent/runtime"
     status: canonical-unpackaged
     contractVersion: nodeagent.policy/v1
     consumers:
+      - NodeBenchAI
       - NodeRoom
       - NodeSlide
       - NodeVideo
@@ -72,6 +131,31 @@ concepts:
       - NodeRoom
       - NodeSlide
       - NodeVideo
+
+  nodeagent.event-protocol:
+    owner: NodeAgent
+    package: "@homenshum/nodeagent"
+    targetPackage: "@nodeagent/event-protocol"
+    status: canonical-unpackaged
+    contractVersion: nodeagent.event/v1
+    consumers:
+      - NodeTrace
+      - NodeMem
+    signatures:
+      - id: nodeagent.event/v1
+        regex: '^\s*export\s+const\s+NODEAGENT_EVENT_SCHEMA_VERSION\b'
+
+  nodeagent.provider-pi:
+    owner: NodeAgent
+    package: "@homenshum/nodeagent"
+    targetPackage: "@nodeagent/provider-pi"
+    status: canonical-unpackaged
+    contractVersion: nodeagent.provider-pi/v1
+    consumers:
+      - NodeRoom
+    signatures:
+      - id: agent-model-adapter
+        regex: '^\s*export\s+function\s+createPiAiAdapter\b'
 
   nodeagent.trace-workpaper:
     owner: NodeAgent
@@ -153,19 +237,23 @@ concepts:
 
   nodeslide.deck:
     owner: NodeSlide
-    package: null
-    targetPackage: null
-    status: canonical-domain
+    package: "@nodeslide/contracts"
+    targetPackage: "@nodeslide/contracts"
+    status: canonical-unpackaged
     contractVersion: nodeslide.slidelang/v1
-    consumers: []
+    consumers:
+      - node-platform
+      - NodeRoom
 
   nodeslide.deck-patch:
     owner: NodeSlide
-    package: null
-    targetPackage: null
-    status: canonical-domain
+    package: "@nodeslide/contracts"
+    targetPackage: "@nodeslide/contracts"
+    status: canonical-unpackaged
     contractVersion: nodeslide.deck-patch/v1
-    consumers: []
+    consumers:
+      - node-platform
+      - NodeRoom
     signatures:
       - id: nodeslide-patch-operation
         regex: '^\s*export\s+type\s+PatchOperation\b'

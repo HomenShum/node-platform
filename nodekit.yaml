@@ -7,8 +7,16 @@ commandProfile: platform
 
 canonicalFor:
   - nodeplatform.repo-contract
+  - nodeplatform.change-story
 
-consumes: []
+consumes:
+  - betterprhandoff.handoff
+  - betterprhandoff.nodekit-present-receipt
+  - featureclip.evidence-manifest
+  - featureclip.evidence-receipt
+  - nodetasks.corpus-receipt
+  - nodeslide.deck
+  - nodeslide.deck-patch
 
 commands:
   doctor:

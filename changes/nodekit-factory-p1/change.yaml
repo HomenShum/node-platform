@@ -1,0 +1,77 @@
+schemaVersion: nodekit.change-story/v1
+id: nodekit-factory-p1
+title: Portable agent-app factory and injectable presentation system
+changeType: architecture
+audience:
+  - technical-reviewer
+  - hackathon-builder
+  - open-source-developer
+presentationTier: 3
+problem:
+  previousState: Agent applications, runtime adapters, proof formats, repository conventions, and presentation tooling were implemented independently across repositories.
+  painOrRisk: A coding agent had to rediscover setup, runtime, evaluation, deployment, and storytelling paths for every project; benchmark and production behavior could diverge.
+  affectedUsers:
+    - hackathon participants
+    - founders using Codex or Claude Code
+    - maintainers of Node ecosystem applications
+decision:
+  selectedApproach: Freeze flat NodeKit and NodeAgent contracts, generate or additively adopt the harness, keep runtimes replaceable through adapters, make proof portable, and extract NodeSlide into governed packages and transports.
+  alternatives:
+    - build another monolithic agent framework
+    - force every repository into one physical tree immediately
+    - keep NodeSlide as a standalone-only application
+  tradeoffs:
+    - more explicit contracts and migration ledgers
+    - stacked pull requests must land in dependency order
+    - production deployment and package publication remain separate approval gates
+implementation:
+  affectedSystems:
+    - NodeKit / node-platform
+    - NodeAgent
+    - NodeSlide
+    - NodeProof
+    - NodeTrace
+    - NodeMem
+    - NodeRoom
+    - NodeBenchAI
+    - NodeVideo
+    - NodeVoice
+    - NodeTasks
+    - BetterPRHandoff
+    - FeatureClipStudio
+  importantContracts:
+    - nodekit.repo/v1
+    - nodeagent.application/v1
+    - nodeagent.pack/v1
+    - nodeagent.event/v1
+    - nodeagent.trace/v1
+    - proofloop.receipt/v1
+    - nodetasks.corpus-receipt/v1
+    - betterprhandoff.handoff/v1
+    - featureclip.evidence-manifest/v1
+    - featureclip.evidence-receipt/v1
+    - NodeSlide repository and patch contracts
+proofRequirements:
+  - generated empty-directory local-ready application
+  - additive brownfield adoption with collision receipt
+  - NodeAgent Pi adapter package proof
+  - NodeSlide package and second-consumer proof
+  - NodeSlide CLI/MCP external-agent proof
+  - NodeTasks corpus integrity proof
+  - BetterPRHandoff to Change Story compilation proof
+  - FeatureClipStudio media-to-Evidence-Index projection proof
+  - canonical proof envelope validation
+  - cross-repository registry validation
+approvalBoundaries:
+  - merge to default branches
+  - npm publication
+  - production deployment
+  - paid resource activation
+  - destructive migration
+limitations:
+  - under-30 setup has a fast observed pass but is not repeatably certified
+  - NodeSlide core, controlled React surfaces, and the NodeRoom consumer proof are merged; the remaining implementation branches are reviews
+  - no package was published and no production deployment was performed
+  - NodeSlide editable canvas and PPTX export/reopen certification remain open
+  - NodeBench native-runtime parity and honest no-key profile remain open
+nextMilestone: Forward-test and review the dependency-ordered PR set, mount the NodeSlide React UI and production adapter in NodeRoom, then certify one live hackathon application without changing the benchmark execution path.

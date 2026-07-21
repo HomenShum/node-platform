@@ -1,0 +1,9 @@
+{
+  "schemaVersion": "nodeagent.eval-suite/v1",
+  "id": "heldout-stability",
+  "assertions": [
+    "the heldout fixture set is stored separately from train and validation",
+    "the deterministic reference policy passes the heldout harness",
+    "the benchmark receipt declares that this is a harness check, not evidence of learned generalization"
+  ]
+}

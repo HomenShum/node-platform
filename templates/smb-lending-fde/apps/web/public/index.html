@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="A synthetic SMB lending forward-deployment lab with graph-backed evidence and human decision boundaries." />
+    <title>__APP_TITLE__ · FDE deployment lab</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#workspace">Skip to deployment workspace</a>
+    <header class="site-header">
+      <a class="brand" href="/" aria-label="__APP_TITLE__ home"><span class="brand-mark">N/</span> __APP_TITLE__</a>
+      <div class="header-meta"><span class="status-dot" aria-hidden="true"></span><span id="runtime-status">synthetic local harness ready</span></div>
+    </header>
+
+    <main id="workspace">
+      <section class="hero" aria-labelledby="hero-title">
+        <div>
+          <p class="eyebrow">INDEPENDENT · SYNTHETIC · EVALUATION ONLY</p>
+          <h1 id="hero-title">Map the file.<br /><em>Keep the decision human.</em></h1>
+          <p class="lede">A forward-deployment workspace for finding missing evidence, tracing process blockers, and proposing bounded document actions. It is not a lending decision system and is not affiliated with Casca.</p>
+        </div>
+        <div class="hero-actions">
+          <label class="case-picker" for="case-select">Synthetic case
+            <select id="case-select" aria-label="Choose synthetic lending case"></select>
+          </label>
+          <button class="button button-primary" id="start-button">Load synthetic case</button>
+          <button class="button" id="export-button" disabled>Export readiness packet</button>
+        </div>
+      </section>
+
+      <div id="error-banner" class="error-banner" role="alert" hidden></div>
+
+      <section class="metric-strip" aria-label="File readiness metrics">
+        <article><span>FILE READINESS</span><strong id="readiness-score">—</strong></article>
+        <article><span>MISSING EVIDENCE</span><strong id="missing-count">—</strong></article>
+        <article><span>REQUESTS PENDING</span><strong id="pending-count">—</strong></article>
+        <article><span>CASE</span><strong class="mono compact" id="case-id">not loaded</strong></article>
+      </section>
+
+      <section class="fde-grid" aria-label="Forward deployment workspace">
+        <aside class="quest-rail">
+          <p class="eyebrow">DEPLOYMENT QUESTS</p>
+          <h2>What the bank needs next.</h2>
+          <ol id="quest-list" class="quest-list"><li>Load the synthetic case to map the path.</li></ol>
+          <div class="constraint-card">
+            <span class="lock" aria-hidden="true">◇</span>
+            <div><strong>Human authority preserved</strong><p>Only a human underwriter or credit authority can make a lending decision.</p></div>
+          </div>
+        </aside>
+
+        <section class="graph-stage" aria-labelledby="graph-title">
+          <div class="section-heading"><div><p class="eyebrow">LENDING PROCESS GRAPH</p><h2 id="graph-title">A bounded path to a reviewable file.</h2></div></div>
+          <div id="process-graph" class="process-graph" aria-live="polite"></div>
+          <div class="graph-questions" aria-label="Ask the local process graph">
+            <button class="button graph-question" type="button" data-graph-operation="why_blocked">Why blocked?</button>
+            <button class="button graph-question" type="button" data-graph-operation="critical_path">Critical path</button>
+            <button class="button graph-question" type="button" data-graph-operation="authority">Authority boundary</button>
+          </div>
+          <div id="graph-answer" class="graph-answer" aria-live="polite">Load a synthetic case to query the local process graph.</div>
+          <label class="live-consent-card" for="live-consent">
+            <input id="live-consent" type="checkbox" />
+            <span><strong>Allow one external Pi proposal</strong><small id="live-capability">Local live Pi is disabled until the server is explicitly configured for one synthetic test.</small></span>
+          </label>
+          <div class="run-actions">
+            <button class="button" id="replay-step" disabled>Find safe next action</button>
+            <button class="button button-live" id="live-step" disabled><span class="spark">✦</span> Ask Pi live</button>
+          </div>
+        </section>
+
+        <aside class="evidence-panel" aria-labelledby="evidence-title">
+          <p class="eyebrow">EVIDENCE AND PROPOSALS</p>
+          <h2 id="evidence-title">Every requested action stays reviewable.</h2>
+          <ul id="document-list" class="document-list"><li>No source packet loaded.</li></ul>
+          <div id="proposal-panel" class="proposal-panel"><span>No proposal awaiting review.</span></div>
+        </aside>
+      </section>
+
+      <section class="workspace">
+        <div class="workbench">
+          <div class="section-heading"><div><p class="eyebrow">ACTIVITY AND LIMITS</p><h2>Observe the work; do not mistake it for approval.</h2></div><span class="mono" id="event-count">0 events</span></div>
+          <ol class="activity-list" id="activity-list"><li class="empty-activity">Events will appear after the case starts.</li></ol>
+        </div>
+        <aside class="steering-panel" aria-labelledby="steering-title">
+          <p class="eyebrow">FDE NOTE</p>
+          <h2 id="steering-title">Add a bounded deployment constraint.</h2>
+          <p>The next proposal records this instruction as context. It cannot change the lending authority boundary.</p>
+          <form id="intervention-form">
+            <label for="intervention">Direction for the next proposal</label>
+            <textarea id="intervention" maxlength="280" placeholder="Prioritize source lineage; do not request unrelated documents." disabled></textarea>
+            <div class="form-footer"><span id="character-count">0 / 280</span><button class="button button-dark" type="submit" disabled>Queue direction</button></div>
+          </form>
+        </aside>
+      </section>
+    </main>
+    <footer><span>SYNTHETIC — NO REAL CUSTOMER DATA · Not financial, legal, or lending advice.</span><span class="mono" id="config-hash">config: —</span></footer>
+    <script type="module" src="/app.js"></script>
+  </body>
+</html>

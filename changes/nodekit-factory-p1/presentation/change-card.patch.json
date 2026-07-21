@@ -1,0 +1,28 @@
+{
+  "id": "patch:nodekit-factory-p1:review-copy",
+  "deckId": "deck:nodekit-factory-p1",
+  "baseDeckVersion": 1,
+  "baseSlideVersions": {
+    "deck:nodekit-factory-p1:slide:1": 1
+  },
+  "baseElementVersions": {
+    "deck:nodekit-factory-p1:slide:1:title": 1
+  },
+  "scope": {
+    "kind": "elements",
+    "deckId": "deck:nodekit-factory-p1",
+    "slideIds": ["deck:nodekit-factory-p1:slide:1"],
+    "elementIds": ["deck:nodekit-factory-p1:slide:1:title"],
+    "operationMode": "copy"
+  },
+  "operations": [
+    {
+      "op": "replace_text",
+      "slideId": "deck:nodekit-factory-p1:slide:1",
+      "elementId": "deck:nodekit-factory-p1:slide:1:title",
+      "text": "P1 factory | Draft contracts, verified local seams"
+    }
+  ],
+  "source": "agent",
+  "summary": "Tighten the change-card title so draft and verified states remain distinct."
+}

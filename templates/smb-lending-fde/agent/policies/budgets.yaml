@@ -1,0 +1,5 @@
+schemaVersion: nodeagent.budgets/v1
+maxModelCallsPerStep: 1
+maxOutputTokensPerCall: 320
+maxExperimentSeconds: 30
+maxConcurrentExperiments: 1

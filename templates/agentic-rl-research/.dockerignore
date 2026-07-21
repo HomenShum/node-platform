@@ -1,0 +1,8 @@
+.git
+.env
+.env.*
+.data
+.nodeagent
+node_modules
+proof/*.json
+npm-debug.log*

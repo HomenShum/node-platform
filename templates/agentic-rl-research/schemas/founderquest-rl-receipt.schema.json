@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "nodekit.founderquest-rl-receipt/v1",
+  "type": "object",
+  "required": ["schemaVersion", "sessionId", "configHash", "runs", "events", "taskSets", "replay"],
+  "properties": {
+    "schemaVersion": { "const": "nodekit.founderquest-rl-receipt/v1" },
+    "sessionId": { "type": "string" },
+    "configHash": { "type": "string" },
+    "runs": { "type": "array" },
+    "taskSets": { "type": "object" }
+  }
+}

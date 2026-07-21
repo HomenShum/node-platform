@@ -1,0 +1,1 @@
+trustworthy research keeps a fixed metric, records every change, and lets a person steer the next experiment without restarting the loop. simple inspectable systems make failures useful.

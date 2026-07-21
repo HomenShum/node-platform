@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "nodekit.experiment-receipt/v1",
+  "type": "object",
+  "required": ["schemaVersion", "sessionId", "configHash", "baseline", "best", "experiments", "events", "replay"],
+  "properties": {
+    "schemaVersion": { "const": "nodekit.experiment-receipt/v1" },
+    "sessionId": { "type": "string" },
+    "configHash": { "type": "string" },
+    "experiments": { "type": "array" }
+  }
+}

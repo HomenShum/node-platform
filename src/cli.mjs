@@ -4,9 +4,16 @@ import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { renderDashboard } from "./lib/dashboard.mjs";
+import { compileAgentDefinition, inspectAgentDefinition } from "./lib/agent-definition.mjs";
 import { pathExists } from "./lib/files.mjs";
 import { checkRepository, commandFor } from "./lib/repo-check.mjs";
 import { loadRegistry, validateRegistry } from "./lib/registry.mjs";
+import { adoptProject, createProject, recordSetupEvent } from "./lib/scaffold.mjs";
+import {
+  importUnderstandAnythingCodeGraph,
+  queryUnderstandAnythingCodeGraph,
+  readUnderstandAnythingCodeGraph,
+} from "./lib/understand-anything.mjs";
 
 const packageRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
@@ -38,19 +45,27 @@ function parseArgs(argv) {
 }
 
 function printHelp() {
-  console.log(`NodeKit P0
+  console.log(`NodeKit
 
 Usage:
+  nodekit create <directory> --name <slug> --brief <text> [--preset research-loop|smb-lending-fde|agentic-rl-research]
+      [--provider openrouter] [--model openai/gpt-4o-mini] [--backend filesystem]
+      [--nodekit-specifier <npm-or-file-spec>] [--sponsors <comma-list>]
+      [--package-manager npm|pnpm]
+      [--launch-started-at <iso>] [--research-ms <number>] [--local-proof]
+      [--no-install] [--no-git]
+  nodekit adopt [directory] --name <slug> --brief <text>
+  nodekit compile [--repo-root <path>] [--check] [--json]
+  nodekit inspect [--repo-root <path>] [--json]
   nodekit doctor [--repo-root <path>] [--json]
   nodekit dev|demo|check|proof [--repo-root <path>] [-- <args>]
   nodekit repo check [--repo-root <path>] [--json]
   nodekit registry check [--registry-root <path>] [--json]
   nodekit ecosystem check [--workspace <path>] [--json]
   nodekit dashboard [--workspace <path>] [--write] [--out <path>]
-  nodekit certify [--repo-root <path>] [--json]
-
-P0 owns repository contracts and drift prevention. create/add/upgrade/migrate/release
-remain planned commands and are not reported as implemented.`);
+  nodekit graph import [--repo-root <path>] [--graph-dir <path>] [--repo-id <id>] [--commit <sha>] [--json]
+  nodekit graph query <terms> [--repo-root <path>] [--limit <number>] [--json]
+  nodekit certify [--repo-root <path>] [--json]`);
 }
 
 function summarize(result) {
@@ -204,9 +219,129 @@ async function runDoctor(parsed) {
     passed: nodeMajor >= 20,
   });
   if (nodeMajor < 20) result.errors.unshift("Node.js 20 or newer is required");
+  const repoRoot = path.resolve(String(parsed.options["repo-root"] ?? process.cwd()));
+  if (await pathExists(path.join(repoRoot, "nodeagent.yaml"))) {
+    const [major, minor] = process.versions.node.split(".").map(Number);
+    const compiled = await compileAgentDefinition(repoRoot, { write: false });
+    if (compiled.definition.provider.package === "@earendil-works/pi-ai" && (major < 22 || (major === 22 && minor < 19))) {
+      result.errors.unshift("@earendil-works/pi-ai requires Node.js 22.19 or newer");
+    }
+  }
   result.passed = result.errors.length === 0;
   printResult(result, parsed.options.json);
   if (!result.passed) process.exitCode = 1;
+}
+
+function optionEnabled(options, name, defaultValue = true) {
+  if (options[`no-${name}`]) return false;
+  if (options[name] === false || options[name] === "false") return false;
+  return defaultValue;
+}
+
+async function runCreate(parsed) {
+  const target = parsed.positional[1];
+  if (!target) throw new Error("create requires a target directory");
+  const localProof = parsed.options["local-proof"] === true || parsed.options["local-proof"] === "true";
+  if (localProof && !optionEnabled(parsed.options, "git")) {
+    throw new Error("--local-proof requires the default local Git candidate; omit --no-git so NodeKit can bind receipts to an immutable commit");
+  }
+  const nodekitSpecifier = parsed.options["nodekit-specifier"] ?? parsed.options["nodekit-source"];
+  const result = await createProject({
+    backend: parsed.options.backend,
+    brief: parsed.options.brief,
+    git: optionEnabled(parsed.options, "git"),
+    install: optionEnabled(parsed.options, "install"),
+    launchStartedAt: parsed.options["launch-started-at"],
+    model: parsed.options.model,
+    name: parsed.options.name ?? path.basename(path.resolve(target)),
+    nodekitSpecifier,
+    packageManager: parsed.options["package-manager"],
+    preset: parsed.options.preset,
+    provider: parsed.options.provider,
+    researchMs: parsed.options["research-ms"] === undefined ? undefined : Number(parsed.options["research-ms"]),
+    secretRef: parsed.options["secret-ref"],
+    sponsors: String(parsed.options.sponsors ?? "").split(",").filter(Boolean),
+    target,
+  });
+  const compileStarted = Date.now();
+  const compiled = await compileAgentDefinition(result.target);
+  await recordSetupEvent(result.target, "compile_completed", { configHash: compiled.definition.configHash }, Date.now() - compileStarted);
+  if (localProof) {
+    const scripts = ["smb-lending-fde", "agentic-rl-research"].includes(result.preset)
+      ? ["demo.mjs", "eval.mjs", "benchmark.mjs", "proof.mjs"]
+      : ["demo.mjs", "eval.mjs", "proof.mjs"];
+    for (const script of scripts) {
+      await new Promise((resolve, reject) => {
+        const child = spawn(process.execPath, [path.join(result.target, "scripts", script)], {
+          cwd: result.target,
+          env: process.env,
+          stdio: "inherit",
+        });
+        child.on("error", reject);
+        child.on("exit", (code) => {
+          if (code === 0) resolve();
+          else reject(new Error(`${script} exited ${code}`));
+        });
+      });
+    }
+  }
+  console.log(`CREATED ${result.name} at ${result.target}${result.candidateCommit ? ` (${result.candidateCommit.slice(0, 12)})` : ""}`);
+  console.log(`NEXT cd ${quoteArgument(result.target)} && ${result.packageManager} run compile && ${result.packageManager} run demo`);
+}
+
+async function runAdopt(parsed) {
+  const target = path.resolve(String(parsed.positional[1] ?? parsed.options["repo-root"] ?? process.cwd()));
+  const result = await adoptProject({
+    backend: parsed.options.backend,
+    brief: parsed.options.brief,
+    model: parsed.options.model,
+    name: parsed.options.name ?? path.basename(target),
+    nodekitSpecifier: parsed.options["nodekit-specifier"] ?? parsed.options["nodekit-source"],
+    provider: parsed.options.provider,
+    secretRef: parsed.options["secret-ref"],
+    target,
+  });
+  console.log(`ADOPTED ${result.name} at ${result.target}`);
+  console.log("NodeKit only added missing harness files; existing auth, routes, CSS, and schemas were preserved.");
+  console.log(`COLLISIONS ${result.collisions.length}; inspect proof/adoption-receipt.json before installation.`);
+}
+
+async function runCompile(parsed) {
+  const repoRoot = path.resolve(String(parsed.options["repo-root"] ?? process.cwd()));
+  const result = await compileAgentDefinition(repoRoot, {
+    check: Boolean(parsed.options.check),
+    write: !parsed.options.check,
+  });
+  const output = {
+    application: result.definition.application.id,
+    applicationHash: result.definition.applicationHash,
+    configHash: result.definition.configHash,
+    contracts: result.definition.contracts,
+    fileCount: result.definition.fileCount,
+    passed: true,
+    schemaVersion: "nodekit.compile/v1",
+  };
+  if (parsed.options.json) console.log(JSON.stringify(output, null, 2));
+  else console.log(`${parsed.options.check ? "CURRENT" : "COMPILED"} ${output.application} ${output.configHash.slice(0, 12)} (${output.fileCount} authored files)`);
+}
+
+async function runInspect(parsed) {
+  const repoRoot = path.resolve(String(parsed.options["repo-root"] ?? process.cwd()));
+  const output = inspectAgentDefinition(await compileAgentDefinition(repoRoot, { write: false }));
+  if (parsed.options.json) {
+    console.log(JSON.stringify(output, null, 2));
+    return;
+  }
+  console.log(`${output.application.name} (${output.application.id})`);
+  console.log(`  runtime ${output.runtime.engine}/${output.runtime.profile}`);
+  console.log(`  provider ${output.provider.adapter}:${output.provider.model.provider}/${output.provider.model.id}`);
+  console.log(`  backend ${output.backend.adapter}`);
+  console.log(`  contracts event=${output.contracts.event} trace=${output.contracts.trace}`);
+  console.log(`  config ${output.configHash}`);
+  console.log(`  application ${output.applicationHash}`);
+  console.log(`  files ${output.fileCount}`);
+  for (const [name, count] of Object.entries(output.discovered)) console.log(`  ${name} ${count}`);
+  for (const secret of output.secrets) console.log(`  secret ${secret.name}: ${secret.configured ? "configured" : "missing"}`);
 }
 
 async function runCertify(parsed) {
@@ -246,6 +381,45 @@ async function runCertify(parsed) {
   if (!output.passed) process.exitCode = 1;
 }
 
+async function runGraphImport(parsed) {
+  const repoRoot = path.resolve(String(parsed.options["repo-root"] ?? process.cwd()));
+  const snapshot = await importUnderstandAnythingCodeGraph(repoRoot, {
+    commitSha: parsed.options.commit,
+    graphDir: parsed.options["graph-dir"],
+    repoId: parsed.options["repo-id"],
+  });
+  const output = {
+    commitSha: snapshot.commitSha,
+    contentHash: snapshot.contentHash,
+    layers: snapshot.layers.length,
+    nodes: snapshot.nodes.length,
+    passed: true,
+    repoId: snapshot.repoId,
+    schemaVersion: "nodekit.graph-import/v1",
+    source: snapshot.source,
+  };
+  if (parsed.options.json) console.log(JSON.stringify(output, null, 2));
+  else console.log(`IMPORTED ${output.repoId}@${output.commitSha} ${output.nodes} nodes ${output.layers} layers`);
+}
+
+async function runGraphQuery(parsed) {
+  const query = parsed.positional.slice(2).join(" ");
+  if (!query) throw new Error("graph query requires search terms");
+  const repoRoot = path.resolve(String(parsed.options["repo-root"] ?? process.cwd()));
+  const snapshot = await readUnderstandAnythingCodeGraph(repoRoot, {
+    snapshotPath: parsed.options["snapshot-path"],
+  });
+  const output = queryUnderstandAnythingCodeGraph(snapshot, query, {
+    limit: parsed.options.limit,
+  });
+  if (parsed.options.json) {
+    console.log(JSON.stringify(output, null, 2));
+    return;
+  }
+  console.log(`CODE GRAPH ${output.source.repoId}@${output.source.commitSha}`);
+  for (const { node, score } of output.matched) console.log(`  ${score} ${node.name} (${node.type})`);
+}
+
 async function main() {
   const parsed = parseArgs(process.argv.slice(2));
   const [first, second] = parsed.positional;
@@ -255,6 +429,22 @@ async function main() {
   }
   if (["dev", "demo", "check", "proof"].includes(first)) {
     await runLifecycle(first, parsed);
+    return;
+  }
+  if (first === "create") {
+    await runCreate(parsed);
+    return;
+  }
+  if (first === "adopt") {
+    await runAdopt(parsed);
+    return;
+  }
+  if (first === "compile") {
+    await runCompile(parsed);
+    return;
+  }
+  if (first === "inspect") {
+    await runInspect(parsed);
     return;
   }
   if (first === "doctor") {
@@ -281,6 +471,14 @@ async function main() {
   }
   if (first === "dashboard") {
     await runDashboard(parsed);
+    return;
+  }
+  if (first === "graph" && second === "import") {
+    await runGraphImport(parsed);
+    return;
+  }
+  if (first === "graph" && second === "query") {
+    await runGraphQuery(parsed);
     return;
   }
   throw new Error(`unknown command: ${parsed.positional.join(" ")}`);

@@ -1,0 +1,10 @@
+schemaVersion: nodeagent.planning-policy/v1
+strategy: one-variable-at-a-time
+objective: minimize heldoutBitsPerCharacter
+constraints:
+  order: { minimum: 1, maximum: 6 }
+  alpha: { minimum: 0.001, maximum: 10 }
+approvalRequiredFor:
+  - changingMetric
+  - changingCorpus
+  - productionDeployment

@@ -22,3 +22,5 @@
 - `nodeagent.trace-workpaper` -> `@nodeagent/trace-protocol`; current source: `NodeRoom/src/nodeagent/traces/traceTypes.ts`
 
 A PASS here means the P0 repository contract is internally consistent. Commands are declared and statically resolvable; this table does not claim they were executed by the dashboard. It does not promote a preview repository to production or turn a planned package into a released package.
+
+`NodeBenchAI` is registered as an active production domain application. It remains `untracked` by ecosystem command execution until its planning-era `apiVersion/kind/spec` repository manifest is explicitly migrated to the canonical flat `nodekit.repo/v1` contract.

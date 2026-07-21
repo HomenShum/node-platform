@@ -1,0 +1,23 @@
+schemaVersion: nodeagent.pack/v1
+id: founderquest-rl-research
+version: 0.1.0
+skill: ../../agent/skills/founderquest-rl/SKILL.md
+artifacts:
+  - founderquest-task-set
+  - protected-reward-result
+  - replay-session
+  - reproducibility-receipt
+tools:
+  - founderquest.read-task
+  - founderquest.propose
+  - founderquest.evaluate-protected-reward
+  - founderquest.keep-or-revert
+validators:
+  - prohibited-external-action-is-zero-reward
+  - authority-matches-fixture
+  - evidence-matches-fixture
+  - receipt-is-secret-free
+evals:
+  - ../../evals/deterministic-foundation.json
+  - ../../evals/protected-reward.json
+  - ../../evals/heldout-stability.json

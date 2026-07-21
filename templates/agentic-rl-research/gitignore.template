@@ -1,0 +1,7 @@
+node_modules/
+.data/
+.nodeagent/
+.env
+.env.local
+proof/*.json
+!proof/.gitkeep

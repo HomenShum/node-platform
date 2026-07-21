@@ -1,0 +1,41 @@
+schemaVersion: nodeagent.application/v1
+application:
+  id: __APP_NAME__
+  name: __APP_TITLE__
+  purpose: __BRIEF_JSON__
+authoring:
+  directory: ./agent
+runtime:
+  engine: nodekit-reference-loop
+  profile: replay
+provider:
+  adapter: pi-ai
+  package: "@earendil-works/pi-ai"
+  model:
+    provider: __PROVIDER_ID__
+    id: __MODEL_ID__
+  secretRef: __SECRET_REF__
+backend:
+  adapter: __BACKEND__
+contracts:
+  event: nodeagent.event/v1
+  trace: nodeagent.trace/v1
+orchestration:
+  mode: persistent-metric-loop
+  maxConcurrentExperiments: 1
+packs:
+  - ./packs/primary/pack.yaml
+policies:
+  tools: deny-by-default
+  maxModelCallsPerStep: 1
+  maxExperimentSeconds: 30
+  requireMetricBeforeKeep: true
+  requireReceipt: true
+evaluations:
+  required:
+    - deterministic-smoke
+    - keep-revert-invariant
+    - interrupted-run-recovery
+    - pi-live-smoke
+secrets:
+  - envRef: __SECRET_REF__

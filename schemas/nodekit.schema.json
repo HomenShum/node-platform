@@ -2,6 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://github.com/HomenShum/node-platform/blob/main/schemas/nodekit.schema.json",
   "title": "NodeKit repository contract",
+  "description": "Canonical flat schemaVersion dialect. apiVersion/kind/spec envelopes are not part of v1.",
   "type": "object",
   "required": [
     "schemaVersion",
@@ -22,6 +23,7 @@
   "properties": {
     "schemaVersion": { "const": "nodekit.repo/v1" },
     "repository": { "type": "string", "pattern": "^[^/]+/[^/]+$" },
+    "registryMode": { "enum": ["ecosystem", "external"] },
     "lifecycle": { "enum": ["production", "preview", "experimental", "reference", "archived"] },
     "support": { "enum": ["active", "maintenance", "frozen"] },
     "role": { "type": "string", "minLength": 1 },

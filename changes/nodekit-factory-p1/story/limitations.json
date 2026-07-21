@@ -1,0 +1,13 @@
+{
+  "schemaVersion": "nodekit.change-limitations/v1",
+  "changeId": "nodekit-factory-p1",
+  "limitations": [
+    "Merged NodeSlide core/React changes are not a complete NodeKit release; the remaining pull requests still require coordinated review.",
+    "No npm package was published.",
+    "No production application was deployed in this rollout.",
+    "No paid resource was activated and no destructive migration ran.",
+    "Under-30 local setup was observed once but not repeated consistently.",
+    "The NodeSlide change card is source-bound and transport-verified, but its full claims are not independently evidence-certified and its PPTX export/reopen path is not verified.",
+    "NodeBench remains on its existing runtime until shadow parity proves promotion is safe."
+  ]
+}

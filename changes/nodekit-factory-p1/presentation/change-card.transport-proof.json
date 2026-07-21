@@ -1,0 +1,33 @@
+{
+  "schemaVersion": "nodekit.nodeslide-external-proof/v1",
+  "nodeSlideRepository": "HomenShum/NodeSlide",
+  "nodeSlideHead": "7815b44fe24d6673745cb5d51af219ef4f6652c9",
+  "pullRequest": "https://github.com/HomenShum/NodeSlide/pull/10",
+  "commands": ["inspect", "validate", "propose", "apply"],
+  "validation": {
+    "passed": true,
+    "baseDeckVersion": 1,
+    "candidateDeckVersion": 2,
+    "baseSnapshotDigest": "sha256:464cd9d5021cf2c1dcf556822ae58828ab8b3f6f54ec0ca09d293fca31b74031",
+    "patchDigest": "sha256:c1be9d504068abd4360a4eb37d2fafed75c640bb0e4ba661a37163154343695c",
+    "validateCandidateDigest": "sha256:b742c7321effa324e0a99f6942ef49596d6eaecfb21666d5d49db7ae7e36abaf",
+    "proposalCandidateDigest": "sha256:b742c7321effa324e0a99f6942ef49596d6eaecfb21666d5d49db7ae7e36abaf",
+    "deterministicCandidateParity": true
+  },
+  "application": {
+    "proposalId": "proposal:6a06b6872de43772d0db038fda160e5a",
+    "receiptId": "application:039db09490de59dce3d36d60b922b101",
+    "approval": "exact_proposal_id",
+    "resultingDeckVersion": 2,
+    "resultingSnapshotDigest": "sha256:b742c7321effa324e0a99f6942ef49596d6eaecfb21666d5d49db7ae7e36abaf"
+  },
+  "boundary": {
+    "sourceBound": true,
+    "digestBound": true,
+    "exactApproval": true,
+    "claimsEvidenceCertified": false,
+    "pptxExportVerified": false,
+    "productionDeployed": false,
+    "packagePublished": false
+  }
+}

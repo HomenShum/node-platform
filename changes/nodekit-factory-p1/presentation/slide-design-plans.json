@@ -1,0 +1,95 @@
+{
+  "schemaVersion": "nodeslide.change-slide-plans/v1",
+  "changeId": "nodekit-factory-p1",
+  "status": "drafted",
+  "slides": [
+    {
+      "slideId": "problem",
+      "job": "Establish why NodeKit exists.",
+      "audienceQuestion": "What repeated execution failure are we eliminating?",
+      "takeaway": "Good niche insight was repeatedly slowed by bespoke agent-app setup, proof, and presentation work.",
+      "narrativeRole": "problem",
+      "dominantVisual": "before_after",
+      "evidenceIds": [],
+      "maxVisibleWords": 42,
+      "speakerNoteGoal": "Separate the participant's valuable domain insight from reusable execution plumbing."
+    },
+    {
+      "slideId": "contract",
+      "job": "Show the portable application contract.",
+      "audienceQuestion": "What is now standardized across repositories?",
+      "takeaway": "Filesystem-authored agents, flat manifests, compiled hashes, packs, evals, and proof form one inspectable contract.",
+      "narrativeRole": "architecture",
+      "dominantVisual": "architecture_diagram",
+      "evidenceIds": ["nodekit-pr-4", "nodeagent-pr-2", "noderoom-pr-219"],
+      "maxVisibleWords": 48,
+      "speakerNoteGoal": "Explain that runtime engines are adapters, not the application identity."
+    },
+    {
+      "slideId": "factory-loop",
+      "job": "Explain the brief-to-proof workflow.",
+      "audienceQuestion": "What does Codex or Claude Code actually do?",
+      "takeaway": "Brief, context, and sponsor requirements compile into a researched vertical slice, QA evidence, and presentation artifacts.",
+      "narrativeRole": "workflow",
+      "dominantVisual": "workflow",
+      "evidenceIds": ["nodekit-tests-30"],
+      "maxVisibleWords": 45,
+      "speakerNoteGoal": "Keep the 30-minute goal visible without presenting it as certified."
+    },
+    {
+      "slideId": "nodeslide-multipurpose",
+      "job": "Show why NodeSlide is a platform capability.",
+      "audienceQuestion": "How can one presentation system serve builders, products, and external agents?",
+      "takeaway": "The same governed deck model can support change storytelling, embedded app editing, CLI/MCP automation, and NodeRoom collaboration.",
+      "narrativeRole": "architecture",
+      "dominantVisual": "architecture_diagram",
+      "evidenceIds": ["nodeslide-core-pr-5", "nodeslide-react-pr-7", "nodeslide-external-pr-10", "nodeslide-external-hosted", "nodeslide-change-card-application", "noderoom-pr-218", "featureclip-pr-4"],
+      "maxVisibleWords": 50,
+      "speakerNoteGoal": "Distinguish core, React, host repository, and external transports."
+    },
+    {
+      "slideId": "brownfield",
+      "job": "Explain migration without a rewrite.",
+      "audienceQuestion": "What happens to a halfway-working repository?",
+      "takeaway": "Map and wrap current paths first; shadow, compare, and promote one capability only after parity.",
+      "narrativeRole": "workflow",
+      "dominantVisual": "timeline",
+      "evidenceIds": ["nodebench-pr-592", "nodevoice-pr-4", "nodevideo-pr-30", "nodetrace-pr-3", "nodemem-pr-3"],
+      "maxVisibleWords": 38,
+      "speakerNoteGoal": "Use NodeBench as the concrete shape-divergent but content-complete example."
+    },
+    {
+      "slideId": "proof",
+      "job": "Show what actually passed.",
+      "audienceQuestion": "Which parts are verified rather than planned?",
+      "takeaway": "Local factory, package boundaries, CAS review, and registry contracts have executable evidence across merged foundations and open review branches.",
+      "narrativeRole": "proof",
+      "dominantVisual": "benchmark",
+      "evidenceIds": ["nodekit-tests-30", "nodekit-hosted-quality", "nodeslide-change-card-application", "nodeslide-change-card-transport", "noderoom-pr-218", "nodetasks-pr-1", "betterprhandoff-pr-4", "featureclip-pr-4"],
+      "maxVisibleWords": 48,
+      "speakerNoteGoal": "Name local and hosted evidence separately and avoid cumulative vanity counts."
+    },
+    {
+      "slideId": "limits",
+      "job": "Make unfinished work legible.",
+      "audienceQuestion": "What cannot we claim yet?",
+      "takeaway": "Foundational merges occurred; package publication, production deployment, repeatable under-30 certification, and PPTX certification did not.",
+      "narrativeRole": "limitation",
+      "dominantVisual": "code_contract",
+      "evidenceIds": ["setup-timing-sample"],
+      "maxVisibleWords": 42,
+      "speakerNoteGoal": "Frame limits as release gates, not footnotes."
+    },
+    {
+      "slideId": "next",
+      "job": "Define the next indisputable milestone.",
+      "audienceQuestion": "What closes the loop?",
+      "takeaway": "Land the remaining contracts, mount NodeSlide's UI and production adapter in NodeRoom, then certify one live hackathon app through export and judge-ready deck.",
+      "narrativeRole": "next-step",
+      "dominantVisual": "timeline",
+      "evidenceIds": [],
+      "maxVisibleWords": 40,
+      "speakerNoteGoal": "End on one measurable integration milestone rather than another capability list."
+    }
+  ]
+}

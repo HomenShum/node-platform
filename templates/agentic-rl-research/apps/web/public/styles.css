@@ -1,0 +1,25 @@
+:root { color-scheme: dark; font-family: Inter, ui-sans-serif, system-ui, sans-serif; background: #08121b; color: #e9f5f0; }
+* { box-sizing: border-box; }
+body { margin: 0; min-width: 320px; }
+.shell { width: min(1120px, calc(100% - 32px)); margin: 0 auto; padding: 48px 0 32px; }
+.hero { max-width: 760px; }
+.eyebrow { color: #7be0b5; font-size: .73rem; font-weight: 800; letter-spacing: .14em; margin: 0 0 8px; }
+h1 { font-size: clamp(2.35rem, 8vw, 5.4rem); letter-spacing: -.06em; line-height: .92; margin: 0; }
+h2 { letter-spacing: -.03em; margin: 0 0 9px; }
+.lede { color: #bbd4ca; font-size: 1.1rem; line-height: 1.6; }
+.safety-row, .actions { align-items: center; display: flex; flex-wrap: wrap; gap: 8px; }
+.safety-row span { background: #123023; border: 1px solid #286244; border-radius: 999px; color: #a6e8c7; font-size: .8rem; padding: 6px 10px; }
+.control-panel { align-items: center; background: linear-gradient(135deg, #102a2a, #172640); border: 1px solid #31505b; border-radius: 20px; display: flex; gap: 24px; justify-content: space-between; margin: 36px 0 20px; padding: 24px; }
+.control-panel p { color: #bbd4ca; margin: 0; }
+button, .button-link { background: #9be0bf; border: 0; border-radius: 10px; color: #082019; cursor: pointer; display: inline-block; font: inherit; font-weight: 800; padding: 10px 13px; text-decoration: none; }
+button[disabled], .button-link.disabled { background: #2a3c42; color: #91a5a5; cursor: not-allowed; pointer-events: none; }
+.grid { display: grid; gap: 16px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.card { background: #0d1e29; border: 1px solid #244351; border-radius: 16px; padding: 22px; }
+.wide { grid-column: 1 / -1; }
+.quest-list { list-style: none; margin: 18px 0 0; padding: 0; }
+.quest-list li, dl div { align-items: center; border-top: 1px solid #244351; display: flex; justify-content: space-between; padding: 12px 0; }
+.quest-list span, dt { color: #9db6b1; }
+dd { font-weight: 800; margin: 0; }
+.events { color: #c6ded6; display: grid; gap: 8px; line-height: 1.45; margin: 0; padding-left: 20px; }
+footer { color: #8ca5a0; font-size: .86rem; line-height: 1.5; margin: 28px 0 0; }
+@media (max-width: 720px) { .shell { width: min(100% - 24px, 1120px); padding-top: 28px; } .control-panel { align-items: stretch; flex-direction: column; } .actions > * { flex: 1 1 160px; text-align: center; } .grid { grid-template-columns: 1fr; } }

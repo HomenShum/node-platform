@@ -1,0 +1,11 @@
+{
+  "schemaVersion": "nodeagent.eval-suite/v1",
+  "id": "deterministic-smoke",
+  "assertions": [
+    "a simulated loan decision is reverted because it is human-underwriter-only",
+    "a request for a currently missing operating-bank statement is kept as a pending proposal",
+    "a human intervention is attached to the bounded document request",
+    "only a human approval changes the document from missing to requested",
+    "reload recovers an interrupted proposal state without making a lending decision"
+  ]
+}

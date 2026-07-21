@@ -1,6 +1,11 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import {
+  alternateDialectErrors,
+  CONTRACT_SCHEMA_FILES,
+  CONTRACT_VERSIONS,
+} from "./contracts.mjs";
+import {
   listSourceFiles,
   normalizePath,
   pathExists,
@@ -8,8 +13,9 @@ import {
   readYaml,
 } from "./files.mjs";
 import { repositoryByName, repositoryName, validateRegistry } from "./registry.mjs";
+import { validateSchema } from "./schema-validation.mjs";
 
-const REPO_SCHEMA = "nodekit.repo/v1";
+const REPO_SCHEMA = CONTRACT_VERSIONS.repository;
 const LIFECYCLES = new Set(["production", "preview", "experimental", "reference", "archived"]);
 const SUPPORT_STATES = new Set(["active", "maintenance", "frozen"]);
 const NO_KEY_STATES = new Set(["certified", "partial", "missing", "not-applicable"]);
@@ -48,9 +54,8 @@ function declaredNpmCommandExists(command, packageJson) {
   return Boolean(match && typeof packageJson?.scripts?.[match[1]] === "string");
 }
 
-async function scanContracts(repoRoot, registry, manifest) {
+async function scanContracts(registry, manifest, files) {
   const findings = [];
-  const files = await listSourceFiles(repoRoot);
   const declarations = new Set(
     (manifest.contractDeclarations ?? []).map((entry) =>
       declarationKey(entry.concept, entry.signature, entry.path),
@@ -80,9 +85,8 @@ async function scanContracts(repoRoot, registry, manifest) {
   return findings;
 }
 
-async function scanArchitecture(repoRoot, registry, manifest) {
+async function scanArchitecture(registry, manifest, files) {
   const findings = [];
-  const files = await listSourceFiles(repoRoot);
   const exceptions = new Set(
     (manifest.architectureExceptions ?? []).map(
       (entry) => `${entry.rule}\0${normalizePath(entry.path)}`,
@@ -128,20 +132,28 @@ export async function checkRepository(repoRoot, registry) {
   }
 
   const manifest = await readYaml(manifestPath);
+  errors.push(
+    ...alternateDialectErrors(manifest, "nodekit.yaml", REPO_SCHEMA),
+    ...await validateSchema(CONTRACT_SCHEMA_FILES.repository, manifest, "nodekit.yaml"),
+  );
   const packagePath = path.join(repoRoot, "package.json");
   const packageJson = (await pathExists(packagePath)) ? await readJson(packagePath) : null;
   const name = manifest?.repository ? repositoryName(manifest) : path.basename(repoRoot);
   const catalogEntry = repositoryByName(registry, name);
+  const external = manifest?.registryMode === "external";
 
   addCheck(checks, "manifest-schema", manifest?.schemaVersion === REPO_SCHEMA, REPO_SCHEMA);
-  addCheck(checks, "catalog-entry", Boolean(catalogEntry), name);
+  addCheck(checks, "catalog-entry", external || Boolean(catalogEntry), external ? "external repository" : name);
   addCheck(checks, "lifecycle", LIFECYCLES.has(manifest?.lifecycle), manifest?.lifecycle ?? "missing");
   addCheck(checks, "support", SUPPORT_STATES.has(manifest?.support), manifest?.support ?? "missing");
 
   if (manifest?.schemaVersion !== REPO_SCHEMA) {
     errors.push(`nodekit.yaml must use ${REPO_SCHEMA}`);
   }
-  if (!catalogEntry) errors.push(`${name} is missing from repositories.yaml`);
+  if (!external && !catalogEntry) errors.push(`${name} is missing from repositories.yaml`);
+  if (manifest?.registryMode && !["ecosystem", "external"].includes(manifest.registryMode)) {
+    errors.push(`invalid registryMode ${manifest.registryMode}`);
+  }
   if (!LIFECYCLES.has(manifest?.lifecycle)) errors.push(`invalid lifecycle ${manifest?.lifecycle ?? "missing"}`);
   if (!SUPPORT_STATES.has(manifest?.support)) errors.push(`invalid support ${manifest?.support ?? "missing"}`);
   if (!Array.isArray(manifest?.canonicalFor)) errors.push("canonicalFor must be an array");
@@ -229,7 +241,7 @@ export async function checkRepository(repoRoot, registry) {
     }
   }
   for (const conceptId of declaredConsumedConcepts) {
-    if (!consumedConcepts.includes(conceptId)) {
+    if (!external && !consumedConcepts.includes(conceptId)) {
       errors.push(`consumes lists ${conceptId} but the ownership registry does not register ${name}`);
     }
   }
@@ -250,7 +262,7 @@ export async function checkRepository(repoRoot, registry) {
     const concept = concepts[conceptId];
     if (!concept) {
       errors.push(`consumes references unknown concept ${conceptId}`);
-    } else if (concept.owner !== name && !(concept.consumers ?? []).includes(name)) {
+    } else if (!external && concept.owner !== name && !(concept.consumers ?? []).includes(name)) {
       errors.push(`${conceptId} does not declare ${name} as a consumer`);
     }
   }
@@ -303,7 +315,12 @@ export async function checkRepository(repoRoot, registry) {
     }
   }
 
-  const contractFindings = await scanContracts(repoRoot, registry, manifest);
+  // Source discovery can dominate ecosystem checks for mature repositories.
+  // Discover executable source once, then reuse it for contract and
+  // architecture scans. JSON manifests/catalogs are schema-validated through
+  // their dedicated paths and are intentionally not treated as source code.
+  const sourceFiles = await listSourceFiles(repoRoot);
+  const contractFindings = await scanContracts(registry, manifest, sourceFiles);
   const findingKeys = new Set(
     contractFindings.map((finding) => declarationKey(finding.concept, finding.signature, finding.path)),
   );
@@ -334,7 +351,7 @@ export async function checkRepository(repoRoot, registry) {
     }
   }
 
-  const sourceFindings = await scanArchitecture(repoRoot, registry, manifest);
+  const sourceFindings = await scanArchitecture(registry, manifest, sourceFiles);
   const sourceFindingKeys = new Set(
     sourceFindings.map((finding) => `${finding.rule}\0${normalizePath(finding.path)}`),
   );

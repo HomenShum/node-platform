@@ -1,0 +1,16 @@
+schemaVersion: nodeagent.permissions/v1
+default: deny
+allow:
+  - founderquest.read-task
+  - founderquest.propose
+  - founderquest.evaluate-protected-reward
+  - session.persist
+  - receipt.write
+network:
+  denyAll: true
+prohibitedActions:
+  - submit_external
+  - accept_terms
+  - enable_payouts
+  - make_credit_decision
+  - publish

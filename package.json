@@ -1,7 +1,7 @@
 {
   "name": "@homenshum/nodekit",
-  "version": "0.1.0",
-  "description": "Node Platform repository contracts, ownership checks, and lifecycle CLI",
+  "version": "0.2.0",
+  "description": "Portable agent-application scaffolding, compilation, conformance, and proof tooling",
   "type": "module",
   "bin": {
     "nodekit": "src/cli.mjs"
@@ -9,6 +9,8 @@
   "files": [
     "src",
     "schemas",
+    "templates",
+    "plugins",
     "ownership.yaml",
     "repositories.yaml",
     "architecture.yaml",
@@ -18,7 +20,8 @@
   "scripts": {
     "doctor": "node src/cli.mjs registry check --registry-root .",
     "audit:prod": "npm audit --omit=dev",
-    "test": "node --test",
+    "test": "node --test test/*.test.mjs",
+    "acceptance:factory": "node src/factory-acceptance.mjs",
     "registry:check": "node src/cli.mjs registry check --registry-root .",
     "ecosystem:check": "node src/cli.mjs ecosystem check --registry-root . --workspace ..",
     "dashboard": "node src/cli.mjs dashboard --registry-root . --workspace .. --write",
@@ -31,6 +34,7 @@
     "access": "public"
   },
   "dependencies": {
+    "ajv": "8.20.0",
     "yaml": "^2.9.0"
   },
   "license": "MIT"

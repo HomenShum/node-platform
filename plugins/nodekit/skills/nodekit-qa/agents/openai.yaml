@@ -1,0 +1,4 @@
+interface:
+  display_name: "NodeKit QA"
+  short_description: "Prove the critical agent-app journey"
+  default_prompt: "Use NodeKit QA to test this application through its rendered UI, runtime events, durable artifacts, and proof receipts. Repair authorized failures and preserve exact revision-bound evidence."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "NodeKit Present"
+  short_description: "Turn verified changes into editable evidence-backed decks"
+  default_prompt: "Capture this change or built application as an evidence-bound story, then use NodeSlide to produce and verify an editable presentation."

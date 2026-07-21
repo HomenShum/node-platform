@@ -1,0 +1,18 @@
+schemaVersion: nodekit.brief/v1
+application: __APP_NAME__
+problem: __BRIEF_JSON__
+outcome:
+  - Run a bounded experiment against an objective held-out metric.
+  - Keep improvements and revert regressions.
+  - Let a human steer the next experiment without restarting the session.
+  - Resume from durable state and export a reproducibility receipt.
+sponsors:
+__SPONSORS_YAML__
+constraints:
+  noKeyDemo: true
+  liveSecretRef: __SECRET_REF__
+  productionWrites: false
+approvals:
+  paidResourceActivation: human
+  productionDeployment: human
+  publicSubmission: human

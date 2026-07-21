@@ -1,0 +1,87 @@
+{
+  "deck": {
+    "schemaVersion": "nodeslide.slidelang/v1",
+    "toolchainVersion": "local-slidelang-adapter/1.1.0",
+    "id": "deck:nodekit-factory-p1",
+    "projectId": "project:nodekit",
+    "title": "NodeKit Factory P1",
+    "brief": {
+      "prompt": "Explain the NodeKit factory P1 rollout without upgrading draft evidence into release claims.",
+      "audience": "technical reviewers and hackathon builders",
+      "purpose": "Change review",
+      "successCriteria": [
+        "The system boundary is understandable.",
+        "Verified evidence and open release gates remain distinct."
+      ]
+    },
+    "theme": {
+      "id": "nodekit-review",
+      "name": "NodeKit review",
+      "mode": "light",
+      "colors": {
+        "canvas": "#f8f7f2",
+        "ink": "#17201b",
+        "muted": "#617068",
+        "accent": "#216e4e",
+        "accentSoft": "#dcefe5",
+        "insight": "#e9e3cf",
+        "insightInk": "#443d24",
+        "trace": "#132b24",
+        "border": "#c9cec9"
+      },
+      "typography": {
+        "display": "Aptos Display",
+        "body": "Aptos",
+        "data": "Aptos Mono"
+      },
+      "defaultRadius": 8,
+      "spacingUnit": 8
+    },
+    "slideOrder": ["deck:nodekit-factory-p1:slide:1"],
+    "version": 1,
+    "status": "ready",
+    "createdAt": 1784515200000,
+    "updatedAt": 1784515200000
+  },
+  "slides": [
+    {
+      "id": "deck:nodekit-factory-p1:slide:1",
+      "deckId": "deck:nodekit-factory-p1",
+      "title": "Problem, contract, proof",
+      "background": "#f8f7f2",
+      "elementOrder": ["deck:nodekit-factory-p1:slide:1:title"],
+      "version": 1
+    }
+  ],
+  "elements": [
+    {
+      "id": "deck:nodekit-factory-p1:slide:1:title",
+      "slideId": "deck:nodekit-factory-p1:slide:1",
+      "name": "Title",
+      "kind": "text",
+      "role": "title",
+      "bbox": { "x": 0.08, "y": 0.12, "width": 0.82, "height": 0.24 },
+      "rotation": 0,
+      "content": "NodeKit Factory P1 | Problem -> Contract -> Proof",
+      "style": { "color": "#17201b", "fontSize": 38, "fontWeight": 700 },
+      "sourceIds": ["source:nodekit-factory-p1:evidence-index"],
+      "locked": false,
+      "exportCapabilities": ["web_native", "pptx_editable"],
+      "version": 1
+    }
+  ],
+  "sources": [
+    {
+      "id": "source:nodekit-factory-p1:evidence-index",
+      "deckId": "deck:nodekit-factory-p1",
+      "title": "NodeKit Factory P1 evidence index",
+      "sourceType": "document",
+      "retrievedAt": 1784515200000,
+      "citation": "../story/evidence-index.json",
+      "format": "json",
+      "provider": "nodekit-change-story",
+      "retention": "until_deleted",
+      "status": "ready"
+    }
+  ]
+}

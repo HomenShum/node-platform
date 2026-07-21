@@ -1,0 +1,10 @@
+schemaVersion: nodeagent.planning-policy/v1
+strategy: one-bounded-document-request-at-a-time
+objective: prepare a reviewable synthetic credit-file readiness packet without making a lending decision
+constraints:
+  - propose only currently missing required documents
+  - do not invent applicant facts, policies, or external verification
+  - do not make, recommend, approve, decline, or simulate a credit decision
+approvalRequiredFor:
+  - applyingDocumentRequest
+  - productionDeployment

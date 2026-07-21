@@ -1,0 +1,8 @@
+schemaVersion: nodeagent.subagent/v1
+id: independent-reviewer
+mode: read-only
+tools:
+  allow:
+    - experiment.read
+    - receipt.verify
+outputSchema: experiment-review/v1

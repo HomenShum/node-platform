@@ -1,0 +1,11 @@
+schemaVersion: nodeagent.permissions/v1
+default: deny
+allow:
+  - experiment.read
+  - experiment.propose
+  - experiment.measure
+  - session.persist
+  - receipt.write
+network:
+  liveOnly:
+    - generativelanguage.googleapis.com
