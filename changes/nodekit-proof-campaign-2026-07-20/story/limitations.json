@@ -1,0 +1,40 @@
+{
+  "schemaVersion": "nodekit.limitations/v1",
+  "limitations": [
+    {
+      "id": "L1_NPM_AUTH",
+      "severity": "release-boundary",
+      "text": "NodeKit v0.2.0 is distributed through its GitHub source release because npm authentication returned E401."
+    },
+    {
+      "id": "L2_CASCA_LOCAL_ONLY",
+      "severity": "release-boundary",
+      "text": "The Casca FDE lab is local-ready and browser-proven on loopback, but not hosted or production-proven."
+    },
+    {
+      "id": "L3_RL_SCOPE",
+      "severity": "scientific-boundary",
+      "text": "The Agentic RL lab currently implements behavior cloning and protected evaluation, not reinforcement-learning weight optimization."
+    },
+    {
+      "id": "L4_RL_LIVE_BLOCKED",
+      "severity": "provider-boundary",
+      "text": "The preregistered Azure-only/ZDR live baseline received HTTP 404 and was not retried with a weaker privacy or routing policy."
+    },
+    {
+      "id": "L5_FOUNDERQUEST_SYNTHETIC",
+      "severity": "product-boundary",
+      "text": "Founder Quest Graph uses a fictional California LLC. Synthetic receipts may prove workflow readiness but never government, bank, insurance, payment-provider, legal, tax, or regulatory approval."
+    },
+    {
+      "id": "L6_NO_ANTHROPIC_AFFILIATION",
+      "severity": "public-claim-boundary",
+      "text": "The Anthropic grant is an independent external scenario; NodeKit is not affiliated with or endorsed by Anthropic and has not received the grant."
+    },
+    {
+      "id": "L7_GRAPH_OF_LOOPS_ATTRIBUTION",
+      "severity": "source-boundary",
+      "text": "The public campaign will describe a graph of research, build, evaluation, proof, presentation, distribution, feedback, and memory loops without claiming ownership of the wider loop/graph-engineering discourse."
+    }
+  ]
+}

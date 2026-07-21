@@ -1,0 +1,96 @@
+{
+  "schemaVersion": "nodeslide.design-plan/v1",
+  "communicationJob": "By the end, a technical reviewer should understand what NodeKit now proves, which real product slices support the claim, and which release gates remain open.",
+  "slides": [
+    {
+      "id": "S1",
+      "job": "Open with the system's concrete promise.",
+      "audienceQuestion": "What is NodeKit?",
+      "takeaway": "NodeKit turns an empty directory into a proof-carrying agent application.",
+      "narrativeRole": "opening",
+      "dominantVisual": "One clean lifecycle from brief to public proof with receipt checkpoints.",
+      "evidenceIds": ["E1_FACTORY_ACCEPTANCE"],
+      "density": "low"
+    },
+    {
+      "id": "S2",
+      "job": "Show why code generation alone is insufficient.",
+      "audienceQuestion": "What pain is this solving?",
+      "takeaway": "The hard part is keeping build, benchmark, browser, deployment, and public claims on one execution path.",
+      "narrativeRole": "stakes",
+      "dominantVisual": "Fragmented parallel paths collapsing into one compiled definition.",
+      "evidenceIds": [],
+      "density": "medium"
+    },
+    {
+      "id": "S3",
+      "job": "Prove the factory rather than describe it.",
+      "audienceQuestion": "Does the empty-directory path actually work?",
+      "takeaway": "Two different presets passed the complete deterministic factory acceptance in 37.221 seconds.",
+      "narrativeRole": "evidence",
+      "dominantVisual": "Two receipt cards joined to one factory-acceptance digest.",
+      "evidenceIds": ["E1_FACTORY_ACCEPTANCE", "E2_NODEKIT_RELEASE"],
+      "density": "medium"
+    },
+    {
+      "id": "S4",
+      "job": "Show the consequential artifact vertical.",
+      "audienceQuestion": "Can the system survive a real agentic product journey?",
+      "takeaway": "The Casca FDE lab passed its local live-provider, adversarial browser, reload, approval, and export path without making a credit decision.",
+      "narrativeRole": "case-study",
+      "dominantVisual": "Product screenshot annotated with graph query, proposal, and receipt checkpoints.",
+      "evidenceIds": ["E3_CASCA_RELEASE", "E4_CASCA_BROWSER", "E5_CASCA_LIVE"],
+      "density": "medium"
+    },
+    {
+      "id": "S5",
+      "job": "Explain the research and learning boundary.",
+      "audienceQuestion": "How does NodeKit approach Agentic RL responsibly?",
+      "takeaway": "Instrument and protect the environment first; train only after the scorer, heldout boundary, and failure corpus are credible.",
+      "narrativeRole": "technical-decision",
+      "dominantVisual": "Trajectory to protected reward to shadow candidate flow, with behavior cloning labeled as the current stage.",
+      "evidenceIds": ["E6_RL_RELEASE", "E7_RL_HELDOUT", "E8_RL_LIVE_BLOCKED"],
+      "density": "high"
+    },
+    {
+      "id": "S6",
+      "job": "Introduce Founder Quest as the connected product surface.",
+      "audienceQuestion": "What does the graph make possible for a user?",
+      "takeaway": "A source-backed quest graph explains applicability, dependencies, authority, evidence, and the next safe action.",
+      "narrativeRole": "product-reveal",
+      "dominantVisual": "Founder Quest product screenshot with quest rail, bounded graph, answer panel, and proof strip.",
+      "evidenceIds": [],
+      "density": "medium"
+    },
+    {
+      "id": "S7",
+      "job": "Connect the external rare-disease grant scenario.",
+      "audienceQuestion": "How would a researcher use this today?",
+      "takeaway": "The same graph maps current work, novelty, data, evaluations, authority boundaries, and application readiness without pretending that research synthesis proves biology.",
+      "narrativeRole": "external-use-case",
+      "dominantVisual": "Disease-gene-phenotype-mechanism-paper-trial-hypothesis graph with source ledger.",
+      "evidenceIds": ["E9_ANTHROPIC_GRANT_SOURCE"],
+      "density": "medium"
+    },
+    {
+      "id": "S8",
+      "job": "Explain the graph of loops as an operating discipline.",
+      "audienceQuestion": "How do the pieces improve without mutually confirming a false story?",
+      "takeaway": "Independent loops watch one another, but only external anchors such as sources, commits, deployed URLs, exports, and user outcomes close the graph.",
+      "narrativeRole": "synthesis",
+      "dominantVisual": "Loop graph with external reality anchors crossing the boundary.",
+      "evidenceIds": ["E1_FACTORY_ACCEPTANCE", "E4_CASCA_BROWSER"],
+      "density": "medium"
+    },
+    {
+      "id": "S9",
+      "job": "Close with a falsifiable invitation.",
+      "audienceQuestion": "What should reviewers do next?",
+      "takeaway": "Bring a consequential workflow, then inspect the proof rather than trusting the pitch.",
+      "narrativeRole": "action",
+      "dominantVisual": "Three entry points: researcher, builder, domain operator; each points to the same proof ledger.",
+      "evidenceIds": ["E2_NODEKIT_RELEASE"],
+      "density": "low"
+    }
+  ]
+}

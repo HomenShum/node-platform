@@ -1,0 +1,92 @@
+{
+  "schemaVersion": "nodekit.claim-ledger/v1",
+  "claims": [
+    {
+      "id": "C1_FACTORY_ACCEPTANCE",
+      "text": "NodeKit v0.2.0 generated, installed, compiled, checked, demonstrated, evaluated, benchmarked, and proof-verified both the Agentic RL and SMB-lending presets from empty directories in 37.221 seconds.",
+      "status": "measured",
+      "evidenceIds": ["E1_FACTORY_ACCEPTANCE", "E2_NODEKIT_RELEASE"],
+      "scope": {
+        "commit": "ef23bb0d630c265d21be5443138cd1a5b769ed8c",
+        "tag": "v0.2.0"
+      },
+      "limitations": [
+        "The timed acceptance is deterministic and local; it is not a production deployment benchmark.",
+        "The npm registry package is not published."
+      ]
+    },
+    {
+      "id": "C2_CASCA_LOCAL_PROOF",
+      "text": "The Casca FDE Deployment Lab passed its deterministic, live-provider, adversarial browser, reload, export, and identity-binding gates on one exact commit.",
+      "status": "verified",
+      "evidenceIds": ["E3_CASCA_RELEASE", "E4_CASCA_BROWSER", "E5_CASCA_LIVE"],
+      "scope": {
+        "commit": "6c8d7d9f81810509240fe0b2352453bfa04ac924",
+        "releaseLevel": "local-ready"
+      },
+      "limitations": [
+        "The application is synthetic and unaffiliated with Casca.",
+        "Deployment remains an explicitly missing release gate."
+      ]
+    },
+    {
+      "id": "C3_RL_LOCAL_BASELINE",
+      "text": "The Agentic RL research lab exports step trajectories, trains a deterministic behavior-cloning baseline, blocks nine adversarial reward attacks, and evaluates a label-free process-separated heldout split.",
+      "status": "verified",
+      "evidenceIds": ["E6_RL_RELEASE", "E7_RL_HELDOUT"],
+      "scope": {
+        "commit": "d6826837920d828edd4d7026c4fc17388f27b8b9",
+        "releaseLevel": "local-learning-baseline-ready"
+      },
+      "limitations": [
+        "This is not policy-gradient RL, preference optimization, online learning, GPU training, or a weight update.",
+        "The two-task heldout set is diagnostic and too small for generalization claims."
+      ]
+    },
+    {
+      "id": "C4_RL_LIVE_ROUTE",
+      "text": "The preregistered Agentic RL live-model baseline failed closed when the Azure-only, zero-data-retention OpenRouter route returned HTTP 404; no retry, fallback, token usage, or cost was accepted.",
+      "status": "observed",
+      "evidenceIds": ["E8_RL_LIVE_BLOCKED"],
+      "scope": {
+        "commit": "353d825767682eaacda989551270747a95bcffc4",
+        "releaseLevel": "blocked"
+      },
+      "limitations": [
+        "The live baseline produced no candidate completions and therefore proves enforcement, not model quality."
+      ]
+    },
+    {
+      "id": "C5_FOUNDER_QUEST_PRODUCT",
+      "text": "Founder Quest Graph provides a read-only synthetic quest rail, bounded graph workspace, source-backed answer panel, and proof surface on an exact hosted revision.",
+      "status": "planned",
+      "evidenceIds": [],
+      "scope": {},
+      "limitations": [
+        "This claim must remain future tense until deployment and fresh-user browser proof pass."
+      ]
+    },
+    {
+      "id": "C6_ANTHROPIC_GRANT_CASE",
+      "text": "NodeKit uses Anthropic's rare-disease research grants as an independent external scenario for mapping current research, novelty, execution, evaluation, and application readiness.",
+      "status": "verified",
+      "evidenceIds": ["E9_ANTHROPIC_GRANT_SOURCE"],
+      "scope": {
+        "retrievedAt": "2026-07-20"
+      },
+      "limitations": [
+        "NodeKit is not affiliated with or endorsed by Anthropic and has not received this grant."
+      ]
+    },
+    {
+      "id": "C7_RECURSIVE_LAUNCH",
+      "text": "NodeKit directed the research, product proofs, editable deck, walkthrough video, and browser-assisted publication of this campaign.",
+      "status": "planned",
+      "evidenceIds": [],
+      "scope": {},
+      "limitations": [
+        "Past tense is prohibited until all artifact, publication, and public-URL receipts exist."
+      ]
+    }
+  ]
+}
