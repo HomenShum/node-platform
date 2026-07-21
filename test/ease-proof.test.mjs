@@ -14,6 +14,10 @@ test("EaseProof keeps browser contracts distinct from certification", async () =
   assert.match(browser, /missingStates/);
   assert.match(browser, /AxeBuilder/);
   assert.match(browser, /accessibilityViolations\.length === 0/);
+  assert.match(browser, /playwright-trace\.zip/);
+  assert.match(browser, /journey\.webm/);
+  assert.match(browser, /receipt_reload_confirmed/);
+  assert.match(browser, /serverProcess/);
   for (const state of [
     "first_arrival", "orientation", "input", "validation_error", "running", "partial_result",
     "external_wait", "proposal_pending", "approval", "conflict", "recoverable_failure",
@@ -52,7 +56,7 @@ test("submission remains fail-closed while external EaseProof gates are open", a
   const factory = await readFile(path.resolve("src", "factory-acceptance.mjs"), "utf8");
   assert.match(factory, /submissionReady: false/);
   assert.doesNotMatch(factory, /submissionBlockers: \["browserStateCoverage"/);
-  for (const blocker of ["freshAgentHeldout", "freshHumanUsability", "threeConvexConsumers", "proofloopEaseVerification"]) {
+  for (const blocker of ["developerTimingMatrix", "freshAgentHeldout", "freshHumanUsability", "threeConvexConsumers", "proofloopEaseVerification"]) {
     assert.match(factory, new RegExp(blocker));
   }
 });

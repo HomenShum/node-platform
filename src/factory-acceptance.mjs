@@ -178,7 +178,7 @@ try {
     schemaVersion: "nodekit.ease-proof-run/v1",
     startedAt,
     submissionReady: false,
-    submissionBlockers: ["freshAgentHeldout", "freshHumanUsability", "threeConvexConsumers", "previewDeployment", "proofloopEaseVerification"],
+    submissionBlockers: ["developerTimingMatrix", "freshAgentHeldout", "freshHumanUsability", "threeConvexConsumers", "previewDeployment", "proofloopEaseVerification"],
     verdict: "EASE_NOT_CERTIFIED",
   };
   receipt.receiptDigest = digest(receipt);

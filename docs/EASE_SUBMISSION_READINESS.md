@@ -18,7 +18,7 @@ NodeKit is eligible for Convex component extraction or submission only when ever
 - [x] Stale proposals fail closed and preserve the newer canonical artifact.
 - [x] Failure and external-wait states preserve the last valid artifact and name next-action ownership.
 - [x] Independent ProofLoop integrity verification re-hashed the candidate archive, manifests, and all 180 screenshots.
-- [x] Cross-platform npm/pnpm factory evidence previously passed on Ubuntu, macOS, and Windows.
+- [x] One cross-platform npm/pnpm factory run passed on Ubuntu, macOS, and Windows.
 
 Canonical evidence:
 
@@ -32,6 +32,15 @@ Canonical evidence:
 - `.qa/memory/findings.jsonl`
 
 ## Open submission blockers
+
+### 0. Repeated cold/warm developer timing matrix
+
+- [ ] Five genuinely cold and five warm runs pass for each supported OS/package-manager lane.
+- [ ] Cold caches are isolated rather than merely labeled cold.
+- [ ] Per-phase cold/warm p50 and p95 are computed from raw receipts.
+- [ ] No strong onboarding percentile claim is published from the current single-run samples.
+
+The existing cross-platform result proves compatibility, not percentile stability.
 
 ### 1. Fresh coding-agent held-out matrix
 

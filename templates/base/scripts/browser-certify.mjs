@@ -1,6 +1,6 @@
 import { createHash, randomUUID } from "node:crypto";
 import { execFileSync, spawn } from "node:child_process";
-import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { copyFile, mkdir, readFile, stat, writeFile } from "node:fs/promises";
 import path from "node:path";
 import AxeBuilder from "@axe-core/playwright";
 import { chromium } from "playwright";
@@ -11,6 +11,7 @@ const runId = process.env.NODEKIT_EASE_RUN_ID ?? `ease_${randomUUID().replaceAll
 const port = Number(process.env.NODEKIT_BROWSER_PORT ?? 43000 + (process.pid % 1000));
 const baseUrl = `http://127.0.0.1:${port}`;
 const evidenceRoot = path.resolve("proof", "ease", runId);
+const browserRoot = path.join(evidenceRoot, "browser");
 const screenshotRoot = path.join(evidenceRoot, "browser", "screenshots");
 const identity = JSON.parse(await readFile(path.resolve(".nodeagent", "application-identity.json"), "utf8"));
 const generatedCandidateCommit = execFileSync("git", ["rev-parse", "HEAD"], { encoding: "utf8" }).trim();
@@ -34,6 +35,14 @@ const globalConsole = [];
 const globalNetwork = [];
 const accessibilityViolations = [];
 const phases = [];
+const milestones = [];
+const evidenceArtifacts = [];
+const journeyAssertions = {
+  approvalApplied: false,
+  proposalVisible: false,
+  receiptSurvivedReload: false,
+  receiptVisible: false,
+};
 let firstMeaningfulPaintMs = null;
 
 function sha256(bytes) {
@@ -42,6 +51,15 @@ function sha256(bytes) {
 
 function mark(name, phaseStarted) {
   phases.push({ at: new Date().toISOString(), durationMs: Math.round(performance.now() - phaseStarted), name });
+}
+
+function milestone(name) {
+  if (!milestones.some((entry) => entry.name === name)) milestones.push({ at: new Date().toISOString(), elapsedMs: Math.round(performance.now() - started), name });
+}
+
+async function recordArtifact(id, absolutePath) {
+  const bytes = await readFile(absolutePath);
+  evidenceArtifacts.push({ byteSize: (await stat(absolutePath)).size, id, path: path.relative(evidenceRoot, absolutePath).replaceAll("\\", "/"), sha256: sha256(bytes) });
 }
 
 async function waitForServer() {
@@ -81,6 +99,7 @@ async function capture(page, state, viewport, theme, observations) {
     pngSha256: sha256(bytes),
     runId,
     schemaVersion: "nodekit.screenshot-proof/v1",
+    serverProcess: { command: `${process.execPath} apps/web/server.mjs`, pid: server.pid },
     state,
     theme,
     viewport: { height: viewport.height, width: viewport.width },
@@ -95,6 +114,7 @@ async function capture(page, state, viewport, theme, observations) {
 }
 
 await mkdir(screenshotRoot, { recursive: true });
+await mkdir(path.join(browserRoot, "video"), { recursive: true });
 const server = spawn(process.execPath, [path.resolve("apps", "web", "server.mjs")], {
   env: { ...process.env, PORT: String(port) },
   stdio: ["ignore", "pipe", "pipe"],
@@ -107,17 +127,42 @@ try {
   browser = await chromium.launch({ headless: true });
   for (const viewport of viewports) {
     for (const theme of ["light", "dark"]) {
+      const canonicalJourney = viewport.id === "desktop" && theme === "light";
       const context = await browser.newContext({
         colorScheme: theme,
+        ...(canonicalJourney ? { recordVideo: { dir: path.join(browserRoot, "video"), size: { height: 900, width: 1440 } } } : {}),
         reducedMotion: viewport.id === "mobile-portrait" ? "reduce" : "no-preference",
         viewport: { height: viewport.height, width: viewport.width },
       });
+      if (canonicalJourney) await context.tracing.start({ screenshots: true, snapshots: true, sources: true });
       const page = await context.newPage();
+      const video = canonicalJourney ? page.video() : null;
       const observations = { consoleErrors: [], failedRequests: [] };
       page.on("console", (message) => {
         if (message.type() === "error") observations.consoleErrors.push({ text: message.text(), type: message.type() });
       });
       page.on("requestfailed", (request) => observations.failedRequests.push({ error: request.failure()?.errorText ?? "unknown", url: request.url() }));
+      if (canonicalJourney) {
+        await page.goto(baseUrl, { waitUntil: "networkidle" });
+        await page.locator("#case-title").waitFor();
+        firstMeaningfulPaintMs = Math.round(performance.now() - started);
+        milestone("first_meaningful_paint");
+        milestone("neutral_case_visible");
+        await page.locator("#propose").click();
+        await page.locator("#proposal strong").waitFor();
+        journeyAssertions.proposalVisible = true;
+        milestone("proposal_visible");
+        await page.locator("#approve").click();
+        await page.locator("#completion").waitFor({ state: "visible" });
+        journeyAssertions.approvalApplied = true;
+        journeyAssertions.receiptVisible = (await page.locator("#receipt-id").innerText()).startsWith("Receipt ");
+        milestone("approval_applied");
+        milestone("receipt_visible");
+        const receiptBeforeReload = await page.locator("#receipt-id").innerText();
+        await page.reload({ waitUntil: "networkidle" });
+        journeyAssertions.receiptSurvivedReload = (await page.locator("#receipt-id").innerText()) === receiptBeforeReload;
+        milestone("receipt_reload_confirmed");
+      }
       for (const state of requiredStates) {
         await page.goto(`${baseUrl}/?scenario=${state}`, { waitUntil: "networkidle" });
         await page.locator("#case-title").waitFor();
@@ -170,12 +215,21 @@ try {
       }
       globalConsole.push(...observations.consoleErrors.map((entry) => ({ ...entry, theme, viewport: viewport.id })));
       globalNetwork.push(...observations.failedRequests.map((entry) => ({ ...entry, theme, viewport: viewport.id })));
+      if (canonicalJourney) await context.tracing.stop({ path: path.join(browserRoot, "playwright-trace.zip") });
       await context.close();
+      if (canonicalJourney && video) {
+        const recordedVideo = await video.path();
+        await copyFile(recordedVideo, path.join(browserRoot, "journey.webm"));
+        await recordArtifact("playwright-trace", path.join(browserRoot, "playwright-trace.zip"));
+        await recordArtifact("browser-video", path.join(browserRoot, "journey.webm"));
+      }
       await fetch(`${baseUrl}/api/reset`, { method: "POST" });
     }
   }
   passed = screenshots.length === viewports.length * 2 * requiredStates.length
     && accessibilityViolations.length === 0
+    && evidenceArtifacts.length === 2
+    && Object.values(journeyAssertions).every(Boolean)
     && screenshots.every((entry) => entry.consoleErrors === 0 && entry.failedRequests === 0 && entry.horizontalOverflowPx === 0 && entry.mojibakeDetected === false);
 } catch (caught) {
   error = caught instanceof Error ? caught.stack ?? caught.message : String(caught);
@@ -195,9 +249,12 @@ const manifest = {
   coveredStates,
   durationMs: Math.round(performance.now() - started),
   error,
+  evidenceArtifacts,
   firstMeaningfulPaintMs,
   generatedAt: new Date().toISOString(),
   generatedCandidateCommit,
+  journeyAssertions,
+  milestones,
   missingStates,
   networkFailures: globalNetwork,
   nodekitCommit,
@@ -207,6 +264,7 @@ const manifest = {
   requiredStates,
   runId,
   schemaVersion: "nodekit.browser-certification/v1",
+  serverProcess: { command: `${process.execPath} apps/web/server.mjs`, pid: server.pid },
   screenshots,
   startedAt,
   verdict: passed && missingStates.length === 0 ? "BROWSER_CERTIFIED" : "BROWSER_JOURNEY_PASS_COVERAGE_INCOMPLETE",
