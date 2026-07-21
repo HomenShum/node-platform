@@ -175,6 +175,21 @@ test("capture adapter adds a bounded visible-text wait to the pinned script cont
   assert.match(adapted, /timeout: a\.timeoutMs \|\| 10000/);
 });
 
+test("campaign renderer pulls result frames back to the full product surface", () => {
+  const source = readFileSync(
+    join(VIDEO_ROOT, "orchestrate-founder-quest-video.mjs"),
+    "utf8",
+  );
+  assert.match(
+    source,
+    /RESULT_SCALE = 1\.14, OPEN_SCALE = 1\.04/,
+  );
+  assert.match(
+    source,
+    /RESULT_SCALE = 1\.0, OPEN_SCALE = 1\.04/,
+  );
+});
+
 test("preflight fails closed when deployment, browser, and screenshot proof are absent", (t) => {
   const prefix = join(tmpdir(), "nodekit-video-gate-");
   const temporaryRoot = mkdtempSync(prefix);

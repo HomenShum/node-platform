@@ -741,6 +741,10 @@ const adaptWalkthroughHostLabel = (stageRoot) => {
   let source = readFileSync(path, "utf8");
   const replacements = [
     [
+      "const ACTION_SCALE = 1.36, RESULT_SCALE = 1.14, OPEN_SCALE = 1.04;",
+      "const ACTION_SCALE = 1.36, RESULT_SCALE = 1.0, OPEN_SCALE = 1.04;",
+    ],
+    [
       "const Chrome = ({ accent }) => (",
       "const Chrome = ({ accent, browserLabel }) => (",
     ],

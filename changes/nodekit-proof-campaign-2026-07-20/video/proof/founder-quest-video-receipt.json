@@ -1,11 +1,11 @@
 {
   "schemaVersion": "nodekit.video-proof-receipt/v1",
   "status": "verified",
-  "verifiedAt": "2026-07-21T06:10:03.951Z",
+  "verifiedAt": "2026-07-21T06:44:43.665Z",
   "campaignId": "nodekit-proof-campaign-2026-07-20",
   "journeyId": "founder-quest-critical-path-v1",
-  "campaignCommit": "7ca02bc3bb73b55ea5c9991276ca1c36268551f8",
-  "configSha256": "420556ca1ee9bfe550ded24655ed5a6bb9a3d27fb34e614d40ab2d2fd079d34c",
+  "campaignCommit": "16a46006a91ebab95d95d02bb316b9375d8c2e5f",
+  "configSha256": "14a917b3b78b2f815394ff6563f152df199f3ec129eb40b5a48e765937ce862b",
   "deployment": {
     "appId": "founder-quest-graph",
     "deploymentId": "dpl_z1dRn48GFzZYuEyBq6oDNKPHdUHP",
@@ -21,24 +21,24 @@
     "upstreamCaptureSha256": "c6eab5d5288cea5d4ebb47395abdffe3f571d579523d782cfdb28c0d2ae37311",
     "adaptedCaptureSha256": "c759dec24442a584672c3305080673478f3db11ec94ccf36d8c8ab8f532f1f1c",
     "adaptedWalkthroughSha256": "334ad1c52f71c9262dfb79829377ff7c550786e33af1a325ff1f341bd57aa6a5",
-    "generatedSpecSha256": "c7f2b99622c7931887b086b5888b40f6322a47fa3b7b6984c036f06f6b5e5c4b",
+    "generatedSpecSha256": "bb62aba33b4f2e27429197033a984ef118053945f0c75b537d58ad4acb3f906b",
     "remotionRootSha256": "42bfe85de1520794c44bdb8852b768a8de1ccc489c4f6628955cb8a16d8641e7",
     "packageLockSha256": "6a33d78acda3ec895b0da45c76cca3fc4875b6d89f74f0709bfff098d126e2d4",
-    "walkthroughDataSha256": "5db93de076521fc95af46248b566ca772d50951ae010076c79bebf29092b283a"
+    "walkthroughDataSha256": "678e903a45a36d39561a84e88d09e862cb974d62daf17f1dbfee385db7b1ec25"
   },
   "prerequisites": {
     "deploymentReceiptSha256": "ddafa68fc53ca807fa0c20726812b58a62b3a99d9410e69469bec1a327d43882",
     "browserProofReceiptSha256": "207fd8ff18591f44c67771b4c1df13a0804cc19c47052f6687c8a27deb3bb4d0",
     "screenshotManifestSha256": "76ec15fc2baada6f02518296cbd082249959b06a7a25c06dfdd0a6d0edfa9e2d",
-    "captureManifestSha256": "380ae2ec90f085a06f5b87bf0f619e5cda01a8c5cf3422173ebfefd555515041"
+    "captureManifestSha256": "c9eb34bec1a7a23f99e2131a72aa8d9507899b29aa5a539602cfe1f8fa27d563"
   },
   "videos": [
     {
       "profileId": "FounderQuestVertical",
       "compositionId": "WT9-FounderQuestVertical",
       "path": "video/output/nodekit-founder-quest-vertical.mp4",
-      "sha256": "4cd8e5c9e5ecfc3b93abaa3e9f8e60dd819c024e6ad147002637bd6e68b12ae3",
-      "bytes": 9771396,
+      "sha256": "40a9f5cc7609912d5235bcb1309dd4da1f30738e00cd6bf297f51c8f817fcf01",
+      "bytes": 9902138,
       "width": 1080,
       "height": 1920,
       "durationSeconds": 83
@@ -47,8 +47,8 @@
       "profileId": "FounderQuestTechnical",
       "compositionId": "WT-FounderQuestTechnical",
       "path": "video/output/nodekit-founder-quest-technical.mp4",
-      "sha256": "d0e2d13ed29fc82d6528c988cd6afabf81d464c00d1a80857951377cc8d07e18",
-      "bytes": 23095701,
+      "sha256": "8e152865f17c19852d980a68cae6ccb3b66da946f29d3fde3d7126c30afe8fe1",
+      "bytes": 23307194,
       "width": 1920,
       "height": 1080,
       "durationSeconds": 180

@@ -1,10 +1,10 @@
 {
   "schemaVersion": "nodekit.video-capture-receipt/v1",
   "status": "captured",
-  "capturedAt": "2026-07-21T06:34:37.126Z",
+  "capturedAt": "2026-07-21T06:37:32.068Z",
   "campaignId": "nodekit-proof-campaign-2026-07-20",
   "journeyId": "founder-quest-critical-path-v1",
-  "campaignCommit": "c650dd7b343a3f754e0818df7fa6fc91744b1dc8",
+  "campaignCommit": "16a46006a91ebab95d95d02bb316b9375d8c2e5f",
   "configSha256": "14a917b3b78b2f815394ff6563f152df199f3ec129eb40b5a48e765937ce862b",
   "deployment": {
     "appId": "founder-quest-graph",
@@ -23,7 +23,7 @@
     "remotionRootSha256": "42bfe85de1520794c44bdb8852b768a8de1ccc489c4f6628955cb8a16d8641e7",
     "packageLockSha256": "6a33d78acda3ec895b0da45c76cca3fc4875b6d89f74f0709bfff098d126e2d4",
     "walkthroughDataSha256": "678e903a45a36d39561a84e88d09e862cb974d62daf17f1dbfee385db7b1ec25",
-    "stageRoot": "D:\\VSCode Projects\\cafecorner_nodebench\\nodebench_ai4\\.worktrees\\nodekit-proof-campaign\\.tmp\\nodekit-proof-video\\14a917b3b78b-dpl-z1dRn48GFzZYuEyBq6oDNKPHdUHP"
+    "stageRoot": "D:\\nkv\\14a917b3b78b-dpl-z1dRn48GFzZYuEyBq6oDNKPHdUHP"
   },
   "prerequisiteEvidence": {
     "deploymentReceiptSha256": "ddafa68fc53ca807fa0c20726812b58a62b3a99d9410e69469bec1a327d43882",
