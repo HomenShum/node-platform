@@ -54,10 +54,7 @@ with qualified researchers and professionals.
 
 Name the graph: research, build, evaluation, proof, presentation, distribution, feedback,
 and memory. The graph is credible only when it resolves to current sources, exact commits,
-fresh-browser evidence, exports, public URLs, and observed response.
-
-## S9 — Inspect the proof
-
-Invite researchers, builders, and domain operators to bring one bounded consequential
-workflow. Close on a falsifiable promise: the system should expose what passed, what
-failed, what is local, and what still needs a human.
+fresh-browser evidence, exports, public URLs, and observed response. Invite researchers,
+builders, and domain operators to bring one bounded consequential workflow. Close on a
+falsifiable promise: the system should expose what passed, what failed, what is local,
+and what still needs a human.

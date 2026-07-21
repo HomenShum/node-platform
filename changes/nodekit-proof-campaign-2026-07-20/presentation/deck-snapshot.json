@@ -1,0 +1,3314 @@
+{
+  "deck": {
+    "brief": {
+      "audience": "agent builders, applied AI researchers, forward-deployed engineers, technical founders and investors",
+      "prompt": "By the end, a technical reviewer should understand that NodeKit is a portable application contract and verification path, see exactly which product slices have passed which gates, and know where the system remains local, blocked, or planned.\nEvery material claim must remain bound to the supplied Change Story evidence.\nThis deck is a draft and does not assert external publish readiness.\nhttps://github.com/HomenShum/node-platform/releases/tag/v0.2.0\nhttps://github.com/HomenShum/agentic-rl-research-lab/releases/tag/v0.1.0-diagnostic-baselines\nhttps://github.com/HomenShum/agentic-rl-research-lab/releases/tag/v0.1.0-diagnostic-baselines\nhttps://www.anthropic.com/news/rare-disease-research-grants\nhttps://medium.com/intuitionmachine/from-loop-engineering-to-graph-engineering-d3ebeb08511c\nhttps://github.com/HomenShum/agentic-rl-research-lab/actions/runs/29799453044",
+      "purpose": "By the end, a technical reviewer should understand that NodeKit is a portable application contract and verification path, see exactly which product slices have passed which gates, and know where the system remains local, blocked, or planned. Draft-only until every deployment and publication gate passes.",
+      "successCriteria": [
+        "exact commits and application/config hashes",
+        "no-key deterministic factory acceptance",
+        "strict paid-provider receipts with no fallback",
+        "browser journeys with console and network health",
+        "exact deployment identity and fresh-user production proof where claimed",
+        "editable deck export and reopen verification",
+        "public URL verification and distribution receipts",
+        "Keep planned Founder Quest content in explicit future tense",
+        "Keep external publish readiness false"
+      ]
+    },
+    "createdAt": 1784505600000,
+    "id": "deck-nodekit-proof-campaign-2026-07-20-draft",
+    "projectId": "nodekit-proof-campaign-2026-07-20",
+    "schemaVersion": "nodeslide.slidelang/v1",
+    "shareSlug": "draft-nodekit-launches-nodekit-through-proof-car-01o5s01",
+    "slideOrder": [
+      "slide_1cf4b8fceb3033524c77ee0693763da4",
+      "slide_50ff87dda5753a60a9afd09c61eab1ff",
+      "slide_f90c9a02ce689dc0e43c15bdaa7cd8b6",
+      "slide_7c6962f7eda3feeb7294c21a997882ac",
+      "slide_18bba5ff882469f994cfecf6ecc4ce71",
+      "slide_84757621167f74a89a9a21c4462cd3e7",
+      "slide_87a5e4c349b351cdf61b0218f11d9db3",
+      "slide_c70d2b484ca5cf50c10158883957b208"
+    ],
+    "status": "draft",
+    "theme": {
+      "colors": {
+        "accent": "#287A8D",
+        "accentSoft": "#DCECF0",
+        "border": "#CFDCE0",
+        "canvas": "#F4F7F8",
+        "ink": "#17242B",
+        "insight": "#DDEDE8",
+        "insightInk": "#15554E",
+        "muted": "#60727B",
+        "trace": "#4E6E8E"
+      },
+      "defaultRadius": 8,
+      "id": "quiet-precision",
+      "mode": "light",
+      "name": "Quiet Precision",
+      "spacingUnit": 8,
+      "typography": {
+        "body": "Geist Variable",
+        "data": "JetBrains Mono Variable",
+        "display": "Geist Variable"
+      }
+    },
+    "title": "DRAFT — NodeKit launches NodeKit through proof-carrying product work",
+    "toolchainVersion": "local-slidelang-adapter/1.1.0",
+    "updatedAt": 1784505600000,
+    "version": 1
+  },
+  "elements": [
+    {
+      "bbox": {
+        "height": 0.83,
+        "width": 0.008,
+        "x": 0.035,
+        "y": 0.065
+      },
+      "exportCapabilities": [
+        "web_native",
+        "pptx_editable",
+        "google_importable"
+      ],
+      "id": "element_2ff4f4e8a01eaaff695e662f47551b93",
+      "kind": "shape",
+      "locked": true,
+      "name": "Accent rail",
+      "role": "decoration",
+      "rotation": 0,
+      "slideId": "slide_1cf4b8fceb3033524c77ee0693763da4",
+      "sourceIds": [],
+      "style": {
+        "fill": "#287A8D",
+        "radius": 8
+      },
+      "version": 1
+    },
+    {
+      "bbox": {
+        "height": 0.05,
+        "width": 0.48,
+        "x": 0.07,
+        "y": 0.065
+      },
+      "content": "OPENING / 01",
+      "exportCapabilities": [
+        "web_native",
+        "pptx_editable",
+        "google_importable"
+      ],
+      "id": "element_34b7e996d5dc467d2dda9cfdf7baf596",
+      "kind": "text",
+      "locked": false,
+      "name": "Section label",
+      "role": "section",
+      "rotation": 0,
+      "slideId": "slide_1cf4b8fceb3033524c77ee0693763da4",
+      "sourceIds": [],
+      "style": {
+        "color": "#287A8D",
+        "fontFamily": "Courier New",
+        "fontSize": 15,
+        "fontWeight": 650,
+        "letterSpacing": 1.3
+      },
+      "version": 1
+    },
+    {
+      "bbox": {
+        "height": 0.27,
+        "width": 0.79,
+        "x": 0.07,
+        "y": 0.15
+      },
+      "content": "Empty directory. Proof-carrying application.",
+      "exportCapabilities": [
+        "web_native",
+        "pptx_editable",
+        "google_importable"
+      ],
+      "id": "element_2eec91cec257e2d659c039e77fb1d308",
+      "kind": "text",
+      "locked": false,
+      "name": "Headline",
+      "role": "title",
+      "rotation": 0,
+      "slideId": "slide_1cf4b8fceb3033524c77ee0693763da4",
+      "sourceIds": [
+        "source_2d056b939eda709bebd6e733061843bb"
+      ],
+      "style": {
+        "color": "#17242B",
+        "fontFamily": "Arial",
+        "fontSize": 48,
+        "fontWeight": 620,
+        "letterSpacing": -0.8,
+        "lineHeight": 1.04
+      },
+      "version": 1
+    },
+    {
+      "bbox": {
+        "height": 0.17,
+        "width": 0.66,
+        "x": 0.07,
+        "y": 0.48
+      },
+      "content": "One manifest connects runtime, evaluation, browser QA, and proof.",
+      "exportCapabilities": [
+        "web_native",
+        "pptx_editable",
+        "google_importable"
+      ],
+      "id": "element_379027360bf16416af43d06b0def887c",
+      "kind": "text",
+      "locked": false,
+      "name": "Body copy",
+      "role": "body",
+      "rotation": 0,
+      "slideId": "slide_1cf4b8fceb3033524c77ee0693763da4",
+      "sourceIds": [
+        "source_2d056b939eda709bebd6e733061843bb",
+        "source_6be783f5420cdb61288cf2af7102eb07",
+        "source_90f22f9d0f351fcc2f15fcd83f3752c3",
+        "source_3e10a3d558d3c4166f322e3f7691af27",
+        "source_7e07f803aa4d9b04b87d4828fc1b1647",
+        "source_a69c79dec813813738607ab32c542d53",
+        "source_82043fb8f2d95853e479440f80f0a692",
+        "source_eb5bb5f501f64e2f3fef3daf2cf79fa1",
+        "source_627f2cf2736066cd2c65dd72c5897641"
+      ],
+      "style": {
+        "color": "#60727B",
+        "fontFamily": "Arial",
+        "fontSize": 19,
+        "fontWeight": 430,
+        "lineHeight": 1.35
+      },
+      "version": 1
+    },
+    {
+      "bbox": {
+        "height": 0.08,
+        "width": 0.25,
+        "x": 0.07,
+        "y": 0.72
+      },
+      "content": "•  Two presets; one path",
+      "exportCapabilities": [
+        "web_native",
+        "pptx_editable",
+        "google_importable"
+      ],
+      "id": "element_ccf6015d184eb1b4cc3631c277bd84a1",
+      "kind": "text",
+      "locked": false,
+      "name": "Key point 1",
+      "role": "bullet",
+      "rotation": 0,
+      "slideId": "slide_1cf4b8fceb3033524c77ee0693763da4",
+      "sourceIds": [
+        "source_2d056b939eda709bebd6e733061843bb",
+        "source_6be783f5420cdb61288cf2af7102eb07",
+        "source_90f22f9d0f351fcc2f15fcd83f3752c3",
+        "source_3e10a3d558d3c4166f322e3f7691af27",
+        "source_7e07f803aa4d9b04b87d4828fc1b1647",
+        "source_a69c79dec813813738607ab32c542d53",
+        "source_82043fb8f2d95853e479440f80f0a692",
+        "source_eb5bb5f501f64e2f3fef3daf2cf79fa1",
+        "source_627f2cf2736066cd2c65dd72c5897641"
+      ],
+      "style": {
+        "color": "#17242B",
+        "fontFamily": "Arial",
+        "fontSize": 16,
+        "fontWeight": 560,
+        "lineHeight": 1.2
+      },
+      "version": 1
+    },
+    {
+      "bbox": {
+        "height": 0.08,
+        "width": 0.25,
+        "x": 0.35,
+        "y": 0.72
+      },
+      "content": "•  Local run: 37.221 s",
+      "exportCapabilities": [
+        "web_native",
+        "pptx_editable",
+        "google_importable"
+      ],
+      "id": "element_6bff6c3bd355a102b302b4c592790d4f",
+      "kind": "text",
+      "locked": false,
+      "name": "Key point 2",
+      "role": "bullet",
+      "rotation": 0,
+      "slideId": "slide_1cf4b8fceb3033524c77ee0693763da4",
+      "sourceIds": [
+        "source_2d056b939eda709bebd6e733061843bb",
+        "source_6be783f5420cdb61288cf2af7102eb07",
+        "source_90f22f9d0f351fcc2f15fcd83f3752c3",
+        "source_3e10a3d558d3c4166f322e3f7691af27",
+        "source_7e07f803aa4d9b04b87d4828fc1b1647",
+        "source_a69c79dec813813738607ab32c542d53",
+        "source_82043fb8f2d95853e479440f80f0a692",
+        "source_eb5bb5f501f64e2f3fef3daf2cf79fa1",
+        "source_627f2cf2736066cd2c65dd72c5897641"
+      ],
+      "style": {
+        "color": "#17242B",
+        "fontFamily": "Arial",
+        "fontSize": 16,
+        "fontWeight": 560,
+        "lineHeight": 1.2
+      },
+      "version": 1
+    },
+    {
+      "bbox": {
+        "height": 0.08,
+        "width": 0.25,
+        "x": 0.63,
+        "y": 0.72
+      },
+      "content": "•  GitHub source; npm blocked",
+      "exportCapabilities": [
+        "web_native",
+        "pptx_editable",
+        "google_importable"
+      ],
+      "id": "element_4bcad36bae99b401609f9a1a7b66cfa1",
+      "kind": "text",
+      "locked": false,
+      "name": "Key point 3",
+      "role": "bullet",
+      "rotation": 0,
+      "slideId": "slide_1cf4b8fceb3033524c77ee0693763da4",
+      "sourceIds": [
+        "source_2d056b939eda709bebd6e733061843bb",
+        "source_6be783f5420cdb61288cf2af7102eb07",
+        "source_90f22f9d0f351fcc2f15fcd83f3752c3",
+        "source_3e10a3d558d3c4166f322e3f7691af27",
+        "source_7e07f803aa4d9b04b87d4828fc1b1647",
+        "source_a69c79dec813813738607ab32c542d53",
+        "source_82043fb8f2d95853e479440f80f0a692",
+        "source_eb5bb5f501f64e2f3fef3daf2cf79fa1",
+        "source_627f2cf2736066cd2c65dd72c5897641"
+      ],
+      "style": {
+        "color": "#17242B",
+        "fontFamily": "Arial",
+        "fontSize": 16,
+        "fontWeight": 560,
+        "lineHeight": 1.2
+      },
+      "version": 1
+    },
+    {
+      "bbox": {
+        "height": 0.035,
+        "width": 0.72,
+        "x": 0.07,
+        "y": 0.93
+      },
+      "content": "DRAFT · NODESLIDE  ·  SOURCE-AWARE  ·  EDITABLE",
+      "exportCapabilities": [
+        "web_native",
+        "pptx_editable",
+        "google_importable"
+      ],
+      "id": "element_c5ed56648423efbb1808c5c8f977882a",
+      "kind": "text",
+      "locked": true,
+      "name": "Deck footer",
+      "role": "footer",
+      "rotation": 0,
+      "slideId": "slide_1cf4b8fceb3033524c77ee0693763da4",
+      "sourceIds": [],
+      "style": {
+        "color": "#60727B",
+        "fontFamily": "Courier New",
+        "fontSize": 10,
+        "fontWeight": 550,
+        "letterSpacing": 1.1
+      },
+      "version": 1
+    },
+    {
+      "bbox": {
+        "height": 0.05,
+        "width": 0.06,
+        "x": 0.88,
+        "y": 0.92
+      },
+      "content": "01",
+      "exportCapabilities": [
+        "web_native",
+        "pptx_editable",
+        "google_importable"
+      ],
+      "id": "element_ed92c57e03181a85453e5a6b32af6482",
+      "kind": "text",
+      "locked": true,
+      "name": "Page number",
+      "role": "page_number",
+      "rotation": 0,
+      "slideId": "slide_1cf4b8fceb3033524c77ee0693763da4",
+      "sourceIds": [],
+      "style": {
+        "color": "#287A8D",
+        "fontFamily": "Courier New",
+        "fontSize": 13,
+        "fontWeight": 700,
+        "textAlign": "right"
+      },
+      "version": 1
+    },
+    {
+      "bbox": {
+        "height": 0.83,
+        "width": 0.008,
+        "x": 0.035,
+        "y": 0.065
+      },
+      "exportCapabilities": [
+        "web_native",
+        "pptx_editable",
+        "google_importable"
+      ],
+      "id": "element_a2d9a5adbbfd16ea0ccd40be5ee66329",
+      "kind": "shape",
+      "locked": true,
+      "name": "Accent rail",
+      "role": "decoration",
+      "rotation": 0,
+      "slideId": "slide_50ff87dda5753a60a9afd09c61eab1ff",
+      "sourceIds": [],
+      "style": {
+        "fill": "#287A8D",
+        "radius": 8
+      },
+      "version": 1
+    },
+    {
+      "bbox": {
+        "height": 0.05,
+        "width": 0.48,
+        "x": 0.07,
+        "y": 0.065
+      },
+      "content": "STAKES / 02",
+      "exportCapabilities": [
+        "web_native",
+        "pptx_editable",
+        "google_importable"
+      ],
+      "id": "element_4800470e13f31aeeaa60b33acc0f0576",
+      "kind": "text",
+      "locked": false,
+      "name": "Section label",
+      "role": "section",
+      "rotation": 0,
+      "slideId": "slide_50ff87dda5753a60a9afd09c61eab1ff",
+      "sourceIds": [],
+      "style": {
+        "color": "#287A8D",
+        "fontFamily": "Courier New",
+        "fontSize": 15,
+        "fontWeight": 650,
+        "letterSpacing": 1.3
+      },
+      "version": 1
+    },
+    {
+      "bbox": {
+        "height": 0.2,
+        "width": 0.76,
+        "x": 0.07,
+        "y": 0.15
+      },
+      "content": "The hard part is keeping every proof gate on one execution path.",
+      "exportCapabilities": [
+        "web_native",
+        "pptx_editable",
+        "google_importable"
+      ],
+      "id": "element_a6bc3bda2c338e4a93146d5747b1abbb",
+      "kind": "text",
+      "locked": false,
+      "name": "Headline",
+      "role": "headline",
+      "rotation": 0,
+      "slideId": "slide_50ff87dda5753a60a9afd09c61eab1ff",
+      "sourceIds": [
+        "source_2d056b939eda709bebd6e733061843bb"
+      ],
+      "style": {
+        "color": "#17242B",
+        "fontFamily": "Arial",
+        "fontSize": 38,
+        "fontWeight": 620,
+        "letterSpacing": -0.8,
+        "lineHeight": 1.04
+      },
+      "version": 1
+    },
+    {
+      "bbox": {
+        "height": 0.18,
+        "width": 0.79,
+        "x": 0.07,
+        "y": 0.4
+      },
+      "content": "Parity breaks when benchmark, browser, deployment, and public claims follow different implementations.",
+      "exportCapabilities": [
+        "web_native",
+        "pptx_editable",
+        "google_importable"
+      ],
+      "id": "element_502bc101f378c17767415bd59e875425",
+      "kind": "text",
+      "locked": false,
+      "name": "Body copy",
+      "role": "body",
+      "rotation": 0,
+      "slideId": "slide_50ff87dda5753a60a9afd09c61eab1ff",
+      "sourceIds": [
+        "source_2d056b939eda709bebd6e733061843bb",
+        "source_6be783f5420cdb61288cf2af7102eb07",
+        "source_90f22f9d0f351fcc2f15fcd83f3752c3",
+        "source_3e10a3d558d3c4166f322e3f7691af27",
+        "source_7e07f803aa4d9b04b87d4828fc1b1647",
+        "source_a69c79dec813813738607ab32c542d53",
+        "source_82043fb8f2d95853e479440f80f0a692",
+        "source_eb5bb5f501f64e2f3fef3daf2cf79fa1",
+        "source_627f2cf2736066cd2c65dd72c5897641"
+      ],
+      "style": {
+        "color": "#60727B",
+        "fontFamily": "Arial",
+        "fontSize": 19,
+        "fontWeight": 430,
+        "lineHeight": 1.35
+      },
+      "version": 1
+    },
+    {
+      "bbox": {
+        "height": 0.16,
+        "width": 0.26,
+        "x": 0.07,
+        "y": 0.62
+      },
+      "content": "01  One implementation must serve every gate",
+      "exportCapabilities": [
+        "web_native",
+        "pptx_editable",
+        "google_importable"
+      ],
+      "id": "element_b87efb9608d5e9db50f6328d90a65c12",
+      "kind": "text",
+      "locked": false,
+      "name": "Key point 1",
+      "role": "bullet",
+      "rotation": 0,
+      "slideId": "slide_50ff87dda5753a60a9afd09c61eab1ff",
+      "sourceIds": [
+        "source_2d056b939eda709bebd6e733061843bb",
+        "source_6be783f5420cdb61288cf2af7102eb07",
+        "source_90f22f9d0f351fcc2f15fcd83f3752c3",
+        "source_3e10a3d558d3c4166f322e3f7691af27",
+        "source_7e07f803aa4d9b04b87d4828fc1b1647",
+        "source_a69c79dec813813738607ab32c542d53",
+        "source_82043fb8f2d95853e479440f80f0a692",
+        "source_eb5bb5f501f64e2f3fef3daf2cf79fa1",
+        "source_627f2cf2736066cd2c65dd72c5897641"
+      ],
+      "style": {
+        "color": "#17242B",
+        "fontFamily": "Arial",
+        "fontSize": 17,
+        "fontWeight": 560,
+        "lineHeight": 1.2
+      },
+      "version": 1
+    },
+    {
+      "bbox": {
+        "height": 0.16,
+        "width": 0.26,
+        "x": 0.36,
+        "y": 0.62
+      },
+      "content": "02  Receipts bind the exact revision",
+      "exportCapabilities": [
+        "web_native",
+        "pptx_editable",
+        "google_importable"
+      ],
+      "id": "element_ec28d61bc43b3385f99e96c43581ef60",
+      "kind": "text",
+      "locked": false,
+      "name": "Key point 2",
+      "role": "bullet",
+      "rotation": 0,
+      "slideId": "slide_50ff87dda5753a60a9afd09c61eab1ff",
+      "sourceIds": [
+        "source_2d056b939eda709bebd6e733061843bb",
+        "source_6be783f5420cdb61288cf2af7102eb07",
+        "source_90f22f9d0f351fcc2f15fcd83f3752c3",
+        "source_3e10a3d558d3c4166f322e3f7691af27",
+        "source_7e07f803aa4d9b04b87d4828fc1b1647",
+        "source_a69c79dec813813738607ab32c542d53",
+        "source_82043fb8f2d95853e479440f80f0a692",
+        "source_eb5bb5f501f64e2f3fef3daf2cf79fa1",
+        "source_627f2cf2736066cd2c65dd72c5897641"
+      ],
+      "style": {
+        "color": "#17242B",
+        "fontFamily": "Arial",
+        "fontSize": 17,
+        "fontWeight": 560,
+        "lineHeight": 1.2
+      },
+      "version": 1
+    },
+    {
+      "bbox": {
+        "height": 0.16,
+        "width": 0.26,
+        "x": 0.65,
+        "y": 0.62
+      },
+      "content": "03  Failed gates stay visible",
+      "exportCapabilities": [
+        "web_native",
+        "pptx_editable",
+        "google_importable"
+      ],
+      "id": "element_3a60c610110d05a3be67847ac8b2e8d0",
+      "kind": "text",
+      "locked": false,
+      "name": "Key point 3",
+      "role": "bullet",
+      "rotation": 0,
+      "slideId": "slide_50ff87dda5753a60a9afd09c61eab1ff",
+      "sourceIds": [
+        "source_2d056b939eda709bebd6e733061843bb",
+        "source_6be783f5420cdb61288cf2af7102eb07",
+        "source_90f22f9d0f351fcc2f15fcd83f3752c3",
+        "source_3e10a3d558d3c4166f322e3f7691af27",
+        "source_7e07f803aa4d9b04b87d4828fc1b1647",
+        "source_a69c79dec813813738607ab32c542d53",
+        "source_82043fb8f2d95853e479440f80f0a692",
+        "source_eb5bb5f501f64e2f3fef3daf2cf79fa1",
+        "source_627f2cf2736066cd2c65dd72c5897641"
+      ],
+      "style": {
+        "color": "#17242B",
+        "fontFamily": "Arial",
+        "fontSize": 17,
+        "fontWeight": 560,
+        "lineHeight": 1.2
+      },
+      "version": 1
+    },
+    {
+      "bbox": {
+        "height": 0.035,
+        "width": 0.72,
+        "x": 0.07,
+        "y": 0.93
+      },
+      "content": "DRAFT · NODESLIDE  ·  SOURCE-AWARE  ·  EDITABLE",
+      "exportCapabilities": [
+        "web_native",
+        "pptx_editable",
+        "google_importable"
+      ],
+      "id": "element_2eea41d8a344938e5b51561b603b8a04",
+      "kind": "text",
+      "locked": true,
+      "name": "Deck footer",
+      "role": "footer",
+      "rotation": 0,
+      "slideId": "slide_50ff87dda5753a60a9afd09c61eab1ff",
+      "sourceIds": [],
+      "style": {
+        "color": "#60727B",
+        "fontFamily": "Courier New",
+        "fontSize": 10,
+        "fontWeight": 550,
+        "letterSpacing": 1.1
+      },
+      "version": 1
+    },
+    {
+      "bbox": {
+        "height": 0.05,
+        "width": 0.06,
+        "x": 0.88,
+        "y": 0.92
+      },
+      "content": "02",
+      "exportCapabilities": [
+        "web_native",
+        "pptx_editable",
+        "google_importable"
+      ],
+      "id": "element_87efd031094ea6efcc6a49fe4a66eb4f",
+      "kind": "text",
+      "locked": true,
+      "name": "Page number",
+      "role": "page_number",
+      "rotation": 0,
+      "slideId": "slide_50ff87dda5753a60a9afd09c61eab1ff",
+      "sourceIds": [],
+      "style": {
+        "color": "#287A8D",
+        "fontFamily": "Courier New",
+        "fontSize": 13,
+        "fontWeight": 700,
+        "textAlign": "right"
+      },
+      "version": 1
+    },
+    {
+      "bbox": {
+        "height": 0.83,
+        "width": 0.008,
+        "x": 0.035,
+        "y": 0.065
+      },
+      "exportCapabilities": [
+        "web_native",
+        "pptx_editable",
+        "google_importable"
+      ],
+      "id": "element_975d9682ed81cb7bbd0af345b588adcd",
+      "kind": "shape",
+      "locked": true,
+      "name": "Accent rail",
+      "role": "decoration",
+      "rotation": 0,
+      "slideId": "slide_f90c9a02ce689dc0e43c15bdaa7cd8b6",
+      "sourceIds": [],
+      "style": {
+        "fill": "#287A8D",
+        "radius": 8
+      },
+      "version": 1
+    },
+    {
+      "bbox": {
+        "height": 0.05,
+        "width": 0.48,
+        "x": 0.07,
+        "y": 0.065
+      },
+      "content": "EVIDENCE / 03",
+      "exportCapabilities": [
+        "web_native",
+        "pptx_editable",
+        "google_importable"
+      ],
+      "id": "element_57d6ef89ac71ffbfca8a6555c1bbd507",
+      "kind": "text",
+      "locked": false,
+      "name": "Section label",
+      "role": "section",
+      "rotation": 0,
+      "slideId": "slide_f90c9a02ce689dc0e43c15bdaa7cd8b6",
+      "sourceIds": [],
+      "style": {
+        "color": "#287A8D",
+        "fontFamily": "Courier New",
+        "fontSize": 15,
+        "fontWeight": 650,
+        "letterSpacing": 1.3
+      },
+      "version": 1
+    },
+    {
+      "bbox": {
+        "height": 0.2,
+        "width": 0.76,
+        "x": 0.07,
+        "y": 0.15
+      },
+      "content": "Two presets passed the full factory path in 37.221 seconds.",
+      "exportCapabilities": [
+        "web_native",
+        "pptx_editable",
+        "google_importable"
+      ],
+      "id": "element_d612985b03badb5e178f00f59f2a953e",
+      "kind": "text",
+      "locked": false,
+      "name": "Headline",
+      "role": "headline",
+      "rotation": 0,
+      "slideId": "slide_f90c9a02ce689dc0e43c15bdaa7cd8b6",
+      "sourceIds": [
+        "source_2d056b939eda709bebd6e733061843bb"
+      ],
+      "style": {
+        "color": "#17242B",
+        "fontFamily": "Arial",
+        "fontSize": 38,
+        "fontWeight": 620,
+        "letterSpacing": -0.8,
+        "lineHeight": 1.04
+      },
+      "version": 1
+    },
+    {
+      "bbox": {
+        "height": 0.2,
+        "width": 0.39,
+        "x": 0.07,
+        "y": 0.4
+      },
+      "content": "From empty directories, NodeKit installed, compiled, ran, evaluated, benchmarked, and proof-checked both presets.",
+      "exportCapabilities": [
+        "web_native",
+        "pptx_editable",
+        "google_importable"
+      ],
+      "id": "element_aab1939bcecab36c94e2b8ea1e848dc7",
+      "kind": "text",
+      "locked": false,
+      "name": "Body copy",
+      "role": "body",
+      "rotation": 0,
+      "slideId": "slide_f90c9a02ce689dc0e43c15bdaa7cd8b6",
+      "sourceIds": [
+        "source_2d056b939eda709bebd6e733061843bb",
+        "source_6be783f5420cdb61288cf2af7102eb07",
+        "source_90f22f9d0f351fcc2f15fcd83f3752c3",
+        "source_3e10a3d558d3c4166f322e3f7691af27",
+        "source_7e07f803aa4d9b04b87d4828fc1b1647",
+        "source_a69c79dec813813738607ab32c542d53",
+        "source_82043fb8f2d95853e479440f80f0a692",
+        "source_eb5bb5f501f64e2f3fef3daf2cf79fa1",
+        "source_627f2cf2736066cd2c65dd72c5897641"
+      ],
+      "style": {
+        "color": "#60727B",
+        "fontFamily": "Arial",
+        "fontSize": 19,
+        "fontWeight": 430,
+        "lineHeight": 1.35
+      },
+      "version": 1
+    },
+    {
+      "bbox": {
+        "height": 0.09,
+        "width": 0.39,
+        "x": 0.07,
+        "y": 0.62
+      },
+      "content": "01  Agentic RL preset: passed",
+      "exportCapabilities": [
+        "web_native",
+        "pptx_editable",
+        "google_importable"
+      ],
+      "id": "element_5d8c0e3243b60b69267fc813eea40a02",
+      "kind": "text",
+      "locked": false,
+      "name": "Key point 1",
+      "role": "bullet",
+      "rotation": 0,
+      "slideId": "slide_f90c9a02ce689dc0e43c15bdaa7cd8b6",
+      "sourceIds": [
+        "source_2d056b939eda709bebd6e733061843bb",
+        "source_6be783f5420cdb61288cf2af7102eb07",
+        "source_90f22f9d0f351fcc2f15fcd83f3752c3",
+        "source_3e10a3d558d3c4166f322e3f7691af27",
+        "source_7e07f803aa4d9b04b87d4828fc1b1647",
+        "source_a69c79dec813813738607ab32c542d53",
+        "source_82043fb8f2d95853e479440f80f0a692",
+        "source_eb5bb5f501f64e2f3fef3daf2cf79fa1",
+        "source_627f2cf2736066cd2c65dd72c5897641"
+      ],
+      "style": {
+        "color": "#17242B",
+        "fontFamily": "Arial",
+        "fontSize": 17,
+        "fontWeight": 560,
+        "lineHeight": 1.2
+      },
+      "version": 1
+    },
+    {
+      "bbox": {
+        "height": 0.09,
+        "width": 0.39,
+        "x": 0.07,
+        "y": 0.72
+      },
+      "content": "02  SMB lending FDE preset: passed",
+      "exportCapabilities": [
+        "web_native",
+        "pptx_editable",
+        "google_importable"
+      ],
+      "id": "element_9a81055afd9033939bad7925801023a9",
+      "kind": "text",
+      "locked": false,
+      "name": "Key point 2",
+      "role": "bullet",
+      "rotation": 0,
+      "slideId": "slide_f90c9a02ce689dc0e43c15bdaa7cd8b6",
+      "sourceIds": [
+        "source_2d056b939eda709bebd6e733061843bb",
+        "source_6be783f5420cdb61288cf2af7102eb07",
+        "source_90f22f9d0f351fcc2f15fcd83f3752c3",
+        "source_3e10a3d558d3c4166f322e3f7691af27",
+        "source_7e07f803aa4d9b04b87d4828fc1b1647",
+        "source_a69c79dec813813738607ab32c542d53",
+        "source_82043fb8f2d95853e479440f80f0a692",
+        "source_eb5bb5f501f64e2f3fef3daf2cf79fa1",
+        "source_627f2cf2736066cd2c65dd72c5897641"
+      ],
+      "style": {
+        "color": "#17242B",
+        "fontFamily": "Arial",
+        "fontSize": 17,
+        "fontWeight": 560,
+        "lineHeight": 1.2
+      },
+      "version": 1
+    },
+    {
+      "bbox": {
+        "height": 0.09,
+        "width": 0.39,
+        "x": 0.07,
+        "y": 0.82
+      },
+      "content": "03  Local benchmark, not production latency",
+      "exportCapabilities": [
+        "web_native",
+        "pptx_editable",
+        "google_importable"
+      ],
+      "id": "element_970eb851e44314a96822beff1db71321",
+      "kind": "text",
+      "locked": false,
+      "name": "Key point 3",
+      "role": "bullet",
+      "rotation": 0,
+      "slideId": "slide_f90c9a02ce689dc0e43c15bdaa7cd8b6",
+      "sourceIds": [
+        "source_2d056b939eda709bebd6e733061843bb",
+        "source_6be783f5420cdb61288cf2af7102eb07",
+        "source_90f22f9d0f351fcc2f15fcd83f3752c3",
+        "source_3e10a3d558d3c4166f322e3f7691af27",
+        "source_7e07f803aa4d9b04b87d4828fc1b1647",
+        "source_a69c79dec813813738607ab32c542d53",
+        "source_82043fb8f2d95853e479440f80f0a692",
+        "source_eb5bb5f501f64e2f3fef3daf2cf79fa1",
+        "source_627f2cf2736066cd2c65dd72c5897641"
+      ],
+      "style": {
+        "color": "#17242B",
+        "fontFamily": "Arial",
+        "fontSize": 17,
+        "fontWeight": 560,
+        "lineHeight": 1.2
+      },
+      "version": 1
+    },
+    {
+      "bbox": {
+        "height": 0.2,
+        "width": 0.34,
+        "x": 0.56,
+        "y": 0.41
+      },
+      "content": "37.221 s",
+      "exportCapabilities": [
+        "web_native",
+        "pptx_editable",
+        "google_importable"
+      ],
+      "id": "element_93785b886142550caa602a36c6d1f1a2",
+      "kind": "text",
+      "locked": false,
+      "name": "Primary metric",
+      "role": "metric",
+      "rotation": 0,
+      "slideId": "slide_f90c9a02ce689dc0e43c15bdaa7cd8b6",
+      "sourceIds": [
+        "source_6be783f5420cdb61288cf2af7102eb07",
+        "source_90f22f9d0f351fcc2f15fcd83f3752c3",
+        "source_3e10a3d558d3c4166f322e3f7691af27",
+        "source_7e07f803aa4d9b04b87d4828fc1b1647",
+        "source_a69c79dec813813738607ab32c542d53",
+        "source_82043fb8f2d95853e479440f80f0a692",
+        "source_eb5bb5f501f64e2f3fef3daf2cf79fa1",
+        "source_627f2cf2736066cd2c65dd72c5897641"
+      ],
+      "style": {
+        "color": "#15554E",
+        "fill": "#DDEDE8",
+        "fontFamily": "Courier New",
+        "fontSize": 56,
+        "fontWeight": 720,
+        "lineHeight": 1,
+        "padding": 20,
+        "radius": 8
+      },
+      "version": 1
+    },
+    {
+      "bbox": {
+        "height": 0.09,
+        "width": 0.29,
+        "x": 0.59,
+        "y": 0.63
+      },
+      "content": "deterministic local factory acceptance",
+      "exportCapabilities": [
+        "web_native",
+        "pptx_editable",
+        "google_importable"
+      ],
+      "id": "element_1c8b7378782e69abbb7b501749401a4e",
+      "kind": "text",
+      "locked": false,
+      "name": "Metric label",
+      "role": "caption",
+      "rotation": 0,
+      "slideId": "slide_f90c9a02ce689dc0e43c15bdaa7cd8b6",
+      "sourceIds": [
+        "source_6be783f5420cdb61288cf2af7102eb07",
+        "source_90f22f9d0f351fcc2f15fcd83f3752c3",
+        "source_3e10a3d558d3c4166f322e3f7691af27",
+        "source_7e07f803aa4d9b04b87d4828fc1b1647",
+        "source_a69c79dec813813738607ab32c542d53",
+        "source_82043fb8f2d95853e479440f80f0a692",
+        "source_eb5bb5f501f64e2f3fef3daf2cf79fa1",
+        "source_627f2cf2736066cd2c65dd72c5897641"
+      ],
+      "style": {
+        "color": "#60727B",
+        "fontFamily": "Arial",
+        "fontSize": 15,
+        "fontWeight": 500,
+        "lineHeight": 1.25,
+        "textAlign": "center"
+      },
+      "version": 1
+    },
+    {
+      "bbox": {
+        "height": 0.035,
+        "width": 0.72,
+        "x": 0.07,
+        "y": 0.93
+      },
+      "content": "DRAFT · NODESLIDE  ·  SOURCE-AWARE  ·  EDITABLE",
+      "exportCapabilities": [
+        "web_native",
+        "pptx_editable",
+        "google_importable"
+      ],
+      "id": "element_c538f28985a70ae50adeac0e951b8034",
+      "kind": "text",
+      "locked": true,
+      "name": "Deck footer",
+      "role": "footer",
+      "rotation": 0,
+      "slideId": "slide_f90c9a02ce689dc0e43c15bdaa7cd8b6",
+      "sourceIds": [],
+      "style": {
+        "color": "#60727B",
+        "fontFamily": "Courier New",
+        "fontSize": 10,
+        "fontWeight": 550,
+        "letterSpacing": 1.1
+      },
+      "version": 1
+    },
+    {
+      "bbox": {
+        "height": 0.05,
+        "width": 0.06,
+        "x": 0.88,
+        "y": 0.92
+      },
+      "content": "03",
+      "exportCapabilities": [
+        "web_native",
+        "pptx_editable",
+        "google_importable"
+      ],
+      "id": "element_4a9b7c132d0933f5734bf1cfab722935",
+      "kind": "text",
+      "locked": true,
+      "name": "Page number",
+      "role": "page_number",
+      "rotation": 0,
+      "slideId": "slide_f90c9a02ce689dc0e43c15bdaa7cd8b6",
+      "sourceIds": [],
+      "style": {
+        "color": "#287A8D",
+        "fontFamily": "Courier New",
+        "fontSize": 13,
+        "fontWeight": 700,
+        "textAlign": "right"
+      },
+      "version": 1
+    },
+    {
+      "bbox": {
+        "height": 0.83,
+        "width": 0.008,
+        "x": 0.035,
+        "y": 0.065
+      },
+      "exportCapabilities": [
+        "web_native",
+        "pptx_editable",
+        "google_importable"
+      ],
+      "id": "element_2ee0fd56da6524825a0288eae0d318de",
+      "kind": "shape",
+      "locked": true,
+      "name": "Accent rail",
+      "role": "decoration",
+      "rotation": 0,
+      "slideId": "slide_7c6962f7eda3feeb7294c21a997882ac",
+      "sourceIds": [],
+      "style": {
+        "fill": "#287A8D",
+        "radius": 8
+      },
+      "version": 1
+    },
+    {
+      "bbox": {
+        "height": 0.05,
+        "width": 0.48,
+        "x": 0.07,
+        "y": 0.065
+      },
+      "content": "CASE STUDY / 04",
+      "exportCapabilities": [
+        "web_native",
+        "pptx_editable",
+        "google_importable"
+      ],
+      "id": "element_4e4a2d2b3a49398c0dcf869739db7523",
+      "kind": "text",
+      "locked": false,
+      "name": "Section label",
+      "role": "section",
+      "rotation": 0,
+      "slideId": "slide_7c6962f7eda3feeb7294c21a997882ac",
+      "sourceIds": [],
+      "style": {
+        "color": "#287A8D",
+        "fontFamily": "Courier New",
+        "fontSize": 15,
+        "fontWeight": 650,
+        "letterSpacing": 1.3
+      },
+      "version": 1
+    },
+    {
+      "bbox": {
+        "height": 0.2,
+        "width": 0.76,
+        "x": 0.07,
+        "y": 0.15
+      },
+      "content": "The Casca lab passed every local gate without making a credit decision.",
+      "exportCapabilities": [
+        "web_native",
+        "pptx_editable",
+        "google_importable"
+      ],
+      "id": "element_d6e66aa42764ff72decbacbe08213df1",
+      "kind": "text",
+      "locked": false,
+      "name": "Headline",
+      "role": "headline",
+      "rotation": 0,
+      "slideId": "slide_7c6962f7eda3feeb7294c21a997882ac",
+      "sourceIds": [
+        "source_2d056b939eda709bebd6e733061843bb"
+      ],
+      "style": {
+        "color": "#17242B",
+        "fontFamily": "Arial",
+        "fontSize": 38,
+        "fontWeight": 620,
+        "letterSpacing": -0.8,
+        "lineHeight": 1.04
+      },
+      "version": 1
+    },
+    {
+      "bbox": {
+        "height": 0.2,
+        "width": 0.39,
+        "x": 0.07,
+        "y": 0.4
+      },
+      "content": "On commit 6c8d7d9, the synthetic lab passed deterministic, live-provider, browser, reload, export, and identity gates.",
+      "exportCapabilities": [
+        "web_native",
+        "pptx_editable",
+        "google_importable"
+      ],
+      "id": "element_c7a23dd119f2d71342dd3adee8f8beea",
+      "kind": "text",
+      "locked": false,
+      "name": "Body copy",
+      "role": "body",
+      "rotation": 0,
+      "slideId": "slide_7c6962f7eda3feeb7294c21a997882ac",
+      "sourceIds": [
+        "source_2d056b939eda709bebd6e733061843bb",
+        "source_6be783f5420cdb61288cf2af7102eb07",
+        "source_90f22f9d0f351fcc2f15fcd83f3752c3",
+        "source_3e10a3d558d3c4166f322e3f7691af27",
+        "source_7e07f803aa4d9b04b87d4828fc1b1647",
+        "source_a69c79dec813813738607ab32c542d53",
+        "source_82043fb8f2d95853e479440f80f0a692",
+        "source_eb5bb5f501f64e2f3fef3daf2cf79fa1",
+        "source_627f2cf2736066cd2c65dd72c5897641"
+      ],
+      "style": {
+        "color": "#60727B",
+        "fontFamily": "Arial",
+        "fontSize": 19,
+        "fontWeight": 430,
+        "lineHeight": 1.35
+      },
+      "version": 1
+    },
+    {
+      "bbox": {
+        "height": 0.09,
+        "width": 0.39,
+        "x": 0.07,
+        "y": 0.62
+      },
+      "content": "01  One bounded live-provider call",
+      "exportCapabilities": [
+        "web_native",
+        "pptx_editable",
+        "google_importable"
+      ],
+      "id": "element_212a58b2c3ebb038c465d02d101aae2e",
+      "kind": "text",
+      "locked": false,
+      "name": "Key point 1",
+      "role": "bullet",
+      "rotation": 0,
+      "slideId": "slide_7c6962f7eda3feeb7294c21a997882ac",
+      "sourceIds": [
+        "source_2d056b939eda709bebd6e733061843bb",
+        "source_6be783f5420cdb61288cf2af7102eb07",
+        "source_90f22f9d0f351fcc2f15fcd83f3752c3",
+        "source_3e10a3d558d3c4166f322e3f7691af27",
+        "source_7e07f803aa4d9b04b87d4828fc1b1647",
+        "source_a69c79dec813813738607ab32c542d53",
+        "source_82043fb8f2d95853e479440f80f0a692",
+        "source_eb5bb5f501f64e2f3fef3daf2cf79fa1",
+        "source_627f2cf2736066cd2c65dd72c5897641"
+      ],
+      "style": {
+        "color": "#17242B",
+        "fontFamily": "Arial",
+        "fontSize": 17,
+        "fontWeight": 560,
+        "lineHeight": 1.2
+      },
+      "version": 1
+    },
+    {
+      "bbox": {
+        "height": 0.09,
+        "width": 0.39,
+        "x": 0.07,
+        "y": 0.72
+      },
+      "content": "02  Fresh browser plus reload",
+      "exportCapabilities": [
+        "web_native",
+        "pptx_editable",
+        "google_importable"
+      ],
+      "id": "element_a57bab852e54c43523ada51955d29928",
+      "kind": "text",
+      "locked": false,
+      "name": "Key point 2",
+      "role": "bullet",
+      "rotation": 0,
+      "slideId": "slide_7c6962f7eda3feeb7294c21a997882ac",
+      "sourceIds": [
+        "source_2d056b939eda709bebd6e733061843bb",
+        "source_6be783f5420cdb61288cf2af7102eb07",
+        "source_90f22f9d0f351fcc2f15fcd83f3752c3",
+        "source_3e10a3d558d3c4166f322e3f7691af27",
+        "source_7e07f803aa4d9b04b87d4828fc1b1647",
+        "source_a69c79dec813813738607ab32c542d53",
+        "source_82043fb8f2d95853e479440f80f0a692",
+        "source_eb5bb5f501f64e2f3fef3daf2cf79fa1",
+        "source_627f2cf2736066cd2c65dd72c5897641"
+      ],
+      "style": {
+        "color": "#17242B",
+        "fontFamily": "Arial",
+        "fontSize": 17,
+        "fontWeight": 560,
+        "lineHeight": 1.2
+      },
+      "version": 1
+    },
+    {
+      "bbox": {
+        "height": 0.09,
+        "width": 0.39,
+        "x": 0.07,
+        "y": 0.82
+      },
+      "content": "03  Deployment gate still open",
+      "exportCapabilities": [
+        "web_native",
+        "pptx_editable",
+        "google_importable"
+      ],
+      "id": "element_ff0dd23fa7c0f9fb4dafae78a89c9624",
+      "kind": "text",
+      "locked": false,
+      "name": "Key point 3",
+      "role": "bullet",
+      "rotation": 0,
+      "slideId": "slide_7c6962f7eda3feeb7294c21a997882ac",
+      "sourceIds": [
+        "source_2d056b939eda709bebd6e733061843bb",
+        "source_6be783f5420cdb61288cf2af7102eb07",
+        "source_90f22f9d0f351fcc2f15fcd83f3752c3",
+        "source_3e10a3d558d3c4166f322e3f7691af27",
+        "source_7e07f803aa4d9b04b87d4828fc1b1647",
+        "source_a69c79dec813813738607ab32c542d53",
+        "source_82043fb8f2d95853e479440f80f0a692",
+        "source_eb5bb5f501f64e2f3fef3daf2cf79fa1",
+        "source_627f2cf2736066cd2c65dd72c5897641"
+      ],
+      "style": {
+        "color": "#17242B",
+        "fontFamily": "Arial",
+        "fontSize": 17,
+        "fontWeight": 560,
+        "lineHeight": 1.2
+      },
+      "version": 1
+    },
+    {
+      "bbox": {
+        "height": 0.24,
+        "width": 0.39,
+        "x": 0.53,
+        "y": 0.42
+      },
+      "content": "query → proposal → approval → export",
+      "exportCapabilities": [
+        "web_native",
+        "pptx_editable",
+        "google_importable"
+      ],
+      "id": "element_0ffa30bac7d103a0cb3caecd4579dc17",
+      "kind": "math",
+      "locked": false,
+      "math": {
+        "description": "Synthetic local workflow only; no automated credit decision.",
+        "display": "query → proposal → approval → export",
+        "displayMode": "block",
+        "expression": "query -> proposal -> approval -> export",
+        "sourceId": "source_6be783f5420cdb61288cf2af7102eb07",
+        "syntax": "plain",
+        "variables": []
+      },
+      "name": "Editable formula",
+      "role": "formula",
+      "rotation": 0,
+      "slideId": "slide_7c6962f7eda3feeb7294c21a997882ac",
+      "sourceIds": [
+        "source_6be783f5420cdb61288cf2af7102eb07",
+        "source_90f22f9d0f351fcc2f15fcd83f3752c3",
+        "source_3e10a3d558d3c4166f322e3f7691af27",
+        "source_7e07f803aa4d9b04b87d4828fc1b1647",
+        "source_a69c79dec813813738607ab32c542d53",
+        "source_82043fb8f2d95853e479440f80f0a692",
+        "source_eb5bb5f501f64e2f3fef3daf2cf79fa1",
+        "source_627f2cf2736066cd2c65dd72c5897641"
+      ],
+      "style": {
+        "color": "#15554E",
+        "fill": "#DDEDE8",
+        "fontFamily": "Courier New",
+        "fontSize": 30,
+        "fontWeight": 720,
+        "lineHeight": 1.15,
+        "padding": 20,
+        "radius": 8,
+        "textAlign": "center",
+        "verticalAlign": "middle"
+      },
+      "version": 1
+    },
+    {
+      "bbox": {
+        "height": 0.035,
+        "width": 0.72,
+        "x": 0.07,
+        "y": 0.93
+      },
+      "content": "DRAFT · NODESLIDE  ·  SOURCE-AWARE  ·  EDITABLE",
+      "exportCapabilities": [
+        "web_native",
+        "pptx_editable",
+        "google_importable"
+      ],
+      "id": "element_7c85c69b0aa6a5ceab7477aaccf51dac",
+      "kind": "text",
+      "locked": true,
+      "name": "Deck footer",
+      "role": "footer",
+      "rotation": 0,
+      "slideId": "slide_7c6962f7eda3feeb7294c21a997882ac",
+      "sourceIds": [],
+      "style": {
+        "color": "#60727B",
+        "fontFamily": "Courier New",
+        "fontSize": 10,
+        "fontWeight": 550,
+        "letterSpacing": 1.1
+      },
+      "version": 1
+    },
+    {
+      "bbox": {
+        "height": 0.05,
+        "width": 0.06,
+        "x": 0.88,
+        "y": 0.92
+      },
+      "content": "04",
+      "exportCapabilities": [
+        "web_native",
+        "pptx_editable",
+        "google_importable"
+      ],
+      "id": "element_ed9d53609d24f97432252eb06c8ca639",
+      "kind": "text",
+      "locked": true,
+      "name": "Page number",
+      "role": "page_number",
+      "rotation": 0,
+      "slideId": "slide_7c6962f7eda3feeb7294c21a997882ac",
+      "sourceIds": [],
+      "style": {
+        "color": "#287A8D",
+        "fontFamily": "Courier New",
+        "fontSize": 13,
+        "fontWeight": 700,
+        "textAlign": "right"
+      },
+      "version": 1
+    },
+    {
+      "bbox": {
+        "height": 0.83,
+        "width": 0.008,
+        "x": 0.035,
+        "y": 0.065
+      },
+      "exportCapabilities": [
+        "web_native",
+        "pptx_editable",
+        "google_importable"
+      ],
+      "id": "element_82b1c4b9fd60a64dae1bab98abe4b2eb",
+      "kind": "shape",
+      "locked": true,
+      "name": "Accent rail",
+      "role": "decoration",
+      "rotation": 0,
+      "slideId": "slide_18bba5ff882469f994cfecf6ecc4ce71",
+      "sourceIds": [],
+      "style": {
+        "fill": "#287A8D",
+        "radius": 8
+      },
+      "version": 1
+    },
+    {
+      "bbox": {
+        "height": 0.05,
+        "width": 0.48,
+        "x": 0.07,
+        "y": 0.065
+      },
+      "content": "TECHNICAL DECISION / 05",
+      "exportCapabilities": [
+        "web_native",
+        "pptx_editable",
+        "google_importable"
+      ],
+      "id": "element_3424e9fd5832197cb55ff13e57bb583e",
+      "kind": "text",
+      "locked": false,
+      "name": "Section label",
+      "role": "section",
+      "rotation": 0,
+      "slideId": "slide_18bba5ff882469f994cfecf6ecc4ce71",
+      "sourceIds": [],
+      "style": {
+        "color": "#287A8D",
+        "fontFamily": "Courier New",
+        "fontSize": 15,
+        "fontWeight": 650,
+        "letterSpacing": 1.3
+      },
+      "version": 1
+    },
+    {
+      "bbox": {
+        "height": 0.2,
+        "width": 0.76,
+        "x": 0.07,
+        "y": 0.15
+      },
+      "content": "Protect the scorer first; train only after its boundaries are credible.",
+      "exportCapabilities": [
+        "web_native",
+        "pptx_editable",
+        "google_importable"
+      ],
+      "id": "element_767fe364d7dbb7764f5049d913b7e83c",
+      "kind": "text",
+      "locked": false,
+      "name": "Headline",
+      "role": "headline",
+      "rotation": 0,
+      "slideId": "slide_18bba5ff882469f994cfecf6ecc4ce71",
+      "sourceIds": [
+        "source_2d056b939eda709bebd6e733061843bb"
+      ],
+      "style": {
+        "color": "#17242B",
+        "fontFamily": "Arial",
+        "fontSize": 38,
+        "fontWeight": 620,
+        "letterSpacing": -0.8,
+        "lineHeight": 1.04
+      },
+      "version": 1
+    },
+    {
+      "bbox": {
+        "height": 0.2,
+        "width": 0.39,
+        "x": 0.07,
+        "y": 0.4
+      },
+      "content": "The current baseline is behavior cloning, not RL. It passed protected local evaluation; the strict Azure-only live route failed closed with no fallback.",
+      "exportCapabilities": [
+        "web_native",
+        "pptx_editable",
+        "google_importable"
+      ],
+      "id": "element_cea180fac9e6d69bde7bb7a499adfdc2",
+      "kind": "text",
+      "locked": false,
+      "name": "Body copy",
+      "role": "body",
+      "rotation": 0,
+      "slideId": "slide_18bba5ff882469f994cfecf6ecc4ce71",
+      "sourceIds": [
+        "source_2d056b939eda709bebd6e733061843bb",
+        "source_6be783f5420cdb61288cf2af7102eb07",
+        "source_90f22f9d0f351fcc2f15fcd83f3752c3",
+        "source_3e10a3d558d3c4166f322e3f7691af27",
+        "source_7e07f803aa4d9b04b87d4828fc1b1647",
+        "source_a69c79dec813813738607ab32c542d53",
+        "source_82043fb8f2d95853e479440f80f0a692",
+        "source_eb5bb5f501f64e2f3fef3daf2cf79fa1",
+        "source_627f2cf2736066cd2c65dd72c5897641"
+      ],
+      "style": {
+        "color": "#60727B",
+        "fontFamily": "Arial",
+        "fontSize": 19,
+        "fontWeight": 430,
+        "lineHeight": 1.35
+      },
+      "version": 1
+    },
+    {
+      "bbox": {
+        "height": 0.09,
+        "width": 0.39,
+        "x": 0.07,
+        "y": 0.62
+      },
+      "content": "01  Behavior cloning only",
+      "exportCapabilities": [
+        "web_native",
+        "pptx_editable",
+        "google_importable"
+      ],
+      "id": "element_d4b69604d1807f23f95e18c826b325a6",
+      "kind": "text",
+      "locked": false,
+      "name": "Key point 1",
+      "role": "bullet",
+      "rotation": 0,
+      "slideId": "slide_18bba5ff882469f994cfecf6ecc4ce71",
+      "sourceIds": [
+        "source_2d056b939eda709bebd6e733061843bb",
+        "source_6be783f5420cdb61288cf2af7102eb07",
+        "source_90f22f9d0f351fcc2f15fcd83f3752c3",
+        "source_3e10a3d558d3c4166f322e3f7691af27",
+        "source_7e07f803aa4d9b04b87d4828fc1b1647",
+        "source_a69c79dec813813738607ab32c542d53",
+        "source_82043fb8f2d95853e479440f80f0a692",
+        "source_eb5bb5f501f64e2f3fef3daf2cf79fa1",
+        "source_627f2cf2736066cd2c65dd72c5897641"
+      ],
+      "style": {
+        "color": "#17242B",
+        "fontFamily": "Arial",
+        "fontSize": 17,
+        "fontWeight": 560,
+        "lineHeight": 1.2
+      },
+      "version": 1
+    },
+    {
+      "bbox": {
+        "height": 0.09,
+        "width": 0.39,
+        "x": 0.07,
+        "y": 0.72
+      },
+      "content": "02  Nine reward attacks blocked",
+      "exportCapabilities": [
+        "web_native",
+        "pptx_editable",
+        "google_importable"
+      ],
+      "id": "element_7a03ec831975550a340315b0834eedbb",
+      "kind": "text",
+      "locked": false,
+      "name": "Key point 2",
+      "role": "bullet",
+      "rotation": 0,
+      "slideId": "slide_18bba5ff882469f994cfecf6ecc4ce71",
+      "sourceIds": [
+        "source_2d056b939eda709bebd6e733061843bb",
+        "source_6be783f5420cdb61288cf2af7102eb07",
+        "source_90f22f9d0f351fcc2f15fcd83f3752c3",
+        "source_3e10a3d558d3c4166f322e3f7691af27",
+        "source_7e07f803aa4d9b04b87d4828fc1b1647",
+        "source_a69c79dec813813738607ab32c542d53",
+        "source_82043fb8f2d95853e479440f80f0a692",
+        "source_eb5bb5f501f64e2f3fef3daf2cf79fa1",
+        "source_627f2cf2736066cd2c65dd72c5897641"
+      ],
+      "style": {
+        "color": "#17242B",
+        "fontFamily": "Arial",
+        "fontSize": 17,
+        "fontWeight": 560,
+        "lineHeight": 1.2
+      },
+      "version": 1
+    },
+    {
+      "bbox": {
+        "height": 0.09,
+        "width": 0.39,
+        "x": 0.07,
+        "y": 0.82
+      },
+      "content": "03  Azure/ZDR route: HTTP 404; no fallback",
+      "exportCapabilities": [
+        "web_native",
+        "pptx_editable",
+        "google_importable"
+      ],
+      "id": "element_cef2ab363eab70be0e70de5c2ee7d139",
+      "kind": "text",
+      "locked": false,
+      "name": "Key point 3",
+      "role": "bullet",
+      "rotation": 0,
+      "slideId": "slide_18bba5ff882469f994cfecf6ecc4ce71",
+      "sourceIds": [
+        "source_2d056b939eda709bebd6e733061843bb",
+        "source_6be783f5420cdb61288cf2af7102eb07",
+        "source_90f22f9d0f351fcc2f15fcd83f3752c3",
+        "source_3e10a3d558d3c4166f322e3f7691af27",
+        "source_7e07f803aa4d9b04b87d4828fc1b1647",
+        "source_a69c79dec813813738607ab32c542d53",
+        "source_82043fb8f2d95853e479440f80f0a692",
+        "source_eb5bb5f501f64e2f3fef3daf2cf79fa1",
+        "source_627f2cf2736066cd2c65dd72c5897641"
+      ],
+      "style": {
+        "color": "#17242B",
+        "fontFamily": "Arial",
+        "fontSize": 17,
+        "fontWeight": 560,
+        "lineHeight": 1.2
+      },
+      "version": 1
+    },
+    {
+      "bbox": {
+        "height": 0.15,
+        "width": 0.34,
+        "x": 0.56,
+        "y": 0.41
+      },
+      "content": "9",
+      "exportCapabilities": [
+        "web_native",
+        "pptx_editable",
+        "google_importable"
+      ],
+      "id": "element_fef2b8eb6fd42f97f9e0a6a391d8e5bb",
+      "kind": "text",
+      "locked": false,
+      "name": "Primary metric",
+      "role": "metric",
+      "rotation": 0,
+      "slideId": "slide_18bba5ff882469f994cfecf6ecc4ce71",
+      "sourceIds": [
+        "source_6be783f5420cdb61288cf2af7102eb07",
+        "source_90f22f9d0f351fcc2f15fcd83f3752c3",
+        "source_3e10a3d558d3c4166f322e3f7691af27",
+        "source_7e07f803aa4d9b04b87d4828fc1b1647",
+        "source_a69c79dec813813738607ab32c542d53",
+        "source_82043fb8f2d95853e479440f80f0a692",
+        "source_eb5bb5f501f64e2f3fef3daf2cf79fa1",
+        "source_627f2cf2736066cd2c65dd72c5897641"
+      ],
+      "style": {
+        "color": "#15554E",
+        "fill": "#DDEDE8",
+        "fontFamily": "Courier New",
+        "fontSize": 43,
+        "fontWeight": 720,
+        "lineHeight": 1,
+        "padding": 20,
+        "radius": 8
+      },
+      "version": 1
+    },
+    {
+      "bbox": {
+        "height": 0.09,
+        "width": 0.29,
+        "x": 0.59,
+        "y": 0.58
+      },
+      "content": "adversarial reward attacks blocked",
+      "exportCapabilities": [
+        "web_native",
+        "pptx_editable",
+        "google_importable"
+      ],
+      "id": "element_f385abf6097325fd7b51b95a9eacfb0a",
+      "kind": "text",
+      "locked": false,
+      "name": "Metric label",
+      "role": "caption",
+      "rotation": 0,
+      "slideId": "slide_18bba5ff882469f994cfecf6ecc4ce71",
+      "sourceIds": [
+        "source_6be783f5420cdb61288cf2af7102eb07",
+        "source_90f22f9d0f351fcc2f15fcd83f3752c3",
+        "source_3e10a3d558d3c4166f322e3f7691af27",
+        "source_7e07f803aa4d9b04b87d4828fc1b1647",
+        "source_a69c79dec813813738607ab32c542d53",
+        "source_82043fb8f2d95853e479440f80f0a692",
+        "source_eb5bb5f501f64e2f3fef3daf2cf79fa1",
+        "source_627f2cf2736066cd2c65dd72c5897641"
+      ],
+      "style": {
+        "color": "#60727B",
+        "fontFamily": "Arial",
+        "fontSize": 15,
+        "fontWeight": 500,
+        "lineHeight": 1.25,
+        "textAlign": "center"
+      },
+      "version": 1
+    },
+    {
+      "bbox": {
+        "height": 0.17,
+        "width": 0.39,
+        "x": 0.53,
+        "y": 0.7
+      },
+      "chart": {
+        "chartType": "bar",
+        "labels": [
+          "reward attacks",
+          "heldout tasks",
+          "fallbacks"
+        ],
+        "series": [
+          {
+            "color": "#287A8D",
+            "name": "Signal",
+            "values": [
+              9,
+              2,
+              0
+            ]
+          }
+        ],
+        "sourceId": "source_6be783f5420cdb61288cf2af7102eb07",
+        "unit": "count"
+      },
+      "exportCapabilities": [
+        "web_native",
+        "pptx_editable",
+        "google_importable"
+      ],
+      "id": "element_352303a0868ce3a47c087d13f239dd4b",
+      "kind": "chart",
+      "locked": false,
+      "name": "Evidence chart",
+      "role": "evidence",
+      "rotation": 0,
+      "slideId": "slide_18bba5ff882469f994cfecf6ecc4ce71",
+      "sourceIds": [
+        "source_6be783f5420cdb61288cf2af7102eb07",
+        "source_90f22f9d0f351fcc2f15fcd83f3752c3",
+        "source_3e10a3d558d3c4166f322e3f7691af27",
+        "source_7e07f803aa4d9b04b87d4828fc1b1647",
+        "source_a69c79dec813813738607ab32c542d53",
+        "source_82043fb8f2d95853e479440f80f0a692",
+        "source_eb5bb5f501f64e2f3fef3daf2cf79fa1",
+        "source_627f2cf2736066cd2c65dd72c5897641"
+      ],
+      "style": {
+        "color": "#17242B",
+        "fill": "#DCECF0",
+        "padding": 14,
+        "radius": 8
+      },
+      "version": 1
+    },
+    {
+      "bbox": {
+        "height": 0.035,
+        "width": 0.72,
+        "x": 0.07,
+        "y": 0.93
+      },
+      "content": "DRAFT · NODESLIDE  ·  SOURCE-AWARE  ·  EDITABLE",
+      "exportCapabilities": [
+        "web_native",
+        "pptx_editable",
+        "google_importable"
+      ],
+      "id": "element_28c49527d4842af2e8dece2dd99b8598",
+      "kind": "text",
+      "locked": true,
+      "name": "Deck footer",
+      "role": "footer",
+      "rotation": 0,
+      "slideId": "slide_18bba5ff882469f994cfecf6ecc4ce71",
+      "sourceIds": [],
+      "style": {
+        "color": "#60727B",
+        "fontFamily": "Courier New",
+        "fontSize": 10,
+        "fontWeight": 550,
+        "letterSpacing": 1.1
+      },
+      "version": 1
+    },
+    {
+      "bbox": {
+        "height": 0.05,
+        "width": 0.06,
+        "x": 0.88,
+        "y": 0.92
+      },
+      "content": "05",
+      "exportCapabilities": [
+        "web_native",
+        "pptx_editable",
+        "google_importable"
+      ],
+      "id": "element_872a60dc1309187dae784afd9e8e483a",
+      "kind": "text",
+      "locked": true,
+      "name": "Page number",
+      "role": "page_number",
+      "rotation": 0,
+      "slideId": "slide_18bba5ff882469f994cfecf6ecc4ce71",
+      "sourceIds": [],
+      "style": {
+        "color": "#287A8D",
+        "fontFamily": "Courier New",
+        "fontSize": 13,
+        "fontWeight": 700,
+        "textAlign": "right"
+      },
+      "version": 1
+    },
+    {
+      "bbox": {
+        "height": 0.83,
+        "width": 0.008,
+        "x": 0.035,
+        "y": 0.065
+      },
+      "exportCapabilities": [
+        "web_native",
+        "pptx_editable",
+        "google_importable"
+      ],
+      "id": "element_379a58d41a5d7d3d970843e8a5444ab6",
+      "kind": "shape",
+      "locked": true,
+      "name": "Accent rail",
+      "role": "decoration",
+      "rotation": 0,
+      "slideId": "slide_84757621167f74a89a9a21c4462cd3e7",
+      "sourceIds": [],
+      "style": {
+        "fill": "#287A8D",
+        "radius": 8
+      },
+      "version": 1
+    },
+    {
+      "bbox": {
+        "height": 0.05,
+        "width": 0.48,
+        "x": 0.07,
+        "y": 0.065
+      },
+      "content": "PRODUCT REVEAL / 06",
+      "exportCapabilities": [
+        "web_native",
+        "pptx_editable",
+        "google_importable"
+      ],
+      "id": "element_b33d599852f29d2a9c61f03dc0455990",
+      "kind": "text",
+      "locked": false,
+      "name": "Section label",
+      "role": "section",
+      "rotation": 0,
+      "slideId": "slide_84757621167f74a89a9a21c4462cd3e7",
+      "sourceIds": [],
+      "style": {
+        "color": "#287A8D",
+        "fontFamily": "Courier New",
+        "fontSize": 15,
+        "fontWeight": 650,
+        "letterSpacing": 1.3
+      },
+      "version": 1
+    },
+    {
+      "bbox": {
+        "height": 0.2,
+        "width": 0.76,
+        "x": 0.07,
+        "y": 0.15
+      },
+      "content": "Founder Quest remains planned until hosted and fresh-user proof pass.",
+      "exportCapabilities": [
+        "web_native",
+        "pptx_editable",
+        "google_importable"
+      ],
+      "id": "element_0992935e19d378827e61d50c105a58f7",
+      "kind": "text",
+      "locked": false,
+      "name": "Headline",
+      "role": "headline",
+      "rotation": 0,
+      "slideId": "slide_84757621167f74a89a9a21c4462cd3e7",
+      "sourceIds": [
+        "source_2d056b939eda709bebd6e733061843bb"
+      ],
+      "style": {
+        "color": "#17242B",
+        "fontFamily": "Arial",
+        "fontSize": 38,
+        "fontWeight": 620,
+        "letterSpacing": -0.8,
+        "lineHeight": 1.04
+      },
+      "version": 1
+    },
+    {
+      "bbox": {
+        "height": 0.2,
+        "width": 0.4,
+        "x": 0.52,
+        "y": 0.4
+      },
+      "content": "After an exact hosted revision and fresh-user journey pass, the planned read-only demo will connect quests, sources, and proof.",
+      "exportCapabilities": [
+        "web_native",
+        "pptx_editable",
+        "google_importable"
+      ],
+      "id": "element_6117d65d5902d83fd41dc8b8d7da63da",
+      "kind": "text",
+      "locked": false,
+      "name": "Body copy",
+      "role": "body",
+      "rotation": 0,
+      "slideId": "slide_84757621167f74a89a9a21c4462cd3e7",
+      "sourceIds": [
+        "source_2d056b939eda709bebd6e733061843bb",
+        "source_6be783f5420cdb61288cf2af7102eb07",
+        "source_90f22f9d0f351fcc2f15fcd83f3752c3",
+        "source_3e10a3d558d3c4166f322e3f7691af27",
+        "source_7e07f803aa4d9b04b87d4828fc1b1647",
+        "source_a69c79dec813813738607ab32c542d53",
+        "source_82043fb8f2d95853e479440f80f0a692",
+        "source_eb5bb5f501f64e2f3fef3daf2cf79fa1",
+        "source_627f2cf2736066cd2c65dd72c5897641"
+      ],
+      "style": {
+        "color": "#60727B",
+        "fontFamily": "Arial",
+        "fontSize": 19,
+        "fontWeight": 430,
+        "lineHeight": 1.35
+      },
+      "version": 1
+    },
+    {
+      "bbox": {
+        "height": 0.09,
+        "width": 0.4,
+        "x": 0.52,
+        "y": 0.62
+      },
+      "content": "01  Quest rail plus bounded graph",
+      "exportCapabilities": [
+        "web_native",
+        "pptx_editable",
+        "google_importable"
+      ],
+      "id": "element_4b17c5b93bf45a079f6512011075b1b9",
+      "kind": "text",
+      "locked": false,
+      "name": "Key point 1",
+      "role": "bullet",
+      "rotation": 0,
+      "slideId": "slide_84757621167f74a89a9a21c4462cd3e7",
+      "sourceIds": [
+        "source_2d056b939eda709bebd6e733061843bb",
+        "source_6be783f5420cdb61288cf2af7102eb07",
+        "source_90f22f9d0f351fcc2f15fcd83f3752c3",
+        "source_3e10a3d558d3c4166f322e3f7691af27",
+        "source_7e07f803aa4d9b04b87d4828fc1b1647",
+        "source_a69c79dec813813738607ab32c542d53",
+        "source_82043fb8f2d95853e479440f80f0a692",
+        "source_eb5bb5f501f64e2f3fef3daf2cf79fa1",
+        "source_627f2cf2736066cd2c65dd72c5897641"
+      ],
+      "style": {
+        "color": "#17242B",
+        "fontFamily": "Arial",
+        "fontSize": 17,
+        "fontWeight": 560,
+        "lineHeight": 1.2
+      },
+      "version": 1
+    },
+    {
+      "bbox": {
+        "height": 0.09,
+        "width": 0.4,
+        "x": 0.52,
+        "y": 0.72
+      },
+      "content": "02  Source-backed answer plus authority class",
+      "exportCapabilities": [
+        "web_native",
+        "pptx_editable",
+        "google_importable"
+      ],
+      "id": "element_1a4461b9992aa0b6dc92f9a83f8c7a25",
+      "kind": "text",
+      "locked": false,
+      "name": "Key point 2",
+      "role": "bullet",
+      "rotation": 0,
+      "slideId": "slide_84757621167f74a89a9a21c4462cd3e7",
+      "sourceIds": [
+        "source_2d056b939eda709bebd6e733061843bb",
+        "source_6be783f5420cdb61288cf2af7102eb07",
+        "source_90f22f9d0f351fcc2f15fcd83f3752c3",
+        "source_3e10a3d558d3c4166f322e3f7691af27",
+        "source_7e07f803aa4d9b04b87d4828fc1b1647",
+        "source_a69c79dec813813738607ab32c542d53",
+        "source_82043fb8f2d95853e479440f80f0a692",
+        "source_eb5bb5f501f64e2f3fef3daf2cf79fa1",
+        "source_627f2cf2736066cd2c65dd72c5897641"
+      ],
+      "style": {
+        "color": "#17242B",
+        "fontFamily": "Arial",
+        "fontSize": 17,
+        "fontWeight": 560,
+        "lineHeight": 1.2
+      },
+      "version": 1
+    },
+    {
+      "bbox": {
+        "height": 0.09,
+        "width": 0.4,
+        "x": 0.52,
+        "y": 0.82
+      },
+      "content": "03  No hosted-revision proof yet",
+      "exportCapabilities": [
+        "web_native",
+        "pptx_editable",
+        "google_importable"
+      ],
+      "id": "element_7388ea3729327a83417c5a1809b22024",
+      "kind": "text",
+      "locked": false,
+      "name": "Key point 3",
+      "role": "bullet",
+      "rotation": 0,
+      "slideId": "slide_84757621167f74a89a9a21c4462cd3e7",
+      "sourceIds": [
+        "source_2d056b939eda709bebd6e733061843bb",
+        "source_6be783f5420cdb61288cf2af7102eb07",
+        "source_90f22f9d0f351fcc2f15fcd83f3752c3",
+        "source_3e10a3d558d3c4166f322e3f7691af27",
+        "source_7e07f803aa4d9b04b87d4828fc1b1647",
+        "source_a69c79dec813813738607ab32c542d53",
+        "source_82043fb8f2d95853e479440f80f0a692",
+        "source_eb5bb5f501f64e2f3fef3daf2cf79fa1",
+        "source_627f2cf2736066cd2c65dd72c5897641"
+      ],
+      "style": {
+        "color": "#17242B",
+        "fontFamily": "Arial",
+        "fontSize": 17,
+        "fontWeight": 560,
+        "lineHeight": 1.2
+      },
+      "version": 1
+    },
+    {
+      "altText": "Founder Quest product view, draft placeholder",
+      "bbox": {
+        "height": 0.38,
+        "width": 0.39,
+        "x": 0.06,
+        "y": 0.39
+      },
+      "exportCapabilities": [
+        "web_native",
+        "pptx_editable",
+        "google_importable"
+      ],
+      "id": "element_d298a0c97352e0958463d72cb8eff098",
+      "image": {
+        "credit": "Synthetic draft",
+        "placeholder": true,
+        "sourceId": "source_6be783f5420cdb61288cf2af7102eb07"
+      },
+      "kind": "image",
+      "locked": false,
+      "name": "Editable image",
+      "role": "image",
+      "rotation": 0,
+      "slideId": "slide_84757621167f74a89a9a21c4462cd3e7",
+      "sourceIds": [
+        "source_6be783f5420cdb61288cf2af7102eb07",
+        "source_90f22f9d0f351fcc2f15fcd83f3752c3",
+        "source_3e10a3d558d3c4166f322e3f7691af27",
+        "source_7e07f803aa4d9b04b87d4828fc1b1647",
+        "source_a69c79dec813813738607ab32c542d53",
+        "source_82043fb8f2d95853e479440f80f0a692",
+        "source_eb5bb5f501f64e2f3fef3daf2cf79fa1",
+        "source_627f2cf2736066cd2c65dd72c5897641"
+      ],
+      "style": {
+        "color": "#60727B",
+        "fill": "#DCECF0",
+        "radius": 8,
+        "stroke": "#CFDCE0",
+        "strokeWidth": 2
+      },
+      "version": 1
+    },
+    {
+      "bbox": {
+        "height": 0.07,
+        "width": 0.35,
+        "x": 0.08,
+        "y": 0.79
+      },
+      "content": "Draft placeholder; hosted screenshot not supplied.",
+      "exportCapabilities": [
+        "web_native",
+        "pptx_editable",
+        "google_importable"
+      ],
+      "id": "element_fc25595fb847a8ef16d028139f458baf",
+      "kind": "text",
+      "locked": false,
+      "name": "Image credit",
+      "role": "caption",
+      "rotation": 0,
+      "slideId": "slide_84757621167f74a89a9a21c4462cd3e7",
+      "sourceIds": [
+        "source_6be783f5420cdb61288cf2af7102eb07",
+        "source_90f22f9d0f351fcc2f15fcd83f3752c3",
+        "source_3e10a3d558d3c4166f322e3f7691af27",
+        "source_7e07f803aa4d9b04b87d4828fc1b1647",
+        "source_a69c79dec813813738607ab32c542d53",
+        "source_82043fb8f2d95853e479440f80f0a692",
+        "source_eb5bb5f501f64e2f3fef3daf2cf79fa1",
+        "source_627f2cf2736066cd2c65dd72c5897641"
+      ],
+      "style": {
+        "color": "#60727B",
+        "fontFamily": "Arial",
+        "fontSize": 14,
+        "fontWeight": 520,
+        "lineHeight": 1.2,
+        "textAlign": "center"
+      },
+      "version": 1
+    },
+    {
+      "bbox": {
+        "height": 0.035,
+        "width": 0.72,
+        "x": 0.07,
+        "y": 0.93
+      },
+      "content": "DRAFT · NODESLIDE  ·  SOURCE-AWARE  ·  EDITABLE",
+      "exportCapabilities": [
+        "web_native",
+        "pptx_editable",
+        "google_importable"
+      ],
+      "id": "element_9378550d04361975d83d4ffe06c3637d",
+      "kind": "text",
+      "locked": true,
+      "name": "Deck footer",
+      "role": "footer",
+      "rotation": 0,
+      "slideId": "slide_84757621167f74a89a9a21c4462cd3e7",
+      "sourceIds": [],
+      "style": {
+        "color": "#60727B",
+        "fontFamily": "Courier New",
+        "fontSize": 10,
+        "fontWeight": 550,
+        "letterSpacing": 1.1
+      },
+      "version": 1
+    },
+    {
+      "bbox": {
+        "height": 0.05,
+        "width": 0.06,
+        "x": 0.88,
+        "y": 0.92
+      },
+      "content": "06",
+      "exportCapabilities": [
+        "web_native",
+        "pptx_editable",
+        "google_importable"
+      ],
+      "id": "element_f27c037df2bc5c8c15d1d9038bd76d40",
+      "kind": "text",
+      "locked": true,
+      "name": "Page number",
+      "role": "page_number",
+      "rotation": 0,
+      "slideId": "slide_84757621167f74a89a9a21c4462cd3e7",
+      "sourceIds": [],
+      "style": {
+        "color": "#287A8D",
+        "fontFamily": "Courier New",
+        "fontSize": 13,
+        "fontWeight": 700,
+        "textAlign": "right"
+      },
+      "version": 1
+    },
+    {
+      "bbox": {
+        "height": 0.83,
+        "width": 0.008,
+        "x": 0.035,
+        "y": 0.065
+      },
+      "exportCapabilities": [
+        "web_native",
+        "pptx_editable",
+        "google_importable"
+      ],
+      "id": "element_b68d756eb34d0806aebb34e7ea79b828",
+      "kind": "shape",
+      "locked": true,
+      "name": "Accent rail",
+      "role": "decoration",
+      "rotation": 0,
+      "slideId": "slide_87a5e4c349b351cdf61b0218f11d9db3",
+      "sourceIds": [],
+      "style": {
+        "fill": "#287A8D",
+        "radius": 8
+      },
+      "version": 1
+    },
+    {
+      "bbox": {
+        "height": 0.05,
+        "width": 0.48,
+        "x": 0.07,
+        "y": 0.065
+      },
+      "content": "EXTERNAL USE CASE / 07",
+      "exportCapabilities": [
+        "web_native",
+        "pptx_editable",
+        "google_importable"
+      ],
+      "id": "element_7737f9ece7e4073659a3593223992db8",
+      "kind": "text",
+      "locked": false,
+      "name": "Section label",
+      "role": "section",
+      "rotation": 0,
+      "slideId": "slide_87a5e4c349b351cdf61b0218f11d9db3",
+      "sourceIds": [],
+      "style": {
+        "color": "#287A8D",
+        "fontFamily": "Courier New",
+        "fontSize": 15,
+        "fontWeight": 650,
+        "letterSpacing": 1.3
+      },
+      "version": 1
+    },
+    {
+      "bbox": {
+        "height": 0.2,
+        "width": 0.76,
+        "x": 0.07,
+        "y": 0.15
+      },
+      "content": "A real grant scenario tests the graph without claiming biological proof.",
+      "exportCapabilities": [
+        "web_native",
+        "pptx_editable",
+        "google_importable"
+      ],
+      "id": "element_2c72e387857a86d08032b21b8963b31d",
+      "kind": "text",
+      "locked": false,
+      "name": "Headline",
+      "role": "headline",
+      "rotation": 0,
+      "slideId": "slide_87a5e4c349b351cdf61b0218f11d9db3",
+      "sourceIds": [
+        "source_2d056b939eda709bebd6e733061843bb"
+      ],
+      "style": {
+        "color": "#17242B",
+        "fontFamily": "Arial",
+        "fontSize": 38,
+        "fontWeight": 620,
+        "letterSpacing": -0.8,
+        "lineHeight": 1.04
+      },
+      "version": 1
+    },
+    {
+      "bbox": {
+        "height": 0.2,
+        "width": 0.39,
+        "x": 0.07,
+        "y": 0.4
+      },
+      "content": "Anthropic's rare-disease grant is an independent forcing function for mapping research, novelty, evaluation, authority, and readiness, not an affiliation.",
+      "exportCapabilities": [
+        "web_native",
+        "pptx_editable",
+        "google_importable"
+      ],
+      "id": "element_01cf7b72a34a31c86362791e8869fd99",
+      "kind": "text",
+      "locked": false,
+      "name": "Body copy",
+      "role": "body",
+      "rotation": 0,
+      "slideId": "slide_87a5e4c349b351cdf61b0218f11d9db3",
+      "sourceIds": [
+        "source_2d056b939eda709bebd6e733061843bb",
+        "source_6be783f5420cdb61288cf2af7102eb07",
+        "source_90f22f9d0f351fcc2f15fcd83f3752c3",
+        "source_3e10a3d558d3c4166f322e3f7691af27",
+        "source_7e07f803aa4d9b04b87d4828fc1b1647",
+        "source_a69c79dec813813738607ab32c542d53",
+        "source_82043fb8f2d95853e479440f80f0a692",
+        "source_eb5bb5f501f64e2f3fef3daf2cf79fa1",
+        "source_627f2cf2736066cd2c65dd72c5897641"
+      ],
+      "style": {
+        "color": "#60727B",
+        "fontFamily": "Arial",
+        "fontSize": 19,
+        "fontWeight": 430,
+        "lineHeight": 1.35
+      },
+      "version": 1
+    },
+    {
+      "bbox": {
+        "height": 0.09,
+        "width": 0.39,
+        "x": 0.07,
+        "y": 0.62
+      },
+      "content": "01  Official grant announcement",
+      "exportCapabilities": [
+        "web_native",
+        "pptx_editable",
+        "google_importable"
+      ],
+      "id": "element_3d38a1461339cbb66366aa963cb9952d",
+      "kind": "text",
+      "locked": false,
+      "name": "Key point 1",
+      "role": "bullet",
+      "rotation": 0,
+      "slideId": "slide_87a5e4c349b351cdf61b0218f11d9db3",
+      "sourceIds": [
+        "source_2d056b939eda709bebd6e733061843bb",
+        "source_6be783f5420cdb61288cf2af7102eb07",
+        "source_90f22f9d0f351fcc2f15fcd83f3752c3",
+        "source_3e10a3d558d3c4166f322e3f7691af27",
+        "source_7e07f803aa4d9b04b87d4828fc1b1647",
+        "source_a69c79dec813813738607ab32c542d53",
+        "source_82043fb8f2d95853e479440f80f0a692",
+        "source_eb5bb5f501f64e2f3fef3daf2cf79fa1",
+        "source_627f2cf2736066cd2c65dd72c5897641"
+      ],
+      "style": {
+        "color": "#17242B",
+        "fontFamily": "Arial",
+        "fontSize": 17,
+        "fontWeight": 560,
+        "lineHeight": 1.2
+      },
+      "version": 1
+    },
+    {
+      "bbox": {
+        "height": 0.09,
+        "width": 0.39,
+        "x": 0.07,
+        "y": 0.72
+      },
+      "content": "02  No affiliation or endorsement",
+      "exportCapabilities": [
+        "web_native",
+        "pptx_editable",
+        "google_importable"
+      ],
+      "id": "element_9286b4c57be6897f17024801e329fcb8",
+      "kind": "text",
+      "locked": false,
+      "name": "Key point 2",
+      "role": "bullet",
+      "rotation": 0,
+      "slideId": "slide_87a5e4c349b351cdf61b0218f11d9db3",
+      "sourceIds": [
+        "source_2d056b939eda709bebd6e733061843bb",
+        "source_6be783f5420cdb61288cf2af7102eb07",
+        "source_90f22f9d0f351fcc2f15fcd83f3752c3",
+        "source_3e10a3d558d3c4166f322e3f7691af27",
+        "source_7e07f803aa4d9b04b87d4828fc1b1647",
+        "source_a69c79dec813813738607ab32c542d53",
+        "source_82043fb8f2d95853e479440f80f0a692",
+        "source_eb5bb5f501f64e2f3fef3daf2cf79fa1",
+        "source_627f2cf2736066cd2c65dd72c5897641"
+      ],
+      "style": {
+        "color": "#17242B",
+        "fontFamily": "Arial",
+        "fontSize": 17,
+        "fontWeight": 560,
+        "lineHeight": 1.2
+      },
+      "version": 1
+    },
+    {
+      "bbox": {
+        "height": 0.09,
+        "width": 0.39,
+        "x": 0.07,
+        "y": 0.82
+      },
+      "content": "03  Research synthesis does not prove biology",
+      "exportCapabilities": [
+        "web_native",
+        "pptx_editable",
+        "google_importable"
+      ],
+      "id": "element_fca0765eaf529abbf0b933de79ba8178",
+      "kind": "text",
+      "locked": false,
+      "name": "Key point 3",
+      "role": "bullet",
+      "rotation": 0,
+      "slideId": "slide_87a5e4c349b351cdf61b0218f11d9db3",
+      "sourceIds": [
+        "source_2d056b939eda709bebd6e733061843bb",
+        "source_6be783f5420cdb61288cf2af7102eb07",
+        "source_90f22f9d0f351fcc2f15fcd83f3752c3",
+        "source_3e10a3d558d3c4166f322e3f7691af27",
+        "source_7e07f803aa4d9b04b87d4828fc1b1647",
+        "source_a69c79dec813813738607ab32c542d53",
+        "source_82043fb8f2d95853e479440f80f0a692",
+        "source_eb5bb5f501f64e2f3fef3daf2cf79fa1",
+        "source_627f2cf2736066cd2c65dd72c5897641"
+      ],
+      "style": {
+        "color": "#17242B",
+        "fontFamily": "Arial",
+        "fontSize": 17,
+        "fontWeight": 560,
+        "lineHeight": 1.2
+      },
+      "version": 1
+    },
+    {
+      "bbox": {
+        "height": 0.24,
+        "width": 0.39,
+        "x": 0.53,
+        "y": 0.42
+      },
+      "content": "source → claim → evaluation → application readiness",
+      "exportCapabilities": [
+        "web_native",
+        "pptx_editable",
+        "google_importable"
+      ],
+      "id": "element_7cb01fd4c5949c21e2f6cd4cac2f50dd",
+      "kind": "math",
+      "locked": false,
+      "math": {
+        "description": "Research synthesis informs an application; it does not prove biology.",
+        "display": "source → claim → evaluation → application readiness",
+        "displayMode": "block",
+        "expression": "source -> claim -> evaluation -> application readiness",
+        "sourceId": "source_6be783f5420cdb61288cf2af7102eb07",
+        "syntax": "plain",
+        "variables": []
+      },
+      "name": "Editable formula",
+      "role": "formula",
+      "rotation": 0,
+      "slideId": "slide_87a5e4c349b351cdf61b0218f11d9db3",
+      "sourceIds": [
+        "source_6be783f5420cdb61288cf2af7102eb07",
+        "source_90f22f9d0f351fcc2f15fcd83f3752c3",
+        "source_3e10a3d558d3c4166f322e3f7691af27",
+        "source_7e07f803aa4d9b04b87d4828fc1b1647",
+        "source_a69c79dec813813738607ab32c542d53",
+        "source_82043fb8f2d95853e479440f80f0a692",
+        "source_eb5bb5f501f64e2f3fef3daf2cf79fa1",
+        "source_627f2cf2736066cd2c65dd72c5897641"
+      ],
+      "style": {
+        "color": "#15554E",
+        "fill": "#DDEDE8",
+        "fontFamily": "Courier New",
+        "fontSize": 30,
+        "fontWeight": 720,
+        "lineHeight": 1.15,
+        "padding": 20,
+        "radius": 8,
+        "textAlign": "center",
+        "verticalAlign": "middle"
+      },
+      "version": 1
+    },
+    {
+      "bbox": {
+        "height": 0.035,
+        "width": 0.72,
+        "x": 0.07,
+        "y": 0.93
+      },
+      "content": "DRAFT · NODESLIDE  ·  SOURCE-AWARE  ·  EDITABLE",
+      "exportCapabilities": [
+        "web_native",
+        "pptx_editable",
+        "google_importable"
+      ],
+      "id": "element_70aff6214700b838fed60ef9155e96c2",
+      "kind": "text",
+      "locked": true,
+      "name": "Deck footer",
+      "role": "footer",
+      "rotation": 0,
+      "slideId": "slide_87a5e4c349b351cdf61b0218f11d9db3",
+      "sourceIds": [],
+      "style": {
+        "color": "#60727B",
+        "fontFamily": "Courier New",
+        "fontSize": 10,
+        "fontWeight": 550,
+        "letterSpacing": 1.1
+      },
+      "version": 1
+    },
+    {
+      "bbox": {
+        "height": 0.05,
+        "width": 0.06,
+        "x": 0.88,
+        "y": 0.92
+      },
+      "content": "07",
+      "exportCapabilities": [
+        "web_native",
+        "pptx_editable",
+        "google_importable"
+      ],
+      "id": "element_7c008a4ddb2d31c334ff99bca175bdf1",
+      "kind": "text",
+      "locked": true,
+      "name": "Page number",
+      "role": "page_number",
+      "rotation": 0,
+      "slideId": "slide_87a5e4c349b351cdf61b0218f11d9db3",
+      "sourceIds": [],
+      "style": {
+        "color": "#287A8D",
+        "fontFamily": "Courier New",
+        "fontSize": 13,
+        "fontWeight": 700,
+        "textAlign": "right"
+      },
+      "version": 1
+    },
+    {
+      "bbox": {
+        "height": 0.83,
+        "width": 0.008,
+        "x": 0.035,
+        "y": 0.065
+      },
+      "exportCapabilities": [
+        "web_native",
+        "pptx_editable",
+        "google_importable"
+      ],
+      "id": "element_942f518d1bf201623f48d52fa665ba4d",
+      "kind": "shape",
+      "locked": true,
+      "name": "Accent rail",
+      "role": "decoration",
+      "rotation": 0,
+      "slideId": "slide_c70d2b484ca5cf50c10158883957b208",
+      "sourceIds": [],
+      "style": {
+        "fill": "#287A8D",
+        "radius": 8
+      },
+      "version": 1
+    },
+    {
+      "bbox": {
+        "height": 0.05,
+        "width": 0.48,
+        "x": 0.07,
+        "y": 0.065
+      },
+      "content": "SYNTHESIS / 08",
+      "exportCapabilities": [
+        "web_native",
+        "pptx_editable",
+        "google_importable"
+      ],
+      "id": "element_ad86d7a284ae3ae2956dfa388b1ed509",
+      "kind": "text",
+      "locked": false,
+      "name": "Section label",
+      "role": "section",
+      "rotation": 0,
+      "slideId": "slide_c70d2b484ca5cf50c10158883957b208",
+      "sourceIds": [],
+      "style": {
+        "color": "#287A8D",
+        "fontFamily": "Courier New",
+        "fontSize": 15,
+        "fontWeight": 650,
+        "letterSpacing": 1.3
+      },
+      "version": 1
+    },
+    {
+      "bbox": {
+        "height": 0.2,
+        "width": 0.76,
+        "x": 0.07,
+        "y": 0.15
+      },
+      "content": "Loops need external anchors. Bring one workflow and inspect the proof.",
+      "exportCapabilities": [
+        "web_native",
+        "pptx_editable",
+        "google_importable"
+      ],
+      "id": "element_60d61b22c518fbc8a0168112fca5076c",
+      "kind": "text",
+      "locked": false,
+      "name": "Headline",
+      "role": "headline",
+      "rotation": 0,
+      "slideId": "slide_c70d2b484ca5cf50c10158883957b208",
+      "sourceIds": [
+        "source_2d056b939eda709bebd6e733061843bb"
+      ],
+      "style": {
+        "color": "#17242B",
+        "fontFamily": "Arial",
+        "fontSize": 38,
+        "fontWeight": 620,
+        "letterSpacing": -0.8,
+        "lineHeight": 1.04
+      },
+      "version": 1
+    },
+    {
+      "bbox": {
+        "height": 0.2,
+        "width": 0.39,
+        "x": 0.07,
+        "y": 0.4
+      },
+      "content": "Research, build, evaluation, proof, presentation, and feedback can watch one another; only external sources, commits, artifacts, and outcomes close the graph.",
+      "exportCapabilities": [
+        "web_native",
+        "pptx_editable",
+        "google_importable"
+      ],
+      "id": "element_4ef5b678102097690202a527beced799",
+      "kind": "text",
+      "locked": false,
+      "name": "Body copy",
+      "role": "body",
+      "rotation": 0,
+      "slideId": "slide_c70d2b484ca5cf50c10158883957b208",
+      "sourceIds": [
+        "source_2d056b939eda709bebd6e733061843bb",
+        "source_6be783f5420cdb61288cf2af7102eb07",
+        "source_90f22f9d0f351fcc2f15fcd83f3752c3",
+        "source_3e10a3d558d3c4166f322e3f7691af27",
+        "source_7e07f803aa4d9b04b87d4828fc1b1647",
+        "source_a69c79dec813813738607ab32c542d53",
+        "source_82043fb8f2d95853e479440f80f0a692",
+        "source_eb5bb5f501f64e2f3fef3daf2cf79fa1",
+        "source_627f2cf2736066cd2c65dd72c5897641"
+      ],
+      "style": {
+        "color": "#60727B",
+        "fontFamily": "Arial",
+        "fontSize": 19,
+        "fontWeight": 430,
+        "lineHeight": 1.35
+      },
+      "version": 1
+    },
+    {
+      "bbox": {
+        "height": 0.09,
+        "width": 0.39,
+        "x": 0.07,
+        "y": 0.62
+      },
+      "content": "01  Researcher, builder, or operator",
+      "exportCapabilities": [
+        "web_native",
+        "pptx_editable",
+        "google_importable"
+      ],
+      "id": "element_15c6cc5d68c4ce323839f0cc32b61cc3",
+      "kind": "text",
+      "locked": false,
+      "name": "Key point 1",
+      "role": "bullet",
+      "rotation": 0,
+      "slideId": "slide_c70d2b484ca5cf50c10158883957b208",
+      "sourceIds": [
+        "source_2d056b939eda709bebd6e733061843bb",
+        "source_6be783f5420cdb61288cf2af7102eb07",
+        "source_90f22f9d0f351fcc2f15fcd83f3752c3",
+        "source_3e10a3d558d3c4166f322e3f7691af27",
+        "source_7e07f803aa4d9b04b87d4828fc1b1647",
+        "source_a69c79dec813813738607ab32c542d53",
+        "source_82043fb8f2d95853e479440f80f0a692",
+        "source_eb5bb5f501f64e2f3fef3daf2cf79fa1",
+        "source_627f2cf2736066cd2c65dd72c5897641"
+      ],
+      "style": {
+        "color": "#17242B",
+        "fontFamily": "Arial",
+        "fontSize": 17,
+        "fontWeight": 560,
+        "lineHeight": 1.2
+      },
+      "version": 1
+    },
+    {
+      "bbox": {
+        "height": 0.09,
+        "width": 0.39,
+        "x": 0.07,
+        "y": 0.72
+      },
+      "content": "02  Sources, commits, exports, and outcomes",
+      "exportCapabilities": [
+        "web_native",
+        "pptx_editable",
+        "google_importable"
+      ],
+      "id": "element_da00cd85fef3a22c3ec250e240567fa3",
+      "kind": "text",
+      "locked": false,
+      "name": "Key point 2",
+      "role": "bullet",
+      "rotation": 0,
+      "slideId": "slide_c70d2b484ca5cf50c10158883957b208",
+      "sourceIds": [
+        "source_2d056b939eda709bebd6e733061843bb",
+        "source_6be783f5420cdb61288cf2af7102eb07",
+        "source_90f22f9d0f351fcc2f15fcd83f3752c3",
+        "source_3e10a3d558d3c4166f322e3f7691af27",
+        "source_7e07f803aa4d9b04b87d4828fc1b1647",
+        "source_a69c79dec813813738607ab32c542d53",
+        "source_82043fb8f2d95853e479440f80f0a692",
+        "source_eb5bb5f501f64e2f3fef3daf2cf79fa1",
+        "source_627f2cf2736066cd2c65dd72c5897641"
+      ],
+      "style": {
+        "color": "#17242B",
+        "fontFamily": "Arial",
+        "fontSize": 17,
+        "fontWeight": 560,
+        "lineHeight": 1.2
+      },
+      "version": 1
+    },
+    {
+      "bbox": {
+        "height": 0.09,
+        "width": 0.39,
+        "x": 0.07,
+        "y": 0.82
+      },
+      "content": "03  Inspect pass, fail, and human-review status",
+      "exportCapabilities": [
+        "web_native",
+        "pptx_editable",
+        "google_importable"
+      ],
+      "id": "element_fdc9d7af208d8c63fe97baf68111ee4f",
+      "kind": "text",
+      "locked": false,
+      "name": "Key point 3",
+      "role": "bullet",
+      "rotation": 0,
+      "slideId": "slide_c70d2b484ca5cf50c10158883957b208",
+      "sourceIds": [
+        "source_2d056b939eda709bebd6e733061843bb",
+        "source_6be783f5420cdb61288cf2af7102eb07",
+        "source_90f22f9d0f351fcc2f15fcd83f3752c3",
+        "source_3e10a3d558d3c4166f322e3f7691af27",
+        "source_7e07f803aa4d9b04b87d4828fc1b1647",
+        "source_a69c79dec813813738607ab32c542d53",
+        "source_82043fb8f2d95853e479440f80f0a692",
+        "source_eb5bb5f501f64e2f3fef3daf2cf79fa1",
+        "source_627f2cf2736066cd2c65dd72c5897641"
+      ],
+      "style": {
+        "color": "#17242B",
+        "fontFamily": "Arial",
+        "fontSize": 17,
+        "fontWeight": 560,
+        "lineHeight": 1.2
+      },
+      "version": 1
+    },
+    {
+      "bbox": {
+        "height": 0.24,
+        "width": 0.39,
+        "x": 0.53,
+        "y": 0.42
+      },
+      "content": "research ↔ build ↔ evaluation ↔ proof",
+      "exportCapabilities": [
+        "web_native",
+        "pptx_editable",
+        "google_importable"
+      ],
+      "id": "element_9bdf5c9b81aa706c586cd31498355573",
+      "kind": "math",
+      "locked": false,
+      "math": {
+        "description": "External sources, commits, artifacts, and observed outcomes close the loop.",
+        "display": "research ↔ build ↔ evaluation ↔ proof",
+        "displayMode": "block",
+        "expression": "research <-> build <-> evaluation <-> proof",
+        "sourceId": "source_6be783f5420cdb61288cf2af7102eb07",
+        "syntax": "plain",
+        "variables": []
+      },
+      "name": "Editable formula",
+      "role": "formula",
+      "rotation": 0,
+      "slideId": "slide_c70d2b484ca5cf50c10158883957b208",
+      "sourceIds": [
+        "source_6be783f5420cdb61288cf2af7102eb07",
+        "source_90f22f9d0f351fcc2f15fcd83f3752c3",
+        "source_3e10a3d558d3c4166f322e3f7691af27",
+        "source_7e07f803aa4d9b04b87d4828fc1b1647",
+        "source_a69c79dec813813738607ab32c542d53",
+        "source_82043fb8f2d95853e479440f80f0a692",
+        "source_eb5bb5f501f64e2f3fef3daf2cf79fa1",
+        "source_627f2cf2736066cd2c65dd72c5897641"
+      ],
+      "style": {
+        "color": "#15554E",
+        "fill": "#DDEDE8",
+        "fontFamily": "Courier New",
+        "fontSize": 30,
+        "fontWeight": 720,
+        "lineHeight": 1.15,
+        "padding": 20,
+        "radius": 8,
+        "textAlign": "center",
+        "verticalAlign": "middle"
+      },
+      "version": 1
+    },
+    {
+      "bbox": {
+        "height": 0.035,
+        "width": 0.72,
+        "x": 0.07,
+        "y": 0.93
+      },
+      "content": "DRAFT · NODESLIDE  ·  SOURCE-AWARE  ·  EDITABLE",
+      "exportCapabilities": [
+        "web_native",
+        "pptx_editable",
+        "google_importable"
+      ],
+      "id": "element_a4b93fa89edb6c94eee5e77639f2fd21",
+      "kind": "text",
+      "locked": true,
+      "name": "Deck footer",
+      "role": "footer",
+      "rotation": 0,
+      "slideId": "slide_c70d2b484ca5cf50c10158883957b208",
+      "sourceIds": [],
+      "style": {
+        "color": "#60727B",
+        "fontFamily": "Courier New",
+        "fontSize": 10,
+        "fontWeight": 550,
+        "letterSpacing": 1.1
+      },
+      "version": 1
+    },
+    {
+      "bbox": {
+        "height": 0.05,
+        "width": 0.06,
+        "x": 0.88,
+        "y": 0.92
+      },
+      "content": "08",
+      "exportCapabilities": [
+        "web_native",
+        "pptx_editable",
+        "google_importable"
+      ],
+      "id": "element_f371971061596791d85e09b01e87e19f",
+      "kind": "text",
+      "locked": true,
+      "name": "Page number",
+      "role": "page_number",
+      "rotation": 0,
+      "slideId": "slide_c70d2b484ca5cf50c10158883957b208",
+      "sourceIds": [],
+      "style": {
+        "color": "#287A8D",
+        "fontFamily": "Courier New",
+        "fontSize": 13,
+        "fontWeight": 700,
+        "textAlign": "right"
+      },
+      "version": 1
+    }
+  ],
+  "slides": [
+    {
+      "archetype": "statement",
+      "background": "#F4F7F8",
+      "deckId": "deck-nodekit-proof-campaign-2026-07-20-draft",
+      "elementOrder": [
+        "element_2ff4f4e8a01eaaff695e662f47551b93",
+        "element_34b7e996d5dc467d2dda9cfdf7baf596",
+        "element_2eec91cec257e2d659c039e77fb1d308",
+        "element_379027360bf16416af43d06b0def887c",
+        "element_ccf6015d184eb1b4cc3631c277bd84a1",
+        "element_6bff6c3bd355a102b302b4c592790d4f",
+        "element_4bcad36bae99b401609f9a1a7b66cfa1",
+        "element_c5ed56648423efbb1808c5c8f977882a",
+        "element_ed92c57e03181a85453e5a6b32af6482"
+      ],
+      "id": "slide_1cf4b8fceb3033524c77ee0693763da4",
+      "notes": "DRAFT PRESENTATION — external publish readiness is not asserted.\n\nOpen on the outcome, not the component inventory. NodeKit is the portable contract\nand certification path around an agent application. The factory receipt is the first\nanchor.\n\nEvidence IDs: E1_FACTORY_ACCEPTANCE, E2_NODEKIT_RELEASE.",
+      "section": "opening / 01",
+      "title": "What is NodeKit?",
+      "version": 1
+    },
+    {
+      "archetype": "comparison",
+      "background": "#F4F7F8",
+      "deckId": "deck-nodekit-proof-campaign-2026-07-20-draft",
+      "elementOrder": [
+        "element_a2d9a5adbbfd16ea0ccd40be5ee66329",
+        "element_4800470e13f31aeeaa60b33acc0f0576",
+        "element_a6bc3bda2c338e4a93146d5747b1abbb",
+        "element_502bc101f378c17767415bd59e875425",
+        "element_b87efb9608d5e9db50f6328d90a65c12",
+        "element_ec28d61bc43b3385f99e96c43581ef60",
+        "element_3a60c610110d05a3be67847ac8b2e8d0",
+        "element_2eea41d8a344938e5b51561b603b8a04",
+        "element_87efd031094ea6efcc6a49fe4a66eb4f"
+      ],
+      "id": "slide_50ff87dda5753a60a9afd09c61eab1ff",
+      "notes": "DRAFT PRESENTATION — external publish readiness is not asserted.\n\nExplain the failure class: a benchmark can call a different planner than production;\na UI can show a plausible answer without durable state; a release can cite a test\nthat was not run against the deployed revision. NodeKit compiles these paths from the\nsame definition and records where parity is still absent.\n\nEvidence IDs: none; planned content only.",
+      "section": "stakes / 02",
+      "title": "What pain is this solving?",
+      "version": 1
+    },
+    {
+      "archetype": "stat-dominant",
+      "background": "#F4F7F8",
+      "deckId": "deck-nodekit-proof-campaign-2026-07-20-draft",
+      "elementOrder": [
+        "element_975d9682ed81cb7bbd0af345b588adcd",
+        "element_57d6ef89ac71ffbfca8a6555c1bbd507",
+        "element_d612985b03badb5e178f00f59f2a953e",
+        "element_aab1939bcecab36c94e2b8ea1e848dc7",
+        "element_5d8c0e3243b60b69267fc813eea40a02",
+        "element_9a81055afd9033939bad7925801023a9",
+        "element_970eb851e44314a96822beff1db71321",
+        "element_93785b886142550caa602a36c6d1f1a2",
+        "element_1c8b7378782e69abbb7b501749401a4e",
+        "element_c538f28985a70ae50adeac0e951b8034",
+        "element_4a9b7c132d0933f5734bf1cfab722935"
+      ],
+      "id": "slide_f90c9a02ce689dc0e43c15bdaa7cd8b6",
+      "notes": "DRAFT PRESENTATION — external publish readiness is not asserted.\n\nUse the exact 37.221-second deterministic acceptance result. Two independently\ngenerated candidate repositories were installed, compiled twice for reproducibility,\ncommitted, run, evaluated, benchmarked, and proof-checked. Do not call this a cloud or\nproduction benchmark.\n\nEvidence IDs: E1_FACTORY_ACCEPTANCE, E2_NODEKIT_RELEASE.",
+      "section": "evidence / 03",
+      "title": "Does the empty-directory path actually work?",
+      "version": 1
+    },
+    {
+      "archetype": "split",
+      "background": "#F4F7F8",
+      "deckId": "deck-nodekit-proof-campaign-2026-07-20-draft",
+      "elementOrder": [
+        "element_2ee0fd56da6524825a0288eae0d318de",
+        "element_4e4a2d2b3a49398c0dcf869739db7523",
+        "element_d6e66aa42764ff72decbacbe08213df1",
+        "element_c7a23dd119f2d71342dd3adee8f8beea",
+        "element_212a58b2c3ebb038c465d02d101aae2e",
+        "element_a57bab852e54c43523ada51955d29928",
+        "element_ff0dd23fa7c0f9fb4dafae78a89c9624",
+        "element_0ffa30bac7d103a0cb3caecd4579dc17",
+        "element_7c85c69b0aa6a5ceab7477aaccf51dac",
+        "element_ed9d53609d24f97432252eb06c8ca639"
+      ],
+      "id": "slide_7c6962f7eda3feeb7294c21a997882ac",
+      "notes": "DRAFT PRESENTATION — external publish readiness is not asserted.\n\nShow the synthetic Casca FDE lab. Highlight graph-aware blocker explanation, proposal\nreview, reload persistence, one bounded live model call, export/reopen, and the explicit\nabsence of an automated credit decision. State clearly that deployment is the missing\nrelease gate.\n\nEvidence IDs: E3_CASCA_RELEASE, E4_CASCA_BROWSER, E5_CASCA_LIVE.",
+      "section": "case study / 04",
+      "title": "Can the system survive a real agentic product journey?",
+      "version": 1
+    },
+    {
+      "archetype": "stat-dominant",
+      "background": "#F4F7F8",
+      "deckId": "deck-nodekit-proof-campaign-2026-07-20-draft",
+      "elementOrder": [
+        "element_82b1c4b9fd60a64dae1bab98abe4b2eb",
+        "element_3424e9fd5832197cb55ff13e57bb583e",
+        "element_767fe364d7dbb7764f5049d913b7e83c",
+        "element_cea180fac9e6d69bde7bb7a499adfdc2",
+        "element_d4b69604d1807f23f95e18c826b325a6",
+        "element_7a03ec831975550a340315b0834eedbb",
+        "element_cef2ab363eab70be0e70de5c2ee7d139",
+        "element_fef2b8eb6fd42f97f9e0a6a391d8e5bb",
+        "element_f385abf6097325fd7b51b95a9eacfb0a",
+        "element_352303a0868ce3a47c087d13f239dd4b",
+        "element_28c49527d4842af2e8dece2dd99b8598",
+        "element_872a60dc1309187dae784afd9e8e483a"
+      ],
+      "id": "slide_18bba5ff882469f994cfecf6ecc4ce71",
+      "notes": "DRAFT PRESENTATION — external publish readiness is not asserted.\n\nThe present baseline is behavior cloning, not RL. The important product result is the\nstep trajectory, protected reward, adversarial suite, heldout boundary, and a live route\nthat failed closed instead of silently weakening its privacy policy. The next scientific\nmilestone is a larger preregistered corpus and a shadow-only trained-policy comparison.\n\nEvidence IDs: E6_RL_RELEASE, E7_RL_HELDOUT, E8_RL_LIVE_BLOCKED, E11_RL_CI.",
+      "section": "technical decision / 05",
+      "title": "How does NodeKit approach Agentic RL responsibly?",
+      "version": 1
+    },
+    {
+      "archetype": "media-dominant",
+      "background": "#F4F7F8",
+      "deckId": "deck-nodekit-proof-campaign-2026-07-20-draft",
+      "elementOrder": [
+        "element_379a58d41a5d7d3d970843e8a5444ab6",
+        "element_b33d599852f29d2a9c61f03dc0455990",
+        "element_0992935e19d378827e61d50c105a58f7",
+        "element_6117d65d5902d83fd41dc8b8d7da63da",
+        "element_4b17c5b93bf45a079f6512011075b1b9",
+        "element_1a4461b9992aa0b6dc92f9a83f8c7a25",
+        "element_7388ea3729327a83417c5a1809b22024",
+        "element_d298a0c97352e0958463d72cb8eff098",
+        "element_fc25595fb847a8ef16d028139f458baf",
+        "element_9378550d04361975d83d4ffe06c3637d",
+        "element_f27c037df2bc5c8c15d1d9038bd76d40"
+      ],
+      "id": "slide_84757621167f74a89a9a21c4462cd3e7",
+      "notes": "DRAFT PRESENTATION — external publish readiness is not asserted.\n\nReplace this note with exact production evidence only after the public read-only demo\npasses. The product should show applicable quests, a bounded graph neighborhood, a\nsource-backed answer, authority class, and evidence/proof status.\n\nEvidence IDs: none; planned content only.",
+      "section": "product reveal / 06",
+      "title": "What does the graph make possible for a user?",
+      "version": 1
+    },
+    {
+      "archetype": "split",
+      "background": "#F4F7F8",
+      "deckId": "deck-nodekit-proof-campaign-2026-07-20-draft",
+      "elementOrder": [
+        "element_b68d756eb34d0806aebb34e7ea79b828",
+        "element_7737f9ece7e4073659a3593223992db8",
+        "element_2c72e387857a86d08032b21b8963b31d",
+        "element_01cf7b72a34a31c86362791e8869fd99",
+        "element_3d38a1461339cbb66366aa963cb9952d",
+        "element_9286b4c57be6897f17024801e329fcb8",
+        "element_fca0765eaf529abbf0b933de79ba8178",
+        "element_7cb01fd4c5949c21e2f6cd4cac2f50dd",
+        "element_70aff6214700b838fed60ef9155e96c2",
+        "element_7c008a4ddb2d31c334ff99bca175bdf1"
+      ],
+      "id": "slide_87a5e4c349b351cdf61b0218f11d9db3",
+      "notes": "DRAFT PRESENTATION — external publish readiness is not asserted.\n\nAnthropic's rare-disease grant announcement is an external scenario, not an affiliation.\nExplain how NodeKit would construct the latest-research ledger, novelty graph, benchmark,\nClaude-credit plan, and application packet while keeping scientific and clinical authority\nwith qualified researchers and professionals.\n\nEvidence IDs: E9_ANTHROPIC_GRANT_SOURCE.",
+      "section": "external use case / 07",
+      "title": "How would a researcher use this today?",
+      "version": 1
+    },
+    {
+      "archetype": "split",
+      "background": "#F4F7F8",
+      "deckId": "deck-nodekit-proof-campaign-2026-07-20-draft",
+      "elementOrder": [
+        "element_942f518d1bf201623f48d52fa665ba4d",
+        "element_ad86d7a284ae3ae2956dfa388b1ed509",
+        "element_60d61b22c518fbc8a0168112fca5076c",
+        "element_4ef5b678102097690202a527beced799",
+        "element_15c6cc5d68c4ce323839f0cc32b61cc3",
+        "element_da00cd85fef3a22c3ec250e240567fa3",
+        "element_fdc9d7af208d8c63fe97baf68111ee4f",
+        "element_9bdf5c9b81aa706c586cd31498355573",
+        "element_a4b93fa89edb6c94eee5e77639f2fd21",
+        "element_f371971061596791d85e09b01e87e19f"
+      ],
+      "id": "slide_c70d2b484ca5cf50c10158883957b208",
+      "notes": "DRAFT PRESENTATION — external publish readiness is not asserted.\n\nName the graph: research, build, evaluation, proof, presentation, distribution, feedback,\nand memory. The graph is credible only when it resolves to current sources, exact commits,\nfresh-browser evidence, exports, public URLs, and observed response. Invite researchers,\nbuilders, and domain operators to bring one bounded consequential workflow. Close on a\nfalsifiable promise: the system should expose what passed, what failed, what is local,\nand what still needs a human.\n\nEvidence IDs: E1_FACTORY_ACCEPTANCE, E2_NODEKIT_RELEASE, E4_CASCA_BROWSER, E10_GRAPH_OF_LOOPS_SOURCE.",
+      "section": "synthesis / 08",
+      "title": "How do the pieces improve, and what should reviewers do next?",
+      "version": 1
+    }
+  ],
+  "sources": [
+    {
+      "citation": "By the end, a technical reviewer should understand that NodeKit is a portable application contract and verification path, see exactly which product slices have passed which gates, and know where the system remains local, blocked, or planned.\nEvery material claim must remain bound to the supplied Change Story evidence.\nThis deck is a draft and does not assert external publish readiness.\nhttps://github.com/HomenShum/node-platform/releases/tag/v0.2.0\nhttps://github.com/HomenShum/agentic-rl-research-lab/releases/tag/v0.1.0-diagnostic-baselines\nhttps://github.com/HomenShum/agentic-rl-research-lab/releases/tag/v0.1.0-diagnostic-baselines\nhttps://www.anthropic.com/news/rare-disease-research-grants\nhttps://medium.com/intuitionmachine/from-loop-engineering-to-graph-engineering-d3ebeb08511c\nhttps://github.com/HomenShum/agentic-rl-research-lab/actions/runs/29799453044",
+      "deckId": "deck-nodekit-proof-campaign-2026-07-20-draft",
+      "id": "source_2d056b939eda709bebd6e733061843bb",
+      "license": "Internal working material",
+      "retrievedAt": 1784505600000,
+      "sourceType": "internal",
+      "title": "DRAFT — NodeKit launches NodeKit through proof-carrying product work — creation brief"
+    },
+    {
+      "citation": "exact commits and application/config hashes; no-key deterministic factory acceptance; strict paid-provider receipts with no fallback; browser journeys with console and network health; exact deployment identity and fresh-user production proof where claimed; editable deck export and reopen verification; public URL verification and distribution receipts; Keep planned Founder Quest content in explicit future tense; Keep external publish readiness false",
+      "deckId": "deck-nodekit-proof-campaign-2026-07-20-draft",
+      "id": "source_195547a4182532175582670daee24960",
+      "license": "Internal working material",
+      "retrievedAt": 1784505600000,
+      "sourceType": "note",
+      "title": "Brief success criteria"
+    },
+    {
+      "citation": "https://github.com/HomenShum/node-platform/releases/tag/v0.2.0",
+      "deckId": "deck-nodekit-proof-campaign-2026-07-20-draft",
+      "id": "source_6be783f5420cdb61288cf2af7102eb07",
+      "license": "User-supplied linked evidence; verify reuse rights before external publication.",
+      "retrievedAt": 1784505600000,
+      "sourceType": "url",
+      "title": "github.com · supplied source 1",
+      "url": "https://github.com/HomenShum/node-platform/releases/tag/v0.2.0"
+    },
+    {
+      "citation": "https://github.com/HomenShum/agentic-rl-research-lab/releases/tag/v0.1.0-diagnostic-baselines",
+      "deckId": "deck-nodekit-proof-campaign-2026-07-20-draft",
+      "id": "source_90f22f9d0f351fcc2f15fcd83f3752c3",
+      "license": "User-supplied linked evidence; verify reuse rights before external publication.",
+      "retrievedAt": 1784505600000,
+      "sourceType": "url",
+      "title": "github.com · supplied source 2",
+      "url": "https://github.com/HomenShum/agentic-rl-research-lab/releases/tag/v0.1.0-diagnostic-baselines"
+    },
+    {
+      "citation": "https://www.anthropic.com/news/rare-disease-research-grants",
+      "deckId": "deck-nodekit-proof-campaign-2026-07-20-draft",
+      "id": "source_3e10a3d558d3c4166f322e3f7691af27",
+      "license": "User-supplied linked evidence; verify reuse rights before external publication.",
+      "retrievedAt": 1784505600000,
+      "sourceType": "url",
+      "title": "anthropic.com · supplied source 3",
+      "url": "https://www.anthropic.com/news/rare-disease-research-grants"
+    },
+    {
+      "citation": "https://medium.com/intuitionmachine/from-loop-engineering-to-graph-engineering-d3ebeb08511c",
+      "deckId": "deck-nodekit-proof-campaign-2026-07-20-draft",
+      "id": "source_7e07f803aa4d9b04b87d4828fc1b1647",
+      "license": "User-supplied linked evidence; verify reuse rights before external publication.",
+      "retrievedAt": 1784505600000,
+      "sourceType": "url",
+      "title": "medium.com · supplied source 4",
+      "url": "https://medium.com/intuitionmachine/from-loop-engineering-to-graph-engineering-d3ebeb08511c"
+    },
+    {
+      "citation": "https://github.com/HomenShum/agentic-rl-research-lab/actions/runs/29799453044",
+      "deckId": "deck-nodekit-proof-campaign-2026-07-20-draft",
+      "id": "source_a69c79dec813813738607ab32c542d53",
+      "license": "User-supplied linked evidence; verify reuse rights before external publication.",
+      "retrievedAt": 1784505600000,
+      "sourceType": "url",
+      "title": "github.com · supplied source 5",
+      "url": "https://github.com/HomenShum/agentic-rl-research-lab/actions/runs/29799453044"
+    },
+    {
+      "byteSize": 10683,
+      "citation": "Uploaded file: NodeKit governed Change Story\n{\n  \"change\": {\n    \"affectedSystems\": [\n      \"NodeKit factory\",\n      \"Casca FDE Deployment Lab\",\n      \"FounderQuest Agentic RL research lab\",\n      \"Founder Quest Graph product\",\n      \"NodeSlide presentation pipeline\",\n      \"Feature Proof Studio video pipeline\",\n      \"Chrome/CDP publication workflow\"\n    ],\n    \"alternatives\": [\n      {\n        \"name\": \"Build another general agent runtime\",\n        \"rejectedBecause\": \"Existing runtimes already cover generic orchestration; the missing value is application composition, artifact governance, and certification.\"\n      },\n      {\n        \"name\": \"Publish a concept announcement before product proof\",\n        \"rejectedBecause\": \"It would make the deck the source of truth instead of a projection of executed evidence.\"\n      }\n    ],\n    \"approvalBoundaries\": {\n      \"destructiveCleanup\": \"not_in_scope\",\n      \"directMessagesRepliesOrPaidPromotion\": \"prohibited\",\n      \"exactPublicCampaign\": \"authorized\",\n      \"paidLiveProvider\": \"authorized\",\n      \"productionDeployment\": \"authorized\"\n    },\n    \"audience\": [\n      \"agent builders\",\n      \"applied AI researchers\",\n      \"forward-deployed engineers\",\n      \"technical founders and investors\"\n    ],\n    \"changeType\": \"release-campaign\",\n    \"communicationJob\": \"By the end, a technical reviewer should understand that NodeKit is a portable application contract and verification path, see exactly which product slices have passed which gates, and know where the system remains local, blocked, or planned.\",\n    \"decision\": [\n      \"Use one thin NodeKit manifest, filesystem-discovered capabilities, composed evaluations, and content-addressed proof receipts.\",\n      \"Prove the system through independent generated applications and preserve failed gates as first-class evidence.\",\n      \"Make the launch itself a governed NodeKit workflow whose public claims resolve to exact receipts.\"\n    ],\n    \"honestLimitations\": [\n      \"NodeKit v0.2.0 is source-released on GitHub; npm publication is blocked by registry authentication.\",\n      \"The Casca lab is local-ready, not production-proven.\",\n      \"The current Agentic RL lab trains a deterministic behavior-cloning baseline; it does not perform gradient-based reinforcement learning.\",\n      \"Founder Quest Graph claims remain planned until its exact deployed revision passes the fresh-user journey.\"\n    ],\n    \"id\": \"nodekit-proof-campaign-2026-07-20\",\n    \"nextMilestone\": \"Deploy and production-prove the read-only synthetic Founder Quest Graph, then export and publish an evidence-bound deck, video, and campaign.\",\n    \"presentationTier\": 4,\n    \"previousState\": [\n      \"Agent application scaffolding, runtime, domain evaluation, browser QA, and release evidence were rebuilt manually per project.\",\n      \"A generated application could appear complete without proving that its benchmark, product, and release paths shared the same implementation.\"\n    ],\n    \"requiredProof\": [\n      \"exact commits and application/config hashes\",\n      \"no-key deterministic factory acceptance\",\n      \"strict paid-provider receipts with no fallback\",\n      \"browser journeys with console and network health\",\n      \"exact deployment identity and fresh-user production proof where claimed\",\n      \"editable deck export and reopen verification\",\n      \"public URL verification and distribution receipts\"\n    ],\n    \"schemaVersion\": \"nodekit.change-story/v1\",\n    \"title\": \"NodeKit launches NodeKit through proof-carrying product work\",\n    \"userPain\": [\n      \"Empty-directory to proof required repeated repository-specific coordination.\",\n      \"Polished demos could outrun their actual runtime, browser, deployment, or artifact evidence.\"\n    ]\n  },\n  \"claims\": {\n    \"claims\": [\n      {\n        \"evidenceIds\": [\n          \"E1_FACTORY_ACCEPTANCE\",\n          \"E2_NODEKIT_RELEASE\"\n        ],\n        \"id\": \"C1_FACTORY_ACCEPTANCE\",\n        \"limitations\": [\n          \"The timed acceptance is deterministic and local; it is not a production deployment benchmark.\",\n          \"The npm registry package is not published.\"\n        ],\n        \"scope\": {\n          \"commit\": \"ef23bb0d630c265d21be5443138cd1a5b769ed8c\",\n          \"tag\": \"v0.2.0\"\n        },\n        \"status\": \"measured\",\n        \"text\": \"NodeKit v0.2.0 generated, installed, compiled, checked, demonstrated, evaluated, benchmarked, and proof-verified both the Agentic RL and SMB-lending presets from empty directories in 37.221 seconds.\"\n      },\n      {\n        \"evidenceIds\": [\n          \"E3_CASCA_RELEASE\",\n          \"E4_CASCA_BROWSER\",\n          \"E5_CASCA_LIVE\"\n        ],\n        \"id\": \"C2_CASCA_LOCAL_PROOF\",\n        \"limitations\": [\n          \"The application is synthetic and unaffiliated with Casca.\",\n          \"Deployment remains an explicitly missing release gate.\"\n        ],\n        \"scope\": {\n          \"commit\": \"6c8d7d9f81810509240fe0b2352453bfa04ac924\",\n          \"releaseLevel\": \"local-ready\"\n        },\n        \"status\": \"verified\",\n        \"text\": \"The Casca FDE Deployment Lab passed its deterministic, live-provider, adversarial browser, reload, export, and identity-binding gates on one exact commit.\"\n      },\n      {\n        \"evidenceIds\": [\n          \"E6_RL_RELEASE\",\n          \"E7_RL_HELDOUT\",\n          \"E11_RL_CI\"\n        ],\n        \"id\": \"C3_RL_LOCAL_BASELINE\",\n        \"limitations\": [\n          \"This is not policy-gradient RL, preference optimization, online learning, GPU training, or a weight update.\",\n          \"The two-task heldout set is diagnostic and too small for generalization claims.\"\n        ],\n        \"scope\": {\n          \"commit\": \"d6826837920d828edd4d7026c4fc17388f27b8b9\",\n          \"releaseLevel\": \"local-learning-baseline-ready\"\n        },\n        \"status\": \"verified\",\n        \"text\": \"The Agentic RL research lab exports step trajectories, trains a deterministic behavior-cloning baseline, blocks nine adversarial reward attacks, and evaluates a label-free process-separated heldout split.\"\n      },\n      {\n        \"evidenceIds\": [\n          \"E8_RL_LIVE_BLOCKED\"\n        ],\n        \"id\": \"C4_RL_LIVE_ROUTE\",\n        \"limitations\": [\n          \"The live baseline produced no candidate completions and therefore proves enforcement, not model quality.\"\n        ],\n        \"scope\": {\n          \"commit\": \"353d825767682eaacda989551270747a95bcffc4\",\n          \"releaseLevel\": \"blocked\"\n        },\n        \"status\": \"observed\",\n        \"text\": \"The preregistered Agentic RL live-model baseline failed closed when the Azure-only, zero-data-retention OpenRouter route returned HTTP 404; no retry, fallback, token usage, or cost was accepted.\"\n      },\n      {\n        \"evidenceIds\": [],\n        \"id\": \"C5_FOUNDER_QUEST_PRODUCT\",\n        \"limitations\": [\n          \"This claim must remain future tense until deployment and fresh-user browser proof pass.\"\n        ],\n        \"scope\": {},\n        \"status\": \"planned\",\n        \"text\": \"Founder Quest Graph provides a read-only synthetic quest rail, bounded graph workspace, source-backed answer panel, and proof surface on an exact hosted revision.\"\n      },\n      {\n        \"evidenceIds\": [\n          \"E9_ANTHROPIC_GRANT_SOURCE\"\n        ],\n        \"id\": \"C6_ANTHROPIC_GRANT_CASE\",\n        \"limitations\": [\n          \"NodeKit is not affiliated with or endorsed by Anthropic and has not received this grant.\"\n        ],\n        \"scope\": {\n          \"retrievedAt\": \"2026-07-20\"\n        },\n        \"status\": \"verified\",\n        \"text\": \"NodeKit uses Anthropic's rare-disease research grants as an independent external scenario for mapping current research, novelty, execution, evaluation, and application readiness.\"\n      },\n      {\n        \"evidenceIds\": [],\n        \"id\": \"C7_RECURSIVE_LAUNCH\",\n        \"limitations\": [\n          \"Past tense is prohibited until all artifact, publication, and public-URL receipts exist.\"\n        ],\n        \"scope\": {},\n        \"status\": \"planned\",\n        \"text\": \"NodeKit directed the research, product proofs, editable deck, walkthrough video, and browser-assisted publication of this campaign.\"\n      },\n      {\n        \"evidenceIds\": [\n          \"E10_GRAPH_OF_LOOPS_SOURCE\"\n        ],\n        \"id\": \"C8_GRAPH_OF_LOOPS_FRAME\",\n        \"limitations\": [\n          \"The loop and graph mechanics predate the current phrase; NodeKit claims an application of the framing, not ownership of the underlying architecture.\"\n        ],\n        \"scope\": {\n          \"retrievedAt\": \"2026-07-20\"\n        },\n        \"status\": \"verified\",\n        \"text\": \"NodeKit applies Carlos E. Perez's graph-of-loops framing to a proof-carrying product workflow, with explicit attribution to Perez's essay and Peter Steinberger's originating prompt.\"\n      }\n    ],\n    \"schemaVersion\": \"nodekit.claim-ledger/v1\"\n  },\n  \"limitations\": {\n    \"limitations\": [\n      {\n        \"id\": \"L1_NPM_AUTH\",\n        \"severity\": \"release-boundary\",\n        \"text\": \"NodeKit v0.2.0 is distributed through its GitHub source release because npm authentication returned E401.\"\n      },\n      {\n        \"id\": \"L2_CASCA_LOCAL_ONLY\",\n        \"severity\": \"release-boundary\",\n        \"text\": \"The Casca FDE lab is local-ready and browser-proven on loopback, but not hosted or production-proven.\"\n      },\n      {\n        \"id\": \"L3_RL_SCOPE\",\n        \"severity\": \"scientific-boundary\",\n        \"text\": \"The Agentic RL lab currently implements behavior cloning and protected evaluation, not reinforcement-learning weight optimization.\"\n      },\n      {\n        \"id\": \"L4_RL_LIVE_BLOCKED\",\n        \"severity\": \"provider-boundary\",\n        \"text\": \"The preregistered Azure-only/ZDR live baseline received HTTP 404 and was not retried with a weaker privacy or routing policy.\"\n      },\n      {\n        \"id\": \"L5_FOUNDERQUEST_SYNTHETIC\",\n        \"severity\": \"product-boundary\",\n        \"text\": \"Founder Quest Graph uses a fictional California LLC. Synthetic receipts may prove workflow readiness but never government, bank, insurance, payment-provider, legal, tax, or regulatory approval.\"\n      },\n      {\n        \"id\": \"L6_NO_ANTHROPIC_AFFILIATION\",\n        \"severity\": \"public-claim-boundary\",\n        \"text\": \"The Anthropic grant is an independent external scenario; NodeKit is not affiliated with or endorsed by Anthropic and has not received the grant.\"\n      },\n      {\n        \"id\": \"L7_GRAPH_OF_LOOPS_ATTRIBUTION\",\n        \"severity\": \"source-boundary\",\n        \"text\": \"The public campaign attributes the graph-of-loops framing to Carlos E. Perez's essay and Peter Steinberger's originating prompt, while recognizing that directed graphs, state machines, and multi-agent orchestration predate the current terminology.\"\n      }\n    ],\n    \"schemaVersion\": \"nodekit.limitations/v1\"\n  }\n}",
+      "columns": [
+        "change",
+        "claims",
+        "limitations"
+      ],
+      "contentDigest": "sha256:ad9ad216240c0a3b08e2fef4a8e20f4f0b5a1d32a4087eec5ca70dff54866381",
+      "deckId": "deck-nodekit-proof-campaign-2026-07-20-draft",
+      "format": "json",
+      "id": "source_82043fb8f2d95853e479440f80f0a692",
+      "lastRefreshedAt": 1784505600000,
+      "license": "User supplied",
+      "retention": "until_deleted",
+      "retrievedAt": 1784505600000,
+      "rowCount": 1,
+      "sourceType": "document",
+      "status": "ready",
+      "title": "NodeKit governed Change Story"
+    },
+    {
+      "byteSize": 3391,
+      "citation": "Uploaded file: NodeKit evidence index\n{\n  \"evidence\": [\n    {\n      \"id\": \"E1_FACTORY_ACCEPTANCE\",\n      \"kind\": \"receipt\",\n      \"path\": \"proof/factory-acceptance.json\",\n      \"receiptDigest\": \"3f792e0ddbf7cffe5173b543b96baf3c43a7c81567f746ebfbce1e2cebce9867\",\n      \"scope\": \"node-platform@ef23bb0d630c265d21be5443138cd1a5b769ed8c\",\n      \"sha256\": \"225b0506aecf2d7eee5925094fa7fa194793cf3bff3149784f49de246ca07566\"\n    },\n    {\n      \"id\": \"E2_NODEKIT_RELEASE\",\n      \"kind\": \"public-release\",\n      \"scope\": \"v0.2.0\",\n      \"url\": \"https://github.com/HomenShum/node-platform/releases/tag/v0.2.0\"\n    },\n    {\n      \"externalPath\": \"../casca-fde-deployment-lab/proof/release-proof.json\",\n      \"id\": \"E3_CASCA_RELEASE\",\n      \"kind\": \"receipt\",\n      \"scope\": \"casca-fde-deployment-lab@6c8d7d9f81810509240fe0b2352453bfa04ac924\"\n    },\n    {\n      \"externalPath\": \"../casca-fde-deployment-lab/proof/browser-proof.json\",\n      \"id\": \"E4_CASCA_BROWSER\",\n      \"kind\": \"browser-proof\",\n      \"scope\": \"local fresh browser\"\n    },\n    {\n      \"externalPath\": \"../casca-fde-deployment-lab/proof/pi-live-receipt.json\",\n      \"id\": \"E5_CASCA_LIVE\",\n      \"kind\": \"live-provider-receipt\",\n      \"scope\": \"OpenRouter openai/gpt-4o-mini; 36 tokens; $0.00000855\"\n    },\n    {\n      \"externalPath\": \"../agentic-rl-research-lab/proof/release-proof.json\",\n      \"id\": \"E6_RL_RELEASE\",\n      \"kind\": \"receipt\",\n      \"publicRelease\": \"https://github.com/HomenShum/agentic-rl-research-lab/releases/tag/v0.1.0-diagnostic-baselines\",\n      \"scope\": \"local deterministic behavior-cloning baseline\"\n    },\n    {\n      \"externalPath\": \"../agentic-rl-research-lab/proof/blind-heldout-receipt.json\",\n      \"id\": \"E7_RL_HELDOUT\",\n      \"kind\": \"benchmark-receipt\",\n      \"scope\": \"two synthetic heldout tasks\"\n    },\n    {\n      \"externalPath\": \"../agentic-rl-research-lab/proof/live-model-baseline-proof.json\",\n      \"id\": \"E8_RL_LIVE_BLOCKED\",\n      \"kind\": \"live-provider-blocked-receipt\",\n      \"publicRelease\": \"https://github.com/HomenShum/agentic-rl-research-lab/releases/tag/v0.1.0-diagnostic-baselines\",\n      \"receiptPath\": \"../agentic-rl-research-lab/proof/live-model-baseline-receipt.json\",\n      \"receiptSha256\": \"b6bdb193deccd585a8e9e825484370ef152a8b50b3d21fa2242792bd24e84ea1\",\n      \"scope\": \"Azure-only ZDR OpenRouter route; immutable failed attempt\",\n      \"sha256\": \"d5dd74a0af019730e506bf2c923dfdb583accd287ad76ba0627b99d1978aa049\"\n    },\n    {\n      \"id\": \"E9_ANTHROPIC_GRANT_SOURCE\",\n      \"kind\": \"official-source\",\n      \"scope\": \"retrieved 2026-07-20\",\n      \"url\": \"https://www.anthropic.com/news/rare-disease-research-grants\"\n    },\n    {\n      \"author\": \"Carlos E. Perez\",\n      \"id\": \"E10_GRAPH_OF_LOOPS_SOURCE\",\n      \"kind\": \"conceptual-source\",\n      \"originPost\": \"https://x.com/steipete/status/2078277297791189132\",\n      \"scope\": \"retrieved 2026-07-20; conceptual inspiration, not product evidence\",\n      \"title\": \"From Loop Engineering to Graph Engineering?\",\n      \"url\": \"https://medium.com/intuitionmachine/from-loop-engineering-to-graph-engineering-d3ebeb08511c\"\n    },\n    {\n      \"id\": \"E11_RL_CI\",\n      \"kind\": \"continuous-integration\",\n      \"scope\": \"agentic-rl-research-lab@e1b114c486fbe26703688ab6481331659081b083; offline quality workflow passed\",\n      \"url\": \"https://github.com/HomenShum/agentic-rl-research-lab/actions/runs/29799453044\"\n    }\n  ],\n  \"schemaVersion\": \"nodekit.evidence-index/v1\"\n}",
+      "columns": [
+        "evidence",
+        "schemaVersion"
+      ],
+      "contentDigest": "sha256:15ef824a84cf2661de3b0b028a1c8038d6faacf9e966a7ce38e5d1afcc35f6a1",
+      "deckId": "deck-nodekit-proof-campaign-2026-07-20-draft",
+      "format": "json",
+      "id": "source_eb5bb5f501f64e2f3fef3daf2cf79fa1",
+      "lastRefreshedAt": 1784505600000,
+      "license": "User supplied",
+      "retention": "until_deleted",
+      "retrievedAt": 1784505600000,
+      "rowCount": 1,
+      "sourceType": "document",
+      "status": "ready",
+      "title": "NodeKit evidence index"
+    },
+    {
+      "byteSize": 8581,
+      "citation": "Uploaded file: NodeKit slide design plans\n{\n  \"communicationJob\": \"By the end, a technical reviewer should understand what NodeKit now proves, which real product slices support the claim, and which release gates remain open.\",\n  \"schemaVersion\": \"nodeslide.design-plan/v1\",\n  \"slides\": [\n    {\n      \"audienceQuestion\": \"What is NodeKit?\",\n      \"body\": \"One manifest connects runtime, evaluation, browser QA, and proof.\",\n      \"bullets\": [\n        \"Two presets; one path\",\n        \"Local run: 37.221 s\",\n        \"GitHub source; npm blocked\"\n      ],\n      \"claimIds\": [\n        \"C1_FACTORY_ACCEPTANCE\"\n      ],\n      \"density\": \"low\",\n      \"dominantVisual\": \"One clean lifecycle from brief to public proof with receipt checkpoints.\",\n      \"evidenceIds\": [\n        \"E1_FACTORY_ACCEPTANCE\",\n        \"E2_NODEKIT_RELEASE\"\n      ],\n      \"id\": \"S1\",\n      \"job\": \"Open with the system's concrete promise.\",\n      \"narrativeRole\": \"opening\",\n      \"takeaway\": \"Empty directory. Proof-carrying application.\"\n    },\n    {\n      \"audienceQuestion\": \"What pain is this solving?\",\n      \"body\": \"Parity breaks when benchmark, browser, deployment, and public claims follow different implementations.\",\n      \"bullets\": [\n        \"One implementation must serve every gate\",\n        \"Receipts bind the exact revision\",\n        \"Failed gates stay visible\"\n      ],\n      \"claimIds\": [],\n      \"density\": \"medium\",\n      \"dominantVisual\": \"Fragmented parallel paths collapsing into one compiled definition.\",\n      \"evidenceIds\": [],\n      \"id\": \"S2\",\n      \"job\": \"Show why code generation alone is insufficient.\",\n      \"narrativeRole\": \"stakes\",\n      \"takeaway\": \"The hard part is keeping every proof gate on one execution path.\"\n    },\n    {\n      \"audienceQuestion\": \"Does the empty-directory path actually work?\",\n      \"body\": \"From empty directories, NodeKit installed, compiled, ran, evaluated, benchmarked, and proof-checked both presets.\",\n      \"bullets\": [\n        \"Agentic RL preset: passed\",\n        \"SMB lending FDE preset: passed\",\n        \"Local benchmark, not production latency\"\n      ],\n      \"claimIds\": [\n        \"C1_FACTORY_ACCEPTANCE\"\n      ],\n      \"density\": \"medium\",\n      \"dominantVisual\": \"Two receipt cards joined to one factory-acceptance digest.\",\n      \"evidenceIds\": [\n        \"E1_FACTORY_ACCEPTANCE\",\n        \"E2_NODEKIT_RELEASE\"\n      ],\n      \"id\": \"S3\",\n      \"job\": \"Prove the factory rather than describe it.\",\n      \"metric\": {\n        \"label\": \"deterministic local factory acceptance\",\n        \"value\": \"37.221 s\"\n      },\n      \"narrativeRole\": \"evidence\",\n      \"takeaway\": \"Two presets passed the full factory path in 37.221 seconds.\"\n    },\n    {\n      \"audienceQuestion\": \"Can the system survive a real agentic product journey?\",\n      \"body\": \"On commit 6c8d7d9, the synthetic lab passed deterministic, live-provider, browser, reload, export, and identity gates.\",\n      \"bullets\": [\n        \"One bounded live-provider call\",\n        \"Fresh browser plus reload\",\n        \"Deployment gate still open\"\n      ],\n      \"claimIds\": [\n        \"C2_CASCA_LOCAL_PROOF\"\n      ],\n      \"density\": \"medium\",\n      \"dominantVisual\": \"Product screenshot annotated with graph query, proposal, and receipt checkpoints.\",\n      \"evidenceIds\": [\n        \"E3_CASCA_RELEASE\",\n        \"E4_CASCA_BROWSER\",\n        \"E5_CASCA_LIVE\"\n      ],\n      \"formula\": {\n        \"description\": \"Synthetic local workflow only; no automated credit decision.\",\n        \"display\": \"query → proposal → approval → export\",\n        \"expression\": \"query -> proposal -> approval -> export\"\n      },\n      \"id\": \"S4\",\n      \"job\": \"Show the consequential artifact vertical.\",\n      \"narrativeRole\": \"case-study\",\n      \"takeaway\": \"The Casca lab passed every local gate without making a credit decision.\"\n    },\n    {\n      \"audienceQuestion\": \"How does NodeKit approach Agentic RL responsibly?\",\n      \"body\": \"The current baseline is behavior cloning, not RL. It passed protected local evaluation; the strict Azure-only live route failed closed with no fallback.\",\n      \"bullets\": [\n        \"Behavior cloning only\",\n        \"Nine reward attacks blocked\",\n        \"Azure/ZDR route: HTTP 404; no fallback\"\n      ],\n      \"chart\": {\n        \"labels\": [\n          \"reward attacks\",\n          \"heldout tasks\",\n          \"fallbacks\"\n        ],\n        \"unit\": \"count\",\n        \"values\": [\n          9,\n          2,\n          0\n        ]\n      },\n      \"claimIds\": [\n        \"C3_RL_LOCAL_BASELINE\",\n        \"C4_RL_LIVE_ROUTE\"\n      ],\n      \"density\": \"high\",\n      \"dominantVisual\": \"Trajectory to protected reward to shadow candidate flow, with behavior cloning labeled as the current stage.\",\n      \"evidenceIds\": [\n        \"E6_RL_RELEASE\",\n        \"E7_RL_HELDOUT\",\n        \"E8_RL_LIVE_BLOCKED\",\n        \"E11_RL_CI\"\n      ],\n      \"id\": \"S5\",\n      \"job\": \"Explain the research and learning boundary.\",\n      \"metric\": {\n        \"label\": \"adversarial reward attacks blocked\",\n        \"value\": \"9\"\n      },\n      \"narrativeRole\": \"technical-decision\",\n      \"takeaway\": \"Protect the scorer first; train only after its boundaries are credible.\"\n    },\n    {\n      \"audienceQuestion\": \"What does the graph make possible for a user?\",\n      \"body\": \"After an exact hosted revision and fresh-user journey pass, the planned read-only demo will connect quests, sources, and proof.\",\n      \"bullets\": [\n        \"Quest rail plus bounded graph\",\n        \"Source-backed answer plus authority class\",\n        \"No hosted-revision proof yet\"\n      ],\n      \"claimIds\": [\n        \"C5_FOUNDER_QUEST_PRODUCT\"\n      ],\n      \"density\": \"medium\",\n      \"dominantVisual\": \"Optional draft Founder Quest screenshot with quest rail, bounded graph, answer panel, and proof strip.\",\n      \"evidenceIds\": [],\n      \"id\": \"S6\",\n      \"job\": \"Introduce Founder Quest as the connected product surface.\",\n      \"metric\": {\n        \"label\": \"hosted revision and fresh-user proof still required\",\n        \"value\": \"PLANNED\"\n      },\n      \"narrativeRole\": \"product-reveal\",\n      \"takeaway\": \"Founder Quest remains planned until hosted and fresh-user proof pass.\"\n    },\n    {\n      \"audienceQuestion\": \"How would a researcher use this today?\",\n      \"body\": \"Anthropic's rare-disease grant is an independent forcing function for mapping research, novelty, evaluation, authority, and readiness, not an affiliation.\",\n      \"bullets\": [\n        \"Official grant announcement\",\n        \"No affiliation or endorsement\",\n        \"Research synthesis does not prove biology\"\n      ],\n      \"claimIds\": [\n        \"C6_ANTHROPIC_GRANT_CASE\"\n      ],\n      \"density\": \"medium\",\n      \"dominantVisual\": \"Disease-gene-phenotype-mechanism-paper-trial-hypothesis graph with source ledger.\",\n      \"evidenceIds\": [\n        \"E9_ANTHROPIC_GRANT_SOURCE\"\n      ],\n      \"formula\": {\n        \"description\": \"Research synthesis informs an application; it does not prove biology.\",\n        \"display\": \"source → claim → evaluation → application readiness\",\n        \"expression\": \"source -> claim -> evaluation -> application readiness\"\n      },\n      \"id\": \"S7\",\n      \"job\": \"Connect the external rare-disease grant scenario.\",\n      \"narrativeRole\": \"external-use-case\",\n      \"takeaway\": \"A real grant scenario tests the graph without claiming biological proof.\"\n    },\n    {\n      \"audienceQuestion\": \"How do the pieces improve, and what should reviewers do next?\",\n      \"body\": \"Research, build, evaluation, proof, presentation, and feedback can watch one another; only external sources, commits, artifacts, and outcomes close the graph.\",\n      \"bullets\": [\n        \"Researcher, builder, or operator\",\n        \"Sources, commits, exports, and outcomes\",\n        \"Inspect pass, fail, and human-review status\"\n      ],\n      \"claimIds\": [\n        \"C8_GRAPH_OF_LOOPS_FRAME\"\n      ],\n      \"density\": \"low\",\n      \"dominantVisual\": \"Loop graph with external reality anchors and three reviewer entry points.\",\n      \"evidenceIds\": [\n        \"E1_FACTORY_ACCEPTANCE\",\n        \"E2_NODEKIT_RELEASE\",\n        \"E4_CASCA_BROWSER\",\n        \"E10_GRAPH_OF_LOOPS_SOURCE\"\n      ],\n      \"formula\": {\n        \"description\": \"External sources, commits, artifacts, and observed outcomes close the loop.\",\n        \"display\": \"research ↔ build ↔ evaluation ↔ proof\",\n        \"expression\": \"research <-> build <-> evaluation <-> proof\"\n      },\n      \"id\": \"S8\",\n      \"job\": \"Explain the graph of loops and close with a falsifiable invitation.\",\n      \"narrativeRole\": \"synthesis\",\n      \"takeaway\": \"Loops need external anchors. Bring one workflow and inspect the proof.\"\n    }\n  ]\n}",
+      "columns": [
+        "communicationJob",
+        "schemaVersion",
+        "slides"
+      ],
+      "contentDigest": "sha256:f60d48d44218914b02cfaf8787bec68f104de41f2a2fc52a025e06a7f8a3d06a",
+      "deckId": "deck-nodekit-proof-campaign-2026-07-20-draft",
+      "format": "json",
+      "id": "source_627f2cf2736066cd2c65dd72c5897641",
+      "lastRefreshedAt": 1784505600000,
+      "license": "User supplied",
+      "retention": "until_deleted",
+      "retrievedAt": 1784505600000,
+      "rowCount": 1,
+      "sourceType": "document",
+      "status": "ready",
+      "title": "NodeKit slide design plans"
+    }
+  ]
+}
