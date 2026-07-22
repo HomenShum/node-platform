@@ -1,0 +1,26 @@
+{
+  "schemaVersion": "nodekit.invariant-claim/v1",
+  "id": "inv:exact-candidate-evidence",
+  "statement": "Submission requires eight distinct decisive verdicts whose contracts, hashes, and candidate identity match one clean immutable NodeKit revision.",
+  "scope": {
+    "applications": [
+      "NodeKit factory"
+    ],
+    "packages": [
+      "@homenshum/nodekit"
+    ],
+    "surfaces": [
+      "submission preparation",
+      "submission evaluation"
+    ]
+  },
+  "enforcement": "runtime-gate",
+  "verifierRefs": [
+    "src/lib/submission-gate.mjs",
+    "src/lib/submission-preparation.mjs",
+    "test/submission-gate.test.mjs",
+    "test/submission-preparation.test.mjs"
+  ],
+  "introducedByEventId": "evt:exact-candidate-contract",
+  "status": "verified"
+}

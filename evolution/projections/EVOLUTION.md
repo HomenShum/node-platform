@@ -26,6 +26,16 @@ Canonical JSON records remain authoritative. This projection explains why materi
 - Evidence: `evd:rendered-browser-certification` (pass)
 - Known limitations: External fresh-user timing evidence remains a separate submission gate.
 
+### Historical receipts and internal deep imports could be mistaken for current package and submission guarantees.
+
+- Event: `evt:exact-candidate-contract`
+- Source: `1df155370258239ddd315c1f8842ecf0aa55b7e0`
+- Resolution: NodeKit now exposes a supported Caseflow package entry point and requires eight distinct, contract-valid decisive verdicts bound to one clean candidate revision before submission.
+- Observed failure: Existing proof aliases mixed source identities, omitted decisive revision fields, and exposed Caseflow through an unstable internal path.
+- Invariants: `inv:exact-candidate-evidence` (verified), `inv:stable-caseflow-package-entrypoint` (verified)
+- Evidence: `evd:exact-candidate-gate` (pass), `evd:caseflow-public-api` (pass)
+- Known limitations: Current-revision timing, fresh-agent, human, consumer, preview, package, and independent ProofLoop evidence still must be collected.; The public Caseflow entry point is portable, but no authenticated Convex consumer has yet earned submission-grade adoption status.
+
 ## Harness evolution
 
 ### Visually polished frontend output could still miss the intended creator-workspace topology.

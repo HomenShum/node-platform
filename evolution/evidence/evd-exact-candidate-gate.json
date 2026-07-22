@@ -1,0 +1,18 @@
+{
+  "schemaVersion": "nodekit.evolution-evidence/v1",
+  "id": "evd:exact-candidate-gate",
+  "kind": "code",
+  "artifactRef": "git:1df155370258239ddd315c1f8842ecf0aa55b7e0:src/lib/submission-gate.mjs",
+  "sha256": "0a945ece362755e218b3b016f4c789b70671f8017643c2db201833d8f0c78002",
+  "sourceCommit": "1df155370258239ddd315c1f8842ecf0aa55b7e0",
+  "generatedAt": "2026-07-22T01:00:51-07:00",
+  "command": "npm run check",
+  "environment": {
+    "repository": "HomenShum/node-platform",
+    "tests": "104 passed"
+  },
+  "verifiesInvariantIds": [
+    "inv:exact-candidate-evidence"
+  ],
+  "result": "pass"
+}
