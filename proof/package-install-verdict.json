@@ -1,0 +1,38 @@
+{
+  "schemaVersion": "nodekit.package-install-proof/v1",
+  "candidateCommit": "f3471c7fd31b4839ffeb9c9f43bd0d4ab7ef6bfc",
+  "nodekitSourceHash": "e4e6a8849115fc70203e1d56228a5bdc3cd44af92ff20f87626657ff4d017d0f",
+  "package": "@homenshum/nodekit",
+  "version": "0.2.1",
+  "tarball": "proof/ease/candidates/f3471c7fd31b4839ffeb9c9f43bd0d4ab7ef6bfc/e4e6a8849115fc70203e1d56228a5bdc3cd44af92ff20f87626657ff4d017d0f/package/homenshum-nodekit-0.2.1.tgz",
+  "tarballSha256": "521b418f95c43253d5687e5526a93a77f191eb05fd96b42ae96cf02fd2db0418",
+  "tarballBytes": 128503,
+  "unpackedSize": 521371,
+  "fileCount": 145,
+  "checks": {
+    "freshConsumerInstall": true,
+    "packagedCliCreate": true,
+    "compile": true,
+    "check": true,
+    "demo": true,
+    "eval": true
+  },
+  "supportingEvidence": [
+    {
+      "path": "proof/ease/candidates/f3471c7fd31b4839ffeb9c9f43bd0d4ab7ef6bfc/e4e6a8849115fc70203e1d56228a5bdc3cd44af92ff20f87626657ff4d017d0f/package/application-identity.json",
+      "sha256": "0acb7d13cf8d9f8c46a83da78dd3c27e9f1bb710db98291e3e778b4b2c6f48ea"
+    },
+    {
+      "path": "proof/ease/candidates/f3471c7fd31b4839ffeb9c9f43bd0d4ab7ef6bfc/e4e6a8849115fc70203e1d56228a5bdc3cd44af92ff20f87626657ff4d017d0f/package/demo-receipt.json",
+      "sha256": "cac1ba732dd3c1b37672135ea5193acc177919f8bf645c248a37bcabb5b7a723"
+    },
+    {
+      "path": "proof/ease/candidates/f3471c7fd31b4839ffeb9c9f43bd0d4ab7ef6bfc/e4e6a8849115fc70203e1d56228a5bdc3cd44af92ff20f87626657ff4d017d0f/package/eval-receipt.json",
+      "sha256": "6f90804c908697fd2dc8ca6be3d43959bf39f2def693cd2c33ab91fe620b849a"
+    }
+  ],
+  "publicationPerformed": false,
+  "passed": true,
+  "startedAt": "2026-07-22T08:13:13.000Z",
+  "generatedAt": "2026-07-22T08:14:13.276Z"
+}
