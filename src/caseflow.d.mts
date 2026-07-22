@@ -93,16 +93,22 @@ export interface NodeKitException<T = unknown> {
 }
 
 export interface NodeKitReceipt {
+  approvalBindings: Array<{ approvalId: string; commentHash: string; decision: "accepted" | "rejected"; proposalId: string }>;
+  artifactBindings: Array<{ artifactId: string; canonicalVersion: number; contentHash: string }>;
   artifactIds: string[];
+  caseHash: string;
   caseId: string;
+  eventBindings: Array<{ actorHash: string; aggregateId: string; aggregateType: string; eventId: string; eventType: string; payloadHash: string; sequence: number }>;
   eventIds: string[];
   generatedAt: string;
+  proposalBindings: Array<{ artifactId: string; baseVersion: number; patchHash: string; proposalId: string; status: NodeKitProposalStatus }>;
   proposalIds: string[];
   receiptHash: string;
   receiptId: string;
+  runHash: string;
   runId: string;
-  schemaVersion: "nodekit.receipt/v1";
-  status: "completed";
+  schemaVersion: "nodekit.receipt/v2";
+  status: "cancelled" | "completed" | "failed_safely";
 }
 
 export interface NodeKitEvent<T = unknown> {
@@ -147,17 +153,18 @@ export type MaybePromise<T> = Promise<T> | T;
 export interface CaseflowRuntime {
   capabilities: RuntimeCapabilities;
   createCase(input: { title: string; primaryJob: string; actor?: NodeKitActor }): MaybePromise<NodeKitCase>;
+  updateCaseInput(input: { caseId: string; primaryJob?: string; title?: string; actor?: NodeKitActor }): MaybePromise<NodeKitCase>;
   startRun(input: { caseId: string; stages: Array<Pick<NodeKitStage, "id" | "label" | "owner">>; actor?: NodeKitActor }): MaybePromise<NodeKitRun>;
-  enterStage(input: { runId: string; stageId: string; nextAction?: string; nextActionOwner?: NodeKitStageOwner; actor?: NodeKitActor }): MaybePromise<NodeKitRun>;
-  createArtifact<T = unknown>(input: { caseId: string; runId: string; kind?: string; title?: string; content: T; actor?: NodeKitActor }): MaybePromise<NodeKitArtifact<T>>;
-  createProposal<T = unknown>(input: { artifactId: string; baseVersion: number; patch: T; rationale?: string; actor?: NodeKitActor }): MaybePromise<NodeKitProposal<T>>;
+  enterStage(input: { runId: string; stageId: string; nextAction?: string; nextActionOwner?: NodeKitStageOwner; actor?: NodeKitActor; idempotencyKey?: string }): MaybePromise<NodeKitRun>;
+  createArtifact<T = unknown>(input: { caseId: string; runId: string; kind?: string; title?: string; content: T; actor?: NodeKitActor; idempotencyKey?: string }): MaybePromise<NodeKitArtifact<T>>;
+  createProposal<T = unknown>(input: { artifactId: string; baseVersion: number; patch: T; rationale?: string; actor?: NodeKitActor; idempotencyKey?: string }): MaybePromise<NodeKitProposal<T>>;
   decideProposal(input: { proposalId: string; decision: "accepted" | "rejected"; comment?: string; actor?: NodeKitActor }): MaybePromise<{
     approval: NodeKitApproval;
     artifact: NodeKitArtifact;
     proposal: NodeKitProposal;
     reused: boolean;
   }>;
-  raiseException<T = unknown>(input: { runId: string; code?: string; message?: string; preservedState?: T; actor?: NodeKitActor }): MaybePromise<NodeKitException<T>>;
+  raiseException<T = unknown>(input: { runId: string; code?: string; message?: string; preservedState?: T; actor?: NodeKitActor; idempotencyKey?: string }): MaybePromise<NodeKitException<T>>;
   resolveException(input: { exceptionId: string; resolution?: string; nextAction?: string; nextActionOwner?: NodeKitStageOwner; actor?: NodeKitActor }): MaybePromise<{
     exception: NodeKitException;
     run: NodeKitRun;
@@ -167,10 +174,21 @@ export interface CaseflowRuntime {
     run: NodeKitRun;
     reused: boolean;
   }>;
+  cancelRun(input: { runId: string; reason?: string; actor?: NodeKitActor }): MaybePromise<{
+    receipt: NodeKitReceipt;
+    run: NodeKitRun;
+    reused: boolean;
+  }>;
+  failRunSafely(input: { runId: string; reason?: string; actor?: NodeKitActor }): MaybePromise<{
+    receipt: NodeKitReceipt;
+    run: NodeKitRun;
+    reused: boolean;
+  }>;
   snapshot(): MaybePromise<NodeKitCaseflowSnapshot>;
 }
 
 export interface CaseflowConformanceVerdict {
+  actorMode: "caller-supplied" | "host-bound";
   assertions: Record<string, boolean>;
   capabilities: RuntimeCapabilities;
   capabilityNegotiation: {
@@ -190,17 +208,63 @@ export const CASEFLOW_SCHEMA_VERSIONS: Readonly<{
   event: "nodekit.caseflow-event/v1";
   exception: "nodekit.exception/v1";
   proposal: "nodekit.proposal/v1";
-  receipt: "nodekit.receipt/v1";
+  receipt: "nodekit.receipt/v2";
   run: "nodekit.run/v1";
   stage: "nodekit.stage/v1";
 }>;
 
 export const TERMINAL_RUN_STATUSES: readonly NodeKitRunStatus[];
 export function contentHash(value: unknown): string;
+export type PortableValue = null | boolean | number | string | PortableValue[] | { [key: string]: PortableValue };
+export const PORTABLE_VALUE_LIMITS: Readonly<{
+  maxArrayItems: 8192;
+  maxEncodedBytes: number;
+  maxEnvelopeBytes: number;
+  maxEnvelopeNestingDepth: 15;
+  maxNestingDepth: 15;
+  maxPayloadNestingDepth: 12;
+  maxObjectFields: 1024;
+  maxObjectKeyLength: 1024;
+}>;
+export function normalizePortableValue(value: unknown, label?: string, options?: {
+  maxEncodedBytes?: number;
+  maxNestingDepth?: number;
+}): PortableValue;
+export function compareCodeUnits(left: string, right: string): number;
+export function compareReceiptEventBindings<T extends Pick<NodeKitEvent, "aggregateId" | "aggregateType" | "eventId" | "sequence">>(left: T, right: T): number;
+export function normalizeReceiptBindings<
+  TArtifact extends { artifactId: string },
+  TProposal extends { proposalId: string },
+  TApproval extends { approvalId: string },
+  TEvent extends Pick<NodeKitEvent, "aggregateId" | "aggregateType" | "eventId" | "sequence">,
+>(bindings: {
+  approvalBindings: readonly TApproval[];
+  artifactBindings: readonly TArtifact[];
+  eventBindings: readonly TEvent[];
+  proposalBindings: readonly TProposal[];
+}): {
+  approvalBindings: TApproval[];
+  artifactBindings: TArtifact[];
+  artifactIds: string[];
+  eventBindings: TEvent[];
+  eventIds: string[];
+  proposalBindings: TProposal[];
+  proposalIds: string[];
+};
 export function createMemoryCaseflow(options?: { clock?: () => string }): CaseflowRuntime;
 export function runCaseflowConformance(
   createRuntime: () => MaybePromise<CaseflowRuntime>,
-  options?: { requiredCapabilities?: Partial<RuntimeCapabilities> },
+  options?: {
+    actorMode?: "caller-supplied" | "host-bound";
+    requiredCapabilities?: Partial<RuntimeCapabilities>;
+    verifyHostAuthorization?: (context: {
+      artifactId: string;
+      caseId: string;
+      proposalId: string;
+      runId: string;
+      runtime: CaseflowRuntime;
+    }) => MaybePromise<boolean>;
+  },
 ): Promise<CaseflowConformanceVerdict>;
 export function negotiateRuntimeCapabilities(
   offered: RuntimeCapabilities,

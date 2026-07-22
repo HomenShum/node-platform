@@ -1,1 +1,4 @@
-export { createPostgresCaseflow } from "./postgres-caseflow.mjs";
+export {
+  createPostgresCaseflow,
+  rehashLegacyPostgresProposalPatches,
+} from "./postgres-caseflow.mjs";

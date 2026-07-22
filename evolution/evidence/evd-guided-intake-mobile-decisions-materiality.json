@@ -1,0 +1,18 @@
+{
+  "schemaVersion": "nodekit.evolution-evidence/v1",
+  "id": "evd:guided-intake-mobile-decisions-materiality",
+  "kind": "human-review",
+  "artifactRef": "file:evolution/artifacts/guided-intake-mobile-decisions-materiality.md",
+  "sha256": "30e6d2bb1054f6e9fea3deabbc589522d96693a4df15b9a1cf34bc6c85d8ea7b",
+  "sourceCommit": "4407b70c616c89b022e0d3d36ba02f00519b1688",
+  "generatedAt": "2026-07-22T02:33:14-07:00",
+  "environment": {
+    "repository": "HomenShum/node-platform",
+    "reviewer": "project-owner",
+    "proofScope": "materiality contract only; exact screenshots and human trials pending"
+  },
+  "verifiesInvariantIds": [
+    "inv:guided-intake-mobile-decisions"
+  ],
+  "result": "partial"
+}

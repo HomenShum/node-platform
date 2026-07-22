@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://nodekit.dev/schemas/nodekit.engineering-issue-inventory.v1.schema.json",
+  "title": "NodeKit machine-recorded engineering issue inventory",
+  "type": "object", "additionalProperties": false,
+  "required": ["schemaVersion", "candidateCommit", "nodekitSourceHash", "generatedAt", "counts", "issues"],
+  "properties": {
+    "schemaVersion": { "const": "nodekit.engineering-issue-inventory/v1" },
+    "candidateCommit": { "type": "string", "pattern": "^[a-f0-9]{40}$" },
+    "nodekitSourceHash": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "generatedAt": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{3}Z$" },
+    "counts": { "type": "object", "additionalProperties": false, "required": ["p0", "p1"], "properties": { "p0": { "type": "integer", "minimum": 0 }, "p1": { "type": "integer", "minimum": 0 } } },
+    "issues": { "type": "array", "uniqueItems": true, "items": { "$ref": "#/$defs/issue" } }
+  },
+  "$defs": {
+    "issue": { "type": "object", "additionalProperties": false, "required": ["id", "severity", "status", "source"], "properties": { "id": { "type": "string", "minLength": 1, "maxLength": 255 }, "severity": { "enum": ["p0", "p1", "p2", "p3"] }, "status": { "enum": ["open", "closed"] }, "source": { "type": "string", "minLength": 1, "maxLength": 2048 } } }
+  }
+}

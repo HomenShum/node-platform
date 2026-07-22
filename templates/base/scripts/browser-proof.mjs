@@ -28,7 +28,7 @@ try {
     artifactPrimary: page.indexOf("Primary artifact") < page.indexOf("Agent activity"),
     currentActionVisible: page.includes("Current action") && Boolean(state.run.nextAction),
     mobileContractPresent: page.includes("viewport") && page.includes("review-tab"),
-    proposalBoundaryVisible: page.includes("Review proposal"),
+    proposalBoundaryVisible: /data-nodekit-review-boundary=["']proposal["']/.test(page),
     semanticLandmarks: /<main[\s>]/.test(page) && /<aside[\s>]/.test(page),
   };
   const receipt = { assertions, generatedAt: new Date().toISOString(), note: "Structural live HTTP and source-DOM contract only. This is not rendered-browser certification.", passed: Object.values(assertions).every(Boolean), schemaVersion: "nodekit.browser-contract/v1" };

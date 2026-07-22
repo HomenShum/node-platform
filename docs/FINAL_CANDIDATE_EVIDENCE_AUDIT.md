@@ -1,5 +1,10 @@
 # NodeKit final-candidate evidence audit
 
+> Historical audit snapshot. The commit, source hash, gate counts, and file-state observations below
+> describe the repository at the time of this audit; they are not the current readiness ledger. Use
+> [`REMAINING_GAPS.md`](REMAINING_GAPS.md) and
+> [`EASE_SUBMISSION_READINESS.md`](EASE_SUBMISSION_READINESS.md) for the live fail-closed status.
+
 Audit snapshot: 2026-07-22, branch `codex/nodekit-figured-out-base`.
 
 ## Verdict
@@ -125,13 +130,16 @@ preview, ProofLoop, and approval verdicts, and no exact-candidate decisive evide
 | Fresh-human usability | 0 participants, failed | No | Five consented fresh people, exact timestamps and screenshots/recordings, at least four unassisted completions, median first action <=30s, median journey <=180s, median SEQ >=6/7, no P0/P1 failures. |
 | Three Convex consumers | `proof/convex-consumers-verdict.json` missing | No | Three authenticated, owner-scoped real consumers exercising stale proposals, retries, exception recovery, receipts, and component/app boundaries. Do not deploy from this audit. |
 | Preview deployment | `proof/preview-verdict.json` missing | No | Authorized isolated frontend/backend preview of the exact commit, fresh identity, real fixture bytes, export/reopen score, screenshots, health, and cleanup. |
+| Managed Supabase portability | `proof/managed-supabase-portability-verdict.json` missing | No | Externally attested managed-project auth/RLS, Storage, Realtime, queue, Cron, and Convex-to-Supabase artifact/receipt hash parity on the exact candidate. |
+| Knowledge Evolution adoption | `proof/knowledge-evolution-adoption-verdict.json` missing | No | Externally attested protected flat/static/evolving comparison that improves or holds both baselines, plus a real consumer adoption and reviewed ledger event. |
+| Model Intelligence harness | `proof/model-intelligence-harness-verdict.json` missing | No | Externally attested exact-model observation, protected application gym, independent evaluator, and passing fresh-agent canary; outcome remains provisional. |
+| Engineering health | `proof/engineering-health-verdict.json` missing | Yes, after source freeze | Ten exact-candidate machine command receipts plus an independently recountable issue inventory proving zero open P0/P1 issues. |
 | ProofLoop Ease verification | `proof/proofloop-final.json` and latest receipt missing | No; independent last step | Verify the final archive and every referenced hash only after all prior exact-candidate evidence is complete. |
 | Package-install proof | Historical tarball pass; malformed verdict JSON | Yes | Pack the exact candidate, install in a fresh consumer, create/compile/check/demo/eval, retain tarball, write BOM-free identity-bound JSON. |
 | Publication approval | `proof/publication-approval.json` missing | No | Explicit owner approval naming both `npm-publish` and `convex-directory-submit`. |
 
-Live PostgreSQL/Supabase portability and real Model Intelligence/EvoGraph observations are also
-required by the readiness policy before broader claims, even though they are not separate IDs in
-the current eight-gate submission schema.
+These are now first-class IDs in the twelve-gate submission schema. They cannot be replaced with
+README claims, local-only emulation, a candidate-authored signature, or an unscoped trusted key.
 
 ## Safe reconciliation plan
 
@@ -150,8 +158,10 @@ the current eight-gate submission schema.
 4. Re-run factory acceptance and the exact browser journey first. Verify every PNG, sidecar,
    trace, video, generated-candidate commit, export, and reload receipt before continuing.
 5. Run the 60 timing trials and aggregate only receipts with the exact same commit and source hash.
-6. Run the three held-out coding-agent trials on that same identity. Pass the expected identity to
-   the aggregator or isolate its input directory so older passing trials cannot be selected.
+6. Run the current fresh-agent v2 matrix on that same identity: three held-out tasks, each through
+   three fresh Codex sessions, one fresh Claude Code session, and one fresh lower-cost-agent
+   session (15 total). Pass the expected identity to the aggregator and isolate its input directory
+   so older passing trials cannot be selected.
 7. Pack and install from that exact commit. Emit standard UTF-8 JSON without a BOM, include both
    candidate commit and source hash, and keep the tarball at a durable evidence path.
 8. Complete the five-person, three-consumer, live preview, portability, and live model/knowledge
@@ -175,9 +185,9 @@ directed to a new identity-scoped directory rather than the dirty historical tre
 ```powershell
 npm test
 npm run check
-npm run factory:acceptance
+npm run acceptance:factory
 npm run ease:evaluate-developer -- <exact-candidate-raw-receipts.json>
-npm run ease:evaluate-agents -- <exact-candidate-agent-directory> <identity-scoped-verdict.json>
+npm run ease:evaluate-agents -- --root=<exact-candidate-agent-directory> --output=<identity-scoped-verdict.json> --candidate=<40-char-commit> --source-hash=<64-char-source-hash> --nodekit-tarball=<exact-candidate.tgz> --nodekit-tarball-sha256=<64-char-tarball-hash>
 npm run submission:evaluate
 ```
 

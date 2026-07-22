@@ -20,3 +20,17 @@ export function createPostgresCaseflow(options: {
   ownerId: string;
   clock?: () => string;
 }): CaseflowRuntime;
+
+export interface PostgreSqlLegacyProposalRehashResult {
+  complete: boolean;
+  ownerId: string;
+  rehashed: Array<{ patchHash: string; proposalId: string }>;
+  remaining: number;
+  schemaVersion: "nodekit.postgres-legacy-patch-rehash/v1";
+}
+
+export function rehashLegacyPostgresProposalPatches(options: {
+  pool: PostgreSqlPool;
+  ownerId: string;
+  batchSize?: number;
+}): Promise<PostgreSqlLegacyProposalRehashResult>;

@@ -243,6 +243,10 @@ test("default projects vendor the exact NodeKit runtime without polluting capabi
   assert.equal(packageJson.dependencies["@homenshum/nodekit"], "file:vendor/nodekit");
   assert.equal(vendoredPackage.name, "@homenshum/nodekit");
   assert.equal(vendoredPackage.version, "0.2.1");
+  assert.equal(vendoredPackage.scripts, undefined, "the materialized file: runtime must not run NodeKit development lifecycle scripts");
+  assert.equal(vendoredPackage.devDependencies, undefined);
+  assert.equal(vendoredPackage.exports["./convex-caseflow"], undefined);
+  assert.equal(vendoredPackage.exports["./caseflow"].import, "./src/caseflow.mjs");
 
   const compiled = await compileAgentDefinition(root);
   assert.equal(compiled.files.some((file) => file.path === "vendor/nodekit/src/cli.mjs"), true);
@@ -265,6 +269,35 @@ test("default projects vendor the exact NodeKit runtime without polluting capabi
   });
   const blankSpecifierPackage = JSON.parse(await readFile(path.join(blankSpecifierTarget, "package.json"), "utf8"));
   assert.equal(blankSpecifierPackage.dependencies["@homenshum/nodekit"], "file:vendor/nodekit");
+});
+
+test("a default vendored runtime installs cold without NodeKit build-only files", async (t) => {
+  const root = await mkdtemp(path.join(os.tmpdir(), "nodekit-vendored-install-"));
+  t.after(() => rm(root, { force: true, recursive: true }));
+  await createProject({ git: false, install: false, name: "cold-vendored-install", target: root });
+
+  await execFileAsync("npm", ["install", "--ignore-scripts=false", "--no-audit", "--no-fund"], {
+    cwd: root,
+    shell: process.platform === "win32",
+    timeout: 120_000,
+  });
+  const installed = JSON.parse(await readFile(path.join(root, "node_modules", "@homenshum", "nodekit", "package.json"), "utf8"));
+  assert.equal(installed.nodekitBundle, "generated-runtime-only");
+  assert.equal(installed.scripts, undefined);
+  const installedRoot = path.join(root, "node_modules", "@homenshum", "nodekit");
+  const exportTargets = [];
+  const collectTargets = (value) => {
+    if (typeof value === "string") exportTargets.push(value);
+    else if (value && typeof value === "object") Object.values(value).forEach(collectTargets);
+  };
+  collectTargets(installed.exports);
+  for (const target of exportTargets) {
+    await readFile(path.join(installedRoot, target.replace(/^\.\//, "")));
+  }
+  await execFileAsync(process.execPath, [path.join(root, "node_modules", "@homenshum", "nodekit", "src", "cli.mjs"), "compile", "--repo-root", "."], {
+    cwd: root,
+    timeout: 30_000,
+  });
 });
 
 test("create --local-proof emits the deterministic receipt in one CLI workflow", async (t) => {

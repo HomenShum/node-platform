@@ -15,6 +15,11 @@
       "import": "./src/caseflow.mjs",
       "default": "./src/caseflow.mjs"
     },
+    "./submission-attestation": {
+      "types": "./src/submission-attestation.d.mts",
+      "import": "./src/submission-attestation.mjs",
+      "default": "./src/submission-attestation.mjs"
+    },
     "./adapters/postgres": {
       "types": "./src/adapters/postgres.d.mts",
       "import": "./src/adapters/postgres.mjs",
@@ -22,13 +27,45 @@
     },
     "./adapters/postgres/migration.sql": "./adapters/postgres/001_caseflow.sql",
     "./adapters/supabase/profile.sql": "./adapters/supabase/001_profile.sql",
+    "./adapters/supabase/workers.sql": "./adapters/supabase/002_workers.sql",
+    "./convex-caseflow": {
+      "types": "./dist/client/index.d.ts",
+      "import": "./dist/client/index.js",
+      "default": "./dist/client/index.js"
+    },
+    "./convex.config.js": {
+      "types": "./dist/component/convex.config.d.ts",
+      "import": "./dist/component/convex.config.js",
+      "default": "./dist/component/convex.config.js"
+    },
+    "./convex.config": {
+      "types": "./dist/component/convex.config.d.ts",
+      "import": "./dist/component/convex.config.js",
+      "default": "./dist/component/convex.config.js"
+    },
+    "./_generated/component.js": {
+      "types": "./src/component/_generated/component.d.ts"
+    },
+    "./_generated/component": {
+      "types": "./src/component/_generated/component.d.ts"
+    },
+    "./test": {
+      "types": "./dist/convex-test.d.ts",
+      "import": "./dist/convex-test.js",
+      "default": "./dist/convex-test.js"
+    },
     "./package.json": "./package.json"
   },
   "bin": {
-    "nodekit": "src/cli.mjs"
+    "nodekit": "src/cli.mjs",
+    "nodekit-attestation-sign": "scripts/sign-submission-attestation.mjs",
+    "nodekit-attestation-verify": "scripts/verify-submission-attestation.mjs"
   },
   "files": [
+    "dist",
     "src",
+    "scripts/sign-submission-attestation.mjs",
+    "scripts/verify-submission-attestation.mjs",
     "adapters",
     "schemas",
     "templates",
@@ -42,9 +79,15 @@
   ],
   "scripts": {
     "doctor": "node src/cli.mjs registry check --registry-root .",
+    "component:codegen": "convex codegen --component-dir ./src/component",
+    "build:component": "node scripts/clean-component-dist.mjs && tsc --project ./tsconfig.component.json && node scripts/copy-component-types.mjs",
+    "typecheck:component": "tsc --noEmit --project ./tsconfig.component-test.json",
+    "test:component": "vitest run --config ./vitest.component.config.mjs",
+    "prepare": "npm run build:component",
     "audit:prod": "npm audit --omit=dev",
     "typecheck:public": "tsc -p tsconfig.public.json",
-    "test": "node --test test/*.test.mjs",
+    "test:repository": "node --test test/*.test.mjs",
+    "test": "npm run test:repository && npm run test:component",
     "presentation:nodekit-proof": "node scripts/generate-nodekit-proof-presentation.mjs",
     "acceptance:factory": "node src/factory-acceptance.mjs",
     "ease:aggregate-developer": "node scripts/aggregate-developer-timing.mjs",
@@ -54,7 +97,14 @@
     "ease:evaluate-humans": "node scripts/evaluate-ease-evidence.mjs humans",
     "submission:prepare": "node scripts/prepare-submission.mjs",
     "submission:evaluate": "node scripts/evaluate-submission.mjs",
+    "attestation:sign": "node scripts/sign-submission-attestation.mjs",
+    "attestation:verify": "node scripts/verify-submission-attestation.mjs",
+    "proof:package-install": "node scripts/run-package-install-proof.mjs",
+    "candidate:check": "node scripts/run-local-candidate-gate.mjs --preflight",
+    "candidate:prove": "node scripts/run-local-candidate-gate.mjs",
+    "candidate:distribution": "node scripts/run-local-distribution-gate.mjs",
     "conformance:postgres": "node scripts/run-postgres-conformance.mjs",
+    "conformance:supabase-local": "node scripts/run-supabase-local-conformance.mjs",
     "registry:check": "node src/cli.mjs registry check --registry-root .",
     "ecosystem:check": "node src/cli.mjs ecosystem check --registry-root . --workspace ..",
     "dashboard": "node src/cli.mjs dashboard --registry-root . --workspace .. --write",
@@ -72,10 +122,23 @@
     "ajv": "8.20.0",
     "yaml": "^2.9.0"
   },
+  "peerDependencies": {
+    "convex": "^1.42.3"
+  },
+  "peerDependenciesMeta": {
+    "convex": {
+      "optional": true
+    }
+  },
   "license": "MIT",
   "devDependencies": {
+    "@edge-runtime/vm": "5.0.0",
+    "@types/node": "24.12.2",
+    "convex": "1.42.3",
+    "convex-test": "0.0.54",
     "pg": "^8.22.0",
     "playwright": "^1.61.1",
-    "typescript": "^7.0.2"
+    "typescript": "^7.0.2",
+    "vitest": "4.1.10"
   }
 }

@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://nodekit.dev/schemas/nodekit.engineering-health-verdict.v1.schema.json",
+  "title": "NodeKit decisive engineering health verdict",
+  "type": "object", "additionalProperties": false,
+  "required": ["schemaVersion", "candidateCommit", "nodekitCommit", "nodekitSourceHash", "nodekitIdentity", "releaseCandidate", "completedAt", "passed", "checks", "unresolved", "commands", "issueInventory"],
+  "properties": {
+    "schemaVersion": { "const": "nodekit.engineering-health-verdict/v1" }, "candidateCommit": { "$ref": "#/$defs/commit" }, "nodekitCommit": { "$ref": "#/$defs/commit" },
+    "nodekitSourceHash": { "$ref": "#/$defs/sha256" }, "nodekitIdentity": { "$ref": "#/$defs/nodekitIdentity" }, "releaseCandidate": { "$ref": "#/$defs/releaseCandidate" },
+    "completedAt": { "$ref": "#/$defs/timestamp" }, "passed": { "const": true }, "checks": { "$ref": "#/$defs/checks" },
+    "unresolved": { "$ref": "#/$defs/zeroCounts" }, "commands": { "$ref": "#/$defs/commands" }, "issueInventory": { "$ref": "#/$defs/issueInventory" }
+  },
+  "$defs": {
+    "commit": { "type": "string", "pattern": "^[a-f0-9]{40}$" }, "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "nodekitIdentity": { "type": "string", "pattern": "^[a-f0-9]{40}/[a-f0-9]{64}$" }, "timestamp": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{3}Z$" },
+    "evidencePath": { "type": "string", "minLength": 1, "pattern": "^(?!/)(?!\\./)(?!.*//)(?!.*\\/$)(?!.*(?:^|/)\\.\\.?(?:/|$))(?![A-Za-z]:)(?!.*\\u0000)[^\\\\]+$" },
+    "releaseCandidate": { "type": "object", "additionalProperties": false, "required": ["nodekitCommit", "nodekitSourceHash", "nodekitTarballSha256", "packageName", "packageVersion"], "properties": { "nodekitCommit": { "$ref": "#/$defs/commit" }, "nodekitSourceHash": { "$ref": "#/$defs/sha256" }, "nodekitTarballSha256": { "$ref": "#/$defs/sha256" }, "packageName": { "const": "@homenshum/nodekit" }, "packageVersion": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+(?:-[0-9A-Za-z.-]+)?$" } } },
+    "checks": { "type": "object", "additionalProperties": false, "required": ["repositoryTests", "componentTests", "publicTypecheck", "componentTypecheck", "componentBuild", "packageAudit", "registry", "ecosystem", "evolution", "distributionClean"], "properties": { "repositoryTests": { "const": true }, "componentTests": { "const": true }, "publicTypecheck": { "const": true }, "componentTypecheck": { "const": true }, "componentBuild": { "const": true }, "packageAudit": { "const": true }, "registry": { "const": true }, "ecosystem": { "const": true }, "evolution": { "const": true }, "distributionClean": { "const": true } } },
+    "zeroCounts": { "type": "object", "additionalProperties": false, "required": ["p0", "p1"], "properties": { "p0": { "const": 0 }, "p1": { "const": 0 } } },
+    "command": { "type": "object", "additionalProperties": false, "required": ["id", "path", "sha256"], "properties": { "id": { "enum": ["repositoryTests", "componentTests", "publicTypecheck", "componentTypecheck", "componentBuild", "packageAudit", "registry", "ecosystem", "evolution", "distributionClean"] }, "path": { "$ref": "#/$defs/evidencePath" }, "sha256": { "$ref": "#/$defs/sha256" } } },
+    "commands": { "type": "array", "minItems": 10, "maxItems": 10, "uniqueItems": true, "items": { "$ref": "#/$defs/command" }, "allOf": [
+      { "contains": { "properties": { "id": { "const": "repositoryTests" } }, "required": ["id"] }, "minContains": 1, "maxContains": 1 },
+      { "contains": { "properties": { "id": { "const": "componentTests" } }, "required": ["id"] }, "minContains": 1, "maxContains": 1 },
+      { "contains": { "properties": { "id": { "const": "publicTypecheck" } }, "required": ["id"] }, "minContains": 1, "maxContains": 1 },
+      { "contains": { "properties": { "id": { "const": "componentTypecheck" } }, "required": ["id"] }, "minContains": 1, "maxContains": 1 },
+      { "contains": { "properties": { "id": { "const": "componentBuild" } }, "required": ["id"] }, "minContains": 1, "maxContains": 1 },
+      { "contains": { "properties": { "id": { "const": "packageAudit" } }, "required": ["id"] }, "minContains": 1, "maxContains": 1 },
+      { "contains": { "properties": { "id": { "const": "registry" } }, "required": ["id"] }, "minContains": 1, "maxContains": 1 },
+      { "contains": { "properties": { "id": { "const": "ecosystem" } }, "required": ["id"] }, "minContains": 1, "maxContains": 1 },
+      { "contains": { "properties": { "id": { "const": "evolution" } }, "required": ["id"] }, "minContains": 1, "maxContains": 1 },
+      { "contains": { "properties": { "id": { "const": "distributionClean" } }, "required": ["id"] }, "minContains": 1, "maxContains": 1 }
+    ] },
+    "issueInventory": { "type": "object", "additionalProperties": false, "required": ["path", "sha256", "p0", "p1"], "properties": { "path": { "$ref": "#/$defs/evidencePath" }, "sha256": { "$ref": "#/$defs/sha256" }, "p0": { "const": 0 }, "p1": { "const": 0 } } }
+  }
+}

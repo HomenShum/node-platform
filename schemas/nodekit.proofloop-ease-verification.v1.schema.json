@@ -1,0 +1,150 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://nodekit.dev/schemas/nodekit.proofloop-ease-verification.v1.schema.json",
+  "title": "NodeKit decisive independent ProofLoop ease verification",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["subject", "releaseCandidate", "verdict", "extensions"],
+  "properties": {
+    "subject": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["repository"],
+      "properties": {
+        "repository": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["candidateCommit", "nodekitSourceHash"],
+          "properties": {
+            "candidateCommit": { "$ref": "#/$defs/commit" },
+            "nodekitSourceHash": { "$ref": "#/$defs/sha256" }
+          }
+        }
+      }
+    },
+    "releaseCandidate": { "$ref": "#/$defs/releaseCandidate" },
+    "verdict": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status"],
+      "properties": { "status": { "const": "passed" } }
+    },
+    "extensions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["easeCertified", "independentVerifier", "checks", "decisiveEvidence", "attestationPayload", "attestation"],
+      "properties": {
+        "easeCertified": { "const": true },
+        "independentVerifier": { "const": true },
+        "checks": { "$ref": "#/$defs/checks" },
+        "decisiveEvidence": {
+          "type": "array",
+          "minItems": 11,
+          "maxItems": 11,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/decisiveEvidenceRef" },
+          "allOf": [
+            { "contains": { "type": "object", "required": ["kind"], "properties": { "kind": { "const": "package" } } }, "minContains": 1, "maxContains": 1 },
+            { "contains": { "type": "object", "required": ["kind"], "properties": { "kind": { "const": "timing" } } }, "minContains": 1, "maxContains": 1 },
+            { "contains": { "type": "object", "required": ["kind"], "properties": { "kind": { "const": "agents" } } }, "minContains": 1, "maxContains": 1 },
+            { "contains": { "type": "object", "required": ["kind"], "properties": { "kind": { "const": "humans" } } }, "minContains": 1, "maxContains": 1 },
+            { "contains": { "type": "object", "required": ["kind"], "properties": { "kind": { "const": "consumers" } } }, "minContains": 1, "maxContains": 1 },
+            { "contains": { "type": "object", "required": ["kind"], "properties": { "kind": { "const": "preview" } } }, "minContains": 1, "maxContains": 1 },
+            { "contains": { "type": "object", "required": ["kind"], "properties": { "kind": { "const": "supabase" } } }, "minContains": 1, "maxContains": 1 },
+            { "contains": { "type": "object", "required": ["kind"], "properties": { "kind": { "const": "evolution" } } }, "minContains": 1, "maxContains": 1 },
+            { "contains": { "type": "object", "required": ["kind"], "properties": { "kind": { "const": "model" } } }, "minContains": 1, "maxContains": 1 },
+            { "contains": { "type": "object", "required": ["kind"], "properties": { "kind": { "const": "engineering" } } }, "minContains": 1, "maxContains": 1 },
+            { "contains": { "type": "object", "required": ["kind"], "properties": { "kind": { "const": "browser" } } }, "minContains": 1, "maxContains": 1 }
+          ]
+        },
+        "attestationPayload": { "$ref": "#/$defs/payload" },
+        "attestation": { "$ref": "#/$defs/attestation" }
+      }
+    }
+  },
+  "$defs": {
+    "commit": { "type": "string", "pattern": "^[a-f0-9]{40}$" },
+    "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "canonicalTimestamp": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{3}Z$" },
+    "evidencePath": { "type": "string", "minLength": 1, "pattern": "^(?!/)(?!\\./)(?!.*//)(?!.*\\/$)(?!.*(?:^|/)\\.\\.?(?:/|$))(?![A-Za-z]:)(?!.*\\u0000)[^\\\\]+$" },
+    "releaseCandidate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["nodekitCommit", "nodekitSourceHash", "nodekitTarballSha256", "packageName", "packageVersion"],
+      "properties": {
+        "nodekitCommit": { "$ref": "#/$defs/commit" },
+        "nodekitSourceHash": { "$ref": "#/$defs/sha256" },
+        "nodekitTarballSha256": { "$ref": "#/$defs/sha256" },
+        "packageName": { "const": "@homenshum/nodekit" },
+        "packageVersion": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+(?:-[0-9A-Za-z.-]+)?$" }
+      }
+    },
+    "evidenceRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256"],
+      "properties": {
+        "path": { "$ref": "#/$defs/evidencePath" },
+        "sha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "decisiveEvidenceRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "path", "sha256"],
+      "properties": {
+        "kind": { "enum": ["package", "timing", "agents", "humans", "consumers", "preview", "supabase", "evolution", "model", "engineering", "browser"] },
+        "path": { "$ref": "#/$defs/evidencePath" },
+        "sha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "checks": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["package", "timing", "agents", "humans", "consumers", "preview", "supabase", "evolution", "model", "engineering", "browser"],
+      "properties": {
+        "package": { "const": true },
+        "timing": { "const": true },
+        "agents": { "const": true },
+        "humans": { "const": true },
+        "consumers": { "const": true },
+        "preview": { "const": true },
+        "supabase": { "const": true },
+        "evolution": { "const": true },
+        "model": { "const": true },
+        "engineering": { "const": true },
+        "browser": { "const": true }
+      }
+    },
+    "payload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schemaVersion", "type", "candidateCommit", "nodekitSourceHash", "nodekitTarballSha256", "verdict", "decisiveEvidenceRootSha256", "verification"],
+      "properties": {
+        "schemaVersion": { "const": "nodekit.proofloop-ease-verification-attestation-payload/v1" },
+        "type": { "const": "proofloopEaseVerification" },
+        "candidateCommit": { "$ref": "#/$defs/commit" },
+        "nodekitSourceHash": { "$ref": "#/$defs/sha256" },
+        "nodekitTarballSha256": { "$ref": "#/$defs/sha256" },
+        "verdict": { "const": "passed" },
+        "decisiveEvidenceRootSha256": { "$ref": "#/$defs/sha256" },
+        "verification": { "$ref": "#/$defs/evidenceRef" }
+      }
+    },
+    "attestation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schemaVersion", "algorithm", "keyId", "signedAt", "payloadType", "payloadSha256", "signatureEncoding", "signature"],
+      "properties": {
+        "schemaVersion": { "const": "nodekit.detached-attestation/v1" },
+        "algorithm": { "const": "Ed25519" },
+        "keyId": { "type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:@-]{0,127}$" },
+        "signedAt": { "$ref": "#/$defs/canonicalTimestamp" },
+        "payloadType": { "const": "proofloopEaseVerification" },
+        "payloadSha256": { "$ref": "#/$defs/sha256" },
+        "signatureEncoding": { "const": "base64url" },
+        "signature": { "type": "string", "pattern": "^[A-Za-z0-9_-]{86}$" }
+      }
+    }
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "schemaVersion": "nodekit.evolution-event/v1",
+  "id": "evt:source-bound-submission-gates",
+  "projectId": "nodekit",
+  "repository": "HomenShum/node-platform",
+  "source": {
+    "commitSha": "4407b70c616c89b022e0d3d36ba02f00519b1688",
+    "occurredAt": "2026-07-22T02:33:14-07:00"
+  },
+  "track": "architecture",
+  "category": "release",
+  "challenge": "Submission evidence could appear complete while describing another source revision, omitting decisive contract fields, duplicating evidence, or lacking scoped publication authority.",
+  "observedFailure": "Counts and familiar filenames were insufficient to prove that timing, agent, human, consumer, preview, package, independent-review, and approval verdicts described one immutable candidate.",
+  "resolution": "The human-reviewed release contract requires strict verdict schemas, exact candidate commit and distributable-source bindings, recomputed evidence hashes, distinct decisive evidence, a signed seven-gate candidate, and explicit scoped publication approval.",
+  "assumptionIds": [],
+  "invariantIds": [
+    "inv:source-bound-decisive-verdicts"
+  ],
+  "evidenceIds": [
+    "evd:source-bound-submission-gates-materiality"
+  ],
+  "predecessorIds": [
+    "evt:exact-candidate-contract"
+  ],
+  "knownLimitations": [
+    "The external timing, fresh-agent, human, consumer, preview, and independent ProofLoop verdicts remain open until collected for the exact candidate.",
+    "This review grants no package publication, production deployment, or Convex Component submission permission.",
+    "Historical proof cannot certify the final candidate and final evaluation must be rerun after the immutable candidate exists."
+  ],
+  "interpretation": {
+    "status": "human-reviewed",
+    "reviewedBy": "project-owner",
+    "reviewedAt": "2026-07-22T02:33:14-07:00"
+  }
+}

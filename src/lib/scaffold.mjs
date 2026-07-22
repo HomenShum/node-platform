@@ -11,6 +11,14 @@ const projectedSkillNames = ["nodekit-launch", "nodekit-present", "nodekit-qa"];
 const vendoredNodeKitSpecifier = "file:vendor/nodekit";
 const nodeKitRuntimeEntries = ["src", "schemas", "LICENSE"];
 
+function vendoredExportIsAvailable(value) {
+  if (typeof value === "string") {
+    const target = value.replace(/^\.\//, "");
+    return target === "package.json" || nodeKitRuntimeEntries.some((entry) => target === entry || target.startsWith(`${entry}/`));
+  }
+  return Boolean(value) && typeof value === "object" && Object.values(value).every(vendoredExportIsAvailable);
+}
+
 function usesVendoredNodeKitRuntime(value) {
   return value === undefined || value === null || String(value).trim() === "";
 }
@@ -63,8 +71,18 @@ async function vendorNodeKitRuntime(target) {
   const packageJson = JSON.parse(await readFile(path.join(packageRoot, "package.json"), "utf8"));
   const destination = path.join(target, "vendor", "nodekit");
   await mkdir(destination, { recursive: true });
+  // A generated application's vendored runtime is already materialized source,
+  // not a NodeKit development checkout. In particular, file: dependencies run
+  // npm's `prepare` lifecycle, while the deliberately small runtime bundle does
+  // not contain NodeKit's build scripts or component TypeScript sources. Keep
+  // package metadata and runtime dependencies, but remove development lifecycle
+  // hooks so a fresh generated application can install from an empty directory.
+  const { scripts: _scripts, devDependencies: _devDependencies, ...publishMetadata } = packageJson;
   const runtimePackage = {
-    ...packageJson,
+    ...publishMetadata,
+    exports: Object.fromEntries(
+      Object.entries(packageJson.exports ?? {}).filter(([, value]) => vendoredExportIsAvailable(value)),
+    ),
     files: nodeKitRuntimeEntries,
     nodekitBundle: "generated-runtime-only",
   };

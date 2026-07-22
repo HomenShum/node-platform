@@ -1,6 +1,7 @@
 import path from "node:path";
 import { writeFile } from "node:fs/promises";
 import { evaluateSubmissionManifest } from "../src/lib/submission-gate.mjs";
+import { parseTrustedAttestationKeysJson } from "../src/lib/submission-attestation.mjs";
 
 function parseArguments(argv) {
   const options = {};
@@ -25,7 +26,8 @@ const { options, positional } = parseArguments(process.argv.slice(2));
 const repoRoot = path.resolve(options["repo-root"] ?? positional[0] ?? ".");
 const manifest = options.manifest ?? positional[1] ?? "proof/submission-manifest.json";
 const outputPath = options.output ?? "proof/submission-verdict.json";
-const output = await evaluateSubmissionManifest(repoRoot, manifest);
+const trustedAttestationKeys = parseTrustedAttestationKeysJson(process.env.NODEKIT_SUBMISSION_TRUSTED_KEYS_JSON ?? "{}");
+const output = await evaluateSubmissionManifest(repoRoot, manifest, { trustedAttestationKeys });
 await writeFile(path.resolve(repoRoot, outputPath), `${JSON.stringify(output, null, 2)}\n`);
 console.log(JSON.stringify(output, null, 2));
 if (!output.passed) process.exitCode = 1;

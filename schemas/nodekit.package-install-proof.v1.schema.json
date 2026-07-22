@@ -1,0 +1,151 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://nodekit.dev/schemas/nodekit.package-install-proof.v1.schema.json",
+  "title": "NodeKit decisive exact-package installation proof",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion", "candidateCommit", "nodekitCommit", "nodekitSourceHash",
+    "nodekitIdentity", "releaseCandidate", "package", "version", "passed",
+    "publicationPerformed", "deployPerformed", "tarball", "tarballBytes",
+    "unpackedSize", "fileCount", "tarballSha256", "checks",
+    "distributionChecks", "supportingEvidence"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "nodekit.package-install-proof/v1" },
+    "candidateCommit": { "$ref": "#/$defs/commit" },
+    "nodekitCommit": { "$ref": "#/$defs/commit" },
+    "nodekitSourceHash": { "$ref": "#/$defs/sha256" },
+    "nodekitIdentity": { "$ref": "#/$defs/nodekitIdentity" },
+    "releaseCandidate": { "$ref": "#/$defs/releaseCandidate" },
+    "package": { "const": "@homenshum/nodekit" },
+    "version": { "$ref": "#/$defs/packageVersion" },
+    "passed": { "const": true },
+    "publicationPerformed": { "const": false },
+    "deployPerformed": { "const": false },
+    "tarball": { "allOf": [{ "$ref": "#/$defs/evidencePath" }, { "pattern": "\\.tgz$" }] },
+    "tarballBytes": { "type": "integer", "minimum": 1 },
+    "unpackedSize": { "type": "integer", "minimum": 1 },
+    "fileCount": { "type": "integer", "minimum": 1 },
+    "tarballSha256": { "$ref": "#/$defs/sha256" },
+    "checks": { "$ref": "#/$defs/checks" },
+    "distributionChecks": { "$ref": "#/$defs/distributionChecks" },
+    "supportingEvidence": {
+      "type": "array",
+      "minItems": 15,
+      "maxItems": 15,
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/packageEvidenceRef" },
+      "allOf": [
+        { "contains": { "$ref": "#/$defs/applicationIdentityEvidence" }, "minContains": 1, "maxContains": 1 },
+        { "contains": { "$ref": "#/$defs/demoReceiptEvidence" }, "minContains": 1, "maxContains": 1 },
+        { "contains": { "$ref": "#/$defs/evalReceiptEvidence" }, "minContains": 1, "maxContains": 1 },
+        { "contains": { "$ref": "#/$defs/convexRuntimeScriptEvidence" }, "minContains": 1, "maxContains": 1 },
+        { "contains": { "$ref": "#/$defs/commandLedgerEvidence" }, "minContains": 1, "maxContains": 1 },
+        { "contains": { "$ref": "#/$defs/packageFilesEvidence" }, "minContains": 1, "maxContains": 1 },
+        { "contains": { "$ref": "#/$defs/publicApiEvidence" }, "minContains": 1, "maxContains": 1 },
+        { "contains": { "$ref": "#/$defs/convexRuntimeProofEvidence" }, "minContains": 1, "maxContains": 1 },
+        { "contains": { "$ref": "#/$defs/generatedPackageEvidence" }, "minContains": 1, "maxContains": 1 },
+        { "contains": { "$ref": "#/$defs/generatedPackageLockEvidence" }, "minContains": 1, "maxContains": 1 },
+        { "contains": { "$ref": "#/$defs/generatedNpmLsEvidence" }, "minContains": 1, "maxContains": 1 },
+        { "contains": { "$ref": "#/$defs/installedRuntimeIdentityEvidence" }, "minContains": 1, "maxContains": 1 },
+        { "contains": { "$ref": "#/$defs/generatedReceiptBindingsEvidence" }, "minContains": 1, "maxContains": 1 },
+        { "contains": { "$ref": "#/$defs/generatedAppArchiveEvidence" }, "minContains": 1, "maxContains": 1 },
+        { "contains": { "$ref": "#/$defs/generatedCandidateEvidence" }, "minContains": 1, "maxContains": 1 }
+      ]
+    }
+  },
+  "$defs": {
+    "commit": { "type": "string", "pattern": "^[a-f0-9]{40}$" },
+    "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "nodekitIdentity": { "type": "string", "pattern": "^[a-f0-9]{40}/[a-f0-9]{64}$" },
+    "packageVersion": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+(?:-[0-9A-Za-z.-]+)?$" },
+    "evidencePath": { "type": "string", "minLength": 1, "pattern": "^(?!/)(?!\\./)(?!.*//)(?!.*\\/$)(?!.*(?:^|/)\\.\\.?(?:/|$))(?![A-Za-z]:)(?!.*\\u0000)[^\\\\]+$" },
+    "releaseCandidate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["nodekitCommit", "nodekitSourceHash", "nodekitTarballSha256", "packageName", "packageVersion"],
+      "properties": {
+        "nodekitCommit": { "$ref": "#/$defs/commit" },
+        "nodekitSourceHash": { "$ref": "#/$defs/sha256" },
+        "nodekitTarballSha256": { "$ref": "#/$defs/sha256" },
+        "packageName": { "const": "@homenshum/nodekit" },
+        "packageVersion": { "$ref": "#/$defs/packageVersion" }
+      }
+    },
+    "checks": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "candidateIdentityStable", "convexComponentRuntime", "freshConsumerInstall",
+        "packagedCliCreate", "generatedAppInstall", "compile", "check", "demo", "eval",
+        "typecheckPublic", "receiptsValid", "tarballHashStable", "distributionComplete"
+      ],
+      "properties": {
+        "candidateIdentityStable": { "const": true },
+        "convexComponentRuntime": { "const": true },
+        "freshConsumerInstall": { "const": true },
+        "packagedCliCreate": { "const": true },
+        "generatedAppInstall": { "const": true },
+        "compile": { "const": true },
+        "check": { "const": true },
+        "demo": { "const": true },
+        "eval": { "const": true },
+        "typecheckPublic": { "const": true },
+        "receiptsValid": { "const": true },
+        "tarballHashStable": { "const": true },
+        "distributionComplete": { "const": true }
+      }
+    },
+    "distributionChecks": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "caseflowTypes", "convexClient", "convexConfig", "convexComponentApi",
+        "convexComponentRuntime", "convexTestExport", "postgresAdapter",
+        "postgresMigration", "supabaseProfile", "supabaseWorkers"
+      ],
+      "properties": {
+        "caseflowTypes": { "const": true },
+        "convexClient": { "const": true },
+        "convexConfig": { "const": true },
+        "convexComponentApi": { "const": true },
+        "convexComponentRuntime": { "const": true },
+        "convexTestExport": { "const": true },
+        "postgresAdapter": { "const": true },
+        "postgresMigration": { "const": true },
+        "supabaseProfile": { "const": true },
+        "supabaseWorkers": { "const": true }
+      }
+    },
+    "packageEvidenceRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256"],
+      "properties": {
+        "path": {
+          "allOf": [
+            { "$ref": "#/$defs/evidencePath" },
+            { "pattern": "(?:^|/)(?:application-identity\\.json|demo-receipt\\.json|eval-receipt\\.json|convex-runtime-proof\\.mjs|command-ledger\\.json|package-files\\.json|public-api\\.ts|convex-runtime-proof\\.json|generated-package\\.json|generated-package-lock\\.json|generated-npm-ls\\.json|installed-runtime-identity\\.json|generated-receipt-bindings\\.json|generated-app\\.tar\\.gz|generated-candidate\\.json)$" }
+          ]
+        },
+        "sha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "applicationIdentityEvidence": { "type": "object", "required": ["path"], "properties": { "path": { "pattern": "(?:^|/)application-identity\\.json$" } } },
+    "demoReceiptEvidence": { "type": "object", "required": ["path"], "properties": { "path": { "pattern": "(?:^|/)demo-receipt\\.json$" } } },
+    "evalReceiptEvidence": { "type": "object", "required": ["path"], "properties": { "path": { "pattern": "(?:^|/)eval-receipt\\.json$" } } },
+    "convexRuntimeScriptEvidence": { "type": "object", "required": ["path"], "properties": { "path": { "pattern": "(?:^|/)convex-runtime-proof\\.mjs$" } } },
+    "commandLedgerEvidence": { "type": "object", "required": ["path"], "properties": { "path": { "pattern": "(?:^|/)command-ledger\\.json$" } } },
+    "packageFilesEvidence": { "type": "object", "required": ["path"], "properties": { "path": { "pattern": "(?:^|/)package-files\\.json$" } } },
+    "publicApiEvidence": { "type": "object", "required": ["path"], "properties": { "path": { "pattern": "(?:^|/)public-api\\.ts$" } } },
+    "convexRuntimeProofEvidence": { "type": "object", "required": ["path"], "properties": { "path": { "pattern": "(?:^|/)convex-runtime-proof\\.json$" } } },
+    "generatedPackageEvidence": { "type": "object", "required": ["path"], "properties": { "path": { "pattern": "(?:^|/)generated-package\\.json$" } } },
+    "generatedPackageLockEvidence": { "type": "object", "required": ["path"], "properties": { "path": { "pattern": "(?:^|/)generated-package-lock\\.json$" } } },
+    "generatedNpmLsEvidence": { "type": "object", "required": ["path"], "properties": { "path": { "pattern": "(?:^|/)generated-npm-ls\\.json$" } } },
+    "installedRuntimeIdentityEvidence": { "type": "object", "required": ["path"], "properties": { "path": { "pattern": "(?:^|/)installed-runtime-identity\\.json$" } } },
+    "generatedReceiptBindingsEvidence": { "type": "object", "required": ["path"], "properties": { "path": { "pattern": "(?:^|/)generated-receipt-bindings\\.json$" } } },
+    "generatedAppArchiveEvidence": { "type": "object", "required": ["path"], "properties": { "path": { "pattern": "(?:^|/)generated-app\\.tar\\.gz$" } } },
+    "generatedCandidateEvidence": { "type": "object", "required": ["path"], "properties": { "path": { "pattern": "(?:^|/)generated-candidate\\.json$" } } }
+  }
+}

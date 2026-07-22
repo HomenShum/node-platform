@@ -1,0 +1,149 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://nodekit.dev/schemas/nodekit.fresh-agent-verdict.v2.schema.json",
+  "title": "NodeKit exact-candidate fresh coding-agent verdict",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion", "nodekitCommit", "nodekitSourceHash", "nodekitIdentity", "passed", "errors",
+    "requiredTasks", "requiredProfiles", "requiredRuns", "observedTrials", "observedRepositoryTrials",
+    "ignoredOtherCandidateTrials", "legacyTrialsIgnored", "failedTrials", "allAttemptsSelected", "releaseCandidate", "selectedRuns",
+    "attestationPayload", "attestation"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "nodekit.fresh-agent-verdict/v2" },
+    "nodekitCommit": { "type": "string", "pattern": "^[a-f0-9]{40}$" },
+    "nodekitSourceHash": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "nodekitIdentity": { "type": "string", "pattern": "^[a-f0-9]{40}/[a-f0-9]{64}$" },
+    "releaseCandidate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["nodekitCommit", "nodekitSourceHash", "nodekitTarballSha256", "packageName", "packageVersion"],
+      "properties": {
+        "nodekitCommit": { "type": "string", "pattern": "^[a-f0-9]{40}$" },
+        "nodekitSourceHash": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+        "nodekitTarballSha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+        "packageName": { "const": "@homenshum/nodekit" },
+        "packageVersion": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+(?:-[0-9A-Za-z.-]+)?$" }
+      }
+    },
+    "passed": { "const": true },
+    "errors": { "type": "array", "maxItems": 0 },
+    "requiredTasks": {
+      "type": "array", "minItems": 3, "maxItems": 3, "uniqueItems": true,
+      "items": { "enum": ["research-map", "volunteer-onboarding", "launch-presentation"] }
+    },
+    "requiredProfiles": {
+      "type": "object", "additionalProperties": false, "required": ["codex", "claude-code", "lower-cost"],
+      "properties": {
+        "codex": { "const": 3 },
+        "claude-code": { "const": 1 },
+        "lower-cost": { "const": 1 }
+      }
+    },
+    "requiredRuns": { "const": 15 },
+    "observedTrials": { "const": 15 },
+    "observedRepositoryTrials": { "const": 15 },
+    "ignoredOtherCandidateTrials": { "type": "integer", "minimum": 0 },
+    "legacyTrialsIgnored": { "type": "integer", "minimum": 0 },
+    "failedTrials": { "const": 0 },
+    "allAttemptsSelected": { "const": true },
+    "attestationPayload": { "$ref": "#/$defs/externalPayload" },
+    "attestation": { "$ref": "#/$defs/attestation" },
+    "selectedRuns": {
+      "type": "array",
+      "minItems": 15,
+      "maxItems": 15,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "runId", "taskId", "agentProfile", "agentDriver", "agentModel", "agentVersion", "agentSessionId", "freshSession",
+          "trialStartedAt", "generatedAt", "nodekitCommit", "nodekitSourceHash", "nodekitPackage", "nodekitVersion", "nodekitTarballSha256",
+          "applicationHash", "configHash", "promptSha256", "receiptSha256",
+          "manifestPath", "manifestSha256", "evidence", "evidenceCount", "evidenceSetSha256", "passed", "validationPassed"
+        ],
+        "properties": {
+          "runId": { "type": "string", "minLength": 1 },
+          "taskId": { "enum": ["research-map", "volunteer-onboarding", "launch-presentation"] },
+          "agentProfile": { "enum": ["codex", "claude-code", "lower-cost"] },
+          "agentDriver": { "enum": ["codex", "claude-code"] },
+          "agentModel": { "type": ["string", "null"] },
+          "agentVersion": { "type": "string", "minLength": 1 },
+          "agentSessionId": { "type": "string", "minLength": 1 },
+          "freshSession": { "const": true },
+          "trialStartedAt": { "type": "string", "minLength": 1 },
+          "generatedAt": { "type": "string", "minLength": 1 },
+          "nodekitCommit": { "type": "string", "pattern": "^[a-f0-9]{40}$" },
+          "nodekitSourceHash": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+          "nodekitPackage": { "const": "@homenshum/nodekit" },
+          "nodekitVersion": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+(?:-[0-9A-Za-z.-]+)?$" },
+          "nodekitTarballSha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+          "applicationHash": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+          "configHash": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+          "promptSha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+          "receiptSha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+          "manifestPath": { "type": "string", "pattern": "^(?!/)(?![A-Za-z]:)(?!.*//)(?!.*(?:^|/)\\.{1,2}(?:/|$))[^\\\\]+/manifest\\.json$" },
+          "manifestSha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+          "evidence": {
+            "type": "array", "minItems": 16, "maxItems": 16,
+            "items": {
+              "type": "object", "additionalProperties": false, "required": ["bytes", "kind", "path", "sha256"],
+              "properties": {
+                "bytes": { "type": "integer", "minimum": 0 },
+                "kind": {
+                  "enum": [
+                    "prompt", "prompt-hash", "environment", "interventions", "session", "final-report", "stderr", "token-usage",
+                    "command-ledger", "candidate-diff", "candidate-status", "candidate-commit", "application-identity", "candidate-archive",
+                    "browser-certification", "screenshot-manifest"
+                  ]
+                },
+                "path": { "type": "string", "minLength": 1, "pattern": "^(?!/)(?![A-Za-z]:)(?!.*//)(?!.*(?:^|/)\\.{1,2}(?:/|$))[^\\\\]+$" },
+                "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+              }
+            }
+          },
+          "evidenceCount": { "const": 16 },
+          "evidenceSetSha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+          "passed": { "const": true },
+          "validationPassed": { "const": true }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "commit": { "type": "string", "pattern": "^[a-f0-9]{40}$" },
+    "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "canonicalTimestamp": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{3}Z$" },
+    "externalPayload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schemaVersion", "type", "candidateCommit", "nodekitSourceHash", "nodekitTarballSha256", "verdict", "evidenceRootSha256", "verdictBodySha256"],
+      "properties": {
+        "schemaVersion": { "const": "nodekit.external-gate-verification-attestation-payload/v1" },
+        "type": { "const": "freshAgentHeldout" },
+        "candidateCommit": { "$ref": "#/$defs/commit" },
+        "nodekitSourceHash": { "$ref": "#/$defs/sha256" },
+        "nodekitTarballSha256": { "$ref": "#/$defs/sha256" },
+        "verdict": { "const": "passed" },
+        "evidenceRootSha256": { "$ref": "#/$defs/sha256" },
+        "verdictBodySha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "attestation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schemaVersion", "algorithm", "keyId", "signedAt", "payloadType", "payloadSha256", "signatureEncoding", "signature"],
+      "properties": {
+        "schemaVersion": { "const": "nodekit.detached-attestation/v1" },
+        "algorithm": { "const": "Ed25519" },
+        "keyId": { "type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:@-]{0,127}$" },
+        "signedAt": { "$ref": "#/$defs/canonicalTimestamp" },
+        "payloadType": { "const": "freshAgentHeldout" },
+        "payloadSha256": { "$ref": "#/$defs/sha256" },
+        "signatureEncoding": { "const": "base64url" },
+        "signature": { "type": "string", "pattern": "^[A-Za-z0-9_-]{86}$" }
+      }
+    }
+  }
+}

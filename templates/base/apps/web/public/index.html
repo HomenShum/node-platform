@@ -6,6 +6,7 @@
     <meta name="description" content="A domain-blank, behaviorally figured-out NodeKit application." />
     <title>__APP_TITLE__ | Guided case</title>
     <link rel="stylesheet" href="/styles.css" />
+    <link rel="stylesheet" href="/responsive-refinements.css" />
   </head>
   <body>
     <a class="skip-link" href="#artifact">Skip to primary artifact</a>
@@ -28,6 +29,16 @@
       <section class="state-banner" id="state-banner" aria-live="polite">
         <span class="state-kind" id="state-kind">ORIENTATION</span>
         <div><strong id="state-title">Ready for your direction</strong><p id="state-message">Confirm the outcome before the run begins.</p></div>
+      </section>
+      <section class="mobile-action" id="mobile-action" aria-label="Current decision" hidden>
+        <div><span>YOUR NEXT ACTION</span><strong id="mobile-action-title">Review proposed change</strong></div>
+        <div>
+          <button class="button primary" id="mobile-propose" hidden>Prepare proposal</button>
+          <button class="button approve" id="mobile-approve" hidden>Approve</button>
+          <button class="button secondary" id="mobile-reject" hidden>Reject</button>
+          <button class="button primary" id="mobile-resume" hidden>Resume safely</button>
+          <button class="button primary" id="mobile-resolve-conflict" hidden>Keep canonical version</button>
+        </div>
       </section>
 
       <section class="workspace">
@@ -52,18 +63,25 @@
           <div class="completion" id="completion" hidden><strong>Completion verified</strong><p>The canonical artifact and content-addressed receipt are ready.</p></div>
         </article>
 
-        <aside id="review">
-          <div class="tabs" role="tablist"><button class="tab active" id="review-tab" role="tab">Review</button><button class="tab" role="tab">Agent activity</button></div>
-          <p class="eyebrow">PENDING DECISION</p>
-          <h2>Review proposal</h2>
-          <p id="review-copy">No generated work is canonical until you approve it.</p>
-          <div class="proposal" id="proposal"><span>Nothing pending.</span></div>
+        <aside id="review" data-nodekit-review-boundary="proposal">
+          <div class="tabs" aria-label="Review panel mode"><button class="tab active" id="review-tab" aria-pressed="true">Review</button><button class="tab" id="activity-tab" aria-pressed="false">Agent activity</button></div>
+          <p class="eyebrow" id="review-eyebrow">NEXT STEP</p>
+          <h2 id="review-title" tabindex="-1">Confirm the intended outcome</h2>
+          <p id="review-copy">Use the primary input to confirm the job before any agent work begins.</p>
+          <div class="proposal" id="proposal"><span>No proposal yet.</span></div>
           <div class="exception" id="exception" hidden></div>
           <div class="receipt-detail" id="receipt-detail" hidden></div>
+          <div class="receipt-actions" id="receipt-actions" hidden>
+            <a class="button primary" id="download-proof" href="/api/export" download="nodekit-proof.json">Download proof</a>
+            <button class="button secondary" id="copy-share" type="button">Copy share summary</button>
+            <span id="copy-status" role="status" aria-live="polite"></span>
+          </div>
           <div class="actions">
             <button class="button primary" id="propose">Prepare proposal</button>
             <button class="button approve" id="approve" disabled>Approve</button>
             <button class="button secondary" id="reject" disabled>Reject</button>
+            <button class="button primary" id="resume" hidden>Resume from preserved state</button>
+            <button class="button primary" id="resolve-conflict" hidden>Continue from canonical version</button>
           </div>
           <details id="activity"><summary>Advanced trace</summary><ol id="events"></ol></details>
         </aside>

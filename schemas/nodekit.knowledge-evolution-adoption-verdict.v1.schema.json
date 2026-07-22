@@ -1,0 +1,61 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://nodekit.dev/schemas/nodekit.knowledge-evolution-adoption-verdict.v1.schema.json",
+  "title": "NodeKit decisive Knowledge Evolution adoption verdict",
+  "type": "object", "additionalProperties": false,
+  "required": ["schemaVersion", "candidateCommit", "nodekitCommit", "nodekitSourceHash", "nodekitIdentity", "releaseCandidate", "passed", "comparisonId", "completedAt", "comparison", "consumerAdoption", "ledgerEventId", "checks", "evidence", "attestationPayload", "attestation"],
+  "properties": {
+    "schemaVersion": { "const": "nodekit.knowledge-evolution-adoption-verdict/v1" },
+    "candidateCommit": { "$ref": "#/$defs/commit" }, "nodekitCommit": { "$ref": "#/$defs/commit" },
+    "nodekitSourceHash": { "$ref": "#/$defs/sha256" }, "nodekitIdentity": { "$ref": "#/$defs/nodekitIdentity" },
+    "releaseCandidate": { "$ref": "#/$defs/releaseCandidate" }, "passed": { "const": true },
+    "comparisonId": { "$ref": "#/$defs/id" }, "completedAt": { "$ref": "#/$defs/timestamp" },
+    "comparison": { "$ref": "#/$defs/comparison" }, "consumerAdoption": { "$ref": "#/$defs/consumerAdoption" },
+    "ledgerEventId": { "$ref": "#/$defs/id" }, "checks": { "$ref": "#/$defs/checks" },
+    "evidence": { "$ref": "#/$defs/evidence" }, "attestationPayload": { "$ref": "#/$defs/externalPayload" },
+    "attestation": { "$ref": "#/$defs/attestation" }
+  },
+  "$defs": {
+    "commit": { "type": "string", "pattern": "^[a-f0-9]{40}$" }, "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "nodekitIdentity": { "type": "string", "pattern": "^[a-f0-9]{40}/[a-f0-9]{64}$" },
+    "id": { "type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:@-]{0,127}$" },
+    "timestamp": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{3}Z$" },
+    "canonicalTimestamp": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{3}Z$" },
+    "evidencePath": { "type": "string", "minLength": 1, "pattern": "^(?!/)(?!\\./)(?!.*//)(?!.*\\/$)(?!.*(?:^|/)\\.\\.?(?:/|$))(?![A-Za-z]:)(?!.*\\u0000)[^\\\\]+$" },
+    "releaseCandidate": {
+      "type": "object", "additionalProperties": false, "required": ["nodekitCommit", "nodekitSourceHash", "nodekitTarballSha256", "packageName", "packageVersion"],
+      "properties": { "nodekitCommit": { "$ref": "#/$defs/commit" }, "nodekitSourceHash": { "$ref": "#/$defs/sha256" }, "nodekitTarballSha256": { "$ref": "#/$defs/sha256" }, "packageName": { "const": "@homenshum/nodekit" }, "packageVersion": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+(?:-[0-9A-Za-z.-]+)?$" } }
+    },
+    "comparison": {
+      "type": "object", "additionalProperties": false,
+      "required": ["taskCount", "protectedBenchmarkSha256", "harnessSha256", "flatScore", "staticGraphScore", "evolvingGraphScore", "outcome"],
+      "properties": {
+        "taskCount": { "type": "integer", "minimum": 3 }, "protectedBenchmarkSha256": { "$ref": "#/$defs/sha256" }, "harnessSha256": { "$ref": "#/$defs/sha256" },
+        "flatScore": { "type": "number", "minimum": 0, "maximum": 1 }, "staticGraphScore": { "type": "number", "minimum": 0, "maximum": 1 },
+        "evolvingGraphScore": { "type": "number", "minimum": 0, "maximum": 1 }, "outcome": { "enum": ["improved", "held"] }
+      }
+    },
+    "consumerAdoption": { "type": "object", "additionalProperties": false, "required": ["consumerId", "consumerCommit", "adopted"], "properties": { "consumerId": { "$ref": "#/$defs/id" }, "consumerCommit": { "$ref": "#/$defs/commit" }, "adopted": { "const": true } } },
+    "checks": {
+      "type": "object", "additionalProperties": false,
+      "required": ["sameInputs", "protectedEvaluatorUnchanged", "flatBaselineCompleted", "staticGraphCompleted", "evolvingGraphCompleted", "performanceImprovedOrHeld", "noProtectedTaskRegression", "humanReviewedLedgerEvent", "downstreamConsumerAdopted", "receiptVerified"],
+      "properties": {
+        "sameInputs": { "const": true }, "protectedEvaluatorUnchanged": { "const": true }, "flatBaselineCompleted": { "const": true }, "staticGraphCompleted": { "const": true }, "evolvingGraphCompleted": { "const": true },
+        "performanceImprovedOrHeld": { "const": true }, "noProtectedTaskRegression": { "const": true }, "humanReviewedLedgerEvent": { "const": true }, "downstreamConsumerAdopted": { "const": true }, "receiptVerified": { "const": true }
+      }
+    },
+    "evidenceRef": { "type": "object", "additionalProperties": false, "required": ["kind", "path", "sha256"], "properties": { "kind": { "enum": ["protected-comparison", "evaluator-identity", "consumer-adoption", "evolution-ledger-event", "evolution-receipt"] }, "path": { "$ref": "#/$defs/evidencePath" }, "sha256": { "$ref": "#/$defs/sha256" } } },
+    "evidence": {
+      "type": "array", "minItems": 5, "maxItems": 5, "uniqueItems": true, "items": { "$ref": "#/$defs/evidenceRef" },
+      "allOf": [
+        { "contains": { "properties": { "kind": { "const": "protected-comparison" } }, "required": ["kind"] }, "minContains": 1, "maxContains": 1 },
+        { "contains": { "properties": { "kind": { "const": "evaluator-identity" } }, "required": ["kind"] }, "minContains": 1, "maxContains": 1 },
+        { "contains": { "properties": { "kind": { "const": "consumer-adoption" } }, "required": ["kind"] }, "minContains": 1, "maxContains": 1 },
+        { "contains": { "properties": { "kind": { "const": "evolution-ledger-event" } }, "required": ["kind"] }, "minContains": 1, "maxContains": 1 },
+        { "contains": { "properties": { "kind": { "const": "evolution-receipt" } }, "required": ["kind"] }, "minContains": 1, "maxContains": 1 }
+      ]
+    },
+    "externalPayload": { "type": "object", "additionalProperties": false, "required": ["schemaVersion", "type", "candidateCommit", "nodekitSourceHash", "nodekitTarballSha256", "verdict", "evidenceRootSha256", "verdictBodySha256"], "properties": { "schemaVersion": { "const": "nodekit.external-gate-verification-attestation-payload/v1" }, "type": { "const": "knowledgeEvolutionAdoption" }, "candidateCommit": { "$ref": "#/$defs/commit" }, "nodekitSourceHash": { "$ref": "#/$defs/sha256" }, "nodekitTarballSha256": { "$ref": "#/$defs/sha256" }, "verdict": { "const": "passed" }, "evidenceRootSha256": { "$ref": "#/$defs/sha256" }, "verdictBodySha256": { "$ref": "#/$defs/sha256" } } },
+    "attestation": { "type": "object", "additionalProperties": false, "required": ["schemaVersion", "algorithm", "keyId", "signedAt", "payloadType", "payloadSha256", "signatureEncoding", "signature"], "properties": { "schemaVersion": { "const": "nodekit.detached-attestation/v1" }, "algorithm": { "const": "Ed25519" }, "keyId": { "type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:@-]{0,127}$" }, "signedAt": { "$ref": "#/$defs/canonicalTimestamp" }, "payloadType": { "const": "knowledgeEvolutionAdoption" }, "payloadSha256": { "$ref": "#/$defs/sha256" }, "signatureEncoding": { "const": "base64url" }, "signature": { "type": "string", "pattern": "^[A-Za-z0-9_-]{86}$" } } }
+  }
+}

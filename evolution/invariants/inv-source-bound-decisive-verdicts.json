@@ -1,0 +1,28 @@
+{
+  "schemaVersion": "nodekit.invariant-claim/v1",
+  "id": "inv:source-bound-decisive-verdicts",
+  "statement": "Submission remains blocked unless all strict decisive verdicts and scoped publication approval bind to one recomputed immutable candidate identity with distinct, hash-valid evidence.",
+  "scope": {
+    "applications": [
+      "NodeKit factory"
+    ],
+    "packages": [
+      "@homenshum/nodekit"
+    ],
+    "surfaces": [
+      "submission preparation",
+      "submission evaluation",
+      "publication authorization"
+    ]
+  },
+  "enforcement": "runtime-gate",
+  "verifierRefs": [
+    "src/lib/submission-gate.mjs",
+    "src/lib/submission-preparation.mjs",
+    "test/submission-gate.test.mjs",
+    "test/submission-preparation.test.mjs",
+    "test/submission-verdict-schemas.test.mjs"
+  ],
+  "introducedByEventId": "evt:source-bound-submission-gates",
+  "status": "partially-verified"
+}

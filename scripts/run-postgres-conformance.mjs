@@ -7,6 +7,11 @@ import { Pool } from "pg";
 import { runCaseflowConformance } from "../src/lib/caseflow-conformance.mjs";
 import { contentHash } from "../src/lib/caseflow.mjs";
 import { createPostgresCaseflow } from "../src/adapters/postgres-caseflow.mjs";
+import {
+  assertCleanDistributablePaths,
+  distributablePathspecs,
+  parseGitStatusPorcelainZ,
+} from "../src/lib/distributable-candidate.mjs";
 import { computeNodeKitSourceHash } from "../src/lib/source-hash.mjs";
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -30,18 +35,25 @@ const migrationPath = path.join(repoRoot, "adapters", "postgres", "001_caseflow.
 const migration = await readFile(migrationPath, "utf8");
 const migrationSha256 = sha256(migration);
 const candidateCommit = execFileSync("git", ["rev-parse", "HEAD"], { cwd: repoRoot, encoding: "utf8" }).trim();
-const dirtySource = execFileSync("git", ["status", "--porcelain", "--untracked-files=all"], { cwd: repoRoot, encoding: "utf8" })
-  .split(/\r?\n/)
-  .filter(Boolean)
-  .map((line) => line.slice(3).replace(/^"|"$/g, "").replaceAll("\\", "/"))
-  .filter((file) => !/^(?:proof|docs|evolution)\//.test(file));
-if (dirtySource.length > 0 && process.env.NODEKIT_ALLOW_DIRTY_CONFORMANCE !== "true") {
-  throw new Error(`PostgreSQL conformance requires a clean source candidate; dirty paths: ${dirtySource.join(", ")}`);
-}
+const packageJson = JSON.parse(await readFile(path.join(repoRoot, "package.json"), "utf8"));
+const dirtySource = parseGitStatusPorcelainZ(execFileSync("git", [
+  "status",
+  "--porcelain=v1",
+  "-z",
+  "--untracked-files=all",
+  "--",
+  ...distributablePathspecs(packageJson),
+], {
+  cwd: repoRoot,
+  encoding: "buffer",
+  maxBuffer: 64 * 1024 * 1024,
+}));
+assertCleanDistributablePaths(dirtySource, "PostgreSQL conformance");
 const nodekitSourceHash = await computeNodeKitSourceHash(repoRoot);
 const ownerPrefix = `postgres-conformance-${randomUUID()}`;
 const ownerA = `${ownerPrefix}-a`;
 const ownerB = `${ownerPrefix}-b`;
+const ownerRace = `${ownerPrefix}-race`;
 
 try {
   await pool.query(migration);
@@ -54,7 +66,7 @@ try {
   const runtimeB = createPostgresCaseflow({ pool, ownerId: ownerB });
   const ownerASnapshot = await runtimeA.snapshot();
   const ownerBSnapshot = await runtimeB.snapshot();
-  const ownerIsolation = ownerASnapshot.cases.length === 1 && ownerBSnapshot.cases.length === 0;
+  const ownerIsolation = ownerASnapshot.cases.length > 0 && ownerBSnapshot.cases.length === 0;
   let crossOwnerDenied = false;
   try {
     await runtimeB.startRun({ caseId: ownerASnapshot.cases[0].caseId, stages: [{ id: "working", label: "Working", owner: "agent" }] });
@@ -81,9 +93,38 @@ try {
   const sameBaseRaceFailedClosed = JSON.stringify(raceStatuses) === JSON.stringify(["accepted", "conflicted"])
     && race.every((entry) => entry.artifact.canonicalVersion === 2);
 
+  const raceWriter = createPostgresCaseflow({ pool, ownerId: ownerRace });
+  const raceCompleter = createPostgresCaseflow({ pool, ownerId: ownerRace });
+  const boundaryCase = await raceWriter.createCase({ title: "Artifact completion barrier", primaryJob: "Never omit a committed artifact" });
+  const boundaryRun = await raceWriter.startRun({
+    caseId: boundaryCase.caseId,
+    stages: [{ id: "work", label: "Work", owner: "agent" }],
+  });
+  const baselineArtifact = await raceWriter.createArtifact({
+    caseId: boundaryCase.caseId,
+    runId: boundaryRun.runId,
+    title: "Baseline artifact",
+    content: { baseline: true },
+  });
+  const [lateArtifactResult, completionResult] = await Promise.allSettled([
+    raceWriter.createArtifact({
+      caseId: boundaryCase.caseId,
+      runId: boundaryRun.runId,
+      title: "Racing artifact",
+      content: { racing: true },
+    }),
+    raceCompleter.completeRun({ runId: boundaryRun.runId }),
+  ]);
+  const completionWon = completionResult.status === "fulfilled";
+  const artifactCompletionRaceAtomic = completionWon && (
+    lateArtifactResult.status === "fulfilled"
+      ? completionResult.value.receipt.artifactIds.includes(lateArtifactResult.value.artifactId)
+      : /run is terminal: completed/.test(String(lateArtifactResult.reason?.message))
+  ) && completionResult.value.receipt.artifactIds.includes(baselineArtifact.artifactId);
+
   const reloaded = createPostgresCaseflow({ pool, ownerId: ownerA });
   const reloadedSnapshot = await reloaded.snapshot();
-  const reloadPreservedState = reloadedSnapshot.cases.length === 2
+  const reloadPreservedState = reloadedSnapshot.cases.some((entry) => entry.caseId === raceCase.caseId)
     && reloadedSnapshot.artifacts.find((entry) => entry.artifactId === raceArtifact.artifactId)?.canonicalVersion === 2;
   const completionReceipt = ownerASnapshot.receipts[0];
   const { receiptHash, receiptId, ...receiptBody } = completionReceipt;
@@ -92,6 +133,7 @@ try {
     && contentHash(receiptBody) === receiptHash;
 
   const assertions = {
+    artifactCompletionRaceAtomic,
     crossOwnerDenied,
     ownerIsolation,
     receiptIntegrity,

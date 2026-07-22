@@ -1,46 +1,83 @@
 # NodeKit remaining-gap ledger
 
-Status date: 2026-07-21
+Status date: 2026-07-22
 
-This is the authoritative distinction between work NodeKit can close inside this repository and evidence that must come from independent people, authenticated applications, or provisioned services. A missing external receipt is a real blocker, not permission to synthesize one.
+Certification verdict: **`EASE_NOT_CERTIFIED`**
 
-## Closed in the repository
+Submission verdict: **DO NOT SUBMIT**
 
-- [x] Domain-blank factory, portable compiled identity, deterministic memory Caseflow, proposal-before-apply, conflict safety, receipts, and no-key demo.
-- [x] Rendered browser certification across 15 lifecycle states, six viewport/theme profiles, exact PNG sidecars, Playwright trace/video, accessibility, console, network, overflow, mojibake, reload, and receipt checks.
-- [x] Cold/warm cache isolation mechanics and normalized per-run timing receipts for all seven required phase measurements.
-- [x] Cross-platform GitHub matrix definition for Windows, Ubuntu, and macOS with npm and pnpm.
-- [x] Developer-timing aggregation and a fail-closed 60-run evaluator.
-- [x] Disposable-container fresh-agent executor with read-only credentials, zero-reprompt ledger, substantive-edit gate, generated checks, screenshots, diff, transcript, and proof capture.
-- [x] Model observation and capability-card compiler with exact requested/resolved model identity and project-first evidence precedence.
-- [x] Executable skill contracts, evidence-threshold candidate proposals, fixed protected comparisons, regression rejection, routing decisions, independent tournaments, canary verification, manual proof-bound promotion, and rollback.
-- [x] Automatic skill and routing promotion remains disabled.
-- [x] Provider capability negotiation and the shared Caseflow conformance suite.
-- [x] PostgreSQL schema foundation with transactional row locks and stale-proposal conditional apply.
-- [x] Executable, owner-scoped PostgreSQL adapter with public TypeScript API and exact-revision live
-  conformance on PostgreSQL 17.10, including same-base races, retries, recovery, reload, and receipts.
-- [x] Supabase managed-profile foundation with owner-scoped RLS policies and explicit Realtime tables.
-- [x] Submission manifest schema and evaluator requiring all evidence hashes plus explicit publication approval.
+This ledger separates implementation from evidence. A feature can be implemented and locally tested
+without certifying the current revision, real users, a managed service, or a public submission. A
+missing external receipt is a real blocker and must never be replaced with synthetic evidence.
 
-## Evidence collection still required
+## Closed locally
 
-| Gate | Exact closure condition | Why it cannot be manufactured locally |
+- [x] Domain-blank empty-directory factory and brownfield adoption path.
+- [x] Portable Caseflow contracts, deterministic memory runtime, proposal-before-apply, stale-write
+  conflicts, safe recovery, terminal receipts, and provider-neutral content hashes.
+- [x] Driver-neutral PostgreSQL adapter with transactions, owner scoping, row/advisory locks,
+  conditional artifact versioning, and shared conformance coverage. An earlier revision also passed
+  live PostgreSQL 17.10 conformance; that receipt is regression history, not final-candidate proof.
+- [x] Convex Caseflow component and public client/package surface, including local `convex-test` and
+  fresh packed-consumer execution of the installed component. This does not count as adoption by a
+  real authenticated application.
+- [x] Supabase local managed profile: authenticated owner reads, denied direct lifecycle writes,
+  principal-derived proposal RPC, explicit Realtime publication, owner-folder Storage policies,
+  and opt-in server-only PGMQ/pg_cron provisioning. Live managed-service behavior is not certified.
+- [x] Responsive lifecycle UI and browser-certification machinery, including a real proof-bundle
+  download, reopen, artifact-hash check, and receipt-body-hash check.
+- [x] Exact evidence schemas and evaluators for a 60-run timing matrix, a 15-run fresh-agent v2
+  matrix, five-person usability, package installation, preview proof, and final submission.
+- [x] Detached Ed25519 attestations for every externally observed decisive gate, with caller-owned
+  trusted keys and signatures bound to the exact commit, source identity, tarball, verdict body,
+  and canonical underlying-evidence root. Unsigned measurements remain usable as raw evidence but
+  cannot pass the submission gate.
+- [x] Recursive submission-evidence verification that is designed to re-hash decisive receipts,
+  their nested evidence, and the packed tarball while rejecting missing, duplicate, escaping,
+  symlinked, or tampered paths.
+- [x] EvoGraph-R1-inspired Knowledge Evolution Plane and Evolution Ledger: governed hypergraph
+  patches, immutable evidence, human-reviewed causal records, replay, receipts, CLI operations, and
+  Harness Gym projection.
+
+## Candidate-freeze work
+
+- [x] Integrate and independently review the current lifecycle, portability, package, browser,
+  evidence-verifier, attestation, and Knowledge Evolution changes.
+- [x] Run the complete repository and component tests, public and component TypeScript checks,
+  component build, production dependency audit, registry check, ecosystem check, and Evolution
+  Ledger verification. The final pre-freeze local run passed 205 Node tests, eight component tests,
+  both TypeScript surfaces, the component build, a zero-vulnerability production audit, registry
+  and ecosystem conformance, and Evolution Ledger verification.
+- [ ] Freeze one clean immutable commit and compute its NodeKit source identity.
+- [ ] Re-run the packed-consumer component proof and local browser download/reopen proof against
+  that exact commit. Historical or mutable-working-tree receipts do not qualify.
+- [ ] Update the submission manifest only from authentic evidence bound to that same candidate;
+  the recursive evaluator must fail while any required evidence is absent.
+
+## External or adoption evidence still open
+
+| Gate | Exact closure condition | Why local implementation is insufficient |
 |---|---|---|
-| Developer timing matrix | Five cold and five warm receipts for each Windows/Ubuntu/macOS x npm/pnpm lane; 60 total | Requires repeated independent hosted runners; automation exists but results must execute against the immutable revision |
-| Fresh coding agents | Research-map, volunteer-onboarding, and launch-presentation held-outs all pass with zero reprompts | Requires three actual isolated model executions and their authentic transcripts |
-| Fresh humans | Five consented participants; at least four unassisted; timing and SEQ thresholds pass; no P0/P1 issue remains | Agent simulations are not human usability evidence |
-| Convex consumers | Authenticated NodeRoom/NodeSheet, NodeSlide, and NodeVideo wrappers each pass lifecycle and ownership conformance | The component boundary can only be discovered from real, materially different consumers |
-| Preview proof | Exact commit deployed to isolated frontend/backend; fresh identity uploads real bytes, completes, exports, reopens, scores, and cleans up | Requires live deployment credentials and a deployment-bound browser journey |
-| Supabase profile | Auth, RLS, Storage, Realtime, Queue, and Cron pass owner-scoped live conformance | Requires a provisioned Supabase project and authenticated multi-user tests |
-| Final ProofLoop | Independent verifier re-hashes the final immutable candidate and every release receipt | Must run after all other receipts exist |
-| Package/publication | Packed install example passes, npm publication is authorized, and a human approves final public claims | Publication is externally visible and intentionally last |
+| Developer timing | Exactly 60 candidate-bound runs: five cold and five warm for each Windows/Ubuntu/macOS x npm/pnpm lane | Requires the six real hosted OS/package-manager lanes; no aggregate-only or duplicate receipt qualifies |
+| Fresh coding agents | Exactly 15 isolated real CLI sessions: three tasks x (Codex x3, Claude x1, lower-cost x1), all zero-reprompt and candidate-bound | Fixture simulations and earlier-revision transcripts do not prove a fresh agent can specialize the final candidate |
+| Fresh humans | Five consented participants, at least four unassisted, required timing/SEQ thresholds, and no unresolved P0/P1 usability issue | Agents cannot substitute for human usability evidence |
+| Convex consumers | Three materially different, authenticated, owner-scoped applications use the exact packed component and pass lifecycle/ownership proof | Local `convex-test`, copied adapters, and sidecar integrations are package proof, not consumer adoption |
+| Preview | Exact commit deployed to isolated frontend/backend; fresh identity completes the rendered journey, downloads, reopens, independently scores, and cleans up | Requires authorized deployment credentials and deployment-bound evidence |
+| Supabase | Auth, RLS, Storage bytes, Realtime delivery, queue isolation/consumption, and bounded Cron invocation pass in a provisioned project | Local SQL parsing and disposable PostgreSQL cannot certify Supabase-managed services |
+| Knowledge evolution | Protected real-task comparisons and verified consumer adoption demonstrate that evolving knowledge improves or safely holds performance | Implemented graph mechanics alone do not prove useful adoption |
+| Model/Harness learning | Live exact-model observations, a protected application gym, independent evaluation, and a fresh-agent canary produce a provisional promotion receipt | Fixture-based machinery cannot certify a model or routing policy |
+| Final ProofLoop | An independent verifier re-hashes the immutable candidate, every decisive receipt, and all transitive evidence | It must run after every other required receipt exists |
+| Publication | Exact tarball is authorized for npm publication and a human approves the final public claims and Convex submission | Publication is externally visible and intentionally last |
 
 ## Deterministic final rule
 
-Copy `proof/submission-manifest.template.json` to `proof/submission-manifest.json` only after real evidence exists. Bind every file by SHA-256, then run:
+Create `proof/submission-manifest.json` only after the real evidence exists, bind every decisive and
+nested file by SHA-256, then run:
 
 ```bash
 npm run submission:evaluate
 ```
 
-The Convex submission is authorized only when the resulting `proof/submission-verdict.json` contains both `passed: true` and `submissionReady: true`. Until then the honest verdict remains `EASE_NOT_CERTIFIED` and **DO NOT SUBMIT**.
+Submission is authorized only when `proof/submission-verdict.json` reports both `passed: true` and
+`submissionReady: true` for the frozen candidate and explicit publication approval is present.
+Until then: **`EASE_NOT_CERTIFIED` - DO NOT SUBMIT**.

@@ -1,6 +1,15 @@
 {
   "schemaVersion": "nodekit.submission-manifest/v1",
   "candidateCommit": "0000000000000000000000000000000000000000",
+  "candidateSourceHash": "0000000000000000000000000000000000000000000000000000000000000000",
+  "releaseCandidate": {
+    "nodekitCommit": "0000000000000000000000000000000000000000",
+    "nodekitSourceHash": "0000000000000000000000000000000000000000000000000000000000000000",
+    "nodekitTarballSha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "packageName": "@homenshum/nodekit",
+    "packageVersion": "0.0.0-unverified"
+  },
+  "evidenceRootSha256": "0000000000000000000000000000000000000000000000000000000000000000",
   "gates": [
     { "id": "developerTimingMatrix", "passed": false, "evidence": [{ "path": "proof/ease/developer-timing-verdict.json", "sha256": "0000000000000000000000000000000000000000000000000000000000000000" }] },
     { "id": "freshAgentHeldout", "passed": false, "evidence": [{ "path": "proof/ease/fresh-agent-verdict.json", "sha256": "0000000000000000000000000000000000000000000000000000000000000000" }] },

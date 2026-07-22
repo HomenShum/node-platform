@@ -1,5 +1,11 @@
 # NodeKit figured-out foundation handoff
 
+> Historical implementation handoff. It records the foundation at the time it was written, before
+> the installable Convex component, PostgreSQL adapter, Supabase profile, hardened evidence gates,
+> and EvoGraph-R1-inspired evolution plane were integrated. Use
+> [`NODEKIT_MASTER_PLAN.md`](NODEKIT_MASTER_PLAN.md) and
+> [`REMAINING_GAPS.md`](REMAINING_GAPS.md) for current status.
+
 ## Current outcome
 
 NodeKit's primary factory is now domain-blank and behaviorally figured out.
@@ -20,7 +26,10 @@ The CLI accepts no `--preset`, domain selector, or public reference-creation pat
 
 `src/lib/caseflow.mjs` defines the current portable semantic implementation. It provides NodeKit-owned IDs, canonical artifact versions, proposal-before-mutation, stale-proposal conflicts, explicit next-action ownership, exception recovery, terminal run states, portable events, and content-addressed receipts.
 
-`src/lib/caseflow-conformance.mjs` is the provider-neutral executable boundary. The memory runtime passes it. Future Convex, PostgreSQL, and Supabase adapters must pass the same observable semantics without flattening provider-native strengths.
+`src/lib/caseflow-conformance.mjs` is the provider-neutral executable boundary. The memory runtime,
+installable Convex component, PostgreSQL adapter, and local Supabase profile now exercise the same
+observable semantics without flattening provider-native strengths. Managed-service and real-consumer
+adoption remain evidence gates, not implementation claims.
 
 ## Generated product contract
 
@@ -44,7 +53,12 @@ Every new app receives:
 
 The empty-directory acceptance runs installation, compilation, generated tests, deterministic demo, stale-proposal evaluation, live HTTP/DOM browser assertions, and proof generation. Its current receipt is `proof/factory-acceptance.json`.
 
-The canonical rendered QA packet is `proof/ease/latest/`. It contains 180 screenshots and sidecars covering 15 required states across six viewport/theme combinations, plus a Playwright trace and browser video of a real proposal, approval, receipt, and reload journey. The browser manifest reports zero missing states, serious/critical Axe violations, console errors, failed requests, horizontal overflow, or detected mojibake. Independent ProofLoop verification re-hashed all 180 screenshots, both replay artifacts, and the candidate/timer manifests. QA memory is append-only under `.qa/memory/`.
+The historical rendered QA packet is `proof/ease/latest/`. It contains 180 screenshots and sidecars
+covering 15 required states across six viewport/theme combinations, plus a Playwright trace and
+browser video of a real proposal, approval, receipt, and reload journey. That historical packet was
+independently re-hashed, but it is not final-candidate ProofLoop evidence. Current certification must
+use an immutable identity-scoped packet and a fresh trusted attestation. QA memory is append-only
+under `.qa/memory/`.
 
 The current audience-facing proof deck is `outputs/nodekit-figured-out-proof.pptx`. It replaces the obsolete two-preset story with the neutral base, portable Caseflow, reference-app boundary, and Convex-first portability decision. Its byte hash, exact-template fidelity, overflow result, and per-slide visual inspection are recorded in `proof/nodekit-figured-out-presentation.json`.
 
@@ -54,15 +68,17 @@ Durable supervision is implemented in the companion NodeProof branch through a d
 
 Convex remains the preferred managed implementation, not the NodeKit semantic definition. `docs/CONVEX_CASEFLOW_EXTRACTION.md` records the component boundary and extraction gate. The component is intentionally not claimed as published: current Convex guidance keeps component state isolated, requires app-owned authentication wrappers, and recommends composing Workflow and Workpool for durable agent execution.
 
-The component extraction begins only after three materially different consumers prove the repeated lifecycle implementation. Until then, NodeKit ships the portable contract, memory reference runtime, capability plan, and conformance suite.
+The component implementation now exists and passes local component/package conformance. Publication
+and Convex-directory submission still wait for three materially different authenticated consumers
+to prove the lifecycle boundary in real applications.
 
 ## Remaining gated work
 
-1. Adapt NodeRoom/NodeSheet, NodeSlide, and NodeVideo to the portable Caseflow contract in isolated, reviewed changes.
-2. Extract the repeated Convex implementation and cover it with `convex-test` only after those consumers agree.
-3. Add generic PostgreSQL semantics, then the Supabase managed profile.
-4. Repair the isolated fresh-agent executor in a new QA pass and run all three held-out tasks.
-5. Run the five-person usability study and an authorized shareable-preview journey.
+1. Freeze one reviewed candidate and rerun package, browser, timing, and coding-agent proof against it.
+2. Complete authenticated NodeRoom, NodeSlide, and NodeVideo adoption with exact packed-component evidence.
+3. Run the five-person usability study and an authorized shareable-preview journey.
+4. Verify the Supabase profile in a provisioned managed project.
+5. Obtain trusted external ProofLoop and publication attestations only after all preceding evidence closes.
 
 The live checklist, exact evidence counts, and submission order are maintained in `docs/EASE_SUBMISSION_READINESS.md`.
 These are explicit future gates, not hidden claims about the current release.

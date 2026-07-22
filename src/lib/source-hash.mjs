@@ -33,5 +33,5 @@ export async function computeNodeKitSourceHash(repoRoot) {
     files.push({ digest: createHash("sha256").update(content).digest("hex"), path: path.relative(repoRoot, absolute).replaceAll("\\", "/") });
   };
   for (const relative of entries) await visit(path.join(repoRoot, relative));
-  return digest(files.sort((left, right) => left.path.localeCompare(right.path)));
+  return digest(files.sort((left, right) => left.path < right.path ? -1 : left.path > right.path ? 1 : 0));
 }

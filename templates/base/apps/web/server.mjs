@@ -100,6 +100,25 @@ function send(response, status, body, contentType = "application/json; charset=u
   response.end(contentType.startsWith("application/json") ? JSON.stringify(body) : body);
 }
 
+function exportProof(response) {
+  const snapshot = view();
+  if (!snapshot.receipt) throw new Error("complete the case before exporting proof");
+  const bundle = {
+    artifact: snapshot.artifact,
+    case: snapshot.case,
+    receipt: snapshot.receipt,
+    run: snapshot.run,
+    schemaVersion: "nodekit.portable-proof-bundle/v1",
+  };
+  response.writeHead(200, {
+    "cache-control": "no-store",
+    "content-disposition": 'attachment; filename="nodekit-proof.json"',
+    "content-type": "application/json; charset=utf-8",
+  });
+  response.end(`${JSON.stringify(bundle, null, 2)}\n`);
+  return true;
+}
+
 async function body(request) {
   const chunks = [];
   for await (const chunk of request) chunks.push(chunk);
@@ -114,15 +133,48 @@ async function api(request, response, url) {
     status: "ok",
   });
   if (request.method === "GET" && url.pathname === "/api/state") return send(response, 200, view());
+  if (request.method === "GET" && url.pathname === "/api/export") return exportProof(response);
   if (request.method === "POST" && url.pathname === "/api/reset") return send(response, 200, reset());
   if (request.method === "POST" && url.pathname === "/api/scenario") {
     const input = await body(request);
     return send(response, 200, loadScenario(input.id));
   }
+  if (request.method === "POST" && url.pathname === "/api/confirm") {
+    if (!["first_arrival", "orientation", "input", "validation_error"].includes(presentation.id)) throw new Error("the outcome is already confirmed");
+    const input = await body(request);
+    const outcome = String(input.outcome ?? "").trim();
+    if (!outcome) throw new Error("add a concrete outcome before continuing");
+    demo.runtime.updateCaseInput({ caseId: current.case.caseId, primaryJob: outcome });
+    demo.runtime.enterStage({ runId: current.run.runId, stageId: "working", nextAction: "Prepare the bounded proposal", nextActionOwner: "agent", idempotencyKey: "confirm-outcome" });
+    setPresentation("running", "running", "Outcome confirmed", "The agent can now prepare a bounded proposal while the canonical artifact remains unchanged.");
+    return send(response, 200, view());
+  }
   if (request.method === "POST" && url.pathname === "/api/propose") {
+    if (["first_arrival", "orientation", "input", "validation_error"].includes(presentation.id)) throw new Error("confirm the outcome before preparing a proposal");
     if (view().proposal?.status === "pending") throw new Error("review the current proposal first");
     prepareProposal();
     setPresentation("proposal_pending", "review", "Proposal ready for review", "Compare the bounded change with the canonical artifact before deciding.");
+    return send(response, 200, view());
+  }
+  if (request.method === "POST" && url.pathname === "/api/recover") {
+    const openException = view().exceptions.find((entry) => entry.status === "open");
+    if (!openException) throw new Error("there is no open exception to recover");
+    if (presentation.id === "external_wait") throw new Error("the external reviewer owns the next action");
+    demo.runtime.resolveException({
+      exceptionId: openException.exceptionId,
+      resolution: "Resume from the preserved canonical artifact",
+      nextAction: "Prepare the bounded proposal",
+      nextActionOwner: "agent",
+    });
+    setPresentation("running", "running", "Work resumed safely", "Only the interrupted step resumed. The preserved canonical artifact remains intact.");
+    return send(response, 200, view());
+  }
+  if (request.method === "POST" && url.pathname === "/api/resolve-conflict") {
+    const proposal = view().proposal;
+    if (proposal?.status !== "conflicted") throw new Error("there is no contained conflict to resolve");
+    demo.runtime.enterStage({ runId: current.run.runId, stageId: "complete" });
+    demo.runtime.completeRun({ runId: current.run.runId });
+    setPresentation("completed_receipt", "complete", "Conflict resolved safely", "The newer canonical artifact was preserved and the stale proposal remains unapplied in the receipt.");
     return send(response, 200, view());
   }
   if (request.method === "POST" && url.pathname === "/api/decide") {

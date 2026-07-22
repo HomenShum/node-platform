@@ -1,39 +1,42 @@
-import { readdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
-import { evaluateDeveloperTimingMatrix } from "../src/lib/ease-evidence.mjs";
+import { aggregateHostedDeveloperTiming } from "../src/lib/developer-timing-aggregation.mjs";
 
-const root = path.resolve(process.argv[2] ?? "proof/ease/downloaded");
-const output = path.resolve(process.argv[3] ?? "proof/ease/developer-timing-runs.json");
-
-async function findReceipts(directory) {
-  const entries = await readdir(directory, { withFileTypes: true });
-  const nested = await Promise.all(entries.map(async (entry) => {
-    const absolute = path.join(directory, entry.name);
-    if (entry.isDirectory()) return findReceipts(absolute);
-    return entry.name === "developer-timing-run.json" ? [absolute] : [];
-  }));
-  return nested.flat();
-}
-
-const files = await findReceipts(root);
-const byRun = new Map();
-let duplicateCopies = 0;
-for (const file of files) {
-  const receipt = JSON.parse(await readFile(file, "utf8"));
-  if (receipt.schemaVersion !== "nodekit.developer-timing-run/v1") throw new Error(`${file}: unexpected schemaVersion`);
-  const existing = byRun.get(receipt.runId);
-  if (existing) {
-    if (JSON.stringify(existing.receipt) !== JSON.stringify(receipt)) {
-      throw new Error(`conflicting timing receipts for runId ${receipt.runId}: ${existing.file} and ${file}`);
+function parseArguments(argv) {
+  const options = {};
+  const positional = [];
+  for (let index = 0; index < argv.length; index += 1) {
+    const argument = argv[index];
+    if (!argument.startsWith("--")) {
+      positional.push(argument);
+      continue;
     }
-    duplicateCopies += 1;
-    continue;
+    const [rawName, inlineValue] = argument.slice(2).split(/=(.*)/s, 2);
+    const value = inlineValue ?? argv[++index];
+    if (value === undefined || value.startsWith("--")) throw new Error(`--${rawName} requires a value`);
+    options[rawName] = value;
   }
-  byRun.set(receipt.runId, { file, receipt });
+  return { options, positional };
 }
-const receipts = [...byRun.values()].map(({ receipt }) => receipt).sort((a, b) => `${a.lane}/${a.cacheClass}/${a.runId}`.localeCompare(`${b.lane}/${b.cacheClass}/${b.runId}`));
-const verdict = evaluateDeveloperTimingMatrix(receipts);
-await writeFile(output, `${JSON.stringify(receipts, null, 2)}\n`);
-await writeFile(output.replace(/\.json$/, "-verdict.json"), `${JSON.stringify(verdict, null, 2)}\n`);
-console.log(JSON.stringify({ files: files.length, uniqueRuns: receipts.length, duplicateCopies, output, ...verdict }, null, 2));
-if (!verdict.passed) process.exitCode = 1;
+
+const { options, positional } = parseArguments(process.argv.slice(2));
+const inputDirectory = path.resolve(positional[0] ?? "proof/ease/downloaded");
+const output = path.resolve(positional[1] ?? "proof/ease/developer-timing-runs.json");
+const verdictOutput = path.resolve(positional[2] ?? "proof/ease/developer-timing-verdict.json");
+const result = await aggregateHostedDeveloperTiming({
+  coldRunId: options["cold-run-id"] ?? process.env.NODEKIT_COLD_GITHUB_RUN_ID,
+  expectedCommit: options["expected-commit"] ?? process.env.NODEKIT_EXPECTED_COMMIT,
+  inputDirectory,
+  output,
+  verdictOutput,
+  warmRunId: options["warm-run-id"] ?? process.env.NODEKIT_WARM_GITHUB_RUN_ID,
+});
+console.log(JSON.stringify({
+  errors: result.verdict.errors,
+  files: result.files,
+  inputDirectory: result.inputDirectory,
+  output: result.output,
+  passed: result.passed,
+  uniqueRuns: result.uniqueRuns,
+  verdictOutput: result.verdictOutput,
+}, null, 2));
+if (!result.passed) process.exitCode = 1;

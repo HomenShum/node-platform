@@ -1,0 +1,12 @@
+{
+  "extends": "./tsconfig.component.json",
+  "compilerOptions": {
+    "composite": false,
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "noEmit": true,
+    "types": ["node", "vite/client", "vitest/globals"]
+  },
+  "include": ["src/component/**/*", "src/client/**/*", "src/convex-test.ts"],
+  "exclude": []
+}

@@ -1,0 +1,19 @@
+/* Small-screen refinements kept separate from the compact base sheet. */
+@media (max-width: 640px) {
+  .state-banner {
+    align-items: flex-start;
+    gap: 0.85rem;
+  }
+
+  .state-banner > div {
+    min-width: 0;
+  }
+
+  .state-kind {
+    flex: 0 0 auto;
+  }
+
+  aside {
+    scroll-margin-top: 70px;
+  }
+}
