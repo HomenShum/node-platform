@@ -36,6 +36,16 @@ Canonical JSON records remain authoritative. This projection explains why materi
 - Evidence: `evd:exact-candidate-gate` (pass), `evd:caseflow-public-api` (pass)
 - Known limitations: Current-revision timing, fresh-agent, human, consumer, preview, package, and independent ProofLoop evidence still must be collected.; The public Caseflow entry point is portable, but no authenticated Convex consumer has yet earned submission-grade adoption status.
 
+### The portable Caseflow conformance suite named idempotency as a requirement without repeating decisions or completion calls.
+
+- Event: `evt:caseflow-idempotent-retries`
+- Source: `f3471c7fd31b4839ffeb9c9f43bd0d4ab7ef6bfc`
+- Resolution: Caseflow now reuses an active run, returns the original approval for a repeated matching decision, returns the original completion receipt, and verifies all three behaviors in shared conformance.
+- Observed failure: An adapter could pass conformance while duplicating artifact versions, approvals, or receipts during an ordinary retry.
+- Invariants: `inv:caseflow-idempotent-retries` (verified)
+- Evidence: `evd:caseflow-idempotent-retries` (pass)
+- Known limitations: Each provider adapter must still demonstrate this contract against its real transactional backend.; Cross-tenant authorization remains an application-wrapper responsibility and is tested separately by each consumer.
+
 ## Harness evolution
 
 ### Visually polished frontend output could still miss the intended creator-workspace topology.
