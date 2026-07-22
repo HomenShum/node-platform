@@ -73,3 +73,24 @@ test("memory caseflow makes exception recovery and next-action ownership explici
   assert.equal(resolved.run.status, "active");
   assert.equal(resolved.run.nextActionOwner, "agent");
 });
+
+test("memory caseflow retries decisions and completion without duplicate writes", () => {
+  const runtime = createMemoryCaseflow();
+  const work = runtime.createCase({ title: "Retry safety", primaryJob: "Apply once" });
+  const run = runtime.startRun({ caseId: work.caseId, stages: [{ id: "work", label: "Work", owner: "agent" }] });
+  const reusedRun = runtime.startRun({ caseId: work.caseId, stages: [{ id: "ignored", label: "Ignored", owner: "system" }] });
+  assert.equal(reusedRun.runId, run.runId);
+  const artifact = runtime.createArtifact({ caseId: work.caseId, runId: run.runId, title: "Result", content: { value: 1 } });
+  const proposal = runtime.createProposal({ artifactId: artifact.artifactId, baseVersion: 1, patch: { value: 2 } });
+  const first = runtime.decideProposal({ proposalId: proposal.proposalId, decision: "accepted" });
+  const repeated = runtime.decideProposal({ proposalId: proposal.proposalId, decision: "accepted" });
+  assert.equal(first.reused, false);
+  assert.equal(repeated.reused, true);
+  assert.equal(repeated.approval.approvalId, first.approval.approvalId);
+  assert.equal(runtime.snapshot().artifacts[0].versions.length, 2);
+  const completed = runtime.completeRun({ runId: run.runId });
+  const retriedCompletion = runtime.completeRun({ runId: run.runId });
+  assert.equal(retriedCompletion.reused, true);
+  assert.equal(retriedCompletion.receipt.receiptId, completed.receipt.receiptId);
+  assert.equal(runtime.snapshot().receipts.length, 1);
+});

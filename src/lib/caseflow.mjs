@@ -189,8 +189,14 @@ export function createMemoryCaseflow({ clock = () => new Date().toISOString() } 
   function decideProposal({ proposalId, decision, actor, comment = "" }) {
     if (!new Set(["accepted", "rejected"]).has(decision)) throw new Error("decision must be accepted or rejected");
     const proposal = requireRecord(state.proposals, proposalId, "proposal");
-    if (proposal.status !== "pending") throw new Error(`proposal is already ${proposal.status}`);
     const artifact = requireRecord(state.artifacts, proposal.artifactId, "artifact");
+    if (proposal.status !== "pending") {
+      const existingApproval = [...state.approvals.values()].find((entry) => entry.proposalId === proposalId);
+      const repeatedDecisionMatches = existingApproval?.decision === decision
+        && (proposal.status === decision || (proposal.status === "conflicted" && decision === "accepted"));
+      if (!repeatedDecisionMatches) throw new Error(`proposal is already ${proposal.status}`);
+      return { approval: clone(existingApproval), artifact: clone(artifact), proposal: clone(proposal), reused: true };
+    }
     const decidedAt = clock();
     const approval = {
       approvalId: id("approval"),
@@ -204,7 +210,7 @@ export function createMemoryCaseflow({ clock = () => new Date().toISOString() } 
     if (decision === "accepted" && proposal.baseVersion !== artifact.canonicalVersion) {
       proposal.status = "conflicted";
       emit("proposal", proposalId, "proposal.conflicted", { canonicalVersion: artifact.canonicalVersion }, actor);
-      return { approval: clone(approval), artifact: clone(artifact), proposal: clone(proposal) };
+      return { approval: clone(approval), artifact: clone(artifact), proposal: clone(proposal), reused: false };
     }
     proposal.status = decision;
     if (decision === "accepted") {
@@ -221,7 +227,7 @@ export function createMemoryCaseflow({ clock = () => new Date().toISOString() } 
       emit("artifact", artifact.artifactId, "artifact.version_created", { proposalId, version: nextVersion }, actor);
     }
     emit("proposal", proposalId, `proposal.${proposal.status}`, { approvalId: approval.approvalId }, actor);
-    return { approval: clone(approval), artifact: clone(artifact), proposal: clone(proposal) };
+    return { approval: clone(approval), artifact: clone(artifact), proposal: clone(proposal), reused: false };
   }
 
   function raiseException({ runId, code, message, preservedState, actor }) {
@@ -257,6 +263,12 @@ export function createMemoryCaseflow({ clock = () => new Date().toISOString() } 
 
   function completeRun({ runId, actor }) {
     const run = requireRecord(state.runs, runId, "run");
+    if (run.status === "completed") {
+      const receipt = [...state.receipts.values()].find((entry) => entry.runId === runId);
+      if (!receipt) throw new Error("completed run is missing its receipt");
+      return { receipt: clone(receipt), run: clone(run), reused: true };
+    }
+    if (TERMINAL_RUN_STATUSES.includes(run.status)) throw new Error(`run is terminal: ${run.status}`);
     if ([...state.exceptions.values()].some((entry) => entry.runId === runId && entry.status === "open")) {
       throw new Error("run has unresolved exceptions");
     }
@@ -283,7 +295,7 @@ export function createMemoryCaseflow({ clock = () => new Date().toISOString() } 
     const receipt = { ...receiptBody, receiptId: id("receipt"), receiptHash: contentHash(receiptBody) };
     state.receipts.set(receipt.receiptId, receipt);
     emit("run", runId, "receipt.created", { receiptHash: receipt.receiptHash, receiptId: receipt.receiptId }, actor);
-    return { receipt: clone(receipt), run: clone(run) };
+    return { receipt: clone(receipt), run: clone(run), reused: false };
   }
 
   function snapshot() {
