@@ -1,4 +1,5 @@
 import { createHash, randomUUID } from "node:crypto";
+import { runtimeProfiles } from "./runtime-capabilities.mjs";
 
 export const CASEFLOW_SCHEMA_VERSIONS = Object.freeze({
   approval: "nodekit.approval/v1",
@@ -290,15 +291,7 @@ export function createMemoryCaseflow({ clock = () => new Date().toISOString() } 
   }
 
   return {
-    capabilities: Object.freeze({
-      durableJobs: "in_process",
-      fileStorage: false,
-      optimisticConcurrency: true,
-      presence: false,
-      provider: "memory",
-      subscriptions: "snapshot",
-      transactions: true,
-    }),
+    capabilities: runtimeProfiles.memory,
     completeRun,
     createArtifact,
     createCase,

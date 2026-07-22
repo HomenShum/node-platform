@@ -214,16 +214,16 @@ official outcomes, decisive judges, safety requirements, or proof thresholds in 
 
 ### Harness Gym implementation order
 
-- [ ] Add the `nodekit.harness/v1` schema and content-addressed harness identity.
-- [ ] Generate a minimal `harness/` directory after the first application vertical slice.
-- [ ] Add protected validation, held-out, and adversarial task indexes.
-- [ ] Add `init`, `baseline`, `inspect`, `diagnose`, `propose`, `benchmark`, `tournament`, `canary`,
+- [x] Add the `nodekit.harness/v1` schema and content-addressed harness identity.
+- [x] Generate a minimal `harness/` directory after the first application vertical slice.
+- [x] Add protected validation, held-out, and adversarial task indexes.
+- [x] Add `init`, `baseline`, `inspect`, `diagnose`, `propose`, `benchmark`, `tournament`, `canary`,
   `review`, `promote`, `rollback`, `status`, and `gate` commands.
-- [ ] Require a hypothesis, expected impact, and risk for every harness candidate.
+- [x] Require a hypothesis, expected impact, and risk for every harness candidate.
 - [ ] Capture complete NodeTrace trajectories and separate task, artifact, UI, safety, efficiency,
   evidence, and human-preference verdicts.
-- [ ] Require fresh-agent canaries, rollback versions, and NodeProof promotion receipts.
-- [ ] Keep automatic promotion disabled by default.
+- [x] Require fresh-agent canaries, rollback versions, and NodeProof promotion receipts.
+- [x] Keep automatic promotion disabled by default.
 - [ ] Implement NodeKit Builder Gym first.
 - [ ] Implement NodeSlide Deck Gym, NodeVideo Creator Gym, and NodeRoom Collaboration Gym next.
 - [ ] Prove Harness v1 beats or holds Harness v0 with a fresh agent on frozen tasks.
@@ -321,7 +321,7 @@ Passing an earlier level never implies a later claim.
 
 - [x] Keep canonical IDs, events, schemas, receipts, and React view models provider-neutral.
 - [x] Maintain one authoritative transactional backend per deployment.
-- [ ] Publish adapter capability negotiation and conformance suites.
+- [x] Publish adapter capability negotiation and conformance suites.
 - [ ] Implement generic PostgreSQL persistence and conditional version application.
 - [ ] Implement the Supabase managed profile: Auth, RLS, Storage, Realtime, queues, and Cron.
 - [ ] Prove export from Convex and import into Supabase with matching canonical artifact and receipt
@@ -347,12 +347,12 @@ Passing an earlier level never implies a later claim.
 - [x] Compile evidence registries and benchmark/harness hashes fail closed.
 - [x] Add baseline, profile, inspect, and failure-diagnosis commands.
 - [ ] Normalize real application evidence into the first provisional capability card.
-- [ ] Add executable role, domain, model-adapter, guardrail, and recovery skill contracts.
-- [ ] Add without-skill versus with-skill protected comparisons.
-- [ ] Add capability-driven routing, deterministic fallbacks, expiry, and decision receipts.
-- [ ] Add blind tournaments, independent critics, fresh-agent canaries, rollback, and NodeProof
+- [x] Add executable role, domain, model-adapter, guardrail, and recovery skill contracts.
+- [x] Add without-skill versus with-skill protected comparisons.
+- [x] Add capability-driven routing, deterministic fallbacks, expiry, and decision receipts.
+- [x] Add blind tournaments, independent critics, fresh-agent canaries, rollback, and NodeProof
   promotion receipts.
-- [ ] Keep automatic skill and routing promotion disabled by default.
+- [x] Keep automatic skill and routing promotion disabled by default.
 
 ## Ordered execution plan
 

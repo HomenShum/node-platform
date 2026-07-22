@@ -9,7 +9,7 @@ on:
         required: true
         default: cold
         type: choice
-        options: [cold, warm-or-unknown]
+        options: [cold, warm]
 
 jobs:
   developer-ease:
@@ -25,7 +25,6 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: npm
       - uses: pnpm/action-setup@v4
         if: matrix.package_manager == 'pnpm'
         with:
@@ -44,4 +43,5 @@ jobs:
           if-no-files-found: error
           path: |
             proof/factory-acceptance.json
+            proof/ease/developer-timing-run.json
             proof/ease/latest/**

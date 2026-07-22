@@ -11,6 +11,11 @@ import { computeNodeKitSourceHash } from "./lib/source-hash.mjs";
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const packageManager = process.env.NODEKIT_PACKAGE_MANAGER ?? "npm";
 const runId = process.env.NODEKIT_EASE_RUN_ID ?? `ease_${randomUUID().replaceAll("-", "").slice(0, 20)}`;
+const cacheClass = process.env.NODEKIT_CACHE_CLASS ?? "warm-or-unknown";
+
+if (!["cold", "warm", "warm-or-unknown"].includes(cacheClass)) {
+  throw new Error(`unsupported NODEKIT_CACHE_CLASS ${cacheClass}; expected cold, warm, or warm-or-unknown`);
+}
 
 function digest(value) {
   return createHash("sha256").update(JSON.stringify(value)).digest("hex");
@@ -56,6 +61,7 @@ async function currentGitCommit(cwd) {
 async function acceptBase(root, sourceIdentity) {
   const phases = [];
   const target = path.join(root, "domain-blank-base");
+  const isolatedCache = path.join(root, `${packageManager}-cache`);
   const scaffoldStarted = performance.now();
   await createProject({
     brief: "Carry one bounded user intention to a reviewed and verified artifact.",
@@ -68,8 +74,12 @@ async function acceptBase(root, sourceIdentity) {
   phases.push({ durationMs: Math.round(performance.now() - scaffoldStarted), name: "scaffold_generation", startedAt: new Date().toISOString() });
 
   const installArgs = packageManager === "pnpm"
-    ? ["install", "--prefer-offline"]
-    : ["install", "--prefer-offline", "--no-audit", "--no-fund"];
+    ? ["install", "--prefer-offline", "--store-dir", isolatedCache]
+    : ["install", "--prefer-offline", "--no-audit", "--no-fund", "--cache", isolatedCache];
+  if (cacheClass === "warm") {
+    phases.push({ ...runCommand(target, packageManager, installArgs, { timeout: 300_000 }).phase, measured: false, name: "cache_priming" });
+    await rm(path.join(target, "node_modules"), { force: true, recursive: true });
+  }
   phases.push({ ...runCommand(target, packageManager, installArgs, { timeout: 300_000 }).phase, name: "dependency_installation" });
   phases.push({ ...runCommand(target, "git", ["add", "--all"]).phase, name: "candidate_stage_after_install" });
   const status = runCommand(target, "git", ["status", "--porcelain"]).stdout.trim();
@@ -143,6 +153,15 @@ async function acceptBase(root, sourceIdentity) {
     dependency,
     phases,
     proofDigest: digest(proof),
+    timingEvidence: {
+      cacheClass,
+      cacheIsolated: cacheClass === "cold" || cacheClass === "warm",
+      firstMeaningfulPaintMs: browserJourney.firstMeaningfulPaintMs,
+      horizontalOverflowPx: Math.max(0, ...browserJourney.screenshots.map((entry) => entry.horizontalOverflowPx ?? 0)),
+      neutralJourneyMs: browserJourney.milestones.find((entry) => entry.name === "receipt_reload_confirmed")?.elapsedMs,
+      reloadPreserved: browserJourney.journeyAssertions?.receiptSurvivedReload === true,
+      serverReadinessMs: browserJourney.phases.find((entry) => entry.name === "server_readiness")?.durationMs,
+    },
     target,
     template: "domain-blank-base",
   };
@@ -163,10 +182,12 @@ try {
   await cp(evidenceSource, evidenceTarget, { recursive: true });
   runCommand(result.target, "git", ["archive", "--format=tar.gz", `--output=${path.join(evidenceTarget, "candidate.tar.gz")}`, "HEAD"]);
 
+  const durationMs = Math.round(performance.now() - started);
   receipt = {
     base: { ...result, target: undefined },
-    cacheClass: process.env.NODEKIT_CACHE_CLASS ?? "warm-or-unknown",
-    durationMs: Math.round(performance.now() - started),
+    cacheClass,
+    cacheIsolated: result.timingEvidence.cacheIsolated,
+    durationMs,
     generatedAt: new Date().toISOString(),
     nodeVersion: process.version,
     nodekitCommit: sourceIdentity.commit,
@@ -185,6 +206,42 @@ try {
   await mkdir(path.join(repoRoot, "proof"), { recursive: true });
   await writeFile(path.join(repoRoot, "proof", "factory-acceptance.json"), `${JSON.stringify(receipt, null, 2)}\n`);
   await writeFile(path.join(evidenceTarget, "manifest.json"), `${JSON.stringify(receipt, null, 2)}\n`);
+  if (cacheClass === "cold" || cacheClass === "warm") {
+    const phase = (name) => result.phases.find((entry) => entry.name === name);
+    const timingReceipt = {
+      apiKeysRequired: 0,
+      cacheClass,
+      cacheIsolated: result.timingEvidence.cacheIsolated,
+      consoleErrors: 0,
+      failedCommands: result.phases.filter((entry) => entry.failed === true).length,
+      generatedAt: receipt.generatedAt,
+      horizontalOverflowPx: result.timingEvidence.horizontalOverflowPx,
+      lane: `${os.platform() === "win32" ? "windows" : os.platform() === "darwin" ? "macos" : "ubuntu"}/${packageManager}`,
+      manualDecisions: 0,
+      measurements: {
+        compileMs: phase("compile")?.durationMs,
+        dependencyInstallationMs: phase("dependency_installation")?.durationMs,
+        firstMeaningfulPaintMs: result.timingEvidence.firstMeaningfulPaintMs,
+        neutralJourneyMs: result.timingEvidence.neutralJourneyMs,
+        scaffoldGenerationMs: phase("scaffold_generation")?.durationMs,
+        serverReadinessMs: result.timingEvidence.serverReadinessMs,
+        totalMs: durationMs,
+      },
+      nodeVersion: receipt.nodeVersion,
+      nodekitCommit: sourceIdentity.commit,
+      nodekitSourceHash: sourceIdentity.hash,
+      operatingSystem: receipt.operatingSystem,
+      packageManager,
+      receiptProduced: result.checks.proofPassed,
+      reloadPreserved: result.timingEvidence.reloadPreserved,
+      runId,
+      schemaVersion: "nodekit.developer-timing-run/v1",
+      sourceEdits: 0,
+    };
+    timingReceipt.receiptSha256 = digest(timingReceipt);
+    await writeFile(path.join(repoRoot, "proof", "ease", "developer-timing-run.json"), `${JSON.stringify(timingReceipt, null, 2)}\n`);
+    await writeFile(path.join(evidenceTarget, "developer-timing-run.json"), `${JSON.stringify(timingReceipt, null, 2)}\n`);
+  }
   console.log(JSON.stringify(receipt, null, 2));
 } finally {
   if (process.env.NODEKIT_KEEP_ACCEPTANCE !== "1") await rm(temporaryRoot, { force: true, recursive: true });

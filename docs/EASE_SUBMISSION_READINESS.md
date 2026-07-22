@@ -43,6 +43,11 @@ Canonical evidence:
 - [ ] Per-phase sample count, median, range, and observed maximum are computed from raw receipts. Do not publish a per-lane p95 from five observations; require at least 20 cold and 20 warm samples per lane before a p95 claim.
 
 Fail-closed evaluator: `npm run ease:evaluate-developer -- proof/ease/developer-timing-runs.json`. It requires all 60 raw trials and refuses percentile claims when any lane, timing field, isolated cold cache, or zero-intervention invariant is missing.
+
+The workflow now creates a dedicated cache for each measured run, explicitly primes only warm runs,
+writes `proof/ease/developer-timing-run.json`, and can aggregate downloaded artifacts with
+`npm run ease:aggregate-developer -- <artifact-root>`. Collection remains open until all 60 hosted
+receipts exist.
 - [ ] No strong onboarding percentile claim is published from the current single-run samples.
 
 The existing cross-platform result proves compatibility, not percentile stability.
@@ -53,7 +58,9 @@ The existing cross-platform result proves compatibility, not percentile stabilit
 - [ ] All three held-out tasks succeed: research map, volunteer onboarding, and launch presentation.
 - [ ] Each run makes substantive non-proof changes, produces a non-blocked final report, passes generated checks, and preserves its transcript, diff, timers, screenshots, and receipt.
 
-Current blocker: native Codex execution inherits a read-only boundary. Docker isolates the candidate and mounts credentials read-only, but Codex's nested `bubblewrap` cannot create an unprivileged user namespace inside Docker Desktop. Two bounded attempts failed closed; the protocol prohibits a third retry in the same QA pass.
+The executor repair is implemented: native runs retain `workspace-write`; Docker runs use the
+disposable outer container as their security boundary and avoid the incompatible nested namespace.
+The held-out gate remains open until all three authentic runs pass and their receipts are retained.
 
 Evidence: `proof/ease/agents/agent_volunteer-onboarding_165fb8466787/agent/session.jsonl` (local ignored evidence).
 
@@ -112,3 +119,7 @@ This requires deployment credentials and explicit authorization. No preview or p
 7. Submit through the Convex component submission process only when `submissionReady` is deterministically true.
 
 Until then, the required verdict is `EASE_NOT_CERTIFIED`.
+
+The final machine gate is `npm run submission:evaluate`. It validates
+`proof/submission-manifest.json`, requires all eight gates exactly once, re-hashes every referenced
+artifact, and treats explicit publication approval as evidence rather than an implied permission.

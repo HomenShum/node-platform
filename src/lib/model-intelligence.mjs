@@ -131,7 +131,7 @@ export async function initializeHarness(repoRoot) {
   );
   await writeIfMissing(
     path.join(harnessRoot, "versions", "h0", "manifest.json"),
-    `${JSON.stringify({ schemaVersion: "nodekit.harness-version/v1", version: "h0", status: "baseline-unmeasured" }, null, 2)}\n`,
+    `${JSON.stringify({ schemaVersion: "nodekit.harness-version/v1", version: "h0", status: "baseline-unmeasured", activeSkills: [] }, null, 2)}\n`,
     created,
   );
   await writeIfMissing(
@@ -144,6 +144,13 @@ export async function initializeHarness(repoRoot) {
     "# Model observations\n\nPlace evaluated `nodekit.model-observation/v1` JSON or JSONL records in `observations/`. Raw observations are evidence, not routing policy.\n",
     created,
   );
+  for (const taskClass of ["development", "validation", "heldout", "adversarial"]) {
+    await writeIfMissing(
+      path.join(harnessRoot, "tasks", taskClass, "index.json"),
+      `${JSON.stringify({ schemaVersion: "nodekit.task-index/v1", taskClass, protected: taskClass !== "development", tasks: [] }, null, 2)}\n`,
+      created,
+    );
+  }
 
   return { applicationId, created: created.map((file) => path.relative(resolvedRoot, file).replaceAll("\\", "/")), harnessRoot };
 }

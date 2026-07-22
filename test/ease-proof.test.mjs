@@ -44,6 +44,8 @@ test("fresh-agent recorder preserves process fields and prohibits routine reprom
   assert.match(harness, /candidate write preflight did not round-trip/);
   assert.match(harness, /nodekit-ease-agent:codex-0\.142\.5/);
   assert.match(harness, /target=\/root\/\.codex\/auth\.json,readonly/);
+  assert.match(harness, /danger-full-access-inside-disposable-container/);
+  assert.match(harness, /"--sandbox", "danger-full-access"/);
   assert.match(harness, /interventions: 0/);
   assert.match(harness, /userReprompts: 0/);
   assert.match(harness, /checks\.agentImplemented = substantiveFiles\.length > 0/);

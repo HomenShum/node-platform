@@ -2,11 +2,21 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { CASEFLOW_SCHEMA_VERSIONS, createMemoryCaseflow } from "../src/lib/caseflow.mjs";
 import { runCaseflowConformance } from "../src/lib/caseflow-conformance.mjs";
+import { negotiateRuntimeCapabilities, runtimeProfiles } from "../src/lib/runtime-capabilities.mjs";
 
 test("memory runtime passes the provider-neutral adapter conformance suite", async () => {
   const result = await runCaseflowConformance(() => createMemoryCaseflow());
   assert.equal(result.passed, true);
   assert.equal(result.capabilities.provider, "memory");
+});
+
+test("runtime capability negotiation is provider-native and fails closed", () => {
+  assert.equal(negotiateRuntimeCapabilities(runtimeProfiles.convex).passed, true);
+  assert.equal(negotiateRuntimeCapabilities(runtimeProfiles.postgres).passed, true);
+  assert.equal(negotiateRuntimeCapabilities(runtimeProfiles.supabase).passed, true);
+  const memoryProduction = negotiateRuntimeCapabilities(runtimeProfiles.memory);
+  assert.equal(memoryProduction.passed, false);
+  assert.equal(memoryProduction.missing.some((entry) => entry.name === "durableState"), true);
 });
 
 test("memory caseflow carries one guided transaction to a content-addressed receipt", () => {

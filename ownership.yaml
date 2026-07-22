@@ -99,6 +99,7 @@ concepts:
       - NodeRoom
       - NodeSlide
       - NodeVideo
+      - NodeTasks
       - NodeVoice
       - NodeProof
     signatures:
@@ -153,6 +154,7 @@ concepts:
     contractVersion: nodeagent.provider-pi/v1
     consumers:
       - NodeRoom
+      - NodeTasks
     signatures:
       - id: agent-model-adapter
         regex: '^\s*export\s+function\s+createPiAiAdapter\b'
@@ -172,6 +174,7 @@ concepts:
       - NodeVideo
       - NodeTrace
       - NodeProof
+      - NodeTasks
     signatures:
       - id: trace-schema
         regex: '^\s*export\s+const\s+NODEAGENT_TRACE_SCHEMA\b'

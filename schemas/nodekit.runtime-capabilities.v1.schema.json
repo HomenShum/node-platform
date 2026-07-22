@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://nodekit.dev/schemas/nodekit.runtime-capabilities.v1.schema.json",
+  "title": "NodeKit runtime capabilities",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "provider", "durableState", "transactions", "optimisticConcurrency", "subscriptions", "durableJobs", "fileStorage", "presence", "scheduledJobs", "localDevelopment"],
+  "properties": {
+    "schemaVersion": { "const": "nodekit.runtime-capabilities/v1" },
+    "provider": { "type": "string", "minLength": 1 },
+    "durableState": { "type": "boolean" },
+    "transactions": { "type": "boolean" },
+    "optimisticConcurrency": { "type": "boolean" },
+    "subscriptions": { "enum": ["native", "event-driven", "polling", "snapshot"] },
+    "durableJobs": { "enum": ["native", "queue-backed", "external", "in-process"] },
+    "fileStorage": { "type": "boolean" },
+    "presence": { "type": "boolean" },
+    "scheduledJobs": { "type": "boolean" },
+    "localDevelopment": { "type": "boolean" }
+  }
+}

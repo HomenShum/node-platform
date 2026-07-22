@@ -16,6 +16,18 @@ import {
   writeModelBaseline,
 } from "./lib/model-intelligence.mjs";
 import {
+  benchmarkSkillCandidate,
+  compileRoutingPolicy,
+  evaluateTournament,
+  harnessStatus,
+  promoteSkillCandidate,
+  proposeSkillCandidates,
+  rejectSkillCandidate,
+  reviewSkillCandidate,
+  rollbackHarness,
+  verifyCanary,
+} from "./lib/harness-gym.mjs";
+import {
   importUnderstandAnythingCodeGraph,
   queryUnderstandAnythingCodeGraph,
   readUnderstandAnythingCodeGraph,
@@ -76,6 +88,18 @@ Usage:
   nodekit models profile [--repo-root <path>] [--json]
   nodekit models inspect [--repo-root <path>] [--json]
   nodekit models diagnose [--repo-root <path>] [--json]
+  nodekit skills propose [--repo-root <path>] [--json]
+  nodekit skills review --candidate <id> [--repo-root <path>] [--json]
+  nodekit skills benchmark --candidate <id> --comparison <file> [--repo-root <path>] [--json]
+  nodekit skills promote --candidate <id> --canary <file> --proof-receipt <file> --approved-by <id>
+  nodekit skills reject --candidate <id> --reason <text>
+  nodekit routing compile [--repo-root <path>] [--json]
+  nodekit routing canary --receipt <file> [--repo-root <path>] [--json]
+  nodekit harness tournament --manifest <file> [--repo-root <path>] [--json]
+  nodekit harness baseline|inspect|diagnose|propose|benchmark|canary|review|promote
+  nodekit harness status [--repo-root <path>] [--json]
+  nodekit harness gate [--repo-root <path>] [--json]
+  nodekit harness rollback [--repo-root <path>] [--json]
   nodekit certify [--repo-root <path>] [--json]`);
 }
 
@@ -504,6 +528,90 @@ async function runModelsDiagnose(parsed) {
   }
 }
 
+function requireOption(parsed, name) {
+  const value = parsed.options[name];
+  if (value === undefined || value === true || String(value).trim() === "") throw new Error(`--${name} is required`);
+  return String(value);
+}
+
+function printStructured(output, parsed, textSummary) {
+  if (parsed.options.json) console.log(JSON.stringify(output, null, 2));
+  else console.log(textSummary(output));
+}
+
+async function runSkillsPropose(parsed) {
+  const output = await proposeSkillCandidates(repoRootFrom(parsed));
+  printStructured(output, parsed, (value) => `PROPOSED ${value.candidates.length} evidence-backed skill candidates; none promoted`);
+}
+
+async function runSkillsReview(parsed) {
+  const output = await reviewSkillCandidate(repoRootFrom(parsed), requireOption(parsed, "candidate"));
+  printStructured(output, parsed, (value) => `REVIEWED ${value.candidate.candidateId}: ${value.candidate.status} (${value.skill.id}@${value.skill.version})`);
+}
+
+async function runSkillsBenchmark(parsed) {
+  const output = await benchmarkSkillCandidate(
+    repoRootFrom(parsed),
+    requireOption(parsed, "candidate"),
+    requireOption(parsed, "comparison"),
+  );
+  printStructured(output, parsed, (value) => `BENCHMARK ${value.passed ? "PASS" : "FAIL"} ${value.candidateId}; meaningful improvement ${value.meaningfulImprovement}`);
+  if (!output.passed) process.exitCode = 1;
+}
+
+async function runSkillsPromote(parsed) {
+  const output = await promoteSkillCandidate(repoRootFrom(parsed), requireOption(parsed, "candidate"), {
+    approvedBy: requireOption(parsed, "approved-by"),
+    canaryPath: requireOption(parsed, "canary"),
+    proofPath: requireOption(parsed, "proof-receipt"),
+  });
+  printStructured(output, parsed, (value) => `PROMOTED ${value.promotion.candidateId} to ${value.nextVersion}; rollback ${value.promotion.rollbackVersion}`);
+}
+
+async function runSkillsReject(parsed) {
+  const output = await rejectSkillCandidate(repoRootFrom(parsed), requireOption(parsed, "candidate"), requireOption(parsed, "reason"));
+  printStructured(output, parsed, (value) => `REJECTED ${value.candidateId}: ${value.reason}`);
+}
+
+async function runRoutingCompile(parsed) {
+  const output = await compileRoutingPolicy(repoRootFrom(parsed));
+  printStructured(output, parsed, (value) => `COMPILED provisional routing policy with ${value.routes.length} task-family routes; promotion not authorized`);
+}
+
+async function runRoutingCanary(parsed) {
+  const output = await verifyCanary(repoRootFrom(parsed), requireOption(parsed, "receipt"));
+  printStructured(output, parsed, (value) => `CANARY PASS ${value.canaryId} for ${value.candidateId}`);
+}
+
+async function runHarnessTournament(parsed) {
+  const output = await evaluateTournament(repoRootFrom(parsed), requireOption(parsed, "manifest"));
+  printStructured(output, parsed, (value) => `TOURNAMENT ${value.tournamentId}: ${value.decisive ? `provisional winner ${value.winner}` : "no decisive winner"}; promotion not authorized`);
+}
+
+async function runHarnessStatus(parsed) {
+  const output = await harnessStatus(repoRootFrom(parsed));
+  printStructured(output, parsed, (value) => `HARNESS ${value.version}: ${value.observations} observations, ${value.capabilityCards} cards, ${value.skillCandidates.length} candidates; routing uncertified`);
+}
+
+async function runHarnessRollback(parsed) {
+  const output = await rollbackHarness(repoRootFrom(parsed));
+  printStructured(output, parsed, (value) => `ROLLED BACK ${value.from} -> ${value.to}; version history preserved`);
+}
+
+async function runHarnessGate(parsed) {
+  const output = await harnessStatus(repoRootFrom(parsed));
+  const checks = {
+    activeVersionPromoted: /^h[1-9]\d*$/.test(output.version),
+    automaticPromotionDisabled: output.automaticPromotion === false,
+    benchmarkBound: typeof output.benchmarkHash === "string" && output.benchmarkHash.length === 64,
+    noOpenCandidates: output.skillCandidates.every((entry) => !["proposed", "reviewed", "benchmark-passed"].includes(entry.status)),
+    routingCertified: output.routingCertified === true,
+  };
+  const result = { ...output, checks, passed: Object.values(checks).every(Boolean), schemaVersion: "nodekit.harness-gate/v1" };
+  printStructured(result, parsed, (value) => `HARNESS GATE ${value.passed ? "PASS" : "BLOCKED"} ${value.version}`);
+  if (!result.passed) process.exitCode = 1;
+}
+
 async function main() {
   const parsed = parseArgs(process.argv.slice(2));
   const [first, second] = parsed.positional;
@@ -583,6 +691,82 @@ async function main() {
   }
   if (first === "models" && second === "diagnose") {
     await runModelsDiagnose(parsed);
+    return;
+  }
+  if (first === "harness" && second === "baseline") {
+    await runModelsBaseline(parsed);
+    return;
+  }
+  if (first === "harness" && second === "inspect") {
+    await runModelsInspect(parsed);
+    return;
+  }
+  if (first === "harness" && second === "diagnose") {
+    await runModelsDiagnose(parsed);
+    return;
+  }
+  if (first === "harness" && second === "propose") {
+    await runSkillsPropose(parsed);
+    return;
+  }
+  if (first === "harness" && second === "benchmark") {
+    await runSkillsBenchmark(parsed);
+    return;
+  }
+  if (first === "harness" && second === "canary") {
+    await runRoutingCanary(parsed);
+    return;
+  }
+  if (first === "harness" && second === "review") {
+    await runSkillsReview(parsed);
+    return;
+  }
+  if (first === "harness" && second === "promote") {
+    await runSkillsPromote(parsed);
+    return;
+  }
+  if (first === "skills" && second === "propose") {
+    await runSkillsPropose(parsed);
+    return;
+  }
+  if (first === "skills" && second === "review") {
+    await runSkillsReview(parsed);
+    return;
+  }
+  if (first === "skills" && second === "benchmark") {
+    await runSkillsBenchmark(parsed);
+    return;
+  }
+  if (first === "skills" && second === "promote") {
+    await runSkillsPromote(parsed);
+    return;
+  }
+  if (first === "skills" && second === "reject") {
+    await runSkillsReject(parsed);
+    return;
+  }
+  if (first === "routing" && second === "compile") {
+    await runRoutingCompile(parsed);
+    return;
+  }
+  if (first === "routing" && second === "canary") {
+    await runRoutingCanary(parsed);
+    return;
+  }
+  if (first === "harness" && second === "tournament") {
+    await runHarnessTournament(parsed);
+    return;
+  }
+  if (first === "harness" && second === "status") {
+    await runHarnessStatus(parsed);
+    return;
+  }
+  if (first === "harness" && second === "gate") {
+    await runHarnessGate(parsed);
+    return;
+  }
+  if (first === "harness" && second === "rollback") {
+    await runHarnessRollback(parsed);
     return;
   }
   throw new Error(`unknown command: ${parsed.positional.join(" ")}`);

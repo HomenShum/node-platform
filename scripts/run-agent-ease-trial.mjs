@@ -81,8 +81,9 @@ const writeProbeMatched = (await readFile(writeProbePath, "utf8")) === `${runId}
 await rm(writeProbePath);
 if (!writeProbeMatched) throw new Error("candidate write preflight did not round-trip");
 await writeFile(path.join(evidenceRoot, "agent", "environment.json"), `${JSON.stringify({
+  outerIsolation: executor === "docker" ? "disposable-container" : "host-codex-sandbox",
   inheritedParentThread: false,
-  requestedSandbox: "workspace-write",
+  requestedSandbox: executor === "docker" ? "danger-full-access-inside-disposable-container" : "workspace-write",
   userConfigLoaded: false,
   userExecPolicyLoaded: false,
   writePreflight: "passed",
@@ -113,7 +114,7 @@ const dockerAgentArgs = [
   "--env", "CODEX_HOME=/root/.codex",
   "--env", "CI=1",
   dockerImage,
-  "codex", "exec", "--ephemeral", "--ignore-user-config", "--ignore-rules", "--sandbox", "workspace-write", "--json",
+  "codex", "exec", "--ephemeral", "--ignore-user-config", "--ignore-rules", "--sandbox", "danger-full-access", "--json",
   "--output-last-message", "/workspace/.nodekit-agent-final-report.md", "-C", "/workspace", task.goal,
 ];
 const agent = executor === "docker"

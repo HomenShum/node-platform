@@ -1,0 +1,14 @@
+{
+  "schemaVersion": "nodekit.submission-manifest/v1",
+  "candidateCommit": "0000000000000000000000000000000000000000",
+  "gates": [
+    { "id": "developerTimingMatrix", "passed": false, "evidence": [{ "path": "proof/ease/developer-timing-verdict.json", "sha256": "0000000000000000000000000000000000000000000000000000000000000000" }] },
+    { "id": "freshAgentHeldout", "passed": false, "evidence": [{ "path": "proof/ease/fresh-agent-verdict.json", "sha256": "0000000000000000000000000000000000000000000000000000000000000000" }] },
+    { "id": "freshHumanUsability", "passed": false, "evidence": [{ "path": "proof/ease/fresh-users-verdict.json", "sha256": "0000000000000000000000000000000000000000000000000000000000000000" }] },
+    { "id": "threeConvexConsumers", "passed": false, "evidence": [{ "path": "proof/convex-consumers-verdict.json", "sha256": "0000000000000000000000000000000000000000000000000000000000000000" }] },
+    { "id": "previewDeployment", "passed": false, "evidence": [{ "path": "proof/preview-verdict.json", "sha256": "0000000000000000000000000000000000000000000000000000000000000000" }] },
+    { "id": "proofloopEaseVerification", "passed": false, "evidence": [{ "path": "proof/proofloop-final.json", "sha256": "0000000000000000000000000000000000000000000000000000000000000000" }] },
+    { "id": "packageInstallProof", "passed": false, "evidence": [{ "path": "proof/package-install-verdict.json", "sha256": "0000000000000000000000000000000000000000000000000000000000000000" }] },
+    { "id": "publicationApproval", "passed": false, "evidence": [{ "path": "proof/publication-approval.json", "sha256": "0000000000000000000000000000000000000000000000000000000000000000" }] }
+  ]
+}

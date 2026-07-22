@@ -2,7 +2,7 @@
  * Provider-neutral Caseflow conformance. An adapter may return values directly
  * or as promises; the suite observes behavior rather than storage mechanics.
  */
-export async function runCaseflowConformance(createRuntime) {
+export async function runCaseflowConformance(createRuntime, { requiredCapabilities = { optimisticConcurrency: true, transactions: true } } = {}) {
   const runtime = await createRuntime();
   const work = await runtime.createCase({ title: "Adapter conformance", primaryJob: "Preserve one reviewed artifact" });
   const run = await runtime.startRun({
@@ -35,8 +35,11 @@ export async function runCaseflowConformance(createRuntime) {
   };
   return {
     assertions,
+    capabilityNegotiation: negotiateRuntimeCapabilities(runtime.capabilities, requiredCapabilities),
     capabilities: runtime.capabilities,
-    passed: Object.values(assertions).every(Boolean),
+    passed: Object.values(assertions).every(Boolean)
+      && negotiateRuntimeCapabilities(runtime.capabilities, requiredCapabilities).passed,
     schemaVersion: "nodekit.adapter-conformance/v1",
   };
 }
+import { negotiateRuntimeCapabilities } from "./runtime-capabilities.mjs";

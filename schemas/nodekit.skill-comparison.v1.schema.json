@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/HomenShum/node-platform/blob/main/schemas/nodekit.skill-comparison.v1.schema.json",
+  "title": "NodeKit controlled with-skill versus without-skill comparison",
+  "type": "object",
+  "required": ["schemaVersion", "candidateId", "benchmarkHash", "harnessHash", "resolvedModel", "taskIds", "baseline", "candidate", "protectedEvaluatorUnchanged"],
+  "properties": {
+    "schemaVersion": { "const": "nodekit.skill-comparison/v1" },
+    "candidateId": { "type": "string", "minLength": 1 },
+    "benchmarkHash": { "$ref": "#/$defs/hash" },
+    "harnessHash": { "$ref": "#/$defs/hash" },
+    "resolvedModel": { "type": "string", "minLength": 1 },
+    "taskIds": { "type": "array", "minItems": 2, "items": { "type": "string", "minLength": 1 }, "uniqueItems": true },
+    "baseline": { "$ref": "#/$defs/arm" },
+    "candidate": { "$ref": "#/$defs/arm" },
+    "protectedEvaluatorUnchanged": { "const": true }
+  },
+  "$defs": {
+    "hash": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "score": { "type": "number", "minimum": 0, "maximum": 1 },
+    "arm": {
+      "type": "object",
+      "required": ["runs", "successRate", "targetFailureRate", "accuracy", "safety", "editability", "exportQuality", "userCompletion", "medianLatencyMs", "costPerSuccessUsd"],
+      "properties": {
+        "runs": { "type": "integer", "minimum": 3 },
+        "successRate": { "$ref": "#/$defs/score" },
+        "targetFailureRate": { "$ref": "#/$defs/score" },
+        "accuracy": { "$ref": "#/$defs/score" },
+        "safety": { "$ref": "#/$defs/score" },
+        "editability": { "$ref": "#/$defs/score" },
+        "exportQuality": { "$ref": "#/$defs/score" },
+        "userCompletion": { "$ref": "#/$defs/score" },
+        "medianLatencyMs": { "type": "integer", "minimum": 0 },
+        "costPerSuccessUsd": { "type": "number", "minimum": 0 }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

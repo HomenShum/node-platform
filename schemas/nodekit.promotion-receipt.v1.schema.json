@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/HomenShum/node-platform/blob/main/schemas/nodekit.promotion-receipt.v1.schema.json",
+  "title": "NodeKit proof-controlled promotion receipt",
+  "type": "object",
+  "required": ["schemaVersion", "promotionId", "candidateId", "kind", "benchmarkVerdictRef", "canaryReceiptRef", "nodeProofReceiptRef", "nodeProofVerified", "rollbackVersion", "automatic", "approvedBy", "promotedHash"],
+  "properties": {
+    "schemaVersion": { "const": "nodekit.promotion-receipt/v1" },
+    "promotionId": { "type": "string", "minLength": 1 },
+    "candidateId": { "type": "string", "minLength": 1 },
+    "kind": { "enum": ["skill", "routing", "harness"] },
+    "benchmarkVerdictRef": { "type": "string", "minLength": 1 },
+    "canaryReceiptRef": { "type": "string", "minLength": 1 },
+    "nodeProofReceiptRef": { "type": "string", "minLength": 1 },
+    "nodeProofVerified": { "const": true },
+    "rollbackVersion": { "type": "string", "minLength": 1 },
+    "automatic": { "const": false },
+    "approvedBy": { "type": "string", "minLength": 1 },
+    "promotedHash": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+  },
+  "additionalProperties": false
+}
