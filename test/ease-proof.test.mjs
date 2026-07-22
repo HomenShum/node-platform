@@ -15,6 +15,11 @@ test("EaseProof keeps browser contracts distinct from certification", async () =
   assert.match(proof, /browserContractPassed/);
   assert.match(proof, /browserCertified/);
   assert.match(browser, /nodekit\.screenshot-proof\/v1/);
+  assert.match(browser, /NODEKIT_TARBALL_SHA256/);
+  assert.match(browser, /nodekitTarballIdentity\?\.digest === nodekitTarballSha256/);
+  assert.match(browser, /nodekitSourceBound/);
+  assert.match(browser, /nodekitTarballBound/);
+  assert.match(browser, /nodekitTarballSha256/);
   assert.match(browser, /missingStates/);
   assert.match(browser, /AxeBuilder/);
   assert.match(browser, /accessibilityViolations\.length === 0/);

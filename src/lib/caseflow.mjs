@@ -31,8 +31,8 @@ function clone(value) {
   return normalizePortableValue(value);
 }
 
-function id(prefix) {
-  return `${prefix}_${randomUUID().replaceAll("-", "")}`;
+export function nodeId(prefix) {
+  return `${prefix}_${randomUUID().replaceAll("-", "").slice(0, 26)}`;
 }
 
 function canonical(value) {
@@ -117,7 +117,7 @@ export function createMemoryCaseflow({ clock = () => new Date().toISOString() } 
       actor: actorValue(actor),
       aggregateId,
       aggregateType,
-      eventId: id("event"),
+      eventId: nodeId("event"),
       eventType,
       occurredAt: clock(),
       payload: clone(payload),
@@ -134,7 +134,7 @@ export function createMemoryCaseflow({ clock = () => new Date().toISOString() } 
     const normalizedPrimaryJob = requireTrimmedText(primaryJob, "case primaryJob");
     const createdAt = clock();
     const record = {
-      caseId: id("case"),
+      caseId: nodeId("case"),
       createdAt,
       currentRunId: null,
       primaryJob: normalizedPrimaryJob,
@@ -180,7 +180,7 @@ export function createMemoryCaseflow({ clock = () => new Date().toISOString() } 
       currentStageId: normalizedStages[0].id,
       nextAction: normalizedStages[0].label,
       nextActionOwner: normalizedStages[0].owner,
-      runId: id("run"),
+      runId: nodeId("run"),
       schemaVersion: CASEFLOW_SCHEMA_VERSIONS.run,
       stages: normalizedStages,
       status: "active",
@@ -230,7 +230,7 @@ export function createMemoryCaseflow({ clock = () => new Date().toISOString() } 
       if (run.caseId !== caseId) throw new Error("run does not belong to case");
       const createdAt = clock();
       const artifact = {
-        artifactId: id("artifact"),
+        artifactId: nodeId("artifact"),
         caseId,
         canonicalVersion: 1,
         createdAt,
@@ -268,7 +268,7 @@ export function createMemoryCaseflow({ clock = () => new Date().toISOString() } 
         baseVersion,
         createdAt,
         patch: portablePatch,
-        proposalId: id("proposal"),
+        proposalId: nodeId("proposal"),
         rationale: normalizedRationale,
         schemaVersion: CASEFLOW_SCHEMA_VERSIONS.proposal,
         status: "pending",
@@ -307,7 +307,7 @@ export function createMemoryCaseflow({ clock = () => new Date().toISOString() } 
     requireActiveRun(artifact.runId);
     const decidedAt = clock();
     const approval = {
-      approvalId: id("approval"),
+      approvalId: nodeId("approval"),
       comment,
       decidedAt,
       decision,
@@ -350,7 +350,7 @@ export function createMemoryCaseflow({ clock = () => new Date().toISOString() } 
       const run = requireNonTerminalRun(runId);
       const exception = {
         code: normalizedCode,
-        exceptionId: id("exception"),
+        exceptionId: nodeId("exception"),
         message: normalizedMessage,
         preservedState: portableState,
         raisedAt: clock(),
@@ -492,7 +492,7 @@ export function createMemoryCaseflow({ clock = () => new Date().toISOString() } 
       schemaVersion: CASEFLOW_SCHEMA_VERSIONS.receipt,
       status,
     };
-    const receipt = { ...receiptBody, receiptId: id("receipt"), receiptHash: contentHash(receiptBody) };
+    const receipt = { ...receiptBody, receiptId: nodeId("receipt"), receiptHash: contentHash(receiptBody) };
     state.receipts.set(receipt.receiptId, receipt);
     emit("run", runId, "receipt.created", { receiptHash: receipt.receiptHash, receiptId: receipt.receiptId }, terminalActor);
     return { receipt: clone(receipt), run: clone(run), reused: false };

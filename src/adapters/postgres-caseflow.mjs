@@ -1,8 +1,8 @@
-import { randomUUID } from "node:crypto";
 import {
   CASEFLOW_SCHEMA_VERSIONS,
   TERMINAL_RUN_STATUSES,
   contentHash,
+  nodeId,
 } from "../lib/caseflow.mjs";
 import {
   PORTABLE_VALUE_LIMITS,
@@ -15,10 +15,6 @@ import { normalizeReceiptBindings } from "../lib/receipt-bindings.mjs";
 import { runtimeProfiles } from "../lib/runtime-capabilities.mjs";
 
 const defaultActor = Object.freeze({ type: "system", id: "nodekit" });
-
-function id(prefix) {
-  return `${prefix}_${randomUUID().replaceAll("-", "")}`;
-}
 
 function iso(value) {
   return value instanceof Date ? value.toISOString() : String(value);
@@ -247,7 +243,7 @@ async function emit(client, {
     actor: portableActor,
     aggregateId,
     aggregateType,
-    eventId: id("event"),
+    eventId: nodeId("event"),
     eventType,
     occurredAt: now,
     payload: portablePayload,
@@ -326,7 +322,7 @@ export function createPostgresCaseflow({ pool, ownerId, clock = () => new Date()
         `insert into nodekit.cases
           (case_id, owner_id, title, primary_job, status, current_run_id, created_at, updated_at)
           values ($1, $2, $3, $4, 'ready', null, $5, $5) returning *`,
-        [id("case"), owner, normalizedTitle, normalizedPrimaryJob, now],
+        [nodeId("case"), owner, normalizedTitle, normalizedPrimaryJob, now],
       )).rows[0];
       const record = caseRecord(row);
       await emit(client, { actor: eventActor, aggregateId: record.caseId, aggregateType: "case", eventType: "case.created", now, ownerId: owner, payload: record });
@@ -383,7 +379,7 @@ export function createPostgresCaseflow({ pool, ownerId, clock = () => new Date()
         }
       }
       const now = clock();
-      const runId = id("run");
+      const runId = nodeId("run");
       const row = (await client.query(
         `insert into nodekit.runs
           (run_id, owner_id, case_id, status, current_stage_id, next_action, next_action_owner, stages, created_at, updated_at)
@@ -468,7 +464,7 @@ export function createPostgresCaseflow({ pool, ownerId, clock = () => new Date()
           throw new Error(`run is not active: ${runReference.rows[0].status}`);
         }
         const now = clock();
-        const artifactId = id("artifact");
+        const artifactId = nodeId("artifact");
         await client.query(
           `insert into nodekit.artifacts
             (artifact_id, owner_id, case_id, run_id, kind, title, canonical_version, created_at, updated_at)
@@ -515,7 +511,7 @@ export function createPostgresCaseflow({ pool, ownerId, clock = () => new Date()
           throw new Error(`proposal base version ${baseVersion} is stale; canonical version is ${artifact.rows[0].canonical_version}`);
         }
         const now = clock();
-        const proposalId = id("proposal");
+        const proposalId = nodeId("proposal");
         const patchHash = contentHash(portablePatch);
         const row = (await client.query(
           `insert into nodekit.proposals
@@ -548,7 +544,7 @@ export function createPostgresCaseflow({ pool, ownerId, clock = () => new Date()
       const now = clock();
       const result = (await client.query(
         "select * from nodekit.apply_proposal($1, $2, $3, $4, $5, $6)",
-        [owner, proposalId, decision, id("approval"), comment, now],
+        [owner, proposalId, decision, nodeId("approval"), comment, now],
       )).rows[0];
       const proposal = proposalRecord((await client.query(
         "select * from nodekit.proposals where owner_id = $1 and proposal_id = $2",
@@ -602,7 +598,7 @@ export function createPostgresCaseflow({ pool, ownerId, clock = () => new Date()
         if (run.rowCount !== 1) throw new Error(`run not found: ${runId}`);
         if (TERMINAL_RUN_STATUSES.includes(run.rows[0].status)) throw new Error(`run is terminal: ${run.rows[0].status}`);
         const now = clock();
-        const exceptionId = id("exception");
+        const exceptionId = nodeId("exception");
         const row = (await client.query(
           `insert into nodekit.exceptions
             (exception_id, owner_id, run_id, code, message, preserved_state, status, resolution, raised_at)
@@ -820,7 +816,7 @@ export function createPostgresCaseflow({ pool, ownerId, clock = () => new Date()
         schemaVersion: CASEFLOW_SCHEMA_VERSIONS.receipt,
         status,
       };
-      const receipt = { ...receiptBody, receiptId: id("receipt"), receiptHash: contentHash(receiptBody) };
+      const receipt = { ...receiptBody, receiptId: nodeId("receipt"), receiptHash: contentHash(receiptBody) };
       await client.query(
         `insert into nodekit.receipts (receipt_id, owner_id, run_id, receipt_hash, body, generated_at)
           values ($1, $2, $3, $4, $5::jsonb, $6)`,

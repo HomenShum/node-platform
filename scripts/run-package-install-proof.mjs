@@ -793,23 +793,28 @@ export async function runPackageInstallProof({
       },
       schemaVersion: "nodekit.generated-receipt-bindings/v1",
     };
-    checks.receiptsValid = generatedIdentity.schemaVersion === "nodeagent.application-identity/v1"
-      && SHA256.test(generatedIdentity.applicationHash ?? "")
-      && SHA256.test(generatedIdentity.configHash ?? "")
-      && identityFiles.get("vendor/nodekit.tgz")?.digest === tarballSha256
-      && SHA256.test(identityFiles.get("package.json")?.digest ?? "")
-      && SHA256.test(identityFiles.get("package-lock.json")?.digest ?? "")
-      && generatedReceiptBindings.applicationIdentity.sha256 === await fileDigest(generatedIdentityPath)
-      && demoReceipt.schemaVersion === "nodekit.figured-out-demo/v1"
-      && demoReceipt.passed === true
-      && /^receipt_[a-f0-9]{26}$/.test(demoReceiptId ?? "")
-      && SHA256.test(demoReceiptHash ?? "")
-      && contentHash(demoReceiptBody) === demoReceiptHash
-      && evalReceipt.schemaVersion === "nodekit.eval-receipt/v1"
-      && evalReceipt.passed === true
-      && generatedReceiptBindings.receipts.demo.sha256 === await fileDigest(demoReceiptPath)
-      && generatedReceiptBindings.receipts.evaluation.sha256 === await fileDigest(evalReceiptPath);
-    if (!checks.receiptsValid) throw new Error("generated application identity, demo receipt, or evaluation receipt is invalid");
+    const receiptChecks = {
+      applicationHash: SHA256.test(generatedIdentity.applicationHash ?? ""),
+      applicationIdentityDigest: generatedReceiptBindings.applicationIdentity.sha256 === await fileDigest(generatedIdentityPath),
+      applicationIdentitySchema: generatedIdentity.schemaVersion === "nodeagent.application-identity/v1",
+      configHash: SHA256.test(generatedIdentity.configHash ?? ""),
+      demoPassed: demoReceipt.passed === true,
+      demoReceiptDigest: generatedReceiptBindings.receipts.demo.sha256 === await fileDigest(demoReceiptPath),
+      demoReceiptHash: SHA256.test(demoReceiptHash ?? "") && contentHash(demoReceiptBody) === demoReceiptHash,
+      demoReceiptId: /^receipt_[a-f0-9]{26}$/.test(demoReceiptId ?? ""),
+      demoSchema: demoReceipt.schemaVersion === "nodekit.figured-out-demo/v1",
+      evaluationPassed: evalReceipt.passed === true,
+      evaluationReceiptDigest: generatedReceiptBindings.receipts.evaluation.sha256 === await fileDigest(evalReceiptPath),
+      evaluationSchema: evalReceipt.schemaVersion === "nodekit.eval-receipt/v1",
+      packageDigest: SHA256.test(identityFiles.get("package.json")?.digest ?? ""),
+      packageLockDigest: SHA256.test(identityFiles.get("package-lock.json")?.digest ?? ""),
+      tarballDigest: identityFiles.get("vendor/nodekit.tgz")?.digest === tarballSha256,
+    };
+    checks.receiptsValid = Object.values(receiptChecks).every(Boolean);
+    if (!checks.receiptsValid) {
+      const failedReceiptChecks = Object.entries(receiptChecks).filter(([, passed]) => !passed).map(([name]) => name);
+      throw new Error(`generated application identity, demo receipt, or evaluation receipt is invalid: ${failedReceiptChecks.join(", ")}`);
+    }
 
     const generatedPackagePath = path.join(candidateProofRoot, "generated-package.json");
     const generatedLockPath = path.join(candidateProofRoot, "generated-package-lock.json");

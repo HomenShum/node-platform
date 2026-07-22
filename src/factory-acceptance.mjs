@@ -279,7 +279,13 @@ async function acceptBase(root, sourceIdentity, candidate) {
     domainBlank: !/lending|research-loop|founderquest/i.test(`${figuredOut}\n${experience}`),
     easeCertificationHonest: browserJourney.certified === true
       && browserJourney.missingStates.length === 0
-      && browserJourney.coveredStates.length === browserJourney.requiredStates.length,
+      && browserJourney.coveredStates.length === browserJourney.requiredStates.length
+      && browserJourney.nodekitSourceBound === true
+      && browserJourney.nodekitTarballBound === true
+      && browserJourney.nodekitTarballSha256 === candidate.tarballSha256
+      && browserJourney.screenshots.every((entry) => entry.nodekitTarballBound === true
+        && entry.nodekitTarballSha256 === candidate.tarballSha256
+        && entry.nodekitSourceBound === true),
     figuredOutContract: figuredOut.includes("Case -> Run -> Stage -> Artifact -> Proposal -> Approval -> Receipt"),
     lockCreated: lockBytes.length > 0,
     proofIdentityBound: proof.applicationHash === currentIdentity.applicationHash && proof.configHash === currentIdentity.configHash,

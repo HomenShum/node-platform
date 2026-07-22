@@ -18,6 +18,18 @@ const identity = JSON.parse(await readFile(path.resolve(".nodeagent", "applicati
 const generatedCandidateCommit = execFileSync("git", ["rev-parse", "HEAD"], { encoding: "utf8" }).trim();
 const nodekitCommit = process.env.NODEKIT_SOURCE_COMMIT ?? null;
 const nodekitSourceHash = process.env.NODEKIT_SOURCE_HASH ?? null;
+const expectedNodekitTarballSha256 = process.env.NODEKIT_TARBALL_SHA256 ?? null;
+const COMMIT = /^[a-f0-9]{40}$/;
+const SHA256 = /^[a-f0-9]{64}$/;
+const nodekitSourceBound = COMMIT.test(nodekitCommit ?? "") && SHA256.test(nodekitSourceHash ?? "");
+const nodekitTarballIdentity = (identity.identity?.files ?? []).find((entry) => entry.path === "vendor/nodekit.tgz") ?? null;
+let nodekitTarballSha256 = null;
+try {
+  nodekitTarballSha256 = sha256(await readFile(path.resolve("vendor", "nodekit.tgz")));
+} catch {}
+const nodekitTarballBound = SHA256.test(expectedNodekitTarballSha256 ?? "")
+  && nodekitTarballSha256 === expectedNodekitTarballSha256
+  && nodekitTarballIdentity?.digest === nodekitTarballSha256;
 const requiredStates = [
   "first_arrival", "orientation", "input", "validation_error", "running", "partial_result",
   "external_wait", "proposal_pending", "approval", "conflict", "recoverable_failure",
@@ -130,7 +142,10 @@ async function capture(page, state, viewport, theme, observations) {
     mojibakeDetected: /(?:\u00c2\S|\u00c3.|\ufffd|\u00e2[\u0080-\u00bf]{1,2})/u.test(renderedText),
     nodekitCommit,
     nodekitIdentity: nodekitCommit && nodekitSourceHash ? `${nodekitCommit}/${nodekitSourceHash}` : null,
+    nodekitSourceBound,
     nodekitSourceHash,
+    nodekitTarballBound,
+    nodekitTarballSha256,
     pageUrl: page.url(),
     pngSha256: sha256(bytes),
     runId,
@@ -404,8 +419,8 @@ const coveredStates = [...new Set(screenshots.map((entry) => entry.state))];
 const missingStates = requiredStates.filter((state) => !coveredStates.includes(state));
 const certified = passed
   && missingStates.length === 0
-  && Boolean(nodekitCommit)
-  && Boolean(nodekitSourceHash);
+  && nodekitSourceBound
+  && nodekitTarballBound;
 const manifest = {
   accessibilityViolations,
   applicationHash: identity.applicationHash,
@@ -425,7 +440,10 @@ const manifest = {
   networkFailures: globalNetwork,
   nodekitCommit,
   nodekitIdentity: nodekitCommit && nodekitSourceHash ? `${nodekitCommit}/${nodekitSourceHash}` : null,
+  nodekitSourceBound,
   nodekitSourceHash,
+  nodekitTarballBound,
+  nodekitTarballSha256,
   passed,
   phases,
   requiredStates,

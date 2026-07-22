@@ -220,8 +220,13 @@ test("memory caseflow carries one guided transaction to a content-addressed rece
   const completed = runtime.completeRun({ runId: run.runId });
 
   assert.equal(runtime.capabilities.provider, "memory");
+  assert.match(work.caseId, /^case_[a-f0-9]{26}$/);
+  assert.match(run.runId, /^run_[a-f0-9]{26}$/);
+  assert.match(artifact.artifactId, /^artifact_[a-f0-9]{26}$/);
+  assert.match(proposal.proposalId, /^proposal_[a-f0-9]{26}$/);
   assert.equal(decided.artifact.canonicalVersion, 2);
   assert.equal(completed.receipt.schemaVersion, CASEFLOW_SCHEMA_VERSIONS.receipt);
+  assert.match(completed.receipt.receiptId, /^receipt_[a-f0-9]{26}$/);
   assert.match(completed.receipt.receiptHash, /^[a-f0-9]{64}$/);
   const { receiptId: _receiptId, receiptHash: _receiptHash, ...receiptBody } = completed.receipt;
   assert.equal(contentHash(receiptBody), completed.receipt.receiptHash);
