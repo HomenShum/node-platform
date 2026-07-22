@@ -398,7 +398,7 @@ Passing an earlier level never implies a later claim.
 - [x] Keep canonical IDs, events, schemas, receipts, and React view models provider-neutral.
 - [x] Maintain one authoritative transactional backend per deployment.
 - [x] Publish adapter capability negotiation and conformance suites.
-- [ ] Implement generic PostgreSQL persistence and conditional version application.
+- [x] Implement generic PostgreSQL persistence and conditional version application.
 - [ ] Implement the Supabase managed profile: Auth, RLS, Storage, Realtime, queues, and Cron.
 - [ ] Prove export from Convex and import into Supabase with matching canonical artifact and receipt
   hashes.
@@ -488,7 +488,8 @@ Passing an earlier level never implies a later claim.
    kernel.
 10. **Package and submit.** Run `convex-test`, installed-example proof, independent review, explicit
    publication approval, and the deterministic submission gate.
-11. **Add SQL portability.** PostgreSQL first, Supabase managed profile second, with migration proof.
+11. **Finish managed SQL portability.** The executable PostgreSQL adapter now passes the shared
+    conformance suite on PostgreSQL 17.10. Complete the Supabase managed profile and migration proof.
 
 ## Why the remaining blockers are hard
 

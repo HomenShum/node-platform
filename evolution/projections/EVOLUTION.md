@@ -56,6 +56,16 @@ Canonical JSON records remain authoritative. This projection explains why materi
 - Evidence: `evd:caseflow-idempotent-retries` (pass)
 - Known limitations: Each provider adapter must still demonstrate this contract against its real transactional backend.; Cross-tenant authorization remains an application-wrapper responsibility and is tested separately by each consumer.
 
+### A checked-in SQL schema was being tracked as portability progress even though no executable NodeKit runtime implemented or proved the full Caseflow contract.
+
+- Event: `evt:postgres-caseflow-adapter`
+- Source: `5cc61578b3c1bd5b5c8195b83347b91f8b83242b`
+- Resolution: NodeKit now ships a driver-neutral PostgreSQL Caseflow adapter, complete transactional schema, owner-scoped operations, stable public and typed exports, a disposable-provider conformance runner, and a complete Supabase RLS projection over the portable tables.
+- Observed failure: The PostgreSQL layer lacked cases, runs, approvals, exceptions, receipts, owner-scoped runtime methods, public package exports, TypeScript declarations, and live provider conformance.
+- Invariants: `inv:postgres-caseflow-conformance` (verified)
+- Evidence: `evd:postgres-caseflow-conformance` (pass)
+- Known limitations: The Supabase SQL projection has not yet passed authenticated live Auth, Storage, Realtime, Queue, and Cron conformance.; PostgreSQL subscriptions use polling and durable jobs remain an external runtime capability by design.
+
 ## Harness evolution
 
 ### Visually polished frontend output could still miss the intended creator-workspace topology.

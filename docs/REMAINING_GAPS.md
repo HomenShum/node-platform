@@ -17,6 +17,8 @@ This is the authoritative distinction between work NodeKit can close inside this
 - [x] Automatic skill and routing promotion remains disabled.
 - [x] Provider capability negotiation and the shared Caseflow conformance suite.
 - [x] PostgreSQL schema foundation with transactional row locks and stale-proposal conditional apply.
+- [x] Executable, owner-scoped PostgreSQL adapter with public TypeScript API and exact-revision live
+  conformance on PostgreSQL 17.10, including same-base races, retries, recovery, reload, and receipts.
 - [x] Supabase managed-profile foundation with owner-scoped RLS policies and explicit Realtime tables.
 - [x] Submission manifest schema and evaluator requiring all evidence hashes plus explicit publication approval.
 
@@ -29,7 +31,6 @@ This is the authoritative distinction between work NodeKit can close inside this
 | Fresh humans | Five consented participants; at least four unassisted; timing and SEQ thresholds pass; no P0/P1 issue remains | Agent simulations are not human usability evidence |
 | Convex consumers | Authenticated NodeRoom/NodeSheet, NodeSlide, and NodeVideo wrappers each pass lifecycle and ownership conformance | The component boundary can only be discovered from real, materially different consumers |
 | Preview proof | Exact commit deployed to isolated frontend/backend; fresh identity uploads real bytes, completes, exports, reopens, scores, and cleans up | Requires live deployment credentials and a deployment-bound browser journey |
-| PostgreSQL adapter | Executable adapter passes the same conformance suite on a provisioned PostgreSQL service | SQL checked into this repository is a foundation, not a running provider receipt |
 | Supabase profile | Auth, RLS, Storage, Realtime, Queue, and Cron pass owner-scoped live conformance | Requires a provisioned Supabase project and authenticated multi-user tests |
 | Final ProofLoop | Independent verifier re-hashes the final immutable candidate and every release receipt | Must run after all other receipts exist |
 | Package/publication | Packed install example passes, npm publication is authorized, and a human approves final public claims | Publication is externally visible and intentionally last |

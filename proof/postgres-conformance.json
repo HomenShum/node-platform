@@ -1,0 +1,71 @@
+{
+  "schemaVersion": "nodekit.postgres-conformance/v1",
+  "adapter": "@homenshum/nodekit/adapters/postgres",
+  "assertions": {
+    "crossOwnerDenied": true,
+    "ownerIsolation": true,
+    "receiptIntegrity": true,
+    "reloadPreservedState": true,
+    "sameBaseRaceFailedClosed": true,
+    "sharedConformancePassed": true
+  },
+  "candidateCommit": "5cc61578b3c1bd5b5c8195b83347b91f8b83242b",
+  "capabilities": {
+    "schemaVersion": "nodekit.runtime-capabilities/v1",
+    "provider": "postgres",
+    "durableState": true,
+    "transactions": true,
+    "optimisticConcurrency": true,
+    "subscriptions": "polling",
+    "durableJobs": "external",
+    "fileStorage": false,
+    "presence": false,
+    "scheduledJobs": false,
+    "localDevelopment": true
+  },
+  "conformance": {
+    "assertions": {
+      "activeRunStartIsIdempotent": true,
+      "canonicalVersionAdvancedOnce": true,
+      "contentAddressedReceipt": true,
+      "exceptionStatePreserved": true,
+      "nextActionOwnerExplicit": true,
+      "oneAuthoritativeCase": true,
+      "repeatedCompletionIsIdempotent": true,
+      "repeatedDecisionIsIdempotent": true,
+      "staleProposalFailedClosed": true
+    },
+    "capabilityNegotiation": {
+      "missing": [],
+      "passed": true,
+      "provider": "postgres",
+      "schemaVersion": "nodekit.runtime-capability-negotiation/v1"
+    },
+    "capabilities": {
+      "schemaVersion": "nodekit.runtime-capabilities/v1",
+      "provider": "postgres",
+      "durableState": true,
+      "transactions": true,
+      "optimisticConcurrency": true,
+      "subscriptions": "polling",
+      "durableJobs": "external",
+      "fileStorage": false,
+      "presence": false,
+      "scheduledJobs": false,
+      "localDevelopment": true
+    },
+    "passed": true,
+    "schemaVersion": "nodekit.adapter-conformance/v1"
+  },
+  "generatedAt": "2026-07-22T08:41:03.302Z",
+  "migration": {
+    "path": "adapters/postgres/001_caseflow.sql",
+    "sha256": "63e4cd3af94f5db8204f3c80ad3faadd53ed0f1b8019bae414f3785e6c1051a3"
+  },
+  "nodekitSourceHash": "0ced0adf6e0f719be9a5fabefd69754a79102f39b6b6a54b20daeb60ceba7c0b",
+  "ownerScope": "isolated-test-identities",
+  "passed": true,
+  "postgres": {
+    "serverVersion": "17.10"
+  }
+}

@@ -183,7 +183,7 @@ The earlier planning-only `apiVersion` / `kind` / `metadata` / `spec` envelope i
 
 ## Honest boundary
 
-`planned`, `migration-planned`, and `canonical-unpackaged` remain intentionally distinct from released shared packages. NodeKit now has one domain-blank base and portable in-memory Caseflow semantics. Convex Caseflow extraction, managed-database adapters, and deeper live-runtime adoption remain separately evidenced work until their respective gates pass.
+`planned`, `migration-planned`, and `canonical-unpackaged` remain intentionally distinct from released shared packages. NodeKit now has one domain-blank base, portable in-memory Caseflow semantics, and an exact-revision PostgreSQL 17.10 conformance receipt. Convex Caseflow extraction, live Supabase managed-profile conformance, and deeper application adoption remain separately evidenced work until their respective gates pass.
 
 See [`docs/DECISIONS.md`](docs/DECISIONS.md) for the ownership split and migration rules.
 The coordinated consumer commits, pull requests, hosted checks, and known limits are recorded in [`docs/P0_ROLLOUT.md`](docs/P0_ROLLOUT.md) and [`proof/p0-rollout.json`](proof/p0-rollout.json).

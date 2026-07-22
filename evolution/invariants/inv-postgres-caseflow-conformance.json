@@ -1,0 +1,24 @@
+{
+  "schemaVersion": "nodekit.invariant-claim/v1",
+  "id": "inv:postgres-caseflow-conformance",
+  "statement": "The PostgreSQL adapter is owner-scoped, transactionally applies at most one same-base proposal, preserves idempotent retries and recovery, survives reload, and emits a content-addressed completion receipt under the shared Caseflow contract.",
+  "scope": {
+    "applications": [
+      "NodeKit factory"
+    ],
+    "packages": [
+      "@homenshum/nodekit/adapters/postgres"
+    ],
+    "surfaces": [
+      "PostgreSQL 17"
+    ]
+  },
+  "enforcement": "test",
+  "verifierRefs": [
+    "scripts/run-postgres-conformance.mjs",
+    "test/postgres-adapter.test.mjs",
+    "proof/postgres-conformance.json"
+  ],
+  "introducedByEventId": "evt:postgres-caseflow-adapter",
+  "status": "verified"
+}

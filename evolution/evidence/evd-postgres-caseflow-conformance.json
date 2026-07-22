@@ -1,0 +1,19 @@
+{
+  "schemaVersion": "nodekit.evolution-evidence/v1",
+  "id": "evd:postgres-caseflow-conformance",
+  "kind": "test",
+  "artifactRef": "proof/ease/candidates/5cc61578b3c1bd5b5c8195b83347b91f8b83242b/0ced0adf6e0f719be9a5fabefd69754a79102f39b6b6a54b20daeb60ceba7c0b/backend/postgres-conformance.json",
+  "sha256": "e76b5931769e68367b42cfc8ce777298bb281328bef7c5dec616508be63e4195",
+  "sourceCommit": "5cc61578b3c1bd5b5c8195b83347b91f8b83242b",
+  "generatedAt": "2026-07-22T01:41:03-07:00",
+  "command": "NODEKIT_POSTGRES_URL=<redacted-disposable-url> npm run conformance:postgres",
+  "environment": {
+    "database": "PostgreSQL 17.10 disposable Docker container",
+    "repository": "HomenShum/node-platform",
+    "sourceHash": "0ced0adf6e0f719be9a5fabefd69754a79102f39b6b6a54b20daeb60ceba7c0b"
+  },
+  "verifiesInvariantIds": [
+    "inv:postgres-caseflow-conformance"
+  ],
+  "result": "pass"
+}
