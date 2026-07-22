@@ -1,7 +1,23 @@
 # NodeKit Model Intelligence and Skill Compiler
 
-Status: **P0 observation and capability-card foundation implemented; skill compilation, routing,
-tournaments, and promotion remain gated roadmap work**
+Status: **P0-P3 mechanics implemented and deterministically tested; real capability evidence,
+application gyms, and current-revision certification remain open**
+
+## Claim boundary
+
+The repository contains working schemas, CLI commands, compilers, fail-closed gates, and
+fixture-backed tests for P0 through P3. That proves the mechanics behave as specified under the
+checked-in test cases. It does **not** prove that any live provider or exact resolved model is good
+at a real NodeKit task family.
+
+Current evidence status:
+
+- no live provider run in this repository has produced a project-scoped capability card;
+- no real model route is certified;
+- no NodeKit Builder, NodeSlide, NodeVideo, NodeRoom, NodeSheet, or NodeBenchAI gym has completed
+  its application-specific evidence program;
+- automatic promotion remains disabled, and deterministic tests cannot substitute for a fresh
+  agent canary plus an independently verified NodeProof receipt.
 
 ## Adopted decision
 
@@ -99,9 +115,9 @@ No card is generated from NodeKit's deterministic factory proof because that pro
 live model comparison. Existing NodeSlide or NodeVideo evidence must be normalized into valid
 observations before it can support a card.
 
-## Skill compiler design
+## Implemented skill compiler mechanics
 
-The future resolved skill stack is:
+`nodekit harness init` creates the five skill roots for the resolved stack:
 
 ```text
 Role skill
@@ -111,9 +127,11 @@ Role skill
 + Conditional recovery skill
 ```
 
-Every executable skill must define typed triggers, inputs, required tools, procedure, constraints,
-completion checks, failure behavior, positive and negative examples, expected tool traces, test
-fixtures, and supporting evidence. A skill is not motivational prose.
+The implemented `nodekit skills propose` path clusters repeated findings only after the configured
+multi-run and multi-brief threshold, then writes proposal-only candidates with executable skill
+contracts. Every executable skill must define typed triggers, inputs, required tools, procedure,
+constraints, completion checks, failure behavior, positive and negative examples, expected tool
+traces, test fixtures, and supporting evidence. A skill is not motivational prose.
 
 Normal promotion threshold:
 
@@ -139,25 +157,28 @@ Model A + Harness v2 +/- candidate skill             # skill effect
 Tasks, evidence, tools, budgets, judges, and scoring remain fixed. Candidate code cannot edit
 held-out tasks, decisive judges, thresholds, safety requirements, or official outcomes.
 
-## Routing compiler design
+## Implemented routing mechanics
 
-Routing eventually compiles task requirements through eligible non-expired cards, quality,
-safety, latency, cost, availability, and tool compatibility into a role/domain/adapter/guardrail
-stack, bounded tools, deterministic fallback, and routing-decision receipt.
+The routing compiler orders eligible non-expired cards using project-before-domain-before-ecosystem
+evidence precedence, then compiles task requirements through quality, safety, latency, cost,
+availability, and tool compatibility into a role/domain/adapter/guardrail stack, bounded tools,
+deterministic fallback, and routing-decision receipt.
 
 Routes expire when material model, harness, tool-surface, context-policy, or skill-stack identity
-changes. Routing and skill changes remain proposals. Automatic promotion is disabled by default.
+changes. Routing and skill changes remain provisional proposals. Automatic promotion is disabled
+by default, and the compiler never reports routing certification.
 
-## Independent evaluation
+## Implemented tournament and promotion guards
 
-The candidate model never judges itself alone. A decisive lane combines independent domain and
-artifact critics, deterministic validators, optional blind human pairwise review, and NodeProof
-integrity verification. Disagreement is retained as evidence instead of collapsed into a single
-model-winner story.
+The tournament evaluator rejects self-judging candidates, requires an unchanged protected
+evaluator, and returns a provisional winner without authorizing promotion. Manual promotion
+requires a passing controlled comparison, fresh-context canary, verified NodeProof receipt, and an
+explicit `approvedBy` identity; promoted harness versions retain a rollback pointer. These guards
+are covered by deterministic fixtures, not yet by a live application tournament.
 
 ## Implementation ladder
 
-### P0 — implemented in this repository
+### P0 — implemented mechanics
 
 - [x] `nodekit.harness/v1` schema.
 - [x] `nodekit.model-observation/v1` schema.
@@ -170,24 +191,27 @@ model-winner story.
 - [x] Automatic promotion and routing certification fail closed.
 - [ ] Normalize one real NodeSlide or NodeVideo model run into a manual provisional card.
 
-### P1 — skill compiler
+### P1 — implemented mechanics
 
-- [ ] Executable skill schema and five skill directories.
-- [ ] Findings clustering into proposal-only candidates.
-- [ ] Positive/negative examples, fixtures, traces, completion, and failure assertions.
-- [ ] With-skill/without-skill benchmark.
+- [x] Executable skill schema and five skill directories.
+- [x] Findings clustering into proposal-only candidates.
+- [x] Positive/negative examples, fixtures, traces, completion, and failure assertions.
+- [x] With-skill/without-skill comparison schema and fail-closed benchmark evaluator.
+- [ ] Run the comparison against real application tasks and live model observations.
 
-### P2 — controlled routing
+### P2 — implemented mechanics
 
-- [ ] Routing-policy schema and evidence precedence.
-- [ ] Confidence, expiry, cost, latency, availability, tool compatibility, and fallback.
-- [ ] Decision receipts and canary behavior.
+- [x] Routing-policy schema and project/domain/ecosystem evidence precedence.
+- [x] Confidence, expiry, cost, latency, availability, tool compatibility, and deterministic fallback.
+- [x] Provisional decision receipt and canary verification behavior.
+- [ ] Compile and canary a route from real, non-expired capability cards.
 
-### P3 — tournament and promotion
+### P3 — implemented mechanics
 
-- [ ] Blind pairwise comparison and independent critics.
-- [ ] Fresh-agent canaries and NodeProof promotion receipts.
-- [ ] Versioned rollback and manual promotion/rejection.
+- [x] Blind pairwise comparison contract and independent-critic enforcement.
+- [x] Fresh-agent canary and NodeProof promotion-receipt gates.
+- [x] Explicit manual promotion/rejection and versioned rollback.
+- [ ] Complete a real tournament, canary, independently verified promotion, and rollback drill.
 
 ### P4 — application gyms
 
@@ -209,3 +233,6 @@ model-winner story.
 > Do not erase model differences with one giant prompt. Measure exact resolved models, exploit
 > demonstrated specialization, compensate for recurring failures, and prove every compensation
 > against protected tasks before promotion.
+
+The checked-in P1-P3 tests prove this rule is enforced mechanically. They do not provide the model
+measurements needed to make a capability or routing claim.

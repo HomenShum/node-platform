@@ -1,0 +1,9 @@
+{
+  "schemaVersion": "nodekit.publication-approval/v1",
+  "candidateCommit": "0000000000000000000000000000000000000000",
+  "approved": false,
+  "approvedBy": "",
+  "approvedAt": null,
+  "scopes": [],
+  "note": "Copy to proof/publication-approval.json only after the named approver explicitly authorizes both npm publication and Convex directory submission for this exact candidate commit."
+}

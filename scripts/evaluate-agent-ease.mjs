@@ -40,6 +40,8 @@ const identities = new Set(selected.map((entry) => `${entry.nodekitCommit}/${ent
 if (identities.size > 1) errors.push("held-out trials do not share one immutable NodeKit identity");
 const verdict = {
   errors,
+  nodekitCommit: identities.size === 1 ? [...identities][0].split("/")[0] : null,
+  nodekitSourceHash: identities.size === 1 ? [...identities][0].split("/")[1] : null,
   nodekitIdentity: identities.size === 1 ? [...identities][0] : null,
   observedTrials: manifests.length,
   passed: errors.length === 0 && selected.length === requiredTasks.length,

@@ -1,5 +1,7 @@
 {
   "schemaVersion": "nodekit.fresh-user-study/v1",
+  "nodekitCommit": "0000000000000000000000000000000000000000",
+  "nodekitSourceHash": "0000000000000000000000000000000000000000000000000000000000000000",
   "instruction": "Use this app to complete the job shown on screen.",
   "participants": [],
   "thresholds": {

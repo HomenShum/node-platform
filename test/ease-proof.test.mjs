@@ -3,6 +3,7 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 import test from "node:test";
 import { reportsWriteBlockage } from "../src/lib/agent-ease-report.mjs";
+import { requiredSubmissionGates } from "../src/lib/submission-gate.mjs";
 
 test("EaseProof keeps browser contracts distinct from certification", async () => {
   const proof = await readFile(path.resolve("templates", "base", "scripts", "proof.mjs"), "utf8");
@@ -81,7 +82,15 @@ test("submission remains fail-closed while external EaseProof gates are open", a
   const factory = await readFile(path.resolve("src", "factory-acceptance.mjs"), "utf8");
   assert.match(factory, /submissionReady: false/);
   assert.doesNotMatch(factory, /submissionBlockers: \["browserStateCoverage"/);
-  for (const blocker of ["developerTimingMatrix", "freshAgentHeldout", "freshHumanUsability", "threeConvexConsumers", "proofloopEaseVerification"]) {
-    assert.match(factory, new RegExp(blocker));
-  }
+  assert.match(factory, /submissionBlockers: \[\.\.\.requiredSubmissionGates\]/);
+  assert.deepEqual(requiredSubmissionGates, [
+    "developerTimingMatrix",
+    "freshAgentHeldout",
+    "freshHumanUsability",
+    "threeConvexConsumers",
+    "previewDeployment",
+    "proofloopEaseVerification",
+    "packageInstallProof",
+    "publicationApproval",
+  ]);
 });

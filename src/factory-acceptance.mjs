@@ -7,6 +7,7 @@ import { fileURLToPath } from "node:url";
 import { compileAgentDefinition } from "./lib/agent-definition.mjs";
 import { createProject } from "./lib/scaffold.mjs";
 import { computeNodeKitSourceHash } from "./lib/source-hash.mjs";
+import { requiredSubmissionGates } from "./lib/submission-gate.mjs";
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const packageManager = process.env.NODEKIT_PACKAGE_MANAGER ?? "npm";
@@ -199,7 +200,7 @@ try {
     schemaVersion: "nodekit.ease-proof-run/v1",
     startedAt,
     submissionReady: false,
-    submissionBlockers: ["developerTimingMatrix", "freshAgentHeldout", "freshHumanUsability", "threeConvexConsumers", "previewDeployment", "proofloopEaseVerification"],
+    submissionBlockers: [...requiredSubmissionGates],
     verdict: "EASE_NOT_CERTIFIED",
   };
   receipt.receiptDigest = digest(receipt);

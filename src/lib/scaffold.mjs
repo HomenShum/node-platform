@@ -41,7 +41,7 @@ function substitutions(options) {
   ).replaceAll("\\", "/");
   const nodekitRuntimeImport = usesVendoredNodeKitRuntime(options.nodekitSpecifier)
     ? "../vendor/nodekit/src/lib/caseflow.mjs"
-    : "@homenshum/nodekit/src/lib/caseflow.mjs";
+    : "@homenshum/nodekit/caseflow";
   const sponsors = normalizedSponsors(options);
   return {
     "__APP_NAME__": slug,

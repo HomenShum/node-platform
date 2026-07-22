@@ -3,6 +3,11 @@
   "version": "0.2.1",
   "description": "Portable agent-application scaffolding, compilation, conformance, and proof tooling",
   "type": "module",
+  "exports": {
+    ".": "./src/index.mjs",
+    "./caseflow": "./src/caseflow.mjs",
+    "./package.json": "./package.json"
+  },
   "bin": {
     "nodekit": "src/cli.mjs"
   },
@@ -29,6 +34,7 @@
     "ease:evaluate-agents": "node scripts/evaluate-agent-ease.mjs",
     "ease:evaluate-developer": "node scripts/evaluate-ease-evidence.mjs developer",
     "ease:evaluate-humans": "node scripts/evaluate-ease-evidence.mjs humans",
+    "submission:prepare": "node scripts/prepare-submission.mjs",
     "submission:evaluate": "node scripts/evaluate-submission.mjs",
     "registry:check": "node src/cli.mjs registry check --registry-root .",
     "ecosystem:check": "node src/cli.mjs ecosystem check --registry-root . --workspace ..",

@@ -1,72 +1,90 @@
 # NodeKit Ease submission readiness
 
-This document governs **E3 Ease certification and C3 Convex submission**, not E0 engineering merge readiness. See `RELEASE_LADDER.md`. The engineering foundation can receive independent review while every later product claim remains fail-closed.
+This document governs **E3 Ease certification and C3 Convex submission**, not E0 engineering merge
+readiness. See `RELEASE_LADDER.md`. Implemented code and passing unit tests may be merged while
+product-evidence and submission claims remain fail-closed.
 
 Status: **DO NOT SUBMIT**
 
-Last evidence run: `ease_3f8133e3d5a5408bb13e` on NodeKit commit `4bdc60d0b0e224f7d4884d7857b6f968bb3a901d`.
+Baseline revision audited before the exact-candidate hardening in this update:
+`5b9c4d73c286020fe7b7c52d208d7e0cbfeef626`.
 
-NodeKit is eligible for Convex component extraction or submission only when every row below is independently evidenced. A green factory command is necessary but not sufficient.
+No complete Ease certification bundle is bound to that revision. Passing evidence from
+`e398398d7f1dd4ff0b65409d2c8da971e83bc488` or
+`0cc282c68c316068447956f5c6729f98ba3435f8` remains useful regression history, but it does not
+certify `5b9c4d7` or any later candidate.
 
-## Closed gates
+## Evidence identity rule
 
-- [x] Empty-directory factory generation, dependency install, compile, check, deterministic demo, evaluation, and receipt generation.
-- [x] Exact phase timer ledger: full run `138751ms`; rendered browser journey `126768ms`; first meaningful paint `1124ms`.
-- [x] Fifteen honest UI states: first arrival, orientation, input, validation error, running, partial result, external wait, proposal pending, approval, conflict, recoverable failure, reload/resume, completed receipt, receipt inspection, and export/share.
-- [x] Six viewports in light and dark: 180 screenshot PNGs plus 180 JSON sidecars.
-- [x] Zero missing states, console errors, failed network requests, horizontal overflow, or detected mojibake.
-- [x] Zero serious or critical Axe violations across all 15 required states.
-- [x] Pixel inspection of desktop, tablet, mobile portrait, mobile landscape, light, dark, conflict, failure, approval, receipt, and export views.
-- [x] Stale proposals fail closed and preserve the newer canonical artifact.
-- [x] Failure and external-wait states preserve the last valid artifact and name next-action ownership.
-- [x] Independent ProofLoop integrity verification re-hashed the candidate archive, manifests, all 180 screenshots, the Playwright trace, and the browser video.
-- [x] A real click-through journey proves proposal creation, approval, receipt visibility, and receipt survival after reload; the trace, video, server process identity, timings, and hashes are in the browser manifest.
-- [x] One cross-platform npm/pnpm factory run passed on Ubuntu, macOS, and Windows.
+Every certification claim must name one immutable NodeKit commit and source hash. A passing receipt
+may not be silently carried forward after source changes, even when those changes are additive.
 
-Canonical evidence:
+The current local evidence directory contains artifacts from different revisions:
 
-- `proof/factory-acceptance.json`
-- `proof/ease/latest/manifest.json`
-- `proof/ease/latest/browser/screenshot-manifest.json`
-- `proof/ease/latest/browser/screenshots/`
-- `proof/ease/latest/candidate.tar.gz`
-- `proof/ease/latest/proofloop-receipt.json`
-- `.qa/memory/runs.jsonl`
-- `.qa/memory/findings.jsonl`
+| Evidence                                                                                                                    | Bound revision                                    | Honest interpretation                                                                           |
+| --------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------- | ----------------------------------------------------------------------------------------------- |
+| `proof/factory-acceptance.json` and `proof/ease/latest/manifest.json`                                                       | `0cc282c`                                         | Passing factory/browser run for that earlier revision only.                                     |
+| `proof/ease/developer-timing-runs-0cc282c*.json`                                                                            | `0cc282c`                                         | Passing 60-run cold/warm matrix for that earlier revision only.                                 |
+| `proof/ease/developer-timing-runs-e398398*.json`                                                                            | `e398398`                                         | Passing 60-run cold/warm matrix for that earlier revision only.                                 |
+| `proof/ease/fresh-agent-verdict-e398398.json`                                                                               | `e398398`                                         | All three required held-out coding-agent tasks passed on one exact earlier identity.            |
+| `proof/package-install-verdict-e398398.json`                                                                                | `e398398`                                         | Fresh-consumer tarball install, create, compile, check, demo, and eval passed for that package. |
+| `proof/local-closure-e398398.json`                                                                                          | `e398398`                                         | Records local/code-owned closure and explicitly leaves external evidence open.                  |
+| `proof/ease/developer-timing-verdict.json`, `proof/ease/fresh-agent-verdict.json`, and `proof/package-install-verdict.json` | aliases currently resolving to `e398398` evidence | Convenience filenames, not current-revision proof.                                              |
+| `proof/ease/latest/proofloop-receipt.json`                                                                                  | absent in the current working tree                | Independent Ease integrity verification is not currently evidenced.                             |
 
-## Open submission blockers
+The `0cc282c` and `e398398` matrices each contain five cold and five warm runs for npm and pnpm on
+Windows, Ubuntu, and macOS. They support an earlier-revision stability claim. They do not support a
+`5b9c4d7` onboarding claim, and five samples per cell still do not justify a per-cell p95.
 
-### 0. Repeated cold/warm developer timing matrix
+## Implemented mechanics versus certification
 
-- [ ] Five genuinely cold and five warm runs pass for each supported OS/package-manager lane.
-- [ ] Cold caches are isolated rather than merely labeled cold.
-- [ ] Per-phase sample count, median, range, and observed maximum are computed from raw receipts. Do not publish a per-lane p95 from five observations; require at least 20 cold and 20 warm samples per lane before a p95 claim.
+The current source includes deterministic machinery for:
 
-Fail-closed evaluator: `npm run ease:evaluate-developer -- proof/ease/developer-timing-runs.json`. It requires all 60 raw trials and refuses percentile claims when any lane, timing field, isolated cold cache, or zero-intervention invariant is missing.
+- domain-blank application scaffolding and package creation;
+- exact server-process binding in browser certification;
+- canonical responsive UI-state screenshots and sidecars;
+- cold/warm timing aggregation that requires all 60 trials;
+- fresh coding-agent held-out aggregation;
+- package-install verification;
+- fail-closed submission-manifest evaluation;
+- P0-P3 Model Intelligence and Harness Gym mechanics;
+- governed Knowledge Evolution and frontend-topology evolution.
 
-The workflow now creates a dedicated cache for each measured run, explicitly primes only warm runs,
-writes `proof/ease/developer-timing-run.json`, and can aggregate downloaded artifacts with
-`npm run ease:aggregate-developer -- <artifact-root>`. Collection remains open until all 60 hosted
-receipts exist.
-- [ ] No strong onboarding percentile claim is published from the current single-run samples.
+Those are implementation facts. They are not equivalent to:
 
-The existing cross-platform result proves compatibility, not percentile stability.
+- a real project-scoped model capability card;
+- a completed application gym;
+- an authenticated Convex consumer;
+- a real-person usability result;
+- a deployed fresh-user production proof; or
+- a current-revision Ease certificate.
 
-### 1. Fresh coding-agent held-out matrix
+## Current-revision certification gate
 
-- [ ] One writable, isolated coding-agent run succeeds without human reprompting.
-- [ ] All three held-out tasks succeed: research map, volunteer onboarding, and launch presentation.
-- [ ] Each run makes substantive non-proof changes, produces a non-blocked final report, passes generated checks, and preserves its transcript, diff, timers, screenshots, and receipt.
+All items below must be repeated on one clean immutable candidate that contains the Knowledge
+Evolution and frontend-specialist changes now present after `e398398`.
 
-The executor repair is implemented: native runs retain `workspace-write`; Docker runs use the
-disposable outer container as their security boundary and avoid the incompatible nested namespace.
-The held-out gate remains open until all three authentic runs pass and their receipts are retained.
+- [ ] Run factory generation, fresh dependency installation, compile, check, deterministic demo,
+      evaluation, and receipt generation on the exact candidate.
+- [ ] Complete the real browser journey and retain exact process identity, trace, video,
+      screenshots, sidecars, accessibility results, network health, reload behavior, and export proof.
+- [ ] Run five isolated cold and five warm trials for all six OS/package-manager lanes and retain
+      the 60 raw receipts plus the aggregate verdict.
+- [ ] Re-run research map, volunteer onboarding, and launch presentation as writable isolated
+      coding-agent tasks with zero human reprompts and substantive non-proof changes.
+- [ ] Pack the candidate and pass the fresh-consumer install/create/compile/check/demo/eval path.
+- [ ] Run independent ProofLoop integrity verification over the final candidate archive and every
+      referenced artifact.
+- [ ] Bind every receipt to the same commit, source hash, package tarball hash, and generated-app
+      identity.
+- [ ] Publish no per-lane p95 unless that lane has at least 20 cold and 20 warm samples.
 
-Evidence: `proof/ease/agents/agent_volunteer-onboarding_165fb8466787/agent/session.jsonl` (local ignored evidence).
+The earlier passing matrices and held-out runs reduce regression risk and prove the harness can
+work. They do not close this gate for the current revision.
 
-Next repair: for the Docker executor only, rely on the outer disposable container as the sandbox and disable the incompatible inner Linux sandbox. Re-run in a new QA pass, then run the other two held-out tasks only after the canary succeeds.
+## External submission blockers
 
-### 2. Five-person fresh-user study
+### 1. Five-person fresh-user study
 
 - [ ] Five participants receive only: "Use this app to complete the job shown on screen."
 - [ ] At least four finish unassisted.
@@ -74,52 +92,67 @@ Next repair: for the Docker executor only, rely on the outer disposable containe
 - [ ] Median neutral journey is at most 180 seconds.
 - [ ] Median Single Ease Question score is at least 6/7.
 - [ ] No P0/P1 usability failures remain.
-- [ ] Consent, timestamps, screen recordings or exact screenshots, interventions, and participant-level receipts are retained.
+- [ ] Consent, timestamps, recordings or exact screenshots, interventions, and participant-level
+      receipts are retained.
 
-Template: `proof/ease/fresh-users.template.json`. This gate requires real people and cannot be replaced with an agent simulation.
+Template: `proof/ease/fresh-users.template.json`. This gate requires real people and cannot be
+replaced by an agent simulation. Evaluate the completed study with
+`npm run ease:evaluate-humans -- proof/ease/fresh-users.json`.
 
-After recording the five uncoached sessions, run `npm run ease:evaluate-humans -- proof/ease/fresh-users.json`. The evaluator writes a machine-readable verdict and exits nonzero until every threshold and required observation passes.
+### 2. Three authenticated Convex-backed consumers
 
-### 3. Three Convex-backed consumers
-
-- [ ] NodeRoom or NodeSheet artifact collaboration passes portable Caseflow conformance through authenticated, owner-scoped Convex wrappers.
+- [ ] NodeRoom or NodeSheet passes portable Caseflow conformance through authenticated,
+      owner-scoped Convex wrappers.
 - [ ] NodeSlide presentation production passes the same contract.
 - [ ] NodeVideo or another long-running artifact workflow passes the same contract.
-- [ ] Stale proposals, idempotent retries, exception recovery, receipt integrity, and component/app ownership boundaries are exercised in each consumer.
-- [ ] The repeated implementation is covered by `convex-test` before extraction.
+- [ ] Each consumer exercises stale proposals, idempotent retries, exception recovery, receipt
+      integrity, and component/application ownership boundaries.
+- [ ] Repeated Caseflow behavior is covered with `convex-test` before extraction.
 
-Current ecosystem audit:
+Repository contract checks, filesystem adapters, local durable candidates, or unauthenticated
+owner-capability locators do not count as authenticated Convex consumers. No component extraction
+is authorized until all three real consumers exist.
 
-- NodeRoom: fails one contract-classification gate.
-- NodeSlide: existing repository contract checks pass, but this is not evidence of a Convex Caseflow consumer.
-- NodeVideo: a production engineering candidate now demonstrates durable Caseflow state, two-session
-  reactivity, stale-proposal rejection, exact approval, reload persistence, and governed external
-  planning. It does not yet count as submission-grade because its owner-capability locator has not
-  been replaced by authenticated, owner-scoped application wrappers.
+### 3. Live backend portability
 
-No component extraction is authorized until all three real consumers exist.
+- [ ] Run the portable Caseflow suite against a live PostgreSQL deployment.
+- [ ] Run it against a live Supabase project with Auth, RLS, Storage, and Realtime enabled.
+- [ ] Preserve provider-specific receipts and verify export/import compatibility.
 
-### 4. Shareable preview and production-first-user proof
+Checked-in migrations and deterministic adapter tests prove implementation shape, not managed
+service behavior.
 
-- [ ] Exact tested commit is deployed to an isolated preview frontend and backend.
-- [ ] Fresh browser identity completes the rendered journey using real fixture bytes.
-- [ ] Exported artifact is downloaded, reopened, and independently scored.
-- [ ] Deployment identity, screenshots, browser health, cleanup, and proof receipt are preserved.
+### 4. Real Model Intelligence evidence
 
-This requires deployment credentials and explicit authorization. No preview or production deployment occurred in the current pass.
+- [ ] Normalize live exact-model observations into at least one project-scoped provisional
+      capability card.
+- [ ] Complete a real application gym using protected tasks and independent evaluation.
+- [ ] Keep routing provisional until a fresh-agent canary and NodeProof receipt pass.
 
-## Submission sequence after blockers close
+P1-P3 mechanics are implemented and tested with fixtures. No live model capability or routing
+claim is currently authorized.
 
-1. Re-run the complete factory and cross-platform matrix against one immutable candidate.
-2. Re-run independent ProofLoop verification.
-3. Confirm five-person and three-consumer receipts are bound into the submission manifest.
-4. Extract only the repeated Convex Caseflow kernel; keep NodeKit CLI, React experience kit, and factory outside the component.
-5. Run `convex-test`, package-install example tests, and the fresh-user preview journey.
-6. Publish the npm package only with explicit authorization.
-7. Submit through the Convex component submission process only when `submissionReady` is deterministically true.
+### 5. Shareable preview and production-first-user proof
+
+- [ ] Deploy the exact tested commit to isolated preview frontend and backend environments.
+- [ ] Use a fresh browser identity and real fixture bytes through the rendered UI.
+- [ ] Download, reopen, and independently score the exported artifact.
+- [ ] Preserve deployment identity, screenshots, health, cleanup, and proof receipt.
+
+This requires credentials and explicit authorization. Local browser evidence is not a deployment.
+
+## Submission sequence after every blocker closes
+
+1. Freeze one immutable candidate and discard or archive stale convenience aliases.
+2. Re-run the current-revision local certification gate.
+3. Bind the five-person, three-consumer, portability, model-evidence, and production-preview
+   receipts into one submission manifest.
+4. Re-run independent ProofLoop verification over the complete evidence set.
+5. Extract only the repeated Convex Caseflow kernel; keep the NodeKit CLI, React experience kit,
+   Knowledge Evolution plane, Harness Gym, and factory outside the component.
+6. Run `convex-test`, package-install example tests, and the fresh-user preview journey.
+7. Publish the npm package only with explicit authorization.
+8. Submit only when `npm run submission:evaluate` returns `submissionReady: true` for the frozen
+   candidate and explicit publication approval is present.
 
 Until then, the required verdict is `EASE_NOT_CERTIFIED`.
-
-The final machine gate is `npm run submission:evaluate`. It validates
-`proof/submission-manifest.json`, requires all eight gates exactly once, re-hashes every referenced
-artifact, and treats explicit publication approval as evidence rather than an implied permission.
