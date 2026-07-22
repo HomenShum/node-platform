@@ -168,6 +168,18 @@ try {
         await page.locator("#case-title").waitFor();
         await page.locator(`body[data-scenario="${state}"]`).waitFor();
         if (firstMeaningfulPaintMs === null) firstMeaningfulPaintMs = Math.round(performance.now() - started);
+        if (state === "first_arrival") {
+          const inputBox = await page.locator("#primary-input").boundingBox();
+          const actionBox = await page.locator("#primary-input button").boundingBox();
+          const visibleInputHeight = inputBox ? Math.max(0, Math.min(inputBox.y + inputBox.height, viewport.height) - Math.max(inputBox.y, 0)) : 0;
+          if (!inputBox || !actionBox || visibleInputHeight < Math.min(88, inputBox.height)
+            || actionBox.y < 0 || actionBox.y + actionBox.height > viewport.height) {
+            throw new Error(`primary action is not visible on first arrival for ${viewport.id}/${theme}: ${JSON.stringify({ actionBox, inputBox, viewport, visibleInputHeight })}`);
+          }
+          if (await page.locator("#reset").isVisible()) {
+            throw new Error(`reset control distracts from the first action for ${viewport.id}/${theme}`);
+          }
+        }
         if (state === "validation_error") {
           await page.locator("#outcome").fill("");
           await page.locator("#primary-input button").click();

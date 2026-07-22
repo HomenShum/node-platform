@@ -35,6 +35,7 @@ function render() {
   elements["receipt-detail"].hidden = !inspectingReceipt;
   elements["receipt-detail"].innerHTML = inspectingReceipt ? `<strong>${scenario === "export_share" ? "Portable proof bundle" : "Receipt contents"}</strong><dl><dt>Receipt</dt><dd>${escapeText(state.receipt.receiptHash)}</dd><dt>Artifacts</dt><dd>${state.receipt.artifactIds.length}</dd><dt>Proposals</dt><dd>${state.receipt.proposalIds.length}</dd><dt>Events</dt><dd>${state.receipt.eventIds.length}</dd></dl>` : "";
   elements["primary-input"].hidden = !["first_arrival", "orientation", "input", "validation_error"].includes(scenario);
+  elements.reset.hidden = ["first_arrival", "orientation", "input", "validation_error"].includes(scenario);
   elements.outcome.setAttribute("aria-invalid", scenario === "validation_error" ? "true" : "false");
   elements["input-help"].textContent = scenario === "validation_error" ? "A concrete outcome is required before work can start." : "Saved locally in this deterministic demonstration.";
   elements.propose.disabled = pending || state.run.status === "completed";
