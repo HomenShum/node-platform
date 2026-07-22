@@ -10,6 +10,12 @@ import { checkRepository, commandFor } from "./lib/repo-check.mjs";
 import { loadRegistry, validateRegistry } from "./lib/registry.mjs";
 import { adoptProject, createProject, recordSetupEvent } from "./lib/scaffold.mjs";
 import {
+  compileModelIntelligence,
+  diagnoseModelFailures,
+  initializeHarness,
+  writeModelBaseline,
+} from "./lib/model-intelligence.mjs";
+import {
   importUnderstandAnythingCodeGraph,
   queryUnderstandAnythingCodeGraph,
   readUnderstandAnythingCodeGraph,
@@ -65,6 +71,11 @@ Usage:
   nodekit dashboard [--workspace <path>] [--write] [--out <path>]
   nodekit graph import [--repo-root <path>] [--graph-dir <path>] [--repo-id <id>] [--commit <sha>] [--json]
   nodekit graph query <terms> [--repo-root <path>] [--limit <number>] [--json]
+  nodekit harness init [--repo-root <path>] [--json]
+  nodekit models baseline [--repo-root <path>] [--json]
+  nodekit models profile [--repo-root <path>] [--json]
+  nodekit models inspect [--repo-root <path>] [--json]
+  nodekit models diagnose [--repo-root <path>] [--json]
   nodekit certify [--repo-root <path>] [--json]`);
 }
 
@@ -417,6 +428,82 @@ async function runGraphQuery(parsed) {
   for (const { node, score } of output.matched) console.log(`  ${score} ${node.name} (${node.type})`);
 }
 
+function repoRootFrom(parsed) {
+  return path.resolve(String(parsed.options["repo-root"] ?? process.cwd()));
+}
+
+async function runHarnessInit(parsed) {
+  const output = await initializeHarness(repoRootFrom(parsed));
+  if (parsed.options.json) console.log(JSON.stringify({ ...output, passed: true }, null, 2));
+  else {
+    console.log(`INITIALIZED Harness Gym for ${output.applicationId}`);
+    console.log(`  ${output.created.length} files created; existing files preserved`);
+    console.log("  automatic promotion disabled; no model capability claims were created");
+  }
+}
+
+async function runModelsBaseline(parsed) {
+  const { receipt, output } = await writeModelBaseline(repoRootFrom(parsed));
+  if (parsed.options.json) console.log(JSON.stringify({ ...receipt, output, passed: true }, null, 2));
+  else {
+    console.log(`BASELINED ${receipt.applicationId}: ${receipt.observationCount} observations, ${receipt.capabilityCardCount} cards`);
+    console.log(`  status ${receipt.status}; provider calls 0; routing not certified`);
+    console.log(`  receipt ${output}`);
+  }
+}
+
+async function runModelsProfile(parsed) {
+  const compiled = await compileModelIntelligence(repoRootFrom(parsed));
+  const output = { ...compiled.registry, passed: true };
+  if (parsed.options.json) console.log(JSON.stringify(output, null, 2));
+  else console.log(`PROFILED ${output.applicationId}: ${output.observations} observations, ${output.cards.length} evidence-backed cards (${output.status})`);
+}
+
+async function runModelsInspect(parsed) {
+  const compiled = await compileModelIntelligence(repoRootFrom(parsed), { write: false });
+  const output = {
+    applicationId: compiled.harness.applicationId,
+    harnessVersion: compiled.harness.version,
+    harnessHash: compiled.resolved.harnessHash,
+    benchmarkHash: compiled.resolved.benchmarkHash,
+    status: compiled.registry.status,
+    observationCount: compiled.observations.length,
+    cards: compiled.cards.map((card) => ({
+      confidence: card.confidence,
+      model: card.model,
+      scope: card.scope,
+      status: card.status,
+    })),
+    routingCertified: false,
+    automaticPromotion: false,
+  };
+  if (parsed.options.json) console.log(JSON.stringify(output, null, 2));
+  else {
+    console.log(`${output.applicationId} Harness ${output.harnessVersion}: ${output.status}`);
+    console.log(`  observations ${output.observationCount}; cards ${output.cards.length}`);
+    console.log("  routing uncertified; automatic promotion disabled");
+    for (const card of output.cards) console.log(`  ${card.scope.level} ${card.model.resolvedProvider}/${card.model.resolvedModel}: ${card.status}, ${card.confidence.level} confidence`);
+  }
+}
+
+async function runModelsDiagnose(parsed) {
+  const compiled = await compileModelIntelligence(repoRootFrom(parsed), { write: false });
+  const clusters = diagnoseModelFailures(compiled.observations);
+  const output = {
+    schemaVersion: "nodekit.model-diagnosis/v1",
+    applicationId: compiled.harness.applicationId,
+    observationCount: compiled.observations.length,
+    clusters,
+    skillCandidates: clusters.filter((cluster) => cluster.skillCandidateEligible).length,
+    passed: true,
+  };
+  if (parsed.options.json) console.log(JSON.stringify(output, null, 2));
+  else {
+    console.log(`DIAGNOSED ${output.applicationId}: ${clusters.length} failure clusters, ${output.skillCandidates} eligible for skill-candidate review`);
+    for (const cluster of clusters) console.log(`  ${cluster.count}x ${cluster.failureClass} (${cluster.probableCause}) ${cluster.model}${cluster.skillCandidateEligible ? " [candidate threshold met]" : ""}`);
+  }
+}
+
 async function main() {
   const parsed = parseArgs(process.argv.slice(2));
   const [first, second] = parsed.positional;
@@ -476,6 +563,26 @@ async function main() {
   }
   if (first === "graph" && second === "query") {
     await runGraphQuery(parsed);
+    return;
+  }
+  if (first === "harness" && second === "init") {
+    await runHarnessInit(parsed);
+    return;
+  }
+  if (first === "models" && second === "baseline") {
+    await runModelsBaseline(parsed);
+    return;
+  }
+  if (first === "models" && second === "profile") {
+    await runModelsProfile(parsed);
+    return;
+  }
+  if (first === "models" && second === "inspect") {
+    await runModelsInspect(parsed);
+    return;
+  }
+  if (first === "models" && second === "diagnose") {
+    await runModelsDiagnose(parsed);
     return;
   }
   throw new Error(`unknown command: ${parsed.positional.join(" ")}`);

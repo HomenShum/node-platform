@@ -1,6 +1,9 @@
 export const CONTRACT_VERSIONS = Object.freeze({
   application: "nodeagent.application/v1",
   event: "nodeagent.event/v1",
+  harness: "nodekit.harness/v1",
+  modelCapabilityCard: "nodekit.model-capability-card/v1",
+  modelObservation: "nodekit.model-observation/v1",
   pack: "nodeagent.pack/v1",
   repository: "nodekit.repo/v1",
   trace: "nodeagent.trace/v1",
@@ -8,6 +11,9 @@ export const CONTRACT_VERSIONS = Object.freeze({
 
 export const CONTRACT_SCHEMA_FILES = Object.freeze({
   application: "nodeagent.application.v1.schema.json",
+  harness: "nodekit.harness.v1.schema.json",
+  modelCapabilityCard: "nodekit.model-capability-card.v1.schema.json",
+  modelObservation: "nodekit.model-observation.v1.schema.json",
   pack: "nodeagent.pack.v1.schema.json",
   repository: "nodekit.schema.json",
 });

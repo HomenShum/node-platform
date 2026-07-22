@@ -1,0 +1,94 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/HomenShum/node-platform/blob/main/schemas/nodekit.model-capability-card.v1.schema.json",
+  "title": "NodeKit evidence-backed model capability card",
+  "type": "object",
+  "required": ["schemaVersion", "model", "scope", "evidenceWindow", "strengths", "weaknesses", "bestRoles", "avoidRoles", "requiredScaffolding", "metrics", "confidence", "expiresWhen", "evidenceRefs", "status"],
+  "properties": {
+    "schemaVersion": { "const": "nodekit.model-capability-card/v1" },
+    "model": {
+      "type": "object",
+      "required": ["requestedRoute", "resolvedProvider", "resolvedModel"],
+      "properties": {
+        "requestedRoute": { "$ref": "#/$defs/nonEmpty" },
+        "resolvedProvider": { "$ref": "#/$defs/nonEmpty" },
+        "resolvedModel": { "$ref": "#/$defs/nonEmpty" },
+        "modelRevision": { "$ref": "#/$defs/nonEmpty" }
+      },
+      "additionalProperties": false
+    },
+    "scope": {
+      "type": "object",
+      "required": ["level", "taskFamilies"],
+      "properties": {
+        "level": { "enum": ["ecosystem", "domain", "project"] },
+        "applicationId": { "$ref": "#/$defs/nonEmpty" },
+        "domainId": { "$ref": "#/$defs/nonEmpty" },
+        "taskFamilies": { "$ref": "#/$defs/stringList" }
+      },
+      "allOf": [
+        { "if": { "properties": { "level": { "const": "project" } } }, "then": { "required": ["applicationId"] } },
+        { "if": { "properties": { "level": { "const": "domain" } } }, "then": { "required": ["domainId"] } }
+      ],
+      "additionalProperties": false
+    },
+    "evidenceWindow": {
+      "type": "object",
+      "required": ["from", "to", "benchmarkRuns", "taskCount", "harnessVersions"],
+      "properties": {
+        "from": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$" },
+        "to": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$" },
+        "benchmarkRuns": { "type": "integer", "minimum": 0 },
+        "taskCount": { "type": "integer", "minimum": 0 },
+        "harnessVersions": { "$ref": "#/$defs/stringList" }
+      },
+      "additionalProperties": false
+    },
+    "strengths": { "$ref": "#/$defs/stringList" },
+    "weaknesses": { "$ref": "#/$defs/stringList" },
+    "bestRoles": { "$ref": "#/$defs/stringList" },
+    "avoidRoles": { "$ref": "#/$defs/stringList" },
+    "requiredScaffolding": { "$ref": "#/$defs/stringList" },
+    "metrics": {
+      "type": "object",
+      "properties": {
+        "briefAdherence": { "$ref": "#/$defs/score" },
+        "validToolCalls": { "$ref": "#/$defs/score" },
+        "firstPassAcceptance": { "$ref": "#/$defs/score" },
+        "repairSuccess": { "$ref": "#/$defs/score" },
+        "medianLatencyMs": { "type": "integer", "minimum": 0 },
+        "costPerSuccessUsd": { "type": "number", "minimum": 0 }
+      },
+      "additionalProperties": false
+    },
+    "confidence": {
+      "type": "object",
+      "required": ["level", "reason"],
+      "properties": {
+        "level": { "enum": ["low", "medium", "high"] },
+        "reason": { "$ref": "#/$defs/nonEmpty" }
+      },
+      "additionalProperties": false
+    },
+    "expiresWhen": { "$ref": "#/$defs/stringList" },
+    "evidenceRefs": { "$ref": "#/$defs/stringList" },
+    "status": { "enum": ["provisional", "certified", "expired"] },
+    "certificationReceiptId": { "$ref": "#/$defs/nonEmpty" }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "status": { "const": "certified" } } },
+      "then": { "required": ["certificationReceiptId"] }
+    }
+  ],
+  "$defs": {
+    "nonEmpty": { "type": "string", "minLength": 1 },
+    "score": { "type": "number", "minimum": 0, "maximum": 1 },
+    "stringList": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/nonEmpty" },
+      "uniqueItems": true
+    }
+  },
+  "additionalProperties": false
+}

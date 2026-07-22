@@ -83,6 +83,10 @@ cross-platform workflow, fresh-agent protocol, and uncoached human-study thresho
 in [`docs/EASE_PROOF.md`](docs/EASE_PROOF.md). The cross-platform workflow is manual so a reviewer
 can deliberately label a run cold or warm; one matrix run is evidence, not a percentile claim.
 
+The adopted evidence-driven model profiling, executable skill, and capability-routing architecture
+is in [`docs/MODEL_INTELLIGENCE.md`](docs/MODEL_INTELLIGENCE.md). Its implemented P0 commands do not
+make provider calls or certify routing from an empty evidence set.
+
 Factory commands (a `--local-proof` run creates an initial local Git commit so
 receipts have an immutable candidate to bind to):
 
@@ -93,6 +97,11 @@ nodekit compile --repo-root <directory>
 nodekit inspect --repo-root <directory>
 nodekit graph import --repo-root <directory> --commit <sha>
 nodekit graph query <terms> --repo-root <directory>
+nodekit harness init --repo-root <directory>
+nodekit models baseline --repo-root <directory>
+nodekit models profile --repo-root <directory>
+nodekit models inspect --repo-root <directory>
+nodekit models diagnose --repo-root <directory>
 ```
 
 From any repository with `nodekit.yaml`:

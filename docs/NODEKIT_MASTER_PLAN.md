@@ -47,7 +47,8 @@ fixtures, and distinctive product experience.
 | NodeVideo Caseflow adoption | ENGINEERING PASS | Production candidate; authenticated wrapper still missing |
 | Submission-grade Convex consumers | 0/3 | NodeVideo does not count until owner-scoped auth boundary passes |
 | Shareable NodeKit factory preview | INCOMPLETE | NodeVideo production proof is not factory-preview proof |
-| Harness Gym | PLANNED | No schema, CLI, protected benchmark, or promotion receipt yet |
+| Harness Gym | P0 FOUNDATION | Schemas, init, observation/card compiler, hashes, and diagnosis exist; no protected benchmark or promotion receipt yet |
+| Model Intelligence | P0 FOUNDATION | Strict observations/cards and fail-closed registry exist; no certified live-model card or routing policy yet |
 | Convex component extraction | BLOCKED | Requires three qualifying consumers and repeated implementation |
 | Convex directory submission | BLOCKED | `submissionReady` must be deterministically true first |
 | PostgreSQL/Supabase portability | FUTURE | Contracts should be preserved now; adapters follow later |
@@ -231,6 +232,23 @@ Harness Gym comes before NodeRL. Model training consumes accepted and rejected t
 after documentation, tools, context, routing, UI contracts, and deterministic repair have been
 optimized.
 
+### Model Intelligence and Skill Compiler
+
+Harness Gym now includes a first-class model-intelligence subsystem. Exact resolved models are
+observed on real application task families; cognitive behavior, tool execution, artifact quality,
+and efficiency are evaluated separately. Behavioral findings update scoped capability cards and
+may later propose focused skill or routing changes.
+
+Evidence precedence is `project > domain > ecosystem > unprofiled fallback`. A dynamic provider
+alias never inherits another resolved model's card. Model, harness, tool-surface, context-policy,
+and skill-stack identities are bound to every observation.
+
+The future resolved stack is `role + domain + model adapter + guardrails + conditional recovery`.
+Candidate skills and routes require controlled ablations, protected tasks, independent critics, a
+fresh-agent canary, rollback, and NodeProof receipt. Automatic promotion remains disabled.
+
+See `MODEL_INTELLIGENCE.md` for the canonical contracts and phase gates.
+
 ## Release ladder
 
 ```text
@@ -319,6 +337,23 @@ Passing an earlier level never implies a later claim.
 - [ ] Export accepted and rejected harness trajectories to NodeRL only after protected evaluation
   exists.
 
+### Model Intelligence and Skill Compiler
+
+- [x] Add strict harness, model-observation, and model-capability-card schemas.
+- [x] Require requested route, resolved provider/model, and harness/tool/context/skill hashes.
+- [x] Separate cognitive, execution, artifact, and efficiency evaluation.
+- [x] Add the shared behavioral failure taxonomy.
+- [x] Add application-specific harness initialization without changing the blank factory.
+- [x] Compile evidence registries and benchmark/harness hashes fail closed.
+- [x] Add baseline, profile, inspect, and failure-diagnosis commands.
+- [ ] Normalize real application evidence into the first provisional capability card.
+- [ ] Add executable role, domain, model-adapter, guardrail, and recovery skill contracts.
+- [ ] Add without-skill versus with-skill protected comparisons.
+- [ ] Add capability-driven routing, deterministic fallbacks, expiry, and decision receipts.
+- [ ] Add blind tournaments, independent critics, fresh-agent canaries, rollback, and NodeProof
+  promotion receipts.
+- [ ] Keep automatic skill and routing promotion disabled by default.
+
 ## Ordered execution plan
 
 1. **Repair fresh-agent execution.** Run the Docker executor without the incompatible nested Linux
@@ -333,8 +368,9 @@ Passing an earlier level never implies a later claim.
    require the shared conformance suite.
 6. **Prove the NodeKit preview journey.** Deploy the exact candidate, run a fresh browser, export,
    reopen, score, clean up, and bind deployment identity.
-7. **Implement Harness Gym v0.** Freeze the NodeKit Builder Gym benchmark before candidate
-   generation or promotion exists.
+7. **Complete Harness Gym v0.** The P0 observation/card compiler now exists. Next freeze the
+   NodeKit Builder Gym benchmark before candidate generation or promotion exists, then normalize
+   one real model run into a provisional card.
 8. **Extract Caseflow.** Only after three consumer implementations reveal the genuinely repeated
    kernel.
 9. **Package and submit.** Run `convex-test`, installed-example proof, independent review, explicit
