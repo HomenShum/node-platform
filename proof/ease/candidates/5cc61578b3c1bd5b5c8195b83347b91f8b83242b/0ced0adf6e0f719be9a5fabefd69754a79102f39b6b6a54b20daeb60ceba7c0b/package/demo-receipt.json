@@ -1,0 +1,431 @@
+{
+  "assertions": {
+    "canonicalVersionAdvanced": true,
+    "explicitNextAction": true,
+    "proposalAccepted": true,
+    "receiptCreated": true
+  },
+  "receipt": {
+    "artifactIds": [
+      "artifact_752bad94e55441aebcdb62370ac5b9c2"
+    ],
+    "caseId": "case_671dee2544f442b4afb1dfb88b2e48f6",
+    "eventIds": [
+      "event_4682a8c6370d4afcbb48ca65a4b8feb6",
+      "event_6ecb93f7235d412685c67ff608ac3ada",
+      "event_3d41e2811f2b441599fc55d52666675c",
+      "event_df7ad9f847e44f4b9baf27b2f9cf0b72",
+      "event_f7a3f6119f4d49cc9decc47494e9f82c",
+      "event_69c2d021f9a940868dc54016e5c73b12",
+      "event_13dfd3428be9431baf7f6fdb0e70a9c6",
+      "event_f904992b491b4f439e9c828792e5e7fd",
+      "event_dd37dfe3fc6245199a156d2e4f526b07",
+      "event_bd70efefe7ca4981bc5b9f4f332418d3"
+    ],
+    "generatedAt": "2026-07-22T08:43:47.421Z",
+    "proposalIds": [
+      "proposal_5f5f69d8d939420fbc481e0a126a8849"
+    ],
+    "runId": "run_d72d57d133ce418689caa525194bc92d",
+    "schemaVersion": "nodekit.receipt/v1",
+    "status": "completed",
+    "receiptId": "receipt_53f48d8f32da4337815d9030cf4e40ff",
+    "receiptHash": "b0f6b06d27f09781457fd9faded4e2d8b458eaa9028f868e52f5497a9570a1e9"
+  },
+  "schemaVersion": "nodekit.figured-out-demo/v1",
+  "snapshot": {
+    "approvals": [
+      {
+        "approvalId": "approval_fbaf901c67b84ed59692cbafb795aa9e",
+        "comment": "",
+        "decidedAt": "2026-07-22T08:43:47.421Z",
+        "decision": "accepted",
+        "proposalId": "proposal_5f5f69d8d939420fbc481e0a126a8849",
+        "schemaVersion": "nodekit.approval/v1"
+      }
+    ],
+    "artifacts": [
+      {
+        "artifactId": "artifact_752bad94e55441aebcdb62370ac5b9c2",
+        "caseId": "case_671dee2544f442b4afb1dfb88b2e48f6",
+        "canonicalVersion": 2,
+        "createdAt": "2026-07-22T08:43:47.419Z",
+        "kind": "structured-document",
+        "runId": "run_d72d57d133ce418689caa525194bc92d",
+        "schemaVersion": "nodekit.artifact/v1",
+        "title": "Primary artifact",
+        "updatedAt": "2026-07-22T08:43:47.421Z",
+        "versions": [
+          {
+            "content": {
+              "summary": "The last approved result remains here.",
+              "status": "baseline"
+            },
+            "contentHash": "1077e34cc8ffae57d4f0bcd7a40d9e5f152b05da45ab643d36195773c10a7de8",
+            "createdAt": "2026-07-22T08:43:47.419Z",
+            "version": 1
+          },
+          {
+            "content": {
+              "summary": "A bounded, reviewable result is ready. Replace this with the researched domain artifact.",
+              "status": "proposed"
+            },
+            "contentHash": "5cbf8cdb4ab5ba5d3ad2b6c2b938190dbd2e470769604929a5f8d5924808c2f8",
+            "createdAt": "2026-07-22T08:43:47.421Z",
+            "proposalId": "proposal_5f5f69d8d939420fbc481e0a126a8849",
+            "version": 2
+          }
+        ]
+      }
+    ],
+    "cases": [
+      {
+        "caseId": "case_671dee2544f442b4afb1dfb88b2e48f6",
+        "createdAt": "2026-07-22T08:43:47.417Z",
+        "currentRunId": "run_d72d57d133ce418689caa525194bc92d",
+        "primaryJob": "Carry one bounded intention to a reviewed artifact and receipt.",
+        "schemaVersion": "nodekit.case/v1",
+        "status": "completed",
+        "title": "Package Proof case",
+        "updatedAt": "2026-07-22T08:43:47.421Z"
+      }
+    ],
+    "events": [
+      {
+        "actor": {
+          "type": "system",
+          "id": "nodekit"
+        },
+        "aggregateId": "case_671dee2544f442b4afb1dfb88b2e48f6",
+        "aggregateType": "case",
+        "eventId": "event_d0dba8f6aa2849fca54286d5f88bb6d5",
+        "eventType": "case.created",
+        "occurredAt": "2026-07-22T08:43:47.419Z",
+        "payload": {
+          "caseId": "case_671dee2544f442b4afb1dfb88b2e48f6",
+          "createdAt": "2026-07-22T08:43:47.417Z",
+          "currentRunId": null,
+          "primaryJob": "Carry one bounded intention to a reviewed artifact and receipt.",
+          "schemaVersion": "nodekit.case/v1",
+          "status": "ready",
+          "title": "Package Proof case",
+          "updatedAt": "2026-07-22T08:43:47.417Z"
+        },
+        "schemaVersion": "nodekit.caseflow-event/v1",
+        "sequence": 1
+      },
+      {
+        "actor": {
+          "type": "system",
+          "id": "nodekit"
+        },
+        "aggregateId": "run_d72d57d133ce418689caa525194bc92d",
+        "aggregateType": "run",
+        "eventId": "event_4682a8c6370d4afcbb48ca65a4b8feb6",
+        "eventType": "run.started",
+        "occurredAt": "2026-07-22T08:43:47.419Z",
+        "payload": {
+          "caseId": "case_671dee2544f442b4afb1dfb88b2e48f6",
+          "createdAt": "2026-07-22T08:43:47.419Z",
+          "currentStageId": "intake",
+          "nextAction": "Confirm the intended outcome",
+          "nextActionOwner": "user",
+          "runId": "run_d72d57d133ce418689caa525194bc92d",
+          "schemaVersion": "nodekit.run/v1",
+          "stages": [
+            {
+              "id": "intake",
+              "label": "Confirm the intended outcome",
+              "owner": "user",
+              "status": "active"
+            },
+            {
+              "id": "working",
+              "label": "Prepare a proposal",
+              "owner": "agent",
+              "status": "pending"
+            },
+            {
+              "id": "review",
+              "label": "Review the proposed change",
+              "owner": "user",
+              "status": "pending"
+            },
+            {
+              "id": "complete",
+              "label": "Verify and export",
+              "owner": "system",
+              "status": "pending"
+            }
+          ],
+          "status": "active",
+          "updatedAt": "2026-07-22T08:43:47.419Z"
+        },
+        "schemaVersion": "nodekit.caseflow-event/v1",
+        "sequence": 1
+      },
+      {
+        "actor": {
+          "type": "system",
+          "id": "nodekit"
+        },
+        "aggregateId": "run_d72d57d133ce418689caa525194bc92d",
+        "aggregateType": "run",
+        "eventId": "event_6ecb93f7235d412685c67ff608ac3ada",
+        "eventType": "stage.entered",
+        "occurredAt": "2026-07-22T08:43:47.419Z",
+        "payload": {
+          "stageId": "intake"
+        },
+        "schemaVersion": "nodekit.caseflow-event/v1",
+        "sequence": 2
+      },
+      {
+        "actor": {
+          "type": "system",
+          "id": "nodekit"
+        },
+        "aggregateId": "artifact_752bad94e55441aebcdb62370ac5b9c2",
+        "aggregateType": "artifact",
+        "eventId": "event_3d41e2811f2b441599fc55d52666675c",
+        "eventType": "artifact.created",
+        "occurredAt": "2026-07-22T08:43:47.420Z",
+        "payload": {
+          "artifactId": "artifact_752bad94e55441aebcdb62370ac5b9c2",
+          "version": 1
+        },
+        "schemaVersion": "nodekit.caseflow-event/v1",
+        "sequence": 1
+      },
+      {
+        "actor": {
+          "type": "system",
+          "id": "nodekit"
+        },
+        "aggregateId": "run_d72d57d133ce418689caa525194bc92d",
+        "aggregateType": "run",
+        "eventId": "event_df7ad9f847e44f4b9baf27b2f9cf0b72",
+        "eventType": "stage.entered",
+        "occurredAt": "2026-07-22T08:43:47.420Z",
+        "payload": {
+          "nextAction": "Prepare a proposal",
+          "nextActionOwner": "agent",
+          "stageId": "working"
+        },
+        "schemaVersion": "nodekit.caseflow-event/v1",
+        "sequence": 3
+      },
+      {
+        "actor": {
+          "type": "system",
+          "id": "nodekit"
+        },
+        "aggregateId": "proposal_5f5f69d8d939420fbc481e0a126a8849",
+        "aggregateType": "proposal",
+        "eventId": "event_f7a3f6119f4d49cc9decc47494e9f82c",
+        "eventType": "proposal.created",
+        "occurredAt": "2026-07-22T08:43:47.420Z",
+        "payload": {
+          "artifactId": "artifact_752bad94e55441aebcdb62370ac5b9c2",
+          "baseVersion": 1,
+          "createdAt": "2026-07-22T08:43:47.420Z",
+          "patch": {
+            "summary": "A bounded, reviewable result is ready. Replace this with the researched domain artifact.",
+            "status": "proposed"
+          },
+          "proposalId": "proposal_5f5f69d8d939420fbc481e0a126a8849",
+          "rationale": "Demonstrate proposal-before-mutation without assuming a domain.",
+          "schemaVersion": "nodekit.proposal/v1",
+          "status": "pending"
+        },
+        "schemaVersion": "nodekit.caseflow-event/v1",
+        "sequence": 1
+      },
+      {
+        "actor": {
+          "type": "system",
+          "id": "nodekit"
+        },
+        "aggregateId": "run_d72d57d133ce418689caa525194bc92d",
+        "aggregateType": "run",
+        "eventId": "event_69c2d021f9a940868dc54016e5c73b12",
+        "eventType": "stage.entered",
+        "occurredAt": "2026-07-22T08:43:47.420Z",
+        "payload": {
+          "nextAction": "Approve or reject the proposed change",
+          "nextActionOwner": "user",
+          "stageId": "review"
+        },
+        "schemaVersion": "nodekit.caseflow-event/v1",
+        "sequence": 4
+      },
+      {
+        "actor": {
+          "type": "system",
+          "id": "nodekit"
+        },
+        "aggregateId": "artifact_752bad94e55441aebcdb62370ac5b9c2",
+        "aggregateType": "artifact",
+        "eventId": "event_13dfd3428be9431baf7f6fdb0e70a9c6",
+        "eventType": "artifact.version_created",
+        "occurredAt": "2026-07-22T08:43:47.421Z",
+        "payload": {
+          "proposalId": "proposal_5f5f69d8d939420fbc481e0a126a8849",
+          "version": 2
+        },
+        "schemaVersion": "nodekit.caseflow-event/v1",
+        "sequence": 2
+      },
+      {
+        "actor": {
+          "type": "system",
+          "id": "nodekit"
+        },
+        "aggregateId": "proposal_5f5f69d8d939420fbc481e0a126a8849",
+        "aggregateType": "proposal",
+        "eventId": "event_f904992b491b4f439e9c828792e5e7fd",
+        "eventType": "proposal.accepted",
+        "occurredAt": "2026-07-22T08:43:47.421Z",
+        "payload": {
+          "approvalId": "approval_fbaf901c67b84ed59692cbafb795aa9e"
+        },
+        "schemaVersion": "nodekit.caseflow-event/v1",
+        "sequence": 2
+      },
+      {
+        "actor": {
+          "type": "system",
+          "id": "nodekit"
+        },
+        "aggregateId": "run_d72d57d133ce418689caa525194bc92d",
+        "aggregateType": "run",
+        "eventId": "event_dd37dfe3fc6245199a156d2e4f526b07",
+        "eventType": "stage.entered",
+        "occurredAt": "2026-07-22T08:43:47.421Z",
+        "payload": {
+          "nextAction": "Verify and export",
+          "nextActionOwner": "system",
+          "stageId": "complete"
+        },
+        "schemaVersion": "nodekit.caseflow-event/v1",
+        "sequence": 5
+      },
+      {
+        "actor": {
+          "type": "system",
+          "id": "nodekit"
+        },
+        "aggregateId": "run_d72d57d133ce418689caa525194bc92d",
+        "aggregateType": "run",
+        "eventId": "event_bd70efefe7ca4981bc5b9f4f332418d3",
+        "eventType": "run.completed",
+        "occurredAt": "2026-07-22T08:43:47.421Z",
+        "payload": {},
+        "schemaVersion": "nodekit.caseflow-event/v1",
+        "sequence": 6
+      },
+      {
+        "actor": {
+          "type": "system",
+          "id": "nodekit"
+        },
+        "aggregateId": "run_d72d57d133ce418689caa525194bc92d",
+        "aggregateType": "run",
+        "eventId": "event_9f127bcfc7b44d32b6b71622f6659244",
+        "eventType": "receipt.created",
+        "occurredAt": "2026-07-22T08:43:47.422Z",
+        "payload": {
+          "receiptHash": "b0f6b06d27f09781457fd9faded4e2d8b458eaa9028f868e52f5497a9570a1e9",
+          "receiptId": "receipt_53f48d8f32da4337815d9030cf4e40ff"
+        },
+        "schemaVersion": "nodekit.caseflow-event/v1",
+        "sequence": 7
+      }
+    ],
+    "exceptions": [],
+    "proposals": [
+      {
+        "artifactId": "artifact_752bad94e55441aebcdb62370ac5b9c2",
+        "baseVersion": 1,
+        "createdAt": "2026-07-22T08:43:47.420Z",
+        "patch": {
+          "summary": "A bounded, reviewable result is ready. Replace this with the researched domain artifact.",
+          "status": "proposed"
+        },
+        "proposalId": "proposal_5f5f69d8d939420fbc481e0a126a8849",
+        "rationale": "Demonstrate proposal-before-mutation without assuming a domain.",
+        "schemaVersion": "nodekit.proposal/v1",
+        "status": "accepted"
+      }
+    ],
+    "receipts": [
+      {
+        "artifactIds": [
+          "artifact_752bad94e55441aebcdb62370ac5b9c2"
+        ],
+        "caseId": "case_671dee2544f442b4afb1dfb88b2e48f6",
+        "eventIds": [
+          "event_4682a8c6370d4afcbb48ca65a4b8feb6",
+          "event_6ecb93f7235d412685c67ff608ac3ada",
+          "event_3d41e2811f2b441599fc55d52666675c",
+          "event_df7ad9f847e44f4b9baf27b2f9cf0b72",
+          "event_f7a3f6119f4d49cc9decc47494e9f82c",
+          "event_69c2d021f9a940868dc54016e5c73b12",
+          "event_13dfd3428be9431baf7f6fdb0e70a9c6",
+          "event_f904992b491b4f439e9c828792e5e7fd",
+          "event_dd37dfe3fc6245199a156d2e4f526b07",
+          "event_bd70efefe7ca4981bc5b9f4f332418d3"
+        ],
+        "generatedAt": "2026-07-22T08:43:47.421Z",
+        "proposalIds": [
+          "proposal_5f5f69d8d939420fbc481e0a126a8849"
+        ],
+        "runId": "run_d72d57d133ce418689caa525194bc92d",
+        "schemaVersion": "nodekit.receipt/v1",
+        "status": "completed",
+        "receiptId": "receipt_53f48d8f32da4337815d9030cf4e40ff",
+        "receiptHash": "b0f6b06d27f09781457fd9faded4e2d8b458eaa9028f868e52f5497a9570a1e9"
+      }
+    ],
+    "runs": [
+      {
+        "caseId": "case_671dee2544f442b4afb1dfb88b2e48f6",
+        "createdAt": "2026-07-22T08:43:47.419Z",
+        "currentStageId": "complete",
+        "nextAction": "Review receipt",
+        "nextActionOwner": "user",
+        "runId": "run_d72d57d133ce418689caa525194bc92d",
+        "schemaVersion": "nodekit.run/v1",
+        "stages": [
+          {
+            "id": "intake",
+            "label": "Confirm the intended outcome",
+            "owner": "user",
+            "status": "completed"
+          },
+          {
+            "id": "working",
+            "label": "Prepare a proposal",
+            "owner": "agent",
+            "status": "completed"
+          },
+          {
+            "id": "review",
+            "label": "Review the proposed change",
+            "owner": "user",
+            "status": "completed"
+          },
+          {
+            "id": "complete",
+            "label": "Verify and export",
+            "owner": "system",
+            "status": "completed"
+          }
+        ],
+        "status": "completed",
+        "updatedAt": "2026-07-22T08:43:47.421Z"
+      }
+    ]
+  },
+  "passed": true
+}

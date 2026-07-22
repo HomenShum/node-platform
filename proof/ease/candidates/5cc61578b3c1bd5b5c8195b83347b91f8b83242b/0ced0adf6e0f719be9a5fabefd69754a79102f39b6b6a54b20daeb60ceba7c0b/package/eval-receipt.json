@@ -1,0 +1,11 @@
+{
+  "assertions": {
+    "canonicalStatePreserved": true,
+    "exceptionPreservedState": true,
+    "recoveryOwnerExplicit": true,
+    "staleProposalConflicted": true
+  },
+  "generatedAt": "2026-07-22T08:43:48.053Z",
+  "passed": true,
+  "schemaVersion": "nodekit.eval-receipt/v1"
+}
