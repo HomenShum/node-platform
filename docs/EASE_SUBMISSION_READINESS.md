@@ -85,7 +85,10 @@ Current ecosystem audit:
 
 - NodeRoom: fails one contract-classification gate.
 - NodeSlide: existing repository contract checks pass, but this is not evidence of a Convex Caseflow consumer.
-- NodeVideo: checkout is absent from the workspace.
+- NodeVideo: a production engineering candidate now demonstrates durable Caseflow state, two-session
+  reactivity, stale-proposal rejection, exact approval, reload persistence, and governed external
+  planning. It does not yet count as submission-grade because its owner-capability locator has not
+  been replaced by authenticated, owner-scoped application wrappers.
 
 No component extraction is authorized until all three real consumers exist.
 

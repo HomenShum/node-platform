@@ -77,7 +77,11 @@ npm run acceptance:factory
 
 It creates a clean temporary base application, installs dependencies, compiles it, runs tests, the deterministic guided journey, stale-proposal evaluation, the structural live HTTP/DOM contract, and a real Playwright journey. Phase-level timers and candidate-bound screenshot sidecars are written under `proof/ease/latest/`; the fail-closed summary remains `proof/factory-acceptance.json`. A passing core browser journey is not Ease certification while required states, fresh-agent trials, human usability, deployment, and real consumers remain open.
 
-The complete submission lock, cross-platform workflow, fresh-agent protocol, and uncoached human-study thresholds are documented in [`docs/EASE_PROOF.md`](docs/EASE_PROOF.md). The cross-platform workflow is manual so a reviewer can deliberately label a run cold or warm; one matrix run is evidence, not a percentile claim.
+The consolidated strategy, evidence-backed status, Harness Gym roadmap, and ordered checklist are in
+[`docs/NODEKIT_MASTER_PLAN.md`](docs/NODEKIT_MASTER_PLAN.md). The complete submission lock,
+cross-platform workflow, fresh-agent protocol, and uncoached human-study thresholds are documented
+in [`docs/EASE_PROOF.md`](docs/EASE_PROOF.md). The cross-platform workflow is manual so a reviewer
+can deliberately label a run cold or warm; one matrix run is evidence, not a percentile claim.
 
 Factory commands (a `--local-proof` run creates an initial local Git commit so
 receipts have an immutable candidate to bind to):
