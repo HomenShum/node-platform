@@ -6,6 +6,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { createProject } from "../src/lib/scaffold.mjs";
 import { computeNodeKitSourceHash } from "../src/lib/source-hash.mjs";
+import { reportsWriteBlockage } from "../src/lib/agent-ease-report.mjs";
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const args = Object.fromEntries(process.argv.slice(2).map((entry) => {
@@ -175,7 +176,7 @@ const substantiveFiles = changedFiles.filter((file) =>
   && !file.startsWith("proof/")
   && !file.startsWith(".nodeagent/")
   && !file.startsWith("node_modules/"));
-const blockedReport = /\b(blocked|read-only|no repository files were changed|please restart with write access)\b/i.test(finalReport);
+const blockedReport = reportsWriteBlockage(finalReport);
 checks.agentImplemented = substantiveFiles.length > 0;
 checks.agentReportedCompletion = finalReport.length > 0 && !blockedReport;
 

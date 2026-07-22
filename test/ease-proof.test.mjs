@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import test from "node:test";
+import { reportsWriteBlockage } from "../src/lib/agent-ease-report.mjs";
 
 test("EaseProof keeps browser contracts distinct from certification", async () => {
   const proof = await readFile(path.resolve("templates", "base", "scripts", "proof.mjs"), "utf8");
@@ -57,6 +58,13 @@ test("fresh-agent recorder preserves process fields and prohibits routine reprom
   assert.match(harness, /checks\.agentReportedCompletion/);
   assert.match(harness, /PILOT_FAIL_AGENT_BLOCKED/);
   assert.match(harness, /candidateRoot, "proof", "ease", runId, "browser"/);
+});
+
+test("fresh-agent completion detection distinguishes domain blockers from write blockage", () => {
+  assert.equal(reportsWriteBlockage("Added tests for blocked missing-document packets."), false);
+  assert.equal(reportsWriteBlockage("The workflow surfaces blocked cases for coordinator review."), false);
+  assert.equal(reportsWriteBlockage("No repository files were changed because the workspace is read-only."), true);
+  assert.equal(reportsWriteBlockage("I was blocked from writing by permissions."), true);
 });
 
 test("submission remains fail-closed while external EaseProof gates are open", async () => {
