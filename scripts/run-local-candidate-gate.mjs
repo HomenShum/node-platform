@@ -128,7 +128,9 @@ async function assertPublishedSurface(repoRoot) {
     }
     await stat(path.join(repoRoot, target));
   }
-  const templatePackage = JSON.parse(await readFile(path.join(repoRoot, "templates", "base", "package.json"), "utf8"));
+  const templatePackage = parseTemplatePackageJson(
+    await readFile(path.join(repoRoot, "templates", "base", "package.json"), "utf8"),
+  );
   if (templatePackage.scripts?.["proof:browser-contract"] !== "node scripts/browser-proof.mjs") {
     throw new Error("base template is missing the structural browser-contract command");
   }
@@ -140,6 +142,21 @@ async function assertPublishedSurface(repoRoot) {
     stat(path.join(repoRoot, "templates", "base", "scripts", "browser-certify.mjs")),
   ]);
   return packageJson;
+}
+
+export function parseTemplatePackageJson(source) {
+  const materialized = String(source).replaceAll(
+    "__NODEKIT_SPECIFIER_JSON__",
+    JSON.stringify("file:vendor/nodekit.tgz"),
+  );
+  const parsed = JSON.parse(materialized);
+  if (parsed?.dependencies?.["@homenshum/nodekit"] !== "file:vendor/nodekit.tgz") {
+    throw new Error("base template does not bind the NodeKit dependency placeholder exactly once");
+  }
+  if (materialized.includes("__NODEKIT_SPECIFIER_JSON__")) {
+    throw new Error("base template contains an unresolved NodeKit dependency placeholder");
+  }
+  return parsed;
 }
 
 export async function runLocalCandidatePreflight({

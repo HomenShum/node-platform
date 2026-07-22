@@ -5,6 +5,7 @@ import {
   ENGINEERING_HEALTH_CHECKS,
   createEngineeringHealthVerdict,
   parseLocalCandidateArguments,
+  parseTemplatePackageJson,
   validateEngineeringIssueInventory,
 } from "../scripts/run-local-candidate-gate.mjs";
 import {
@@ -140,4 +141,14 @@ test("package metadata exposes preflight and exact proof commands", async () => 
   assert.equal(packageJson.scripts["candidate:check"], "node scripts/run-local-candidate-gate.mjs --preflight");
   assert.equal(packageJson.scripts["candidate:prove"], "node scripts/run-local-candidate-gate.mjs");
   assert.equal(packageJson.scripts["candidate:distribution"], "node scripts/run-local-distribution-gate.mjs");
+});
+
+test("candidate preflight materializes the intentionally non-JSON template dependency placeholder", async () => {
+  const template = await readFile(new URL("../templates/base/package.json", import.meta.url), "utf8");
+  const parsed = parseTemplatePackageJson(template);
+  assert.equal(parsed.dependencies["@homenshum/nodekit"], "file:vendor/nodekit.tgz");
+  assert.throws(
+    () => parseTemplatePackageJson(template.replace("__NODEKIT_SPECIFIER_JSON__", '"not-the-nodekit-tarball"')),
+    /does not bind the NodeKit dependency placeholder exactly once/,
+  );
 });
