@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import { spawn } from "node:child_process";
-import { mkdir, writeFile } from "node:fs/promises";
+import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { renderDashboard } from "./lib/dashboard.mjs";
@@ -32,6 +32,21 @@ import {
   queryUnderstandAnythingCodeGraph,
   readUnderstandAnythingCodeGraph,
 } from "./lib/understand-anything.mjs";
+import {
+  applyGraphPatch,
+  benchmarkKnowledgeRetrieval,
+  decideGraphPatch,
+  diffKnowledgeGraph,
+  initializeKnowledgeGraph,
+  inspectKnowledgeGaps,
+  proposeGraphPatch,
+  queryKnowledgeGraph,
+  readKnowledgeGraph,
+  recordKnowledgeAction,
+  replayKnowledgeGraph,
+  validateGraphPatch,
+} from "./lib/knowledge-evolution.mjs";
+import { proposeHarnessKnowledgePatch } from "./lib/harness-knowledge.mjs";
 
 const packageRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
@@ -82,7 +97,19 @@ Usage:
   nodekit ecosystem check [--workspace <path>] [--json]
   nodekit dashboard [--workspace <path>] [--write] [--out <path>]
   nodekit graph import [--repo-root <path>] [--graph-dir <path>] [--repo-id <id>] [--commit <sha>] [--json]
-  nodekit graph query <terms> [--repo-root <path>] [--limit <number>] [--json]
+  nodekit graph init [--repo-root <path>] [--graph-id <id>] [--json]
+  nodekit graph ingest --input <file> [--repo-root <path>] [--json]
+  nodekit graph inspect [--repo-root <path>] [--json]
+  nodekit graph query <terms> [--repo-root <path>] [--limit <number>] [--code] [--json]
+  nodekit graph gaps [--repo-root <path>] [--json]
+  nodekit graph research <terms> [--repo-root <path>] [--run-id <id>] [--json]
+  nodekit graph propose --patch <file> [--repo-root <path>] [--json]
+  nodekit graph validate --patch <id> [--repo-root <path>] [--json]
+  nodekit graph apply --patch <id> --approved-by <principal> [--reason <text>] [--repo-root <path>] [--json]
+  nodekit graph diff --from <version> [--to <version>] [--repo-root <path>] [--json]
+  nodekit graph replay --version <number> [--out <file>] [--repo-root <path>] [--json]
+  nodekit graph benchmark --cases <file> [--repo-root <path>] [--json]
+  nodekit graph harness-sync [--repo-root <path>] [--json]
   nodekit harness init [--repo-root <path>] [--json]
   nodekit models baseline [--repo-root <path>] [--json]
   nodekit models profile [--repo-root <path>] [--json]
@@ -438,6 +465,28 @@ async function runGraphQuery(parsed) {
   const query = parsed.positional.slice(2).join(" ");
   if (!query) throw new Error("graph query requires search terms");
   const repoRoot = path.resolve(String(parsed.options["repo-root"] ?? process.cwd()));
+  if (!parsed.options.code) {
+    try {
+      const graph = await readKnowledgeGraph(repoRoot, { graphPath: parsed.options["graph-path"] });
+      const output = queryKnowledgeGraph(graph, query, { limit: parsed.options.limit });
+      if (parsed.options.json) console.log(JSON.stringify(output, null, 2));
+      else {
+        console.log(`KNOWLEDGE GRAPH ${output.graphId}@v${output.graphVersion}`);
+        for (const { entity, score } of output.results) console.log(`  ${score} ${entity.label ?? entity.predicate} (${entity.kind ?? "hyperedge"}:${entity.layer})`);
+      }
+      await recordKnowledgeAction(repoRoot, {
+        type: "GRAPH_RETRIEVE",
+        runId: parsed.options["run-id"],
+        caseId: parsed.options["case-id"],
+        actorId: parsed.options["actor-id"] ?? "nodekit-cli",
+        input: { query, limit: parsed.options.limit ?? 12 },
+        outputRefs: output.results.map((entry) => entry.entity.id),
+      }, { graphPath: parsed.options["graph-path"] });
+      return;
+    } catch (error) {
+      if (!String(error.message).includes("knowledge graph is missing")) throw error;
+    }
+  }
   const snapshot = await readUnderstandAnythingCodeGraph(repoRoot, {
     snapshotPath: parsed.options["snapshot-path"],
   });
@@ -450,6 +499,190 @@ async function runGraphQuery(parsed) {
   }
   console.log(`CODE GRAPH ${output.source.repoId}@${output.source.commitSha}`);
   for (const { node, score } of output.matched) console.log(`  ${score} ${node.name} (${node.type})`);
+}
+
+async function readJsonInput(repoRoot, candidate, label) {
+  if (!candidate) throw new Error(`${label} file is required`);
+  const root = path.resolve(repoRoot);
+  const absolute = path.resolve(root, String(candidate));
+  const relative = path.relative(root, absolute);
+  if (relative === ".." || relative.startsWith(`..${path.sep}`) || path.isAbsolute(relative)) throw new Error(`${label} file must stay inside the repository`);
+  try {
+    return JSON.parse(await readFile(absolute, "utf8"));
+  } catch (error) {
+    throw new Error(`${label} file is invalid JSON: ${relative}: ${error.message}`);
+  }
+}
+
+async function runGraphInit(parsed) {
+  const repoRoot = repoRootFrom(parsed);
+  const graph = await initializeKnowledgeGraph(repoRoot, {
+    graphId: parsed.options["graph-id"],
+    graphPath: parsed.options["graph-path"],
+  });
+  const output = { passed: true, graphId: graph.graphId, graphVersion: graph.version, contentHash: graph.contentHash };
+  if (parsed.options.json) console.log(JSON.stringify(output, null, 2));
+  else console.log(`INITIALIZED ${graph.graphId}@v${graph.version} ${graph.contentHash}`);
+}
+
+async function runGraphInspect(parsed) {
+  const graph = await readKnowledgeGraph(repoRootFrom(parsed), { graphPath: parsed.options["graph-path"] });
+  const output = {
+    schemaVersion: "nodekit.knowledge-inspection/v1",
+    graphId: graph.graphId,
+    graphVersion: graph.version,
+    contentHash: graph.contentHash,
+    nodes: graph.nodes.length,
+    hyperedges: graph.hyperedges.length,
+    layers: Object.fromEntries(graph.layers.map((layer) => [layer.id, graph.nodes.filter((node) => node.layer === layer.id).length + graph.hyperedges.filter((edge) => edge.layer === layer.id).length])),
+    patches: Object.fromEntries(["pending", "accepted", "rejected", "conflicted", "applied"].map((status) => [status, graph.proposals.filter((patch) => patch.status === status).length])),
+    actionReceipts: graph.actionReceipts.length,
+    evolutionReceipts: graph.evolutionReceipts.length,
+    authority: graph.authority,
+  };
+  if (parsed.options.json) console.log(JSON.stringify(output, null, 2));
+  else console.log(`KNOWLEDGE ${output.graphId}@v${output.graphVersion} ${output.nodes} nodes ${output.hyperedges} hyperedges ${output.patches.pending} pending patches`);
+}
+
+function proposalActor(parsed) {
+  return {
+    agentId: String(parsed.options["agent-id"] ?? "nodekit-cli"),
+    modelRoute: String(parsed.options["model-route"] ?? "deterministic"),
+    resolvedModel: String(parsed.options["resolved-model"] ?? "none"),
+    harnessVersion: String(parsed.options["harness-version"] ?? "h0"),
+  };
+}
+
+async function runGraphIngest(parsed) {
+  const repoRoot = repoRootFrom(parsed);
+  const input = await readJsonInput(repoRoot, parsed.options.input, "graph ingest input");
+  const patch = await proposeGraphPatch(repoRoot, {
+    operations: [
+      ...(input.nodes ?? []).map((node) => ({ type: "INSERT", node })),
+      ...(input.hyperedges ?? []).map((hyperedge) => ({ type: "INSERT", hyperedge })),
+    ],
+    evidenceRefs: input.evidenceRefs ?? [],
+    contradictionRefs: input.contradictionRefs ?? [],
+    proposedBy: input.proposedBy ?? proposalActor(parsed),
+    confidence: input.confidence ?? 1,
+  }, { graphPath: parsed.options["graph-path"] });
+  const output = { passed: true, proposalOnly: true, patch };
+  if (parsed.options.json) console.log(JSON.stringify(output, null, 2));
+  else console.log(`PROPOSED INGEST ${patch.patchId} (${patch.operations.length} operations); canonical graph unchanged`);
+}
+
+async function runGraphPropose(parsed) {
+  const repoRoot = repoRootFrom(parsed);
+  const input = await readJsonInput(repoRoot, parsed.options.patch, "graph patch");
+  const patch = await proposeGraphPatch(repoRoot, {
+    ...input,
+    proposedBy: input.proposedBy ?? proposalActor(parsed),
+  }, { graphPath: parsed.options["graph-path"] });
+  if (parsed.options.json) console.log(JSON.stringify({ passed: true, patch }, null, 2));
+  else console.log(`PROPOSED ${patch.patchId}@v${patch.baseVersion}; validate then apply with explicit approval`);
+}
+
+async function runGraphValidate(parsed) {
+  const patchId = parsed.options.patch;
+  if (!patchId) throw new Error("graph validate requires --patch <id>");
+  const patch = await validateGraphPatch(repoRootFrom(parsed), String(patchId), { graphPath: parsed.options["graph-path"] });
+  const passed = patch.validation.errors.length === 0 && Object.entries(patch.validation).filter(([key]) => key !== "errors").every(([, value]) => value);
+  if (parsed.options.json) console.log(JSON.stringify({ passed, patch }, null, 2));
+  else {
+    console.log(`GRAPH PATCH ${passed ? "VALID" : "BLOCKED"} ${patch.patchId}`);
+    for (const error of patch.validation.errors) console.log(`  ${error}`);
+  }
+  if (!passed) process.exitCode = 1;
+}
+
+async function runGraphApply(parsed) {
+  const patchId = parsed.options.patch;
+  const principalId = parsed.options["approved-by"];
+  if (!patchId || !principalId) throw new Error("graph apply requires --patch <id> and --approved-by <principal>");
+  const repoRoot = repoRootFrom(parsed);
+  let graph = await readKnowledgeGraph(repoRoot, { graphPath: parsed.options["graph-path"] });
+  let patch = graph.proposals.find((entry) => entry.patchId === patchId);
+  if (!patch) throw new Error(`graph patch not found: ${patchId}`);
+  if (patch.status === "pending" || patch.status === "conflicted") {
+    patch = await validateGraphPatch(repoRoot, String(patchId), { graphPath: parsed.options["graph-path"] });
+    if (patch.status !== "pending") throw new Error(`graph patch is ${patch.status}; create a rebased proposal`);
+    patch = await decideGraphPatch(repoRoot, String(patchId), {
+      decision: "accept",
+      principalId: String(principalId),
+      reason: parsed.options.reason,
+      graphPath: parsed.options["graph-path"],
+    });
+  }
+  const output = await applyGraphPatch(repoRoot, String(patchId), { graphPath: parsed.options["graph-path"] });
+  if (parsed.options.json) console.log(JSON.stringify({ passed: true, ...output }, null, 2));
+  else console.log(`APPLIED ${patchId} v${output.receipt.fromVersion}->v${output.receipt.toVersion} ${output.receipt.receiptId}`);
+}
+
+async function runGraphGaps(parsed) {
+  const graph = await readKnowledgeGraph(repoRootFrom(parsed), { graphPath: parsed.options["graph-path"] });
+  const output = inspectKnowledgeGaps(graph);
+  if (parsed.options.json) console.log(JSON.stringify(output, null, 2));
+  else console.log(`GAPS unresolved=${output.unresolved.length} unsupported=${output.unsupported.length} stale=${output.staleEvidence.length} pending=${output.pendingPatches.length}`);
+}
+
+async function runGraphResearch(parsed) {
+  const query = parsed.positional.slice(2).join(" ");
+  if (!query) throw new Error("graph research requires a typed knowledge-gap query");
+  const receipt = await recordKnowledgeAction(repoRootFrom(parsed), {
+    type: "EXTERNAL_RESEARCH",
+    runId: parsed.options["run-id"],
+    caseId: parsed.options["case-id"],
+    actorId: parsed.options["actor-id"] ?? "nodekit-cli",
+    input: { query, gapIds: String(parsed.options["gap-ids"] ?? "").split(",").filter(Boolean) },
+    budget: { maximumSearches: Number(parsed.options["max-searches"] ?? 1) },
+    status: "planned",
+  }, { graphPath: parsed.options["graph-path"] });
+  if (parsed.options.json) console.log(JSON.stringify({ passed: true, receipt }, null, 2));
+  else console.log(`PLANNED EXTERNAL_RESEARCH ${receipt.receiptId}; results require evidence anchors and a graph patch`);
+}
+
+async function runGraphDiff(parsed) {
+  if (parsed.options.from === undefined) throw new Error("graph diff requires --from <version>");
+  const graph = await readKnowledgeGraph(repoRootFrom(parsed), { graphPath: parsed.options["graph-path"] });
+  const output = diffKnowledgeGraph(graph, parsed.options.from, parsed.options.to ?? graph.version);
+  if (parsed.options.json) console.log(JSON.stringify(output, null, 2));
+  else console.log(`GRAPH DIFF v${output.fromVersion}->v${output.toVersion}: ${output.patchIds.length} patches ${output.operations.length} operations`);
+}
+
+async function runGraphReplay(parsed) {
+  if (parsed.options.version === undefined) throw new Error("graph replay requires --version <number>");
+  const repoRoot = repoRootFrom(parsed);
+  const graph = await readKnowledgeGraph(repoRoot, { graphPath: parsed.options["graph-path"] });
+  const output = replayKnowledgeGraph(graph, parsed.options.version);
+  if (parsed.options.out) {
+    const root = path.resolve(repoRoot);
+    const destination = path.resolve(root, String(parsed.options.out));
+    const relation = path.relative(root, destination);
+    if (relation === ".." || relation.startsWith(`..${path.sep}`) || path.isAbsolute(relation)) throw new Error("graph replay output must stay inside the repository");
+    await mkdir(path.dirname(destination), { recursive: true });
+    await writeFile(destination, `${JSON.stringify(output, null, 2)}\n`, "utf8");
+  }
+  if (parsed.options.json) console.log(JSON.stringify(output, null, 2));
+  else console.log(`REPLAYED ${output.graphId}@v${output.version} ${output.nodes.length} nodes ${output.hyperedges.length} hyperedges`);
+}
+
+async function runGraphBenchmark(parsed) {
+  const repoRoot = repoRootFrom(parsed);
+  const cases = await readJsonInput(repoRoot, parsed.options.cases, "graph benchmark cases");
+  const graph = await readKnowledgeGraph(repoRoot, { graphPath: parsed.options["graph-path"] });
+  const output = benchmarkKnowledgeRetrieval(graph, Array.isArray(cases) ? cases : cases.cases, { limit: parsed.options.limit });
+  if (parsed.options.json) console.log(JSON.stringify(output, null, 2));
+  else console.log(`GRAPH BENCHMARK flat=${output.results.flat.averageRecall.toFixed(3)} static=${output.results.staticGraph.averageRecall.toFixed(3)} evolving=${output.results.evolvingGraph.averageRecall.toFixed(3)}`);
+}
+
+async function runGraphHarnessSync(parsed) {
+  const output = await proposeHarnessKnowledgePatch(repoRootFrom(parsed), {
+    graphPath: parsed.options["graph-path"],
+    agentId: parsed.options["agent-id"],
+  });
+  if (parsed.options.json) console.log(JSON.stringify({ passed: true, proposalOnly: true, ...output }, null, 2));
+  else if (output.unchanged) console.log(`HARNESS KNOWLEDGE UNCHANGED (${output.observationCount} observations)`);
+  else console.log(`PROPOSED HARNESS KNOWLEDGE ${output.patch.patchId} (${output.patch.operations.length} operations); canonical graph unchanged`);
 }
 
 function repoRootFrom(parsed) {
@@ -669,8 +902,56 @@ async function main() {
     await runGraphImport(parsed);
     return;
   }
+  if (first === "graph" && second === "init") {
+    await runGraphInit(parsed);
+    return;
+  }
+  if (first === "graph" && second === "ingest") {
+    await runGraphIngest(parsed);
+    return;
+  }
+  if (first === "graph" && second === "inspect") {
+    await runGraphInspect(parsed);
+    return;
+  }
   if (first === "graph" && second === "query") {
     await runGraphQuery(parsed);
+    return;
+  }
+  if (first === "graph" && second === "gaps") {
+    await runGraphGaps(parsed);
+    return;
+  }
+  if (first === "graph" && second === "research") {
+    await runGraphResearch(parsed);
+    return;
+  }
+  if (first === "graph" && second === "propose") {
+    await runGraphPropose(parsed);
+    return;
+  }
+  if (first === "graph" && second === "validate") {
+    await runGraphValidate(parsed);
+    return;
+  }
+  if (first === "graph" && second === "apply") {
+    await runGraphApply(parsed);
+    return;
+  }
+  if (first === "graph" && second === "diff") {
+    await runGraphDiff(parsed);
+    return;
+  }
+  if (first === "graph" && second === "replay") {
+    await runGraphReplay(parsed);
+    return;
+  }
+  if (first === "graph" && second === "benchmark") {
+    await runGraphBenchmark(parsed);
+    return;
+  }
+  if (first === "graph" && second === "harness-sync") {
+    await runGraphHarnessSync(parsed);
     return;
   }
   if (first === "harness" && second === "init") {

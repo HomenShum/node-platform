@@ -8,6 +8,7 @@ commandProfile: platform
 canonicalFor:
   - nodeplatform.repo-contract
   - nodeplatform.change-story
+  - nodekit.knowledge-evolution
 
 consumes:
   - betterprhandoff.handoff
@@ -40,5 +41,9 @@ proof:
   command: npm run check
   receiptSchema: nodeplatform.conformance/v1
 
-contractDeclarations: []
+contractDeclarations:
+  - concept: nodekit.knowledge-evolution
+    signature: knowledge-graph-schema
+    path: src/lib/knowledge-evolution.mjs
+    mode: canonical
 architectureExceptions: []

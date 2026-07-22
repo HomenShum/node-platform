@@ -31,3 +31,7 @@ Infrastructure stays backstage. The main experience exposes progress, consequenc
 ## Specialization boundary
 
 Change the domain job, guided questions, stages, artifact type, tools, validators, fixtures, and renderer. Do not remove version safety, approval, explicit next-action ownership, exception recovery, or proof.
+
+When specialization requires durable cross-run knowledge, use `docs/KNOWLEDGE_EVOLUTION.md`.
+Persistent knowledge follows the same safety grammar as artifacts: retrieve, propose, validate,
+approve, apply, and retain a receipt.

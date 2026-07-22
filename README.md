@@ -96,7 +96,10 @@ nodekit adopt <existing-directory> --name <slug> --brief <text>
 nodekit compile --repo-root <directory>
 nodekit inspect --repo-root <directory>
 nodekit graph import --repo-root <directory> --commit <sha>
+nodekit graph init --repo-root <directory>
 nodekit graph query <terms> --repo-root <directory>
+nodekit graph gaps --repo-root <directory>
+nodekit graph harness-sync --repo-root <directory>
 nodekit harness init --repo-root <directory>
 nodekit models baseline --repo-root <directory>
 nodekit models profile --repo-root <directory>
@@ -128,8 +131,9 @@ npm name belongs to an unrelated project.
 - [`schemas/nodeagent.application.v1.schema.json`](schemas/nodeagent.application.v1.schema.json) and [`schemas/nodeagent.pack.v1.schema.json`](schemas/nodeagent.pack.v1.schema.json) enforce the application and capability-pack contracts during compilation.
 - [`schemas/nodeagent.event.v1.schema.json`](schemas/nodeagent.event.v1.schema.json) defines the canonical portable event envelope. Applications resolve `nodeagent.event/v1` and `nodeagent.trace/v1` contract references even when an older v1 manifest omits the optional `contracts` block.
 - `nodekit compile` discovers authored files, validates pack references, rejects literal secrets, and emits a full application identity in `.nodeagent/`. The identity binds the agent, packs, integrations, backend, UI/app surface, scripts, workflow definitions, evaluations, fixtures, dependency locks, and recognized deployment configuration.
-- `nodekit graph import` imports a pinned Understand Anything `knowledge-graph.json` as a namespaced, commit-bound code graph snapshot. `nodekit graph query` performs local graph retrieval; it never turns the code graph into a write authority.
+- `nodekit graph import` imports a pinned Understand Anything `knowledge-graph.json` as a namespaced, commit-bound code graph snapshot. `nodekit graph query --code` retrieves from that snapshot; it never turns the code graph into a write authority.
 - [`docs/UNDERSTAND_ANYTHING_CODE_GRAPH.md`](docs/UNDERSTAND_ANYTHING_CODE_GRAPH.md) defines the graph authority, privacy, freshness, and NodeGraph/NodeRoom projection boundary.
+- [`docs/KNOWLEDGE_EVOLUTION.md`](docs/KNOWLEDGE_EVOLUTION.md) defines the EvoGraph-R1-inspired, backend-neutral Knowledge Evolution Plane: immutable multimodal evidence, n-ary hyperedges, typed gaps, proposal-only graph mutations, explicit approval, stale-version conflicts, replay, receipts, Harness Gym projection, and evaluation boundaries.
 - `nodekit create` refuses non-empty targets. `nodekit adopt` writes missing files only, preserves host scripts, and emits a collision receipt.
 - `nodekit repo check` validates ownership declarations, command aliases, migration origins, signature classification, and source rules.
 - `nodekit ecosystem check` checks all active local clones together.

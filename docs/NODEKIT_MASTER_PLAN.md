@@ -41,14 +41,15 @@ fixtures, and distinctive product experience.
 | Cross-platform compatibility | PASS, one run per lane | Not a repeatability or percentile claim |
 | Rendered UI coverage | PASS | 15 states, 6 viewport/theme profiles, 180 hashed screenshots |
 | Evidence integrity | PASS | Independent ProofLoop re-hash passed |
-| Repeated cold/warm timing | INCOMPLETE | 60 raw developer trials still required |
-| Fresh coding-agent specialization | INCOMPLETE | No valid three-task, writable, zero-reprompt matrix |
+| Repeated cold/warm timing | PASS AT `e398398` | 60/60 exact Windows, Ubuntu, and macOS npm/pnpm trials exist; final-candidate proof remains revision-bound |
+| Fresh coding-agent specialization | PASS AT `e398398` | Three writable zero-reprompt held-outs passed; final-candidate proof remains revision-bound |
 | Fresh-human usability | INCOMPLETE | Five real participants still required |
 | NodeVideo Caseflow adoption | ENGINEERING PASS | Production candidate; authenticated wrapper still missing |
 | Submission-grade Convex consumers | 0/3 | NodeVideo does not count until owner-scoped auth boundary passes |
 | Shareable NodeKit factory preview | INCOMPLETE | NodeVideo production proof is not factory-preview proof |
 | Harness Gym | P0 FOUNDATION | Schemas, init, observation/card compiler, hashes, and diagnosis exist; no protected benchmark or promotion receipt yet |
 | Model Intelligence | P0 FOUNDATION | Strict observations/cards and fail-closed registry exist; no certified live-model card or routing policy yet |
+| Knowledge Evolution Plane | V1 ENGINEERING PASS | Six-layer hypergraph, evidence anchors, governed patches, receipts, replay, CLI, Harness projection, and tests exist; live task evidence and provider adapters remain |
 | Convex component extraction | BLOCKED | Requires three qualifying consumers and repeated implementation |
 | Convex directory submission | BLOCKED | `submissionReady` must be deterministically true first |
 | PostgreSQL/Supabase portability | FUTURE | Contracts should be preserved now; adapters follow later |
@@ -102,6 +103,8 @@ NodeKit experience layer
         ↓
 NodeAgent execution and tool runtime
         ↓
+Knowledge Evolution Plane
+        ↓
 Portable Caseflow core
         ↓
 Memory | Convex | PostgreSQL | Supabase
@@ -114,6 +117,11 @@ next-action ownership, safe failure, and content-addressed receipts.
 Convex is the golden reactive implementation. It is not the semantic definition of NodeKit.
 Shared product code and shared React components must consume NodeKit ports and view models rather
 than importing provider-specific database documents or hooks.
+
+The Knowledge Evolution Plane is a separate authority from Caseflow and imported code graphs. It
+maintains a backend-neutral multimodal hypergraph across `source`, `derived`, `working`, `proposal`,
+`canonical`, and `hypothesis` layers. Only a source-grounded, validated, explicitly accepted patch
+against the current base version advances canonical graph state. See `KNOWLEDGE_EVOLUTION.md`.
 
 ## Primary creation experience
 
@@ -249,6 +257,38 @@ fresh-agent canary, rollback, and NodeProof receipt. Automatic promotion remains
 
 See `MODEL_INTELLIGENCE.md` for the canonical contracts and phase gates.
 
+## Knowledge Evolution Plane
+
+The graph is an agent environment, not merely a visualization:
+
+```text
+retrieve known subgraph
+-> identify a gap or contradiction
+-> perform bounded external research
+-> anchor multimodal evidence
+-> propose graph patch
+-> validate and approve
+-> apply atomically
+-> retain evolution receipt
+```
+
+Implemented v1:
+
+- [x] Add backend-neutral knowledge-state, graph, graph-patch, and action-receipt schemas.
+- [x] Add immutable multimodal source anchors and n-ary hyperedges with typed roles.
+- [x] Separate source, derived, working, proposal, canonical, and hypothesis layers.
+- [x] Add INSERT, UPDATE, and DEPRECATE; omit destructive DELETE.
+- [x] Require source grounding, schema validity, authority, freshness, and base-version checks.
+- [x] Require an explicit approving principal before apply.
+- [x] Preserve stale proposals as conflicts instead of overwrites.
+- [x] Add query, gaps, diff, replay, benchmark, and action/evolution receipts.
+- [x] Project Harness Gym observations into proposal-only task/model/harness/failure hyperedges.
+- [x] Preserve the Understand Anything graph as read-only, commit-pinned code evidence.
+- [ ] Run protected flat/static/evolving comparisons on real application tasks.
+- [ ] Add NodeGraph document/rendering, Neo4j traversal, Convex collaboration, and SQL persistence projections.
+- [ ] Add graph-aware NodeRoom review and multimodal source-region navigation.
+- [ ] Export trajectories to NodeRL only after protected rewards stabilize.
+
 ## Release ladder
 
 ```text
@@ -354,6 +394,17 @@ Passing an earlier level never implies a later claim.
   promotion receipts.
 - [x] Keep automatic skill and routing promotion disabled by default.
 
+### Knowledge Evolution Plane
+
+- [x] Add the governed six-layer knowledge hypergraph and portable schemas.
+- [x] Add immutable multimodal evidence anchors and n-ary hyperedges.
+- [x] Add proposal, validation, approval, conflict, apply, diff, and replay semantics.
+- [x] Add graph CLI commands and Harness Gym proposal projection.
+- [x] Add deterministic conformance and safety tests.
+- [ ] Run protected real-task comparisons against flat retrieval, static graph, and search-only baselines.
+- [ ] Add NodeGraph, Neo4j, Convex, and SQL provider projections in that order.
+- [ ] Add graph-aware review UI only after the portable proposal contract is stable.
+
 ## Ordered execution plan
 
 1. **Repair fresh-agent execution.** Run the Docker executor without the incompatible nested Linux
@@ -368,9 +419,10 @@ Passing an earlier level never implies a later claim.
    require the shared conformance suite.
 6. **Prove the NodeKit preview journey.** Deploy the exact candidate, run a fresh browser, export,
    reopen, score, clean up, and bind deployment identity.
-7. **Complete Harness Gym v0.** The P0 observation/card compiler now exists. Next freeze the
+7. **Complete Harness Gym v0 and Knowledge Evolution evaluation.** The P0 observation/card compiler exists. Next freeze the
    NodeKit Builder Gym benchmark before candidate generation or promotion exists, then normalize
-   one real model run into a provisional card.
+   one real model run into a provisional card. Add protected flat/static/evolving graph cases and
+   prove graph assistance improves or holds success without increasing unsupported-edge rate.
 8. **Extract Caseflow.** Only after three consumer implementations reveal the genuinely repeated
    kernel.
 9. **Package and submit.** Run `convex-test`, installed-example proof, independent review, explicit

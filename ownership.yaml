@@ -31,6 +31,17 @@ concepts:
       - BetterPRHandoff
       - FeatureClipStudio
 
+  nodekit.knowledge-evolution:
+    owner: node-platform
+    package: "@homenshum/nodekit"
+    targetPackage: "@homenshum/nodekit"
+    status: canonical
+    contractVersion: nodekit.knowledge-graph/v1
+    consumers: []
+    signatures:
+      - id: knowledge-graph-schema
+        regex: '^export const KNOWLEDGE_GRAPH_SCHEMA = "nodekit\.knowledge-graph/v1";'
+
   featureclip.evidence-manifest:
     owner: FeatureClipStudio
     package: null
