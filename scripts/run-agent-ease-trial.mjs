@@ -63,6 +63,12 @@ function requirePass(result, label) {
   if (result.error || result.status !== 0) throw new Error(`${label} failed\n${result.stdout ?? ""}\n${result.stderr ?? ""}`);
 }
 
+// Pin the NodeKit source identity before the candidate is generated. A long-running
+// trial must never inherit a newer commit merely because the parent repository moved
+// while the isolated coding agent was working.
+const nodekitCommit = run("git", ["rev-parse", "HEAD"], repoRoot).stdout.trim();
+const sourceHash = await computeNodeKitSourceHash(repoRoot);
+
 await mkdir(path.join(evidenceRoot, "agent"), { recursive: true });
 await mkdir(path.join(evidenceRoot, "candidate"), { recursive: true });
 await writeFile(path.join(evidenceRoot, "agent", "original-prompt.txt"), `${task.goal}\n`);
@@ -150,8 +156,6 @@ const browserInstall = packageManager === "pnpm"
   ? run("pnpm", ["exec", "playwright", "install", "chromium"], candidateRoot, { timeout: 300_000 })
   : run("npx", ["playwright", "install", "chromium"], candidateRoot, { timeout: 300_000 });
 checks.browserRuntime = browserInstall.status === 0 && !browserInstall.error;
-const nodekitCommit = run("git", ["rev-parse", "HEAD"], repoRoot).stdout.trim();
-const sourceHash = await computeNodeKitSourceHash(repoRoot);
 const browser = run(packageManager, ["run", "proof:browser"], candidateRoot, {
   env: { NODEKIT_EASE_RUN_ID: runId, NODEKIT_SOURCE_COMMIT: nodekitCommit, NODEKIT_SOURCE_HASH: sourceHash },
   timeout: 300_000,
@@ -159,6 +163,9 @@ const browser = run(packageManager, ["run", "proof:browser"], candidateRoot, {
 checks.browserJourney = browser.status === 0 && !browser.error;
 const proof = run(packageManager, ["run", "proof"], candidateRoot);
 checks.proof = proof.status === 0 && !proof.error;
+const endingNodekitCommit = run("git", ["rev-parse", "HEAD"], repoRoot).stdout.trim();
+const endingNodekitSourceHash = await computeNodeKitSourceHash(repoRoot);
+checks.nodekitIdentityStable = endingNodekitCommit === nodekitCommit && endingNodekitSourceHash === sourceHash;
 
 const finalReport = await readFile(finalPath, "utf8").catch(() => "");
 const porcelain = run("git", ["status", "--porcelain=v1"], candidateRoot).stdout;
@@ -206,6 +213,8 @@ const receipt = {
   executor,
   generatedAt: new Date().toISOString(),
   interventions: 0,
+  endingNodekitCommit,
+  endingNodekitSourceHash,
   nodekitCommit,
   nodekitSourceHash: sourceHash,
   packageManager,

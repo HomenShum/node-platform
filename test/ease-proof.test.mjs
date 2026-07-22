@@ -49,6 +49,9 @@ test("fresh-agent recorder preserves process fields and prohibits routine reprom
   assert.match(harness, /interventions: 0/);
   assert.match(harness, /nodekitCommit,/);
   assert.match(harness, /nodekitSourceHash: sourceHash/);
+  assert.ok(harness.indexOf('const nodekitCommit = run("git"') < harness.indexOf("await createProject"));
+  assert.ok(harness.indexOf("const sourceHash = await computeNodeKitSourceHash") < harness.indexOf("await createProject"));
+  assert.match(harness, /checks\.nodekitIdentityStable = endingNodekitCommit === nodekitCommit && endingNodekitSourceHash === sourceHash/);
   assert.match(harness, /userReprompts: 0/);
   assert.match(harness, /checks\.agentImplemented = substantiveFiles\.length > 0/);
   assert.match(harness, /checks\.agentReportedCompletion/);
