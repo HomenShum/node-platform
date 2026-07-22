@@ -9,6 +9,8 @@ test("EaseProof keeps browser contracts distinct from certification", async () =
   const contract = await readFile(path.resolve("templates", "base", "scripts", "browser-proof.mjs"), "utf8");
   const browser = await readFile(path.resolve("templates", "base", "scripts", "browser-certify.mjs"), "utf8");
   assert.match(contract, /not rendered-browser certification/);
+  assert.match(contract, /health\?\.certificationRunId === runId/);
+  assert.match(contract, /health\?\.serverPid === child\.pid/);
   assert.match(proof, /browserContractPassed/);
   assert.match(proof, /browserCertified/);
   assert.match(browser, /nodekit\.screenshot-proof\/v1/);
@@ -18,7 +20,13 @@ test("EaseProof keeps browser contracts distinct from certification", async () =
   assert.match(browser, /playwright-trace\.zip/);
   assert.match(browser, /journey\.webm/);
   assert.match(browser, /receipt_reload_confirmed/);
+  assert.match(browser, /canonical_state_reset/);
+  assert.match(browser, /health\?\.certificationRunId === runId/);
+  assert.match(browser, /health\?\.serverPid === server\.pid/);
+  assert.match(browser, /NODEKIT_BROWSER_RUN_ID: runId/);
   assert.match(browser, /serverProcess/);
+  assert.match(proof, /suppliedBrowserEvidencePassed/);
+  assert.match(proof, /checks\.browserJourneyPassed !== false/);
   for (const state of [
     "first_arrival", "orientation", "input", "validation_error", "running", "partial_result",
     "external_wait", "proposal_pending", "approval", "conflict", "recoverable_failure",
@@ -33,6 +41,8 @@ test("generated UI scenarios are backed by caseflow conflict, exception, and rec
   assert.match(server, /raiseException\(\{ runId: current\.run\.runId/);
   assert.match(server, /"receipt_inspection", "export_share"/);
   assert.match(server, /\/api\/scenario/);
+  assert.match(server, /certificationRunId: process\.env\.NODEKIT_BROWSER_RUN_ID \?\? null/);
+  assert.match(server, /serverPid: process\.pid/);
 });
 
 test("fresh-agent recorder preserves process fields and prohibits routine reprompts", async () => {

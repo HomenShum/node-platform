@@ -1,14 +1,24 @@
 import { spawn } from "node:child_process";
+import { randomUUID } from "node:crypto";
 import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { recordFriction } from "./lib/friction.mjs";
 
 const port = 42731;
-const child = spawn(process.execPath, [path.resolve("apps/web/server.mjs")], { env: { ...process.env, PORT: String(port) }, stdio: ["ignore", "pipe", "pipe"] });
+const runId = `browser_contract_${randomUUID()}`;
+const child = spawn(process.execPath, [path.resolve("apps/web/server.mjs")], {
+  env: { ...process.env, NODEKIT_BROWSER_RUN_ID: runId, PORT: String(port) },
+  stdio: ["ignore", "pipe", "pipe"],
+});
 try {
   let ready = false;
   for (let attempt = 0; attempt < 40; attempt += 1) {
-    try { const response = await fetch(`http://127.0.0.1:${port}/api/health`); ready = response.ok; if (ready) break; } catch {}
+    try {
+      const response = await fetch(`http://127.0.0.1:${port}/api/health`);
+      const health = response.ok ? await response.json() : null;
+      ready = health?.certificationRunId === runId && health?.serverPid === child.pid;
+      if (ready) break;
+    } catch {}
     await new Promise((resolve) => setTimeout(resolve, 100));
   }
   if (!ready) throw new Error("browser-proof server did not become ready");

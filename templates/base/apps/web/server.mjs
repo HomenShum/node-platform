@@ -107,7 +107,12 @@ async function body(request) {
 }
 
 async function api(request, response, url) {
-  if (request.method === "GET" && url.pathname === "/api/health") return send(response, 200, { application: "__APP_NAME__", status: "ok" });
+  if (request.method === "GET" && url.pathname === "/api/health") return send(response, 200, {
+    application: "__APP_NAME__",
+    certificationRunId: process.env.NODEKIT_BROWSER_RUN_ID ?? null,
+    serverPid: process.pid,
+    status: "ok",
+  });
   if (request.method === "GET" && url.pathname === "/api/state") return send(response, 200, view());
   if (request.method === "POST" && url.pathname === "/api/reset") return send(response, 200, reset());
   if (request.method === "POST" && url.pathname === "/api/scenario") {

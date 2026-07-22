@@ -67,7 +67,8 @@ async function waitForServer() {
   for (let attempt = 0; attempt < 100; attempt += 1) {
     try {
       const response = await fetch(`${baseUrl}/api/health`);
-      if (response.ok) {
+      const health = response.ok ? await response.json() : null;
+      if (health?.certificationRunId === runId && health?.serverPid === server.pid) {
         mark("server_readiness", phaseStarted);
         return;
       }
@@ -116,7 +117,7 @@ async function capture(page, state, viewport, theme, observations) {
 await mkdir(screenshotRoot, { recursive: true });
 await mkdir(path.join(browserRoot, "video"), { recursive: true });
 const server = spawn(process.execPath, [path.resolve("apps", "web", "server.mjs")], {
-  env: { ...process.env, PORT: String(port) },
+  env: { ...process.env, NODEKIT_BROWSER_RUN_ID: runId, PORT: String(port) },
   stdio: ["ignore", "pipe", "pipe"],
 });
 let browser;
@@ -143,6 +144,9 @@ try {
       });
       page.on("requestfailed", (request) => observations.failedRequests.push({ error: request.failure()?.errorText ?? "unknown", url: request.url() }));
       if (canonicalJourney) {
+        const resetResponse = await fetch(`${baseUrl}/api/reset`, { method: "POST" });
+        if (!resetResponse.ok) throw new Error(`canonical journey reset failed with HTTP ${resetResponse.status}`);
+        milestone("canonical_state_reset");
         await page.goto(baseUrl, { waitUntil: "networkidle" });
         await page.locator("#case-title").waitFor();
         firstMeaningfulPaintMs = Math.round(performance.now() - started);

@@ -23,7 +23,13 @@ const checks = {
   identityBound: typeof identity.applicationHash === "string" && typeof identity.configHash === "string",
   secretFree: !/(?:sk-[A-Za-z0-9_-]{12,}|-----BEGIN [A-Z ]+PRIVATE KEY-----)/.test(JSON.stringify({ browserContract, browserJourney, demo, evaluation })),
 };
-const localReady = checks.deterministicDemo && checks.deterministicEvaluation && checks.identityBound && checks.secretFree;
+const suppliedBrowserEvidencePassed = checks.browserContractPassed !== false
+  && checks.browserJourneyPassed !== false;
+const localReady = checks.deterministicDemo
+  && checks.deterministicEvaluation
+  && checks.identityBound
+  && checks.secretFree
+  && suppliedBrowserEvidencePassed;
 const receipt = {
   applicationHash: identity.applicationHash,
   checks,
