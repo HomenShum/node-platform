@@ -10,6 +10,7 @@ import {
   assertExactDistributableCandidate,
   runPackageInstallProof,
 } from "./run-package-install-proof.mjs";
+import { resolveNpmCliInvocation } from "../src/lib/npm-cli-invocation.mjs";
 
 const COMMIT = /^[a-f0-9]{40}$/;
 const SHA256 = /^[a-f0-9]{64}$/;
@@ -53,20 +54,24 @@ function sanitize(value, replacements) {
 }
 
 function execute(ledger, { args, command, cwd, label, replacements, timeoutMs }) {
+  const isNpm = /(?:^|[\\/])npm(?:\.cmd)?$/i.test(command);
+  const invocation = isNpm
+    ? resolveNpmCliInvocation(args)
+    : { args, command, displayArgs: args, displayCommand: path.basename(command).replace(/\.cmd$/i, ""), shell: false };
   const startedAt = new Date().toISOString();
   const started = performance.now();
-  const result = spawnSync(command, args, {
+  const result = spawnSync(invocation.command, invocation.args, {
     cwd,
     encoding: "utf8",
     env: { ...process.env, CI: "1", NO_COLOR: "1", npm_config_audit: "false", npm_config_fund: "false" },
     maxBuffer: 50 * 1024 * 1024,
-    shell: process.platform === "win32" && /(?:^|[\\/])npm(?:\.cmd)?$/i.test(command),
+    shell: invocation.shell,
     timeout: timeoutMs,
   });
   const stdout = sanitize(result.stdout, replacements);
   const stderr = sanitize(result.stderr, replacements);
   const record = {
-    command: sanitize(`${path.basename(command).replace(/\.cmd$/i, "")} ${args.join(" ")}`, replacements),
+    command: sanitize(`${invocation.displayCommand} ${invocation.displayArgs.join(" ")}`, replacements),
     completedAt: new Date().toISOString(),
     durationMs: Math.round(performance.now() - started),
     exitCode: result.status,

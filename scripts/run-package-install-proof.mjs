@@ -21,6 +21,7 @@ import {
   parseGitStatusPorcelainZ,
 } from "../src/lib/distributable-candidate.mjs";
 import { computeNodeKitSourceHash } from "../src/lib/source-hash.mjs";
+import { resolveNpmCliInvocation } from "../src/lib/npm-cli-invocation.mjs";
 
 const COMMIT = /^[a-f0-9]{40}$/;
 const SHA256 = /^[a-f0-9]{64}$/;
@@ -174,21 +175,25 @@ function sanitizeText(value, replacements) {
 }
 
 function execute(ledger, { command, args, cwd, label, displayArgs = args, replacements = [], timeoutMs = 300_000 }) {
+  const isNpm = /(?:^|[\\/])npm(?:\.cmd)?$/i.test(command);
+  const invocation = isNpm
+    ? resolveNpmCliInvocation(args)
+    : { args, command, displayArgs, displayCommand: path.basename(command).replace(/\.cmd$/i, ""), shell: false };
   const startedAt = new Date().toISOString();
   const started = performance.now();
-  const result = spawnSync(command, args, {
+  const result = spawnSync(invocation.command, invocation.args, {
     cwd,
     encoding: "utf8",
     env: { ...process.env, CI: "1", NO_COLOR: "1", npm_config_audit: "false", npm_config_fund: "false" },
     maxBuffer: 50 * 1024 * 1024,
-    shell: process.platform === "win32" && /(?:^|[\\/])(?:npm|npx)(?:\.cmd)?$/.test(command),
+    shell: invocation.shell,
     timeout: timeoutMs,
   });
   const stdout = sanitizeText(result.stdout ?? "", replacements);
   const stderr = sanitizeText(result.stderr ?? "", replacements);
   const record = {
-    args: displayArgs,
-    command: path.basename(command).replace(/\.cmd$/i, ""),
+    args: displayArgs ?? invocation.displayArgs,
+    command: isNpm ? invocation.displayCommand : path.basename(command).replace(/\.cmd$/i, ""),
     durationMs: Math.round(performance.now() - started),
     exitCode: result.status,
     label,
