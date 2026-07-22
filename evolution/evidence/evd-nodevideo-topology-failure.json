@@ -1,0 +1,17 @@
+{
+  "schemaVersion": "nodekit.evolution-evidence/v1",
+  "id": "evd:nodevideo-topology-failure",
+  "kind": "human-review",
+  "artifactRef": "git:678f2e0b82c2c50c3741c8bbb2a80ed95ff5b159:evolution/artifacts/nodevideo-topology-failure.md",
+  "sha256": "80676ad0c40ed9e38ae84c4af0aba7ccc979ef7c1d373914f4e312eafc808ac4",
+  "sourceCommit": "678f2e0b82c2c50c3741c8bbb2a80ed95ff5b159",
+  "generatedAt": "2026-07-22T00:36:59-07:00",
+  "environment": {
+    "reviewSurface": "NodeVideo",
+    "evidenceBoundary": "human-reviewed topology failure; not a universal model verdict"
+  },
+  "verifiesInvariantIds": [
+    "inv:major-frontend-direction-tournament"
+  ],
+  "result": "partial"
+}

@@ -1,0 +1,12 @@
+{
+  "schemaVersion": "nodekit.evolution-adoption/v1",
+  "id": "adp:nodekit-frontend-tournament",
+  "invariantId": "inv:major-frontend-direction-tournament",
+  "consumer": {
+    "repository": "HomenShum/node-platform",
+    "package": "@homenshum/nodekit"
+  },
+  "adoptedAtCommit": "678f2e0b82c2c50c3741c8bbb2a80ed95ff5b159",
+  "evidenceIds": [],
+  "status": "declared"
+}

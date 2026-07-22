@@ -22,5 +22,14 @@
     "evidenceIds": [
       "evd:domain-blank-factory"
     ]
+  },
+  {
+    "invariantId": "inv:major-frontend-direction-tournament",
+    "consumer": {
+      "repository": "HomenShum/node-platform",
+      "package": "@homenshum/nodekit"
+    },
+    "status": "declared",
+    "evidenceIds": []
   }
 ]

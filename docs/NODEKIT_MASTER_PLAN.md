@@ -461,7 +461,7 @@ Passing an earlier level never implies a later claim.
 - [x] Add init, draft, record, verify, query, diff, materiality, docs, and graph-proposal commands.
 - [x] Add generated chronology/adoption projections and CI drift/materiality gates.
 - [x] Backfill domain-blank factory and rendered-browser-certification decisions.
-- [ ] Complete the NodeVideo topology-failure backfill against its exact source commit.
+- [x] Complete the NodeVideo topology-failure backfill against its exact source commit.
 - [ ] Verify adoption of the frontend tournament invariant in a real consumer.
 
 ## Ordered execution plan

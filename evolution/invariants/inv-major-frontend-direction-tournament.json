@@ -1,0 +1,20 @@
+{
+  "schemaVersion": "nodekit.invariant-claim/v1",
+  "id": "inv:major-frontend-direction-tournament",
+  "statement": "A major frontend must preserve a protected product-design contract, render three materially distinct desktop/mobile directions, use independent pairwise selection, and pass a fresh-browser NodeProof canary before promotion.",
+  "scope": {
+    "applications": [
+      "NodeKit applications"
+    ],
+    "surfaces": [
+      "major frontend creation and redesign"
+    ]
+  },
+  "enforcement": "runtime-gate",
+  "verifierRefs": [
+    "src/lib/frontend-specialist.mjs",
+    "test/frontend-specialist.test.mjs"
+  ],
+  "introducedByEventId": "evt:nodevideo-topology-contract",
+  "status": "partially-verified"
+}
