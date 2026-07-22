@@ -1,0 +1,27 @@
+{
+  "applicationHash": "df5321e8adbece38f1a0c66b684f3b3ad55f8e92b98889fa3941dab0791bc933",
+  "capturedAt": "2026-07-22T08:51:26.720Z",
+  "configHash": "df5321e8adbece38f1a0c66b684f3b3ad55f8e92b98889fa3941dab0791bc933",
+  "consoleErrors": 0,
+  "elapsedMs": 123518,
+  "failedRequests": 0,
+  "generatedCandidateCommit": "d6e1fd54fedeac143f1c2b16dafc262d11685906",
+  "horizontalOverflowPx": 0,
+  "mojibakeDetected": false,
+  "nodekitCommit": "5cc61578b3c1bd5b5c8195b83347b91f8b83242b",
+  "nodekitSourceHash": "0ced0adf6e0f719be9a5fabefd69754a79102f39b6b6a54b20daeb60ceba7c0b",
+  "pageUrl": "http://127.0.0.1:43172/?scenario=partial_result",
+  "pngSha256": "4840f0319cc0b7cd880c413562f2e0484fb3bb158c64a2d7512ff160990d03da",
+  "runId": "browser_5cc6157_20260722",
+  "schemaVersion": "nodekit.screenshot-proof/v1",
+  "serverProcess": {
+    "command": "C:\\nvm4w\\nodejs\\node.exe apps/web/server.mjs",
+    "pid": 24808
+  },
+  "state": "partial_result",
+  "theme": "dark",
+  "viewport": {
+    "height": 844,
+    "width": 390
+  }
+}
