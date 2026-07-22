@@ -206,6 +206,8 @@ const receipt = {
   executor,
   generatedAt: new Date().toISOString(),
   interventions: 0,
+  nodekitCommit,
+  nodekitSourceHash: sourceHash,
   packageManager,
   passed: agent.status === 0 && Object.values(checks).every(Boolean),
   promptSha256: sha256(task.goal),

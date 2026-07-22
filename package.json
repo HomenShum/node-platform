@@ -25,6 +25,7 @@
     "acceptance:factory": "node src/factory-acceptance.mjs",
     "ease:aggregate-developer": "node scripts/aggregate-developer-timing.mjs",
     "acceptance:agent": "node scripts/run-agent-ease-trial.mjs",
+    "ease:evaluate-agents": "node scripts/evaluate-agent-ease.mjs",
     "ease:evaluate-developer": "node scripts/evaluate-ease-evidence.mjs developer",
     "ease:evaluate-humans": "node scripts/evaluate-ease-evidence.mjs humans",
     "submission:evaluate": "node scripts/evaluate-submission.mjs",

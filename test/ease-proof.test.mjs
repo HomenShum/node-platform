@@ -47,6 +47,8 @@ test("fresh-agent recorder preserves process fields and prohibits routine reprom
   assert.match(harness, /danger-full-access-inside-disposable-container/);
   assert.match(harness, /"--sandbox", "danger-full-access"/);
   assert.match(harness, /interventions: 0/);
+  assert.match(harness, /nodekitCommit,/);
+  assert.match(harness, /nodekitSourceHash: sourceHash/);
   assert.match(harness, /userReprompts: 0/);
   assert.match(harness, /checks\.agentImplemented = substantiveFiles\.length > 0/);
   assert.match(harness, /checks\.agentReportedCompletion/);
