@@ -3,7 +3,7 @@
   "id": "evd:source-bound-submission-gates-materiality",
   "kind": "human-review",
   "artifactRef": "file:evolution/artifacts/source-bound-submission-gates-materiality.md",
-  "sha256": "d1394b8702be7ade2b5691a11427d43545767689acd377b9ce1599efbea33cfd",
+  "sha256": "141c4b9813fac5877b0fd88f3c31dcb749382bf956f0934dc9741839454d5ad5",
   "sourceCommit": "4407b70c616c89b022e0d3d36ba02f00519b1688",
   "generatedAt": "2026-07-22T02:33:14-07:00",
   "environment": {
