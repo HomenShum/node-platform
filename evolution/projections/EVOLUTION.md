@@ -14,6 +14,16 @@ Canonical JSON records remain authoritative. This projection explains why materi
 - Evidence: `evd:domain-blank-factory` (pass)
 - Known limitations: Reference applications still require explicit user selection after creation.
 
+### The natural named-option form for selecting a submission candidate failed before evidence evaluation began.
+
+- Event: `evt:submission-cli-named-options`
+- Source: `d0d9bb5b0a2cde1cdc2b236025ac985595613a5d`
+- Resolution: Submission preparation and evaluation now accept explicit named options, retain positional compatibility, reject unknown options clearly, and have subprocess coverage for the public command form.
+- Observed failure: npm run submission:prepare -- --candidate <sha> treated --candidate as a literal Git reference and produced a spawn error instead of a readiness manifest.
+- Invariants: `inv:submission-cli-explicit-options` (verified)
+- Evidence: `evd:submission-cli-explicit-options` (pass)
+- Known limitations: A generated readiness manifest remains fail-closed until every external evidence gate passes.; This change improves command usability but does not authorize publication or Convex submission.
+
 ## Architecture evolution
 
 ### Structural availability was mislabeled as browser certification.

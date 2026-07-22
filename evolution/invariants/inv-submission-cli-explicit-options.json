@@ -1,0 +1,23 @@
+{
+  "schemaVersion": "nodekit.invariant-claim/v1",
+  "id": "inv:submission-cli-explicit-options",
+  "statement": "Submission preparation and evaluation accept explicit named paths and candidate references, preserve positional compatibility, and fail clearly on unknown or incomplete options.",
+  "scope": {
+    "applications": [
+      "NodeKit factory"
+    ],
+    "packages": [
+      "@homenshum/nodekit"
+    ],
+    "surfaces": [
+      "submission preparation CLI",
+      "submission evaluation CLI"
+    ]
+  },
+  "enforcement": "test",
+  "verifierRefs": [
+    "test/submission-cli.test.mjs"
+  ],
+  "introducedByEventId": "evt:submission-cli-named-options",
+  "status": "verified"
+}
