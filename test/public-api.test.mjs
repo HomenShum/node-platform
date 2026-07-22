@@ -6,6 +6,7 @@ import {
   runCaseflowConformance,
   runtimeProfiles,
 } from "@homenshum/nodekit/caseflow";
+import { createPostgresCaseflow } from "@homenshum/nodekit/adapters/postgres";
 
 test("published Caseflow entry point exposes the supported portable contract", async () => {
   assert.equal(CASEFLOW_SCHEMA_VERSIONS.case, "nodekit.case/v1");
@@ -14,4 +15,5 @@ test("published Caseflow entry point exposes the supported portable contract", a
   assert.equal(verdict.passed, true);
   assert.equal(verdict.assertions.staleProposalFailedClosed, true);
   assert.equal(verdict.assertions.contentAddressedReceipt, true);
+  assert.equal(typeof createPostgresCaseflow, "function");
 });

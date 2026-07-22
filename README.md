@@ -122,6 +122,36 @@ consumers that do not use `nodekit create` should use an immutable Git or
 packed-tarball reference until the package is released. The unscoped `nodekit`
 npm name belongs to an unrelated project.
 
+## PostgreSQL adapter
+
+NodeKit ships a driver-neutral, owner-scoped PostgreSQL Caseflow adapter. Apply the exported
+`@homenshum/nodekit/adapters/postgres/migration.sql` once, then provide a pool compatible with
+`pg.Pool`:
+
+```js
+import { Pool } from "pg";
+import { createPostgresCaseflow } from "@homenshum/nodekit/adapters/postgres";
+
+const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+const caseflow = createPostgresCaseflow({
+  pool,
+  ownerId: authenticatedPrincipal.id,
+});
+```
+
+The adapter uses transactions, row locks, advisory sequence locks, owner-scoped queries,
+idempotent active-run/decision/completion retries, and conditional artifact-version application.
+Run the shared suite against a disposable database with:
+
+```bash
+NODEKIT_POSTGRES_URL=postgresql://... npm run conformance:postgres
+```
+
+The Supabase profile is a separate SQL export at
+`@homenshum/nodekit/adapters/supabase/profile.sql`. It layers complete owner RLS and explicit
+Realtime publication over the PostgreSQL schema. A checked-in profile is not a claim that live
+Supabase Auth, Storage, Realtime, Queue, or Cron conformance has passed.
+
 ## Contracts
 
 - [`ownership.yaml`](ownership.yaml) names one owner, current package, target package, status, version, and consumers for every governed concept.

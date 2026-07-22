@@ -3,9 +3,25 @@
   "version": "0.2.1",
   "description": "Portable agent-application scaffolding, compilation, conformance, and proof tooling",
   "type": "module",
+  "types": "./src/index.d.mts",
   "exports": {
-    ".": "./src/index.mjs",
-    "./caseflow": "./src/caseflow.mjs",
+    ".": {
+      "types": "./src/index.d.mts",
+      "import": "./src/index.mjs",
+      "default": "./src/index.mjs"
+    },
+    "./caseflow": {
+      "types": "./src/caseflow.d.mts",
+      "import": "./src/caseflow.mjs",
+      "default": "./src/caseflow.mjs"
+    },
+    "./adapters/postgres": {
+      "types": "./src/adapters/postgres.d.mts",
+      "import": "./src/adapters/postgres.mjs",
+      "default": "./src/adapters/postgres.mjs"
+    },
+    "./adapters/postgres/migration.sql": "./adapters/postgres/001_caseflow.sql",
+    "./adapters/supabase/profile.sql": "./adapters/supabase/001_profile.sql",
     "./package.json": "./package.json"
   },
   "bin": {
@@ -13,6 +29,7 @@
   },
   "files": [
     "src",
+    "adapters",
     "schemas",
     "templates",
     "plugins",
@@ -26,6 +43,7 @@
   "scripts": {
     "doctor": "node src/cli.mjs registry check --registry-root .",
     "audit:prod": "npm audit --omit=dev",
+    "typecheck:public": "tsc -p tsconfig.public.json",
     "test": "node --test test/*.test.mjs",
     "presentation:nodekit-proof": "node scripts/generate-nodekit-proof-presentation.mjs",
     "acceptance:factory": "node src/factory-acceptance.mjs",
@@ -36,12 +54,13 @@
     "ease:evaluate-humans": "node scripts/evaluate-ease-evidence.mjs humans",
     "submission:prepare": "node scripts/prepare-submission.mjs",
     "submission:evaluate": "node scripts/evaluate-submission.mjs",
+    "conformance:postgres": "node scripts/run-postgres-conformance.mjs",
     "registry:check": "node src/cli.mjs registry check --registry-root .",
     "ecosystem:check": "node src/cli.mjs ecosystem check --registry-root . --workspace ..",
     "dashboard": "node src/cli.mjs dashboard --registry-root . --workspace .. --write",
     "evolution:verify": "node src/cli.mjs evolution verify --repo-root .",
     "evolution:docs": "node src/cli.mjs evolution build-docs --repo-root .",
-    "check": "npm run test && npm run audit:prod && npm run registry:check && npm run ecosystem:check"
+    "check": "npm run test && npm run typecheck:public && npm run audit:prod && npm run registry:check && npm run ecosystem:check"
   },
   "engines": {
     "node": ">=20"
@@ -55,6 +74,8 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "playwright": "^1.61.1"
+    "pg": "^8.22.0",
+    "playwright": "^1.61.1",
+    "typescript": "^7.0.2"
   }
 }
