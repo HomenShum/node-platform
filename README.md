@@ -134,6 +134,8 @@ npm name belongs to an unrelated project.
 - `nodekit graph import` imports a pinned Understand Anything `knowledge-graph.json` as a namespaced, commit-bound code graph snapshot. `nodekit graph query --code` retrieves from that snapshot; it never turns the code graph into a write authority.
 - [`docs/UNDERSTAND_ANYTHING_CODE_GRAPH.md`](docs/UNDERSTAND_ANYTHING_CODE_GRAPH.md) defines the graph authority, privacy, freshness, and NodeGraph/NodeRoom projection boundary.
 - [`docs/KNOWLEDGE_EVOLUTION.md`](docs/KNOWLEDGE_EVOLUTION.md) defines the EvoGraph-R1-inspired, backend-neutral Knowledge Evolution Plane: immutable multimodal evidence, n-ary hyperedges, typed gaps, proposal-only graph mutations, explicit approval, stale-version conflicts, replay, receipts, Harness Gym projection, and evaluation boundaries.
+- [`docs/FRONTEND_SPECIALIST.md`](docs/FRONTEND_SPECIALIST.md) defines the evidence-ranked frontend route, protected product packet, mandatory three-direction tournament, bounded repair, and fresh-user canary.
+- [`docs/EVOLUTION_LEDGER.md`](docs/EVOLUTION_LEDGER.md) defines the permanent reasoning ledger from limitation and failed assumption through invariant, immutable evidence, verifier, and verified downstream adoption.
 - `nodekit create` refuses non-empty targets. `nodekit adopt` writes missing files only, preserves host scripts, and emits a collision receipt.
 - `nodekit repo check` validates ownership declarations, command aliases, migration origins, signature classification, and source rules.
 - `nodekit ecosystem check` checks all active local clones together.

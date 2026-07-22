@@ -79,7 +79,8 @@
         "tokensOut": { "type": "integer", "minimum": 0 },
         "costUsd": { "type": "number", "minimum": 0 },
         "toolCalls": { "type": "integer", "minimum": 0 },
-        "retries": { "type": "integer", "minimum": 0 }
+        "retries": { "type": "integer", "minimum": 0 },
+        "repairRounds": { "type": "integer", "minimum": 0 }
       },
       "additionalProperties": false
     },
@@ -132,10 +133,10 @@
         "failureId": { "$ref": "#/$defs/nonEmpty" },
         "failureClass": {
           "enum": [
-            "BRIEF_MISS", "GENERIC_FALLBACK", "OVERPLANNING", "UNDERPLANNING", "WRONG_PRIMITIVE",
+            "BRIEF_MISS", "PRODUCT_TOPOLOGY_MISS", "GENERIC_DASHBOARD_FALLBACK", "GENERIC_FALLBACK", "OVERPLANNING", "UNDERPLANNING", "WRONG_PRIMITIVE",
             "LAYOUT_REPETITION", "TEXT_DENSITY", "TOOL_AVOIDANCE", "TOOL_MISUSE", "NO_RESULT_INSPECTION",
             "FALSE_COMPLETION", "WEAK_REPAIR", "CONTEXT_DRIFT", "ORCHESTRATION_FAILURE", "UNSUPPORTED_CLAIM",
-            "COST_INEFFICIENCY", "REPOSITORY_LEGIBILITY_FAILURE", "REFERENCE_DISCOVERY_FAILURE", "UI_OPERABILITY_FAILURE",
+            "COST_INEFFICIENCY", "REPOSITORY_LEGIBILITY_FAILURE", "REFERENCE_DISCOVERY_FAILURE", "UI_OPERABILITY_FAILURE", "MOBILE_TOPOLOGY_FAILURE", "BACKSTAGE_COMPLEXITY_LEAK",
             "AUTHORITY_VIOLATION", "STALE_WRITE_FAILURE", "EXPORT_FAILURE", "RECOVERY_FAILURE"
           ]
         },
@@ -145,7 +146,7 @@
         "harnessVersion": { "$ref": "#/$defs/nonEmpty" },
         "behavior": { "$ref": "#/$defs/nonEmpty" },
         "expectedBehavior": { "$ref": "#/$defs/nonEmpty" },
-        "probableCause": { "enum": ["model", "prompt", "skill", "tool", "context", "reference", "renderer", "validator", "runtime", "unknown"] },
+        "probableCause": { "enum": ["model", "prompt", "skill", "tool", "context", "reference", "renderer", "validator", "runtime", "product contract", "unknown"] },
         "evidenceRefs": { "$ref": "#/$defs/stringList" },
         "repair": {
           "type": "object",

@@ -2,7 +2,7 @@
 
 Status: **engineering foundation proven; Ease certification and Convex submission blocked**
 
-Last reconciled: 2026-07-21
+Last reconciled: 2026-07-22
 
 This document is the canonical strategic summary for NodeKit. It separates implemented behavior,
 evidence-backed claims, active work, and future architecture. Detailed gate definitions remain in
@@ -49,7 +49,9 @@ fixtures, and distinctive product experience.
 | Shareable NodeKit factory preview | INCOMPLETE | NodeVideo production proof is not factory-preview proof |
 | Harness Gym | P0 FOUNDATION | Schemas, init, observation/card compiler, hashes, and diagnosis exist; no protected benchmark or promotion receipt yet |
 | Model Intelligence | P0 FOUNDATION | Strict observations/cards and fail-closed registry exist; no certified live-model card or routing policy yet |
+| Frontend Specialist | V1 ENGINEERING PASS | Protected product contract, evidence-ranked route, three-direction tournament, bounded repair, and canary gate exist; real consumer tournament proof remains |
 | Knowledge Evolution Plane | V1 ENGINEERING PASS | Six-layer hypergraph, evidence anchors, governed patches, receipts, replay, CLI, Harness projection, and tests exist; live task evidence and provider adapters remain |
+| Evolution Ledger | V1 ENGINEERING PASS | Immutable causal records, evidence hashes, adoption map, projections, CI materiality, and graph proposal exist; live consumer adoption remains |
 | Convex component extraction | BLOCKED | Requires three qualifying consumers and repeated implementation |
 | Convex directory submission | BLOCKED | `submissionReady` must be deterministically true first |
 | PostgreSQL/Supabase portability | FUTURE | Contracts should be preserved now; adapters follow later |
@@ -102,6 +104,10 @@ Domain application pack
 NodeKit experience layer
         ↓
 NodeAgent execution and tool runtime
+        ↓
+Frontend Specialist + Model Intelligence + Harness Gym
+        ↓
+Evolution Ledger (human-reviewed causal memory)
         ↓
 Knowledge Evolution Plane
         ↓
@@ -257,6 +263,21 @@ fresh-agent canary, rollback, and NodeProof receipt. Automatic promotion remains
 
 See `MODEL_INTELLIGENCE.md` for the canonical contracts and phase gates.
 
+### Frontend Specialist Routing
+
+Frontend work is a protected Harness Gym specialization rather than a prompt convention. The
+product-design contract retains authority over the primary job, canonical artifact, required
+states, mobile topology, evidence, approvals, and forbidden patterns. Model routing is evidence
+ranked and remains unprofiled until real observations justify a preferred route.
+
+Every major frontend must render exactly three materially different directions: collaborative
+workspace, artifact studio, and domain-native. An independent critic performs pairwise selection;
+the winner may receive only bounded repairs before a fresh-browser canary. Promotion requires the
+exact model and commit, a fresh identity, complete desktop/mobile journeys, screenshots, NodeProof,
+zero major findings, and human approval. Automatic deployment and promotion remain disabled.
+
+See `FRONTEND_SPECIALIST.md` for the CLI and authority boundaries.
+
 ## Knowledge Evolution Plane
 
 The graph is an agent environment, not merely a visualization:
@@ -288,6 +309,21 @@ Implemented v1:
 - [ ] Add NodeGraph document/rendering, Neo4j traversal, Convex collaboration, and SQL persistence projections.
 - [ ] Add graph-aware NodeRoom review and multimodal source-region navigation.
 - [ ] Export trajectories to NodeRL only after protected rewards stabilize.
+
+## Evolution Ledger
+
+The Evolution Ledger is NodeKit's durable causal memory. It records human-reviewed evolution
+events, challenged assumptions, invariant claims, immutable evidence, and consumer adoptions. Git
+commits, content hashes, verifier references, model identity, sample size, viewport, and candidate
+identity are checked where applicable. Records are append-only; corrections supersede history
+instead of overwriting it.
+
+The ledger can be queried and diffed, generates `EVOLUTION.md` and an adoption map, and can only
+propose evidence-grounded Knowledge Evolution patches. It does not silently mutate the canonical
+knowledge graph. CI blocks material product, schema, template, harness, ownership, or workflow
+changes when the commit range contains no human-reviewed evolution event.
+
+See `EVOLUTION_LEDGER.md` for record contracts and commands.
 
 ## Release ladder
 
@@ -405,6 +441,29 @@ Passing an earlier level never implies a later claim.
 - [ ] Add NodeGraph, Neo4j, Convex, and SQL provider projections in that order.
 - [ ] Add graph-aware review UI only after the portable proposal contract is stable.
 
+### Frontend Specialist
+
+- [x] Add protected product-design, route, direction-set, benchmark, and decision contracts.
+- [x] Default routing to unprofiled; require evidence before naming a preferred model.
+- [x] Require three distinct directions and the full desktop/mobile view set.
+- [x] Add independent pairwise selection, bounded repair, and prior-implementation preservation.
+- [x] Require exact model, exact commit, fresh identity, screenshots, NodeProof, human approval, and
+  zero major findings for canary success.
+- [x] Keep promotion and deployment disabled by default.
+- [ ] Run the first complete tournament and fresh-browser canary in NodeVideo or NodeSlide.
+
+### Evolution Ledger
+
+- [x] Add event, assumption, invariant, evidence, and adoption schemas.
+- [x] Enforce human-reviewed canonical events and immutable append-or-supersede history.
+- [x] Verify Git provenance, content hashes, references, secrets, benchmark identity, screenshots,
+  model identity, invariant proof, and consumer adoption.
+- [x] Add init, draft, record, verify, query, diff, materiality, docs, and graph-proposal commands.
+- [x] Add generated chronology/adoption projections and CI drift/materiality gates.
+- [x] Backfill domain-blank factory and rendered-browser-certification decisions.
+- [ ] Complete the NodeVideo topology-failure backfill against its exact source commit.
+- [ ] Verify adoption of the frontend tournament invariant in a real consumer.
+
 ## Ordered execution plan
 
 1. **Repair fresh-agent execution.** Run the Docker executor without the incompatible nested Linux
@@ -419,15 +478,17 @@ Passing an earlier level never implies a later claim.
    require the shared conformance suite.
 6. **Prove the NodeKit preview journey.** Deploy the exact candidate, run a fresh browser, export,
    reopen, score, clean up, and bind deployment identity.
-7. **Complete Harness Gym v0 and Knowledge Evolution evaluation.** The P0 observation/card compiler exists. Next freeze the
-   NodeKit Builder Gym benchmark before candidate generation or promotion exists, then normalize
-   one real model run into a provisional card. Add protected flat/static/evolving graph cases and
-   prove graph assistance improves or holds success without increasing unsupported-edge rate.
-8. **Extract Caseflow.** Only after three consumer implementations reveal the genuinely repeated
+7. **Run the first Frontend Specialist tournament.** Freeze the product contract, render all three
+   directions across desktop and mobile, select with an independent critic, apply bounded repair,
+   and retain a fresh-browser NodeProof canary without promoting automatically.
+8. **Complete Harness Gym v0 and Knowledge Evolution evaluation.** Freeze the NodeKit Builder Gym
+   benchmark, normalize one real model run into a provisional card, and run protected
+   flat/static/evolving graph cases. Record material conclusions in the Evolution Ledger.
+9. **Extract Caseflow.** Only after three consumer implementations reveal the genuinely repeated
    kernel.
-9. **Package and submit.** Run `convex-test`, installed-example proof, independent review, explicit
+10. **Package and submit.** Run `convex-test`, installed-example proof, independent review, explicit
    publication approval, and the deterministic submission gate.
-10. **Add SQL portability.** PostgreSQL first, Supabase managed profile second, with migration proof.
+11. **Add SQL portability.** PostgreSQL first, Supabase managed profile second, with migration proof.
 
 ## Why the remaining blockers are hard
 

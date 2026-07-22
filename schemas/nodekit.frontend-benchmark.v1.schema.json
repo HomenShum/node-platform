@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/HomenShum/node-platform/blob/main/schemas/nodekit.frontend-benchmark.v1.schema.json",
+  "title": "NodeKit Frontend Gym benchmark",
+  "type": "object",
+  "required": ["schemaVersion", "benchmarkId", "directionSet", "scores", "pairwiseResults", "criticIndependent", "browserChecksPassed", "accessibilityPassed", "overflowPassed", "majorFindings", "freshUserEvidenceRefs"],
+  "properties": {
+    "schemaVersion": { "const": "nodekit.frontend-benchmark/v1" },
+    "benchmarkId": { "type": "string", "minLength": 1 },
+    "directionSet": { "type": "string", "minLength": 1 },
+    "scores": {
+      "type": "object",
+      "minProperties": 3,
+      "additionalProperties": {
+        "type": "object",
+        "required": ["primaryJobClarity", "artifactDominance", "workflowHierarchy", "agentLegibility", "reviewSafety", "mobileOperation", "domainAppropriateness", "visualQuality"],
+        "properties": {
+          "primaryJobClarity": { "$ref": "#/$defs/score" },
+          "artifactDominance": { "$ref": "#/$defs/score" },
+          "workflowHierarchy": { "$ref": "#/$defs/score" },
+          "agentLegibility": { "$ref": "#/$defs/score" },
+          "reviewSafety": { "$ref": "#/$defs/score" },
+          "mobileOperation": { "$ref": "#/$defs/score" },
+          "domainAppropriateness": { "$ref": "#/$defs/score" },
+          "visualQuality": { "$ref": "#/$defs/score" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "pairwiseResults": {
+      "type": "array",
+      "minItems": 3,
+      "items": {
+        "type": "object",
+        "required": ["left", "right", "winner", "evidenceRefs"],
+        "properties": {
+          "left": { "type": "string", "minLength": 1 },
+          "right": { "type": "string", "minLength": 1 },
+          "winner": { "type": "string", "minLength": 1 },
+          "evidenceRefs": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 }, "uniqueItems": true }
+        },
+        "additionalProperties": false
+      }
+    },
+    "criticIndependent": { "const": true },
+    "browserChecksPassed": { "type": "boolean" },
+    "accessibilityPassed": { "type": "boolean" },
+    "overflowPassed": { "type": "boolean" },
+    "majorFindings": { "type": "array", "items": { "type": "string", "minLength": 1 }, "uniqueItems": true },
+    "freshUserEvidenceRefs": { "type": "array", "items": { "type": "string", "minLength": 1 }, "uniqueItems": true }
+  },
+  "$defs": { "score": { "type": "number", "minimum": 0, "maximum": 1 } },
+  "additionalProperties": false
+}

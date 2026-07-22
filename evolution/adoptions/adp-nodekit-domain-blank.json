@@ -1,0 +1,9 @@
+{
+  "schemaVersion": "nodekit.evolution-adoption/v1",
+  "id": "adp:nodekit-domain-blank",
+  "invariantId": "inv:domain-blank-create",
+  "consumer": { "repository": "HomenShum/node-platform", "application": "NodeKit factory", "package": "@homenshum/nodekit" },
+  "adoptedAtCommit": "8d4f7e6e8235751d07c456208f841b15edf8de39",
+  "evidenceIds": ["evd:domain-blank-factory"],
+  "status": "verified"
+}

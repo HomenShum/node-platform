@@ -1,0 +1,14 @@
+{
+  "schemaVersion": "nodekit.evolution-evidence/v1",
+  "id": "evd:rendered-browser-certification",
+  "kind": "code",
+  "artifactRef": "git:e398398d7f1dd4ff0b65409d2c8da971e83bc488:templates/base/scripts/browser-certify.mjs",
+  "sha256": "83632d43ca75a7afc3d071cd9d1e05b8c779324a6cb17d7b935bfe9fdeaed239",
+  "sourceCommit": "e398398d7f1dd4ff0b65409d2c8da971e83bc488",
+  "generatedAt": "2026-07-21T20:52:14-07:00",
+  "command": "node --test test/ease-proof.test.mjs test/factory.test.mjs",
+  "environment": { "repository": "HomenShum/node-platform" },
+  "verifiesInvariantIds": ["inv:rendered-browser-evidence"],
+  "nodeProofReceiptId": "nodeproof:ease-e398398",
+  "result": "pass"
+}

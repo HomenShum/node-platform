@@ -7,6 +7,7 @@ import {
   compileModelIntelligence,
   diagnoseModelFailures,
   initializeHarness,
+  MODEL_FAILURE_CAUSES,
   MODEL_FAILURE_CLASSES,
   writeModelBaseline,
 } from "../src/lib/model-intelligence.mjs";
@@ -97,6 +98,9 @@ test("model observation and capability-card schemas require exact resolved ident
   );
   assert.equal(MODEL_FAILURE_CLASSES.includes("FALSE_COMPLETION"), true);
   assert.equal(MODEL_FAILURE_CLASSES.includes("AUTHORITY_VIOLATION"), true);
+  assert.equal(MODEL_FAILURE_CLASSES.includes("PRODUCT_TOPOLOGY_MISS"), true);
+  assert.equal(MODEL_FAILURE_CLASSES.includes("MOBILE_TOPOLOGY_FAILURE"), true);
+  assert.equal(MODEL_FAILURE_CAUSES.includes("product contract"), true);
 });
 
 test("harness init is additive and baseline fails closed to an unmeasured registry", async (t) => {
@@ -108,6 +112,7 @@ test("harness init is additive and baseline fails closed to an unmeasured regist
   const first = await initializeHarness(root);
   const second = await initializeHarness(root);
   assert.equal(first.created.includes("harness/harness.yaml"), true);
+  assert.match(await readFile(first.frontend.routePath, "utf8"), /status: unprofiled/);
   assert.equal(second.created.length, 0);
   const { receipt } = await writeModelBaseline(root);
   assert.equal(receipt.status, "unmeasured");

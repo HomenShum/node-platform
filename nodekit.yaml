@@ -9,6 +9,8 @@ canonicalFor:
   - nodeplatform.repo-contract
   - nodeplatform.change-story
   - nodekit.knowledge-evolution
+  - nodekit.frontend-specialist
+  - nodekit.evolution-ledger
 
 consumes:
   - betterprhandoff.handoff
@@ -45,5 +47,13 @@ contractDeclarations:
   - concept: nodekit.knowledge-evolution
     signature: knowledge-graph-schema
     path: src/lib/knowledge-evolution.mjs
+    mode: canonical
+  - concept: nodekit.frontend-specialist
+    signature: frontend-route-schema
+    path: src/lib/frontend-specialist.mjs
+    mode: canonical
+  - concept: nodekit.evolution-ledger
+    signature: evolution-event-schema
+    path: src/lib/evolution-ledger.mjs
     mode: canonical
 architectureExceptions: []

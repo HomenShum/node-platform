@@ -1,0 +1,10 @@
+{
+  "schemaVersion": "nodekit.invariant-claim/v1",
+  "id": "inv:domain-blank-create",
+  "statement": "The primary NodeKit creation path makes no domain decision for the user.",
+  "scope": { "applications": ["NodeKit factory"], "packages": ["@homenshum/nodekit"], "surfaces": ["nodekit create"] },
+  "enforcement": "test",
+  "verifierRefs": ["test/factory.test.mjs#primary-create-rejects-domain-presets"],
+  "introducedByEventId": "evt:domain-blank-factory",
+  "status": "verified"
+}

@@ -1,0 +1,26 @@
+{
+  "schemaVersion": "nodekit.evolution-ledger/v1",
+  "authority": {
+    "canonicalRecords": "human-reviewed-only",
+    "mutation": "append-or-supersede",
+    "delete": "prohibited"
+  },
+  "materiality": [
+    "primary-user-workflow",
+    "public-contract",
+    "architectural-ownership",
+    "security-authority",
+    "proof-requirement",
+    "model-routing",
+    "harness-behavior",
+    "benchmark-conclusion",
+    "downstream-guarantee"
+  ],
+  "recordSchemas": [
+    "nodekit.evolution-event/v1",
+    "nodekit.assumption/v1",
+    "nodekit.invariant-claim/v1",
+    "nodekit.evolution-evidence/v1",
+    "nodekit.evolution-adoption/v1"
+  ]
+}

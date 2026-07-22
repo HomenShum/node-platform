@@ -4,11 +4,12 @@ Read these files in order before changing the product:
 
 1. `docs/FIGURED_OUT.md`
 2. `docs/KNOWLEDGE_EVOLUTION.md`
-3. `product/BRIEF.md`
-4. `product/USER_JOURNEY.md`
-5. `product/SERVICE_BLUEPRINT.md`
-6. `product/EXPERIENCE.yaml`
-7. `nodeagent.yaml`
+3. `docs/EVOLUTION.md`
+4. `product/BRIEF.md`
+5. `product/USER_JOURNEY.md`
+6. `product/SERVICE_BLUEPRINT.md`
+7. `product/EXPERIENCE.yaml`
+8. `nodeagent.yaml`
 
 Keep the application blank in domain until the real user workflow is researched. Preserve the universal `Case -> Run -> Stage -> Artifact -> Proposal -> Approval -> Receipt` behavior and the in-memory deterministic demonstration.
 
@@ -28,3 +29,5 @@ When the real workflow needs durable cross-run knowledge, initialize the NodeKit
 - Propose INSERT, UPDATE, or DEPRECATE operations; never mutate the canonical graph directly.
 - Require validation and explicit approval before a graph version advances.
 - Use `ABSTAIN` when required evidence is missing.
+
+Material product, architecture, or harness changes require a reviewed Evolution Ledger record with immutable evidence and scoped adoption. A generating or frontend model cannot define its own judge, proof threshold, or completion verdict.

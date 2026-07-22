@@ -3,10 +3,13 @@ import { mkdir, readFile, readdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { stringify as stringifyYaml } from "yaml";
 import { pathExists, readYaml } from "./files.mjs";
+import { initializeFrontendHarness } from "./frontend-specialist.mjs";
 import { validateSchema } from "./schema-validation.mjs";
 
 export const MODEL_FAILURE_CLASSES = Object.freeze([
   "BRIEF_MISS",
+  "PRODUCT_TOPOLOGY_MISS",
+  "GENERIC_DASHBOARD_FALLBACK",
   "GENERIC_FALLBACK",
   "OVERPLANNING",
   "UNDERPLANNING",
@@ -25,10 +28,26 @@ export const MODEL_FAILURE_CLASSES = Object.freeze([
   "REPOSITORY_LEGIBILITY_FAILURE",
   "REFERENCE_DISCOVERY_FAILURE",
   "UI_OPERABILITY_FAILURE",
+  "MOBILE_TOPOLOGY_FAILURE",
+  "BACKSTAGE_COMPLEXITY_LEAK",
   "AUTHORITY_VIOLATION",
   "STALE_WRITE_FAILURE",
   "EXPORT_FAILURE",
   "RECOVERY_FAILURE",
+]);
+
+export const MODEL_FAILURE_CAUSES = Object.freeze([
+  "model",
+  "prompt",
+  "skill",
+  "tool",
+  "context",
+  "reference",
+  "renderer",
+  "validator",
+  "runtime",
+  "product contract",
+  "unknown",
 ]);
 
 const HARNESS_DIRECTORIES = [
@@ -152,7 +171,13 @@ export async function initializeHarness(repoRoot) {
     );
   }
 
-  return { applicationId, created: created.map((file) => path.relative(resolvedRoot, file).replaceAll("\\", "/")), harnessRoot };
+  const frontend = await initializeFrontendHarness(resolvedRoot);
+  return {
+    applicationId,
+    created: created.map((file) => path.relative(resolvedRoot, file).replaceAll("\\", "/")),
+    frontend,
+    harnessRoot,
+  };
 }
 
 async function filesUnder(root, extensions) {

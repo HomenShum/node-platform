@@ -1,0 +1,26 @@
+[
+  {
+    "invariantId": "inv:rendered-browser-evidence",
+    "consumer": {
+      "repository": "HomenShum/node-platform",
+      "application": "NodeKit factory",
+      "package": "@homenshum/nodekit"
+    },
+    "status": "verified",
+    "evidenceIds": [
+      "evd:rendered-browser-certification"
+    ]
+  },
+  {
+    "invariantId": "inv:domain-blank-create",
+    "consumer": {
+      "repository": "HomenShum/node-platform",
+      "application": "NodeKit factory",
+      "package": "@homenshum/nodekit"
+    },
+    "status": "verified",
+    "evidenceIds": [
+      "evd:domain-blank-factory"
+    ]
+  }
+]

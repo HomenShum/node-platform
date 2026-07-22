@@ -11,6 +11,7 @@
     "schemas",
     "templates",
     "plugins",
+    "evolution",
     "ownership.yaml",
     "repositories.yaml",
     "architecture.yaml",
@@ -32,6 +33,8 @@
     "registry:check": "node src/cli.mjs registry check --registry-root .",
     "ecosystem:check": "node src/cli.mjs ecosystem check --registry-root . --workspace ..",
     "dashboard": "node src/cli.mjs dashboard --registry-root . --workspace .. --write",
+    "evolution:verify": "node src/cli.mjs evolution verify --repo-root .",
+    "evolution:docs": "node src/cli.mjs evolution build-docs --repo-root .",
     "check": "npm run test && npm run audit:prod && npm run registry:check && npm run ecosystem:check"
   },
   "engines": {

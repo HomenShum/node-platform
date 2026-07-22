@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/HomenShum/node-platform/blob/main/schemas/nodekit.frontend-route.v1.schema.json",
+  "title": "NodeKit evidence-ranked frontend specialist route",
+  "type": "object",
+  "required": ["schemaVersion", "role", "status", "selection", "requiredCapabilities", "authority", "budget", "expiry"],
+  "properties": {
+    "schemaVersion": { "const": "nodekit.frontend-route/v1" },
+    "role": { "const": "frontend-architect" },
+    "status": { "enum": ["unprofiled", "provisional", "evidence-ranked", "expired"] },
+    "selection": {
+      "type": "object",
+      "required": ["strategy", "preferredRoute", "fallbacks", "evidenceRefs"],
+      "properties": {
+        "strategy": { "const": "evidence_ranked" },
+        "preferredRoute": { "type": ["string", "null"], "minLength": 1 },
+        "fallbacks": { "$ref": "#/$defs/strings" },
+        "evidenceRefs": { "$ref": "#/$defs/strings" }
+      },
+      "additionalProperties": false
+    },
+    "requiredCapabilities": { "$ref": "#/$defs/nonEmptyStrings" },
+    "authority": {
+      "type": "object",
+      "required": ["sourceWrite", "proofGateWrite", "productionCredentials", "deployment"],
+      "properties": {
+        "sourceWrite": { "const": "proposal_workspace" },
+        "proofGateWrite": { "const": "prohibited" },
+        "productionCredentials": { "const": "prohibited" },
+        "deployment": { "const": "approval_required" }
+      },
+      "additionalProperties": false
+    },
+    "budget": {
+      "type": "object",
+      "required": ["maximumCostUsd", "maximumRepairRounds"],
+      "properties": {
+        "maximumCostUsd": { "type": "number", "minimum": 0 },
+        "maximumRepairRounds": { "type": "integer", "minimum": 0, "maximum": 5 }
+      },
+      "additionalProperties": false
+    },
+    "expiry": {
+      "type": "object",
+      "required": ["profiledAt", "reprofileAfterDays", "invalidateOnModelRevision", "invalidateOnToolSurfaceChange"],
+      "properties": {
+        "profiledAt": { "type": ["string", "null"], "pattern": "^$|^\\d{4}-\\d{2}-\\d{2}T" },
+        "reprofileAfterDays": { "type": "integer", "minimum": 1 },
+        "invalidateOnModelRevision": { "const": true },
+        "invalidateOnToolSurfaceChange": { "const": true }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$defs": {
+    "strings": { "type": "array", "items": { "type": "string", "minLength": 1 }, "uniqueItems": true },
+    "nonEmptyStrings": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 }, "uniqueItems": true }
+  },
+  "additionalProperties": false
+}

@@ -42,6 +42,28 @@ concepts:
       - id: knowledge-graph-schema
         regex: '^export const KNOWLEDGE_GRAPH_SCHEMA = "nodekit\.knowledge-graph/v1";'
 
+  nodekit.frontend-specialist:
+    owner: node-platform
+    package: "@homenshum/nodekit"
+    targetPackage: "@homenshum/nodekit"
+    status: canonical
+    contractVersion: nodekit.frontend-route/v1
+    consumers: []
+    signatures:
+      - id: frontend-route-schema
+        regex: '^export const FRONTEND_ROUTE_SCHEMA = "nodekit\.frontend-route/v1";'
+
+  nodekit.evolution-ledger:
+    owner: node-platform
+    package: "@homenshum/nodekit"
+    targetPackage: "@homenshum/nodekit"
+    status: canonical
+    contractVersion: nodekit.evolution-event/v1
+    consumers: []
+    signatures:
+      - id: evolution-event-schema
+        regex: '^export const EVOLUTION_EVENT_SCHEMA = "nodekit\.evolution-event/v1";'
+
   featureclip.evidence-manifest:
     owner: FeatureClipStudio
     package: null

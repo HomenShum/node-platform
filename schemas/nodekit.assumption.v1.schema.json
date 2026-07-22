@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/HomenShum/node-platform/blob/main/schemas/nodekit.assumption.v1.schema.json",
+  "type": "object",
+  "required": ["schemaVersion", "id", "statement", "scope", "status", "supportingEvidenceIds", "contradictingEvidenceIds"],
+  "properties": {
+    "schemaVersion": { "const": "nodekit.assumption/v1" },
+    "id": { "$ref": "#/$defs/id" },
+    "statement": { "$ref": "#/$defs/text" },
+    "scope": { "$ref": "#/$defs/scope" },
+    "status": { "enum": ["untested", "supported", "scope-limited", "disproven", "superseded"] },
+    "introducedByEventId": { "$ref": "#/$defs/id" },
+    "invalidatedByEventId": { "$ref": "#/$defs/id" },
+    "supportingEvidenceIds": { "$ref": "#/$defs/ids" },
+    "contradictingEvidenceIds": { "$ref": "#/$defs/ids" }
+  },
+  "$defs": {
+    "id": { "type": "string", "pattern": "^[a-z][a-z0-9._:-]+$" },
+    "text": { "type": "string", "minLength": 1 },
+    "ids": { "type": "array", "items": { "$ref": "#/$defs/id" }, "uniqueItems": true },
+    "scope": { "type": "object", "properties": { "applications": { "$ref": "#/$defs/strings" }, "packages": { "$ref": "#/$defs/strings" }, "taskFamilies": { "$ref": "#/$defs/strings" } }, "minProperties": 1, "additionalProperties": false },
+    "strings": { "type": "array", "items": { "$ref": "#/$defs/text" }, "uniqueItems": true }
+  },
+  "additionalProperties": false
+}

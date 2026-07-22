@@ -47,6 +47,25 @@ import {
   validateGraphPatch,
 } from "./lib/knowledge-evolution.mjs";
 import { proposeHarnessKnowledgePatch } from "./lib/harness-knowledge.mjs";
+import {
+  compileFrontendPlan,
+  createFrontendDirections,
+  createFrontendRepairPlan,
+  evaluateFrontendTournament,
+  initializeFrontendHarness,
+  verifyFrontendCanary,
+} from "./lib/frontend-specialist.mjs";
+import {
+  buildEvolutionDocs,
+  checkEvolutionMateriality,
+  diffEvolutionLedger,
+  draftEvolutionEvent,
+  initializeEvolutionLedger,
+  proposeEvolutionKnowledgePatch,
+  queryEvolutionLedger,
+  recordEvolutionRecord,
+  verifyEvolutionLedger,
+} from "./lib/evolution-ledger.mjs";
 
 const packageRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
@@ -110,6 +129,21 @@ Usage:
   nodekit graph replay --version <number> [--out <file>] [--repo-root <path>] [--json]
   nodekit graph benchmark --cases <file> [--repo-root <path>] [--json]
   nodekit graph harness-sync [--repo-root <path>] [--json]
+  nodekit frontend init [--repo-root <path>] [--json]
+  nodekit frontend plan --contract <file> [--route <file>] [--repo-root <path>] [--json]
+  nodekit frontend directions --plan <file> [--repo-root <path>] [--json]
+  nodekit frontend benchmark --manifest <file> [--repo-root <path>] [--json]
+  nodekit frontend repair --benchmark <file> [--repo-root <path>] [--json]
+  nodekit frontend canary --receipt <file> [--repo-root <path>] [--json]
+  nodekit evolution init [--repo-root <path>] [--json]
+  nodekit evolution draft --id <id> --track <track> --category <category> --challenge <text> --resolution <text> --reviewed-by <id>
+  nodekit evolution record --file <file> [--repo-root <path>] [--json]
+  nodekit evolution verify [--repo-root <path>] [--json]
+  nodekit evolution query [--track <track>] [--since <iso>] [--invariant <id>] [--repo-root <path>] [--json]
+  nodekit evolution diff --from <commit> --to <commit> [--repo-root <path>] [--json]
+  nodekit evolution materiality --from <commit> --to <commit> [--repo-root <path>] [--json]
+  nodekit evolution build-docs [--repo-root <path>] [--json]
+  nodekit evolution sync-graph [--graph-path <path>] [--repo-root <path>] [--json]
   nodekit harness init [--repo-root <path>] [--json]
   nodekit models baseline [--repo-root <path>] [--json]
   nodekit models profile [--repo-root <path>] [--json]
@@ -685,16 +719,119 @@ async function runGraphHarnessSync(parsed) {
   else console.log(`PROPOSED HARNESS KNOWLEDGE ${output.patch.patchId} (${output.patch.operations.length} operations); canonical graph unchanged`);
 }
 
+async function runFrontendInit(parsed) {
+  const output = await initializeFrontendHarness(repoRootFrom(parsed));
+  printStructured({ ...output, passed: true }, parsed, (value) => `INITIALIZED Frontend Gym at ${value.frontendRoot}; preferred route remains unprofiled`);
+}
+
+async function runFrontendPlan(parsed) {
+  const output = await compileFrontendPlan(repoRootFrom(parsed), requireOption(parsed, "contract"), parsed.options.route);
+  printStructured(output, parsed, (value) => `PLANNED ${value.plan.planId}; 3 directions required; route ${value.plan.routeStatus}; deployment unauthorized`);
+}
+
+async function runFrontendDirections(parsed) {
+  const output = await createFrontendDirections(repoRootFrom(parsed), requireOption(parsed, "plan"));
+  printStructured(output, parsed, (value) => `CREATED ${value.directionSet.directionSetId}: collaborative workspace, artifact studio, and domain-native hypotheses`);
+}
+
+async function runFrontendBenchmark(parsed) {
+  const output = await evaluateFrontendTournament(repoRootFrom(parsed), requireOption(parsed, "manifest"));
+  printStructured(output, parsed, (value) => `FRONTEND TOURNAMENT ${value.decisive ? "DECISIVE" : "BLOCKED"}: provisional ${value.decision.selectedCandidateId}; promotion unauthorized`);
+  if (!output.decisive) process.exitCode = 1;
+}
+
+async function runFrontendRepair(parsed) {
+  const output = await createFrontendRepairPlan(repoRootFrom(parsed), requireOption(parsed, "benchmark"));
+  printStructured(output, parsed, (value) => `REPAIR ${value.repair.repairId}: maximum ${value.repair.maximumRounds} bounded rounds; prior implementation preserved`);
+}
+
+async function runFrontendCanary(parsed) {
+  const output = await verifyFrontendCanary(repoRootFrom(parsed), requireOption(parsed, "receipt"));
+  printStructured(output, parsed, (value) => `FRONTEND CANARY ${value.passed ? "PASS" : "BLOCKED"}`);
+  if (!output.passed) process.exitCode = 1;
+}
+
+function optionList(parsed, name) {
+  const value = parsed.options[name];
+  if (value === undefined || value === true || String(value).trim() === "") return [];
+  return String(value).split(",").map((entry) => entry.trim()).filter(Boolean);
+}
+
+async function runEvolutionInit(parsed) {
+  const output = await initializeEvolutionLedger(repoRootFrom(parsed));
+  printStructured({ ...output, passed: true }, parsed, (value) => `INITIALIZED Evolution Ledger at ${value.evolutionRoot}`);
+}
+
+async function runEvolutionDraft(parsed) {
+  const output = await draftEvolutionEvent(repoRootFrom(parsed), {
+    id: requireOption(parsed, "id"),
+    repository: parsed.options.repository,
+    projectId: parsed.options["project-id"],
+    commitSha: parsed.options.commit,
+    pullRequest: parsed.options.pr,
+    track: requireOption(parsed, "track"),
+    category: requireOption(parsed, "category"),
+    challenge: requireOption(parsed, "challenge"),
+    observedFailure: parsed.options.failure,
+    resolution: requireOption(parsed, "resolution"),
+    reviewedBy: requireOption(parsed, "reviewed-by"),
+    assumptionIds: optionList(parsed, "assumptions"),
+    invariantIds: optionList(parsed, "invariants"),
+    evidenceIds: optionList(parsed, "evidence"),
+    knownLimitations: optionList(parsed, "limitations"),
+  });
+  printStructured(output, parsed, (value) => `DRAFTED ${value.event.id}; record remains separate from canonical history`);
+}
+
+async function runEvolutionRecord(parsed) {
+  const output = await recordEvolutionRecord(repoRootFrom(parsed), requireOption(parsed, "file"));
+  printStructured(output, parsed, (value) => `${value.duplicate ? "UNCHANGED" : "RECORDED"} ${value.record.id}`);
+}
+
+async function runEvolutionVerify(parsed) {
+  const output = await verifyEvolutionLedger(repoRootFrom(parsed));
+  printStructured(output, parsed, (value) => `EVOLUTION ${value.passed ? "PASS" : "BLOCKED"}: ${value.counts.events} events, ${value.counts.invariants} invariants, ${value.counts.adoptions} adoptions`);
+  if (!output.passed) process.exitCode = 1;
+}
+
+async function runEvolutionQuery(parsed) {
+  const output = await queryEvolutionLedger(repoRootFrom(parsed), { track: parsed.options.track, since: parsed.options.since, invariantId: parsed.options.invariant });
+  printStructured(output, parsed, (value) => `EVOLUTION QUERY: ${value.events.length} events, ${value.invariants.length} invariants, ${value.evidence.length} evidence records`);
+}
+
+async function runEvolutionDiff(parsed) {
+  const output = await diffEvolutionLedger(repoRootFrom(parsed), requireOption(parsed, "from"), requireOption(parsed, "to"));
+  printStructured(output, parsed, (value) => `EVOLUTION DIFF ${value.from}..${value.to}: ${value.events.length} material events`);
+}
+
+async function runEvolutionMateriality(parsed) {
+  const output = await checkEvolutionMateriality(repoRootFrom(parsed), requireOption(parsed, "from"), requireOption(parsed, "to"));
+  printStructured(output, parsed, (value) => `EVOLUTION MATERIALITY ${value.passed ? "PASS" : "BLOCKED"}: ${value.materialFiles.length} material files, ${value.events.length} recorded events`);
+  if (!output.passed) process.exitCode = 1;
+}
+
+async function runEvolutionBuildDocs(parsed) {
+  const output = await buildEvolutionDocs(repoRootFrom(parsed));
+  printStructured(output, parsed, (value) => `BUILT ${value.output} with ${value.adoptionMap.length} adoption records`);
+}
+
+async function runEvolutionSyncGraph(parsed) {
+  const output = await proposeEvolutionKnowledgePatch(repoRootFrom(parsed), { graphPath: parsed.options["graph-path"] });
+  printStructured({ ...output, proposalOnly: true }, parsed, (value) => `PROPOSED EVOLUTION KNOWLEDGE ${value.patch.patchId}; approval is still required`);
+}
+
 function repoRootFrom(parsed) {
   return path.resolve(String(parsed.options["repo-root"] ?? process.cwd()));
 }
 
 async function runHarnessInit(parsed) {
-  const output = await initializeHarness(repoRootFrom(parsed));
+  const root = repoRootFrom(parsed);
+  const output = await initializeHarness(root);
   if (parsed.options.json) console.log(JSON.stringify({ ...output, passed: true }, null, 2));
   else {
     console.log(`INITIALIZED Harness Gym for ${output.applicationId}`);
     console.log(`  ${output.created.length} files created; existing files preserved`);
+    console.log("  Frontend Gym initialized with an unprofiled evidence-ranked route and three-direction contract");
     console.log("  automatic promotion disabled; no model capability claims were created");
   }
 }
@@ -952,6 +1089,66 @@ async function main() {
   }
   if (first === "graph" && second === "harness-sync") {
     await runGraphHarnessSync(parsed);
+    return;
+  }
+  if (first === "frontend" && second === "init") {
+    await runFrontendInit(parsed);
+    return;
+  }
+  if (first === "frontend" && second === "plan") {
+    await runFrontendPlan(parsed);
+    return;
+  }
+  if (first === "frontend" && second === "directions") {
+    await runFrontendDirections(parsed);
+    return;
+  }
+  if (first === "frontend" && second === "benchmark") {
+    await runFrontendBenchmark(parsed);
+    return;
+  }
+  if (first === "frontend" && second === "repair") {
+    await runFrontendRepair(parsed);
+    return;
+  }
+  if (first === "frontend" && second === "canary") {
+    await runFrontendCanary(parsed);
+    return;
+  }
+  if (first === "evolution" && second === "init") {
+    await runEvolutionInit(parsed);
+    return;
+  }
+  if (first === "evolution" && second === "draft") {
+    await runEvolutionDraft(parsed);
+    return;
+  }
+  if (first === "evolution" && second === "record") {
+    await runEvolutionRecord(parsed);
+    return;
+  }
+  if (first === "evolution" && second === "verify") {
+    await runEvolutionVerify(parsed);
+    return;
+  }
+  if (first === "evolution" && second === "query") {
+    await runEvolutionQuery(parsed);
+    return;
+  }
+  if (first === "evolution" && second === "diff") {
+    await runEvolutionDiff(parsed);
+    return;
+  }
+  if (first === "evolution" && second === "materiality") {
+    await runEvolutionMateriality(parsed);
+    return;
+  }
+  if (first === "evolution" && second === "build-docs") {
+    await runEvolutionBuildDocs(parsed);
+    return;
+  }
+  if (first === "evolution" && second === "sync-graph") {
+    await runEvolutionSyncGraph(parsed);
     return;
   }
   if (first === "harness" && second === "init") {

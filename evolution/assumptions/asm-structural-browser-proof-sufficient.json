@@ -1,0 +1,11 @@
+{
+  "schemaVersion": "nodekit.assumption/v1",
+  "id": "asm:structural-browser-proof-sufficient",
+  "statement": "HTTP reachability and DOM string checks are sufficient browser certification.",
+  "scope": { "applications": ["NodeKit factory"], "taskFamilies": ["production-certification"] },
+  "status": "disproven",
+  "introducedByEventId": "evt:rendered-browser-certification",
+  "invalidatedByEventId": "evt:rendered-browser-certification",
+  "supportingEvidenceIds": [],
+  "contradictingEvidenceIds": ["evd:rendered-browser-certification"]
+}
