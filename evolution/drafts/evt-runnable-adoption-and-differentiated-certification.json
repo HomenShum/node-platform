@@ -1,0 +1,33 @@
+{
+  "schemaVersion": "nodekit.evolution-event/v1",
+  "id": "evt:runnable-adoption-and-differentiated-certification",
+  "projectId": "nodekit",
+  "repository": "HomenShum/node-platform",
+  "source": {
+    "commitSha": "8d0c48fa7c3538f0f77da9b539f38964d7ed0e5e",
+    "occurredAt": "2026-07-23T04:05:00-07:00"
+  },
+  "track": "harness",
+  "category": "ui",
+  "challenge": "NodeKit could report a healthy harness while the paths that make it adoptable were broken and the gate that judged its interface enforced sameness.",
+  "observedFailure": "Adoption wrote a dependency on a vendored runtime it never materialised, so an adopted repository could not install or run its demo. A runtime import was declared as a development dependency and stripped from the vendored runtime, so a cold install failed. Archive inspection resolved to a tar that reads a Windows drive letter as a remote host. Browser certification threw unless review copy matched the template's literal strings, so every certified application shipped identical language and domain-appropriate wording was a certification failure.",
+  "resolution": "Adoption now vendors the runtime as creation does, and a regression test adopts with no specifier and runs the generated demo to a passing receipt. The runtime import moved to dependencies. Tar binary resolution is centralised on the Windows system bsdtar with a PATH fallback, replacing four open-coded call sites. Browser certification now certifies that the review state is communicated and that the correct controls are visible for the state, leaving the behavioural contract unchanged and the template's default copy in place.",
+  "assumptionIds": [
+    "asm:strong-model-infers-topology"
+  ],
+  "invariantIds": [
+    "inv:domain-blank-create"
+  ],
+  "evidenceIds": [
+    "evd:runnable-adoption-and-differentiated-certification"
+  ],
+  "knownLimitations": [
+    "The token vocabulary generated applications inherit remains a single line of colour variables with no spacing, type, radius, elevation, or motion scale, so an agent extending the interface still has no vocabulary to extend it inside the system.",
+    "The frontend tournament's decisive verdict is still computed from self-asserted booleans with no evidence binding; no frontend quality claim rests on it and it is not repaired here.",
+    "The four defects were found by inspection and regression tests on Windows, not by a fresh user or a live consumer, so no adoption or cross-platform claim follows."
+  ],
+  "interpretation": {
+    "status": "human-reviewed",
+    "reviewedBy": "project-owner"
+  }
+}

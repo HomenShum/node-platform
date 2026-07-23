@@ -1,0 +1,18 @@
+{
+  "schemaVersion": "nodekit.evolution-evidence/v1",
+  "id": "evd:runnable-adoption-and-differentiated-certification",
+  "kind": "test",
+  "artifactRef": "git:8d0c48fa7c3538f0f77da9b539f38964d7ed0e5e:evolution/artifacts/runnable-adoption-and-differentiated-certification.md",
+  "sha256": "e89bb6c7ceeabfab1d9c6bb727c1bf8163ae2c70ea86b3bad7bf0dcf2f9de99a",
+  "sourceCommit": "8d0c48fa7c3538f0f77da9b539f38964d7ed0e5e",
+  "generatedAt": "2026-07-23T04:05:00-07:00",
+  "environment": {
+    "reviewSurface": "node-platform",
+    "suites": "factory 16/16, ease-proof 8/8, immutable-package-snapshot + package-install-proof-runner 12/12, atlas 5/5, atlas-retrieval 11/11, typecheck:public exit 0",
+    "evidenceBoundary": "Regression coverage for four repaired defects on Windows. No fresh-user, live-consumer, or cross-platform claim follows from it."
+  },
+  "verifiesInvariantIds": [
+    "inv:domain-blank-create"
+  ],
+  "result": "partial"
+}
