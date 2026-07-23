@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { mkdtemp, mkdir, cp, readFile, rm, symlink, writeFile } from "node:fs/promises";
+import { link, mkdtemp, mkdir, open, cp, readFile, rm, symlink, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import test from "node:test";
@@ -10,15 +10,39 @@ import {
   evaluateSubmissionManifest,
   parseGitStatusZ,
   portableEvidencePath,
+  readSubmissionEvidenceFile,
   requiredSubmissionGates,
   resolveSubmissionEvidenceClosure,
   submissionEvidenceRootSha256,
   transitiveSubmissionEvidence,
+  validateSubmissionScreenshotPng,
 } from "../src/lib/submission-gate.mjs";
 import { computeNodeKitSourceHash } from "../src/lib/source-hash.mjs";
+import { knowledgeRuntimeHash } from "../src/lib/knowledge-runtime.mjs";
 import { exactSubmissionVerdicts, submissionEvidenceFixtureBytes, submissionEvidenceFixtureClosure, submissionFixtureTrustedKeys } from "./submission-fixtures.mjs";
 
 const digest = (value) => createHash("sha256").update(value).digest("hex");
+let testPngCrcTable;
+function testPngCrc32(bytes) {
+  testPngCrcTable ??= Array.from({ length: 256 }, (_, index) => {
+    let value = index;
+    for (let bit = 0; bit < 8; bit += 1) value = (value & 1) === 1 ? (0xedb88320 ^ (value >>> 1)) : (value >>> 1);
+    return value >>> 0;
+  });
+  let crc = 0xffffffff;
+  for (const byte of bytes) crc = testPngCrcTable[(crc ^ byte) & 0xff] ^ (crc >>> 8);
+  return (crc ^ 0xffffffff) >>> 0;
+}
+function testPngChunk(type, data) {
+  const typeBytes = Buffer.from(type, "ascii");
+  const body = Buffer.from(data);
+  const chunk = Buffer.alloc(12 + body.length);
+  chunk.writeUInt32BE(body.length, 0);
+  typeBytes.copy(chunk, 4);
+  body.copy(chunk, 8);
+  chunk.writeUInt32BE(testPngCrc32(Buffer.concat([typeBytes, body])), 8 + body.length);
+  return chunk;
+}
 const canonicalGatePaths = {
   developerTimingMatrix: "proof/ease/developer-timing-verdict.json",
   freshAgentHeldout: "proof/ease/fresh-agent-verdict.json",
@@ -34,12 +58,13 @@ const canonicalGatePaths = {
   publicationApproval: "proof/publication-approval.json",
 };
 
-async function writeGateEvidence(root, id, value, relative = canonicalGatePaths[id]) {
+async function writeGateEvidence(root, id, value, relative = canonicalGatePaths[id], { includeBrowserClosure = true } = {}) {
   const bytes = Buffer.from(`${JSON.stringify(value)}\n`);
   await mkdir(path.dirname(path.join(root, relative)), { recursive: true });
   await writeFile(path.join(root, relative), bytes);
   const evidence = [{ path: relative, sha256: digest(bytes) }];
   const deferredBrowserClosure = [];
+  const deferredProtectedManifests = [];
   for (const reference of transitiveSubmissionEvidence(id, value)) {
     const candidateCommit = value.nodekitCommit ?? value.candidateCommit ?? value.subject?.repository?.candidateCommit;
     const sourceHash = value.nodekitSourceHash ?? value.subject?.repository?.nodekitSourceHash;
@@ -50,13 +75,47 @@ async function writeGateEvidence(root, id, value, relative = canonicalGatePaths[
       await writeFile(path.join(root, reference.path), nestedBytes);
     }
     evidence.push({ path: reference.path, sha256: reference.sha256 });
-    if (reference.kind === "screenshot-manifest" && id === "previewDeployment") {
+    // Candidate-authored browser bytes are diagnostic only for freshAgentHeldout:
+    // the decisive UI closure hangs off the protected evaluator instead, so
+    // declaring these children would surface as undeclared extra evidence.
+    if (includeBrowserClosure && reference.kind === "screenshot-manifest" && id !== "freshAgentHeldout") {
       for (const child of submissionEvidenceFixtureClosure(reference.path, candidateCommit, sourceHash)) {
         const childBytes = submissionEvidenceFixtureBytes(child.path, candidateCommit, sourceHash);
         await mkdir(path.dirname(path.join(root, child.path)), { recursive: true });
         await writeFile(path.join(root, child.path), childBytes);
         deferredBrowserClosure.push({ path: child.path, sha256: digest(childBytes) });
       }
+    }
+    // The protected browser manifest is synthesized by the closure walker from
+    // the protected evaluation rather than named by the verdict, so it has to be
+    // materialized here even though nothing in the verdict points at it.
+    if (includeBrowserClosure && id === "freshAgentHeldout" && reference.kind === "protected-evaluation") {
+      const evaluation = JSON.parse(submissionEvidenceFixtureBytes(reference.path, candidateCommit, sourceHash).toString("utf8"));
+      deferredProtectedManifests.push(path.posix.join(path.posix.dirname(reference.path), evaluation.protectedBrowserManifestFile));
+    }
+    if (reference.kind === "protected-comparison") {
+      for (const child of submissionEvidenceFixtureClosure(reference.path, candidateCommit, sourceHash)) {
+        const childBytes = submissionEvidenceFixtureBytes(child.path, candidateCommit, sourceHash);
+        await mkdir(path.dirname(path.join(root, child.path)), { recursive: true });
+        await writeFile(path.join(root, child.path), childBytes);
+        deferredBrowserClosure.push({ path: child.path, sha256: digest(childBytes) });
+      }
+    }
+  }
+  // The walker only discovers these while draining the direct references, so
+  // they land after all of them and ahead of their own screenshot children.
+  for (const protectedManifestPath of deferredProtectedManifests) {
+    const candidateCommit = value.nodekitCommit ?? value.candidateCommit ?? value.subject?.repository?.candidateCommit;
+    const sourceHash = value.nodekitSourceHash ?? value.subject?.repository?.nodekitSourceHash;
+    const protectedManifestBytes = submissionEvidenceFixtureBytes(protectedManifestPath, candidateCommit, sourceHash);
+    await mkdir(path.dirname(path.join(root, protectedManifestPath)), { recursive: true });
+    await writeFile(path.join(root, protectedManifestPath), protectedManifestBytes);
+    evidence.push({ path: protectedManifestPath, sha256: digest(protectedManifestBytes) });
+    for (const child of submissionEvidenceFixtureClosure(protectedManifestPath, candidateCommit, sourceHash)) {
+      const childBytes = submissionEvidenceFixtureBytes(child.path, candidateCommit, sourceHash);
+      await mkdir(path.dirname(path.join(root, child.path)), { recursive: true });
+      await writeFile(path.join(root, child.path), childBytes);
+      deferredBrowserClosure.push({ path: child.path, sha256: digest(childBytes) });
     }
   }
   evidence.push(...deferredBrowserClosure);
@@ -120,6 +179,9 @@ test("decisive evidence contracts reject shallow counts and unproven live adopti
   packageProof.distributionChecks.convexComponentRuntime = false;
   assert.equal(evidenceContractPasses("packageInstallProof", packageProof), false);
   packageProof.distributionChecks.convexComponentRuntime = true;
+  packageProof.distributionChecks.builderGym = false;
+  assert.equal(evidenceContractPasses("packageInstallProof", packageProof), false);
+  packageProof.distributionChecks.builderGym = true;
   packageProof.supportingEvidence.pop();
   assert.equal(evidenceContractPasses("packageInstallProof", packageProof), false);
   const timing = exactSubmissionVerdicts(candidateCommit).developerTimingMatrix;
@@ -187,8 +249,22 @@ test("evidence paths are canonical and browser certification closes over every b
     await mkdir(path.dirname(path.join(root, child.path)), { recursive: true });
     await writeFile(path.join(root, child.path), bytes);
   }));
+  const browserManifest = JSON.parse(manifestBytes.toString("utf8"));
   const value = {
+    applicationHash: browserManifest.applicationHash,
+    configHash: browserManifest.configHash,
+    deploymentCommit: browserManifest.generatedCandidateCommit,
     evidence: [{ kind: "screenshot-manifest", path: manifestPath, sha256: digest(manifestBytes) }],
+    nodekitCommit: candidateCommit,
+    nodekitIdentity: `${candidateCommit}/${sourceHash}`,
+    nodekitSourceHash: sourceHash,
+    releaseCandidate: {
+      nodekitCommit: candidateCommit,
+      nodekitSourceHash: sourceHash,
+      nodekitTarballSha256: browserManifest.nodekitTarballSha256,
+      packageName: "@homenshum/nodekit",
+      packageVersion: "0.2.1",
+    },
   };
   const closure = await resolveSubmissionEvidenceClosure(root, "previewDeployment", value);
   assert.equal(closure.length, 1 + 180 * 2 + 5);
@@ -256,6 +332,39 @@ test("engineering health recomputes command identity and unresolved P0/P1 from m
   );
 });
 
+test("knowledge adoption closure recomputes protected cases, aggregates, and execution bytes", async () => {
+  const root = await mkdtemp(path.join(os.tmpdir(), "nodekit-knowledge-closure-"));
+  const candidateCommit = "a".repeat(40);
+  const sourceHash = "b".repeat(64);
+  const verdict = exactSubmissionVerdicts(candidateCommit, sourceHash).knowledgeEvolutionAdoption;
+  await writeGateEvidence(root, "knowledgeEvolutionAdoption", verdict);
+  const complete = await resolveSubmissionEvidenceClosure(root, "knowledgeEvolutionAdoption", verdict);
+  assert.equal(complete.length, 18);
+
+  const comparisonPath = path.join(root, "proof/evolution/protected-comparison.json");
+  const comparison = JSON.parse(await readFile(comparisonPath, "utf8"));
+  comparison.profiles.flat.successRate = 0.5;
+  const { resultSha256: ignoredResultSha256, ...comparisonBody } = comparison;
+  comparison.resultSha256 = knowledgeRuntimeHash(comparisonBody);
+  const alteredBytes = Buffer.from(`${JSON.stringify(comparison)}\n`);
+  await writeFile(comparisonPath, alteredBytes);
+  verdict.evidence.find((entry) => entry.kind === "protected-comparison").sha256 = digest(alteredBytes);
+  await assert.rejects(
+    () => resolveSubmissionEvidenceClosure(root, "knowledgeEvolutionAdoption", verdict),
+    /not reproducible from its exact graph, definition, and execution receipts|aggregate does not match its cases/,
+  );
+
+  const originalBytes = submissionEvidenceFixtureBytes("proof/evolution/protected-comparison.json", candidateCommit, sourceHash);
+  await writeFile(comparisonPath, originalBytes);
+  verdict.evidence.find((entry) => entry.kind === "protected-comparison").sha256 = digest(originalBytes);
+  const executionPath = path.join(root, "proof/evolution/executions/flat-direct-fact.json");
+  await writeFile(executionPath, "tampered execution\n");
+  await assert.rejects(
+    () => resolveSubmissionEvidenceClosure(root, "knowledgeEvolutionAdoption", verdict),
+    /execution receipt evidence hash mismatch|evidence closure hash mismatch/,
+  );
+});
+
 test("submission gate requires all evidence, hashes, and explicit approval", async () => {
   const root = await mkdtemp(path.join(os.tmpdir(), "nodekit-submission-"));
   await mkdir(path.join(root, "schemas"), { recursive: true });
@@ -266,7 +375,18 @@ test("submission gate requires all evidence, hashes, and explicit approval", asy
   execFileSync("git", ["config", "user.name", "NodeKit Test"], { cwd: root });
   await writeFile(path.join(root, "candidate.txt"), "candidate\n");
   await writeFile(path.join(root, "package.json"), `${JSON.stringify({ files: ["candidate.txt", "schemas"] })}\n`);
-  execFileSync("git", ["add", "candidate.txt", "schemas", "package.json"], { cwd: root });
+  const freshAgentSources = [
+    "evals/ease/heldout-tasks.json",
+    "scripts/run-agent-ease-trial.mjs",
+    "scripts/run-protected-browser-lane.mjs",
+    "scripts/run-agent-provider-broker.mjs",
+    "scripts/run-protected-agent-evaluator.mjs",
+  ];
+  for (const relative of freshAgentSources) {
+    await mkdir(path.dirname(path.join(root, relative)), { recursive: true });
+    await writeFile(path.join(root, relative), submissionEvidenceFixtureBytes(relative));
+  }
+  execFileSync("git", ["add", "candidate.txt", "schemas", "package.json", ...freshAgentSources], { cwd: root });
   execFileSync("git", ["commit", "-m", "candidate"], { cwd: root, stdio: "ignore" });
   const candidateCommit = execFileSync("git", ["rev-parse", "HEAD"], { cwd: root, encoding: "utf8" }).trim();
   const candidateSourceHash = await computeNodeKitSourceHash(root);
@@ -349,7 +469,7 @@ test("submission gate rejects uncommitted source and incomplete package proof", 
   verdicts.packageInstallProof.checks = {};
   const gates = [];
   for (const id of requiredSubmissionGates) {
-    gates.push({ id, passed: true, evidence: await writeGateEvidence(root, id, verdicts[id]) });
+    gates.push({ id, passed: true, evidence: await writeGateEvidence(root, id, verdicts[id], canonicalGatePaths[id], { includeBrowserClosure: false }) });
   }
   await writeFile(path.join(root, "proof", "submission-manifest.json"), JSON.stringify(submissionManifest(candidateCommit, candidateSourceHash, gates, verdicts.packageInstallProof.releaseCandidate)));
   await writeFile(path.join(root, "src", "dirty.mjs"), "export default true;\n");
@@ -374,7 +494,7 @@ test("submission gate rejects tampered, omitted, and extra transitive evidence",
   const candidateSourceHash = await computeNodeKitSourceHash(root);
   const verdicts = exactSubmissionVerdicts(candidateCommit, candidateSourceHash);
   const gates = [];
-  for (const id of requiredSubmissionGates) gates.push({ id, passed: true, evidence: await writeGateEvidence(root, id, verdicts[id]) });
+  for (const id of requiredSubmissionGates) gates.push({ id, passed: true, evidence: await writeGateEvidence(root, id, verdicts[id], canonicalGatePaths[id], { includeBrowserClosure: false }) });
   const manifestPath = path.join(root, "proof", "submission-manifest.json");
   await writeFile(manifestPath, JSON.stringify(submissionManifest(candidateCommit, candidateSourceHash, gates, verdicts.packageInstallProof.releaseCandidate)));
   const packageGate = gates.find((gate) => gate.id === "packageInstallProof");
@@ -409,7 +529,7 @@ test("submission gate rejects evidence reached through an escaping junction", as
   const candidateSourceHash = await computeNodeKitSourceHash(root);
   const verdicts = exactSubmissionVerdicts(candidateCommit, candidateSourceHash);
   const gates = [];
-  for (const id of requiredSubmissionGates) gates.push({ id, passed: true, evidence: await writeGateEvidence(root, id, verdicts[id]) });
+  for (const id of requiredSubmissionGates) gates.push({ id, passed: true, evidence: await writeGateEvidence(root, id, verdicts[id], canonicalGatePaths[id], { includeBrowserClosure: false }) });
   const target = verdicts.previewDeployment.evidence.at(-1);
   const outside = await mkdtemp(path.join(os.tmpdir(), "nodekit-submission-outside-"));
   await writeFile(path.join(outside, "cleanup-receipt.json"), submissionEvidenceFixtureBytes(target.path));
@@ -424,6 +544,64 @@ test("submission gate rejects evidence reached through an escaping junction", as
   await writeFile(path.join(root, "proof", "submission-manifest.json"), JSON.stringify(submissionManifest(candidateCommit, candidateSourceHash, gates, verdicts.packageInstallProof.releaseCandidate)));
   const result = await evaluateSubmissionManifest(root, "proof/submission-manifest.json", { trustedAttestationKeys: submissionFixtureTrustedKeys });
   assert.match(result.errors.join("\n"), /symlink escapes repository|evidence unavailable/);
+});
+
+test("submission evidence reader rejects a single hard-linked path to outside mutable bytes", async (t) => {
+  const root = await mkdtemp(path.join(os.tmpdir(), "nodekit-submission-hardlink-"));
+  const outside = await mkdtemp(path.join(os.tmpdir(), "nodekit-submission-hardlink-outside-"));
+  t.after(() => Promise.all([rm(root, { recursive: true, force: true }), rm(outside, { recursive: true, force: true })]));
+  const source = path.join(outside, "outside.json");
+  const target = path.join(root, "evidence.json");
+  await writeFile(source, "{\"forged\":true}\n");
+  try {
+    await link(source, target);
+  } catch (error) {
+    if (["EPERM", "EACCES", "ENOTSUP", "EXDEV"].includes(error?.code)) return t.skip(`hard links unavailable: ${error.code}`);
+    throw error;
+  }
+  await assert.rejects(() => readSubmissionEvidenceFile(root, "evidence.json"), /regular unaliased|multiple hard links/);
+});
+
+test("submission evidence reader rejects oversized sparse files before reading their bytes", async (t) => {
+  const root = await mkdtemp(path.join(os.tmpdir(), "nodekit-evidence-size-"));
+  t.after(() => rm(root, { recursive: true, force: true }));
+  await mkdir(path.join(root, "proof"), { recursive: true });
+  const target = path.join(root, "proof", "oversized.bin");
+  const handle = await open(target, "w");
+  try {
+  await handle.truncate((32 * 1024 * 1024) + 1);
+  } finally {
+    await handle.close();
+  }
+  await assert.rejects(
+    () => readSubmissionEvidenceFile(root, "proof/oversized.bin"),
+    /exceeds the 33554432-byte verifier limit/,
+  );
+});
+
+test("screenshot validation canonicalizes metadata-only PNG changes to one decoded pixel identity", () => {
+  const original = submissionEvidenceFixtureBytes("proof/preview/browser/screenshots/first_arrival--desktop--light.png");
+  const iend = original.subarray(original.length - 12);
+  const changedMetadata = Buffer.concat([
+    original.subarray(0, original.length - 12),
+    testPngChunk("tEXt", Buffer.from("extra-proof-label\0different-file-bytes", "utf8")),
+    iend,
+  ]);
+  assert.notEqual(digest(original), digest(changedMetadata));
+  const expectation = { tuple: "first_arrival/desktop/light", screenshot: { viewport: { width: 1440, height: 900 } } };
+  assert.equal(
+    validateSubmissionScreenshotPng(original, expectation).pixelSha256,
+    validateSubmissionScreenshotPng(changedMetadata, expectation).pixelSha256,
+  );
+});
+
+test("screenshot validation rejects oversized PNG input before decoding or concatenating chunks", () => {
+  const oversized = Buffer.alloc((25 * 1024 * 1024) + 1);
+  Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]).copy(oversized);
+  assert.throws(
+    () => validateSubmissionScreenshotPng(oversized, { tuple: "oversized/desktop/light", screenshot: { viewport: { width: 1440, height: 900 } } }),
+    /exceeds the 26214400-byte verifier limit/,
+  );
 });
 
 test("null-delimited Git status parsing preserves rename endpoints and embedded newlines", () => {

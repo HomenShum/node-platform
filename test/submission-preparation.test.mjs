@@ -14,8 +14,19 @@ import { computeNodeKitSourceHash } from "../src/lib/source-hash.mjs";
 import { exactSubmissionVerdicts, submissionEvidenceFixtureBytes, submissionEvidenceFixtureClosure, submissionFixtureTrustedKeys } from "./submission-fixtures.mjs";
 
 function git(root, args) {
-  return execFileSync("git", args, { cwd: root, encoding: "utf8", stdio: ["ignore", "pipe", "pipe"] }).trim();
+  // The evidence closure stages thousands of files, and Git emits a line-ending
+  // warning per file. The default 1 MB pipe buffer overflows with ENOBUFS, so
+  // bound it the same way the product bounds its own Git invocations.
+  return execFileSync("git", args, { cwd: root, encoding: "utf8", maxBuffer: 16 * 1024 * 1024, stdio: ["ignore", "pipe", "pipe"] }).trim();
 }
+
+const freshAgentSharedSources = [
+  "evals/ease/heldout-tasks.json",
+  "scripts/run-agent-ease-trial.mjs",
+  "scripts/run-protected-browser-lane.mjs",
+  "scripts/run-agent-provider-broker.mjs",
+  "scripts/run-protected-agent-evaluator.mjs",
+];
 
 async function createRepository(prefix) {
   const root = await mkdtemp(path.join(os.tmpdir(), prefix));
@@ -24,7 +35,14 @@ async function createRepository(prefix) {
   git(root, ["config", "user.name", "NodeKit Test"]);
   await writeFile(path.join(root, "candidate.txt"), "candidate\n");
   await writeFile(path.join(root, "package.json"), `${JSON.stringify({ files: ["candidate.txt"] })}\n`);
-  git(root, ["add", "candidate.txt", "package.json"]);
+  // freshAgentHeldout references these harness sources directly. They are source
+  // files, so leaving them untracked makes the working tree dirty and fails every
+  // gate on sourceIsExact before any evidence is even read.
+  for (const relative of freshAgentSharedSources) {
+    await mkdir(path.dirname(path.join(root, relative)), { recursive: true });
+    await writeFile(path.join(root, relative), submissionEvidenceFixtureBytes(relative));
+  }
+  git(root, ["add", "candidate.txt", "package.json", ...freshAgentSharedSources]);
   git(root, ["commit", "-m", "candidate"]);
   return { root, candidateCommit: git(root, ["rev-parse", "HEAD"]), candidateSourceHash: await computeNodeKitSourceHash(root) };
 }
@@ -43,8 +61,22 @@ async function writeVerdicts(root, verdicts) {
         await mkdir(path.dirname(path.join(root, evidence.path)), { recursive: true });
         await writeFile(path.join(root, evidence.path), submissionEvidenceFixtureBytes(evidence.path, candidateCommit, sourceHash));
       }
-      if (evidence.kind === "screenshot-manifest" && gate.id === "previewDeployment") {
-        for (const child of submissionEvidenceFixtureClosure(evidence.path, candidateCommit, sourceHash)) {
+      const recursiveManifestPaths = [];
+      if (evidence.kind === "screenshot-manifest" || evidence.kind === "protected-comparison") {
+        recursiveManifestPaths.push(evidence.path);
+      }
+      // The closure walker synthesizes the protected browser manifest from each
+      // protected evaluation instead of naming it in the verdict, so it has to
+      // be materialized here or the recursive closure ENOENTs.
+      if (gate.id === "freshAgentHeldout" && evidence.kind === "protected-evaluation") {
+        const evaluation = JSON.parse(submissionEvidenceFixtureBytes(evidence.path, candidateCommit, sourceHash).toString("utf8"));
+        const protectedManifestPath = path.posix.join(path.posix.dirname(evidence.path), evaluation.protectedBrowserManifestFile);
+        await mkdir(path.dirname(path.join(root, protectedManifestPath)), { recursive: true });
+        await writeFile(path.join(root, protectedManifestPath), submissionEvidenceFixtureBytes(protectedManifestPath, candidateCommit, sourceHash));
+        recursiveManifestPaths.push(protectedManifestPath);
+      }
+      for (const manifestPath of recursiveManifestPaths) {
+        for (const child of submissionEvidenceFixtureClosure(manifestPath, candidateCommit, sourceHash)) {
           await mkdir(path.dirname(path.join(root, child.path)), { recursive: true });
           await writeFile(path.join(root, child.path), submissionEvidenceFixtureBytes(child.path, candidateCommit, sourceHash));
         }
@@ -153,7 +185,9 @@ test("submission preparation byte-verifies every transitive reference and packag
   assert.equal(tampered.manifest.gates.find((gate) => gate.id === "packageInstallProof").passed, false);
   const tarball = tampered.manifest.gates.find((gate) => gate.id === "packageInstallProof").evidence.find((entry) => entry.path === verdicts.packageInstallProof.tarball);
   assert.ok(tarball, "the package tarball must be included in the prepared evidence closure");
-  assert.equal(tampered.manifest.gates.find((gate) => gate.id === "freshAgentHeldout").evidence.length, 1 + (15 * 17));
+  // 1 decisive verdict + 7 shared refs + 15 runs x (20 direct refs + 1 synthesized
+  // protected browser manifest + 360 protected screenshot/sidecar children).
+  assert.equal(tampered.manifest.gates.find((gate) => gate.id === "freshAgentHeldout").evidence.length, 1 + 7 + (15 * 381));
 });
 
 test("submission preparation fails closed for missing transitive evidence", async () => {
