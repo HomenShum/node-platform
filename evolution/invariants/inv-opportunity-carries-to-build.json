@@ -1,0 +1,20 @@
+{
+  "schemaVersion": "nodekit.invariant-claim/v1",
+  "id": "inv:opportunity-carries-to-build",
+  "statement": "Compiling an approved OpportunityContract into Build inputs preserves the decided fields as protected product-contract decisions (primaryUser, primaryJob, canonicalWorkflow, dataAuthority, and permissionBoundaries pinned to the nodekit authority; completionCriteria and finalVerdict pinned to the nodeproof authority), turns every prohibited authority into a prohibited:<slug> anti-pattern in the product contract's avoid list, and keeps a read-only wedge read-only; so the Build stage cannot re-decide the user, job, artifact, data authority, or permission boundaries while coding.",
+  "scope": {
+    "applications": [
+      "NodeKit builder journey"
+    ],
+    "surfaces": [
+      "Decide to Build seam, opportunity compiler, product-design contract"
+    ]
+  },
+  "enforcement": "test",
+  "verifierRefs": [
+    "src/lib/opportunity-compiler.mjs",
+    "test/opportunity-compiler.test.mjs"
+  ],
+  "introducedByEventId": "evt:builder-journey-j1-decide-build",
+  "status": "partially-verified"
+}

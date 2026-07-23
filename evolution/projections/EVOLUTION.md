@@ -44,6 +44,16 @@ Canonical JSON records remain authoritative. This projection explains why materi
 - Evidence: `evd:builder-journey-j0` (partial)
 - Known limitations: Only the Decide to Build seam has a real handoff contract; the other four handoff artifacts are named and referenced but not yet given schemas or generators.; The builder journey is a contract and a fail-closed advance rule, not yet a running product surface, and no real builder has carried a case end to end.; The salon slice is a fixture, not a certified application; the EASE verdict remains EASE_NOT_CERTIFIED.
 
+### J0 closed the Decide to Build seam with a fail-closed advance rule, but the approved OpportunityContract was still inert; nothing turned it into the inputs Build consumes, so the coding agent would re-decide the user, job, artifact, data authority, and permission boundaries while coding.
+
+- Event: `evt:builder-journey-j1-decide-build`
+- Source: `6a2716e3fcb3a344ca09e918cc7c57fc8ff9e237`
+- Resolution: Added compileOpportunityToBuild in src/lib/opportunity-compiler.mjs. It maps a validated nodekit.opportunity-contract/v1 to a nodekit.product-design-contract/v1 and an Atlas reuse query. The contract's decided fields become the product contract's protected decisions (primaryUser, primaryJob, canonicalWorkflow, dataAuthority, permissionBoundaries pinned to nodekit; completionCriteria and finalVerdict pinned to nodeproof); every prohibited authority becomes a prohibited:<slug> anti-pattern in avoid; and a read-only wedge stays read-only in both the dominant action and the Atlas query. Zero new runtime dependencies.
+- Observed failure: The boundary was recorded but not load-bearing: there was no compiler from OpportunityContract to a product-design contract, so the Build stage had no protected decisions to build against and scope could still drift during implementation.
+- Invariants: `inv:opportunity-carries-to-build` (partially-verified)
+- Evidence: `evd:builder-journey-j1-decide-build` (partial)
+- Known limitations: The compiler produces Build inputs; it does not yet run the frontend tournament or generate the salon application, so no contract has been carried through to a rendered, certified surface.; The protected-decision pinning is verified by a unit test over the single salon slice; no real builder has carried an OpportunityContract through compile to build to certification.; This closes the Decide to Build hand-off mechanically; it certifies no application, and the EASE verdict remains EASE_NOT_CERTIFIED.
+
 ## Architecture evolution
 
 ### Structural availability was mislabeled as browser certification.
