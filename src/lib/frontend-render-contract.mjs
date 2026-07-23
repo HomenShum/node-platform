@@ -73,6 +73,70 @@ function checkIsPassButRawShowsIssue(checks) {
   return null;
 }
 
+// Assemble a render receipt from raw browser observations, DERIVING each check's status
+// from its own counts rather than accepting an asserted status. This is what "the verifier
+// runs the checks itself" means: a state where the raw report shows a serious accessibility
+// issue cannot be assembled into a passing receipt, because the status is computed here, not
+// supplied. The screenshot and check-report hashes are computed over the observed bytes, so
+// the manifest is bound to what was actually seen.
+export function assembleFrontendRenderReceipt({ candidate, verifier, states }) {
+  if (!Array.isArray(states) || states.length < REQUIRED_RENDER_STATE_IDS.length) {
+    throw new Error("a render receipt must be assembled from at least the six required states");
+  }
+  const renderedStates = states.map((state) => {
+    const checkReport = {
+      pageErrors: state.pageErrors ?? 0,
+      failedRequiredRequests: state.failedRequiredRequests ?? 0,
+      accessibilitySerious: state.accessibilitySerious ?? 0,
+      accessibilityIncomplete: state.accessibilityIncomplete ?? 0,
+      overflowPx: state.overflowPx ?? 0,
+      silent: Boolean(state.silent),
+    };
+    return {
+      stateId: state.stateId,
+      route: state.route,
+      viewport: { width: state.viewport.width, height: state.viewport.height },
+      screenshotSha256: createHash("sha256").update(state.screenshotBytes ?? Buffer.alloc(0)).digest("hex"),
+      checkReportSha256: createHash("sha256").update(JSON.stringify(checkReport)).digest("hex"),
+      _report: checkReport,
+    };
+  });
+
+  const totals = renderedStates.reduce((acc, entry) => {
+    acc.pageErrors += entry._report.pageErrors;
+    acc.failedRequiredRequests += entry._report.failedRequiredRequests;
+    acc.accessibilitySerious += entry._report.accessibilitySerious;
+    acc.accessibilityIncomplete += entry._report.accessibilityIncomplete;
+    acc.overflowPx = Math.max(acc.overflowPx, entry._report.overflowPx);
+    if (entry._report.silent) acc.silentStates.push(entry.stateId);
+    return acc;
+  }, { pageErrors: 0, failedRequiredRequests: 0, accessibilitySerious: 0, accessibilityIncomplete: 0, overflowPx: 0, silentStates: [] });
+
+  const rendered = new Set(renderedStates.map((entry) => entry.stateId));
+  const missingRequiredStates = REQUIRED_RENDER_STATE_IDS.filter((id) => !rendered.has(id));
+  const checks = {
+    browser: {
+      status: totals.pageErrors === 0 && totals.failedRequiredRequests === 0 && missingRequiredStates.length === 0 ? "pass" : "fail",
+      pageErrors: totals.pageErrors, failedRequiredRequests: totals.failedRequiredRequests, missingRequiredStates,
+    },
+    accessibility: {
+      status: totals.accessibilitySerious > 0 ? "fail" : totals.accessibilityIncomplete > 0 ? "incomplete" : "pass",
+      seriousOrCriticalCount: totals.accessibilitySerious, incompleteCount: totals.accessibilityIncomplete,
+    },
+    overflow: { status: totals.overflowPx > 0 ? "fail" : "pass", maxHorizontalOverflowPx: totals.overflowPx },
+    stateCommunication: { status: totals.silentStates.length > 0 ? "fail" : "pass", silentStates: totals.silentStates },
+  };
+
+  const coverageStates = renderedStates.map(({ _report, ...entry }) => entry);
+  return {
+    schemaVersion: "nodekit.frontend-render-receipt/v1",
+    candidate: { ...candidate, stateManifestHash: stateManifestHashOf(coverageStates) },
+    verifier,
+    coverage: { requiredStateIds: [...REQUIRED_RENDER_STATE_IDS], renderedStates: coverageStates },
+    checks,
+  };
+}
+
 /**
  * @param {object} input
  * @param {object|null} input.renderReceipt  a validated nodekit.frontend-render-receipt/v1, or null

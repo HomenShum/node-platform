@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { evaluateFrontendRenderContract, stateManifestHashOf, REQUIRED_RENDER_STATE_IDS } from "../src/lib/frontend-render-contract.mjs";
+import { Buffer } from "node:buffer";
+import { assembleFrontendRenderReceipt, evaluateFrontendRenderContract, stateManifestHashOf, REQUIRED_RENDER_STATE_IDS } from "../src/lib/frontend-render-contract.mjs";
 
 const sha256 = (seed) => seed.padEnd(64, "0").slice(0, 64);
 const sha1 = (seed) => seed.padEnd(40, "0").slice(0, 40);
@@ -138,4 +139,34 @@ test("all deterministic checks pass but an unresolved major finding is NOT_DECIS
   const v = run(render, review);
   assert.equal(v.status, "NOT_DECISIVE");
   assert.equal(v.decisive, false);
+});
+
+// The verifier runs the checks itself: statuses are derived from raw observations, never asserted.
+function observationStates(overrides = {}) {
+  return REQUIRED_RENDER_STATE_IDS.map((stateId) => ({
+    stateId, route: `/${stateId}`,
+    viewport: { width: stateId.startsWith("mobile") ? 375 : 1440, height: 812 },
+    screenshotBytes: Buffer.from(`shot-${stateId}`),
+    ...(overrides[stateId] ?? {}),
+  }));
+}
+const assembleCandidate = { candidateId: "direction-a", repositoryCommit: EXPECTED.repositoryCommit, productContractHash: sha256("contract"), directionSetHash: EXPECTED.directionSetHash };
+const assembleVerifier = { verifierId: "independent-verifier", verifierCommit: sha1("verifier"), command: "npm run frontend:render-check", browserName: "chromium", browserVersion: "1.61.1", startedAt: "2026-07-23T00:00:00.000Z", completedAt: "2026-07-23T00:02:00.000Z" };
+
+test("a clean observation bundle assembles into a receipt that is DECISIVE", () => {
+  const render = assembleFrontendRenderReceipt({ candidate: assembleCandidate, verifier: assembleVerifier, states: observationStates() });
+  assert.equal(render.checks.accessibility.status, "pass");
+  const v = run(render, reviewReceipt({ render }));
+  assert.equal(v.status, "DECISIVE");
+});
+
+test("an observed serious accessibility issue cannot be assembled into a passing receipt", () => {
+  const render = assembleFrontendRenderReceipt({
+    candidate: assembleCandidate, verifier: assembleVerifier,
+    states: observationStates({ mobile_review: { accessibilitySerious: 1 } }),
+  });
+  // The status is derived from the raw count, not supplied — so it is honestly fail.
+  assert.equal(render.checks.accessibility.status, "fail");
+  assert.equal(render.checks.accessibility.seriousOrCriticalCount, 1);
+  assert.equal(run(render, reviewReceipt({ render })).status, "FAIL");
 });
