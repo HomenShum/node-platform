@@ -1,0 +1,20 @@
+{
+  "schemaVersion": "nodekit.invariant-claim/v1",
+  "id": "inv:builder-journey-stage-handoff",
+  "statement": "A builder case cannot advance out of a stage, or be marked stage-complete, unless that stage's handoff artifact exists and a Caseflow receipt binds that exact artifact by content hash; a forged or mismatched handoff reference stays blocked.",
+  "scope": {
+    "applications": [
+      "NodeKit builder journey"
+    ],
+    "surfaces": [
+      "Decide, Build, Explain, Launch, and Learn stage transitions"
+    ]
+  },
+  "enforcement": "runtime-gate",
+  "verifierRefs": [
+    "src/lib/builder-journey.mjs",
+    "test/builder-journey.test.mjs"
+  ],
+  "introducedByEventId": "evt:builder-journey-j0",
+  "status": "partially-verified"
+}
