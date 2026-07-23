@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://nodekit.dev/schemas/nodekit.frontend-review-receipt.v1.schema.json",
+  "title": "NodeKit frontend independent review receipt",
+  "description": "An independent judgement over a rendered direction, bound to the exact render receipt's state manifest. The evaluator rejects it when the reviewer is the same identity that generated the candidate (a model reviewing its own output), or when it references a different state manifest than the render receipt.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "candidateId", "reviewerId", "reviewedStateManifestHash", "generatingModelId", "verdict", "unresolvedMajorFindings", "reviewedAt"],
+  "properties": {
+    "schemaVersion": { "const": "nodekit.frontend-review-receipt/v1" },
+    "candidateId": { "type": "string", "pattern": "^direction-[abc]$" },
+    "reviewerId": { "type": "string", "minLength": 1 },
+    "generatingModelId": {
+      "type": "string",
+      "minLength": 1,
+      "description": "The identity that produced the candidate. The evaluator fails the receipt when reviewerId equals this value."
+    },
+    "reviewedStateManifestHash": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$",
+      "description": "Must equal the render receipt's candidate.stateManifestHash, or the review is judged to be of a different artifact."
+    },
+    "verdict": { "enum": ["pass", "fail", "incomplete"] },
+    "unresolvedMajorFindings": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "description": "Any non-empty entry makes the tournament NOT decisive even when every deterministic check passes."
+    },
+    "reviewedAt": { "type": "string", "format": "date-time" }
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "schemaVersion": "nodekit.evolution-evidence/v1",
+  "id": "evd:frontend-decisive-evidence",
+  "kind": "test",
+  "artifactRef": "git:f4bf70f5356c913aa3d7f28fab83ccba3f94877c:evolution/artifacts/frontend-decisive-evidence.md",
+  "sha256": "1b64d1598b9c165f5a01968a2764e0cad03a8f6a6f8023e2e860a37895e651cf",
+  "sourceCommit": "f4bf70f5356c913aa3d7f28fab83ccba3f94877c",
+  "generatedAt": "2026-07-23T05:30:00-07:00",
+  "environment": {
+    "reviewSurface": "node-platform",
+    "suites": "frontend-render-contract 13/13 (incl. the corruption corpus), frontend-specialist 14/14 (incl. a live NOT_DECISIVE case), harness-gym 7/7, typecheck:public exit 0",
+    "evidenceBoundary": "Proves the tournament's decisive verdict is now computed from verifier evidence and grades fail-closed. It does not certify any real frontend, model, or consumer."
+  },
+  "verifiesInvariantIds": [
+    "inv:major-frontend-direction-tournament"
+  ],
+  "result": "partial"
+}

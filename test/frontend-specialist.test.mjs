@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
 import { mkdtemp, mkdir, readFile, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
@@ -14,6 +15,36 @@ import {
   initializeFrontendHarness,
   verifyFrontendCanary,
 } from "../src/lib/frontend-specialist.mjs";
+import { REQUIRED_RENDER_STATE_IDS, directionSetHashOf, stateManifestHashOf } from "../src/lib/frontend-render-contract.mjs";
+
+const sha = (seed) => createHash("sha256").update(seed).digest("hex");
+const REPO_COMMIT = "a".repeat(40);
+
+// Author a valid render receipt + independent review receipt for a selected direction,
+// matching the render contract's bindings so the happy path is DECISIVE.
+async function writeRenderReceipts(root, candidateId, directionSet) {
+  const renderedStates = REQUIRED_RENDER_STATE_IDS.map((stateId, i) => ({
+    stateId, route: `/${stateId}`,
+    viewport: { width: stateId.startsWith("mobile") ? 375 : 1440, height: 812 },
+    screenshotSha256: sha(`${candidateId}-shot-${i}`), checkReportSha256: sha(`${candidateId}-report-${i}`),
+  }));
+  const stateManifestHash = stateManifestHashOf(renderedStates);
+  const renderReceipt = {
+    schemaVersion: "nodekit.frontend-render-receipt/v1",
+    candidate: { candidateId, repositoryCommit: REPO_COMMIT, productContractHash: sha("contract"), directionSetHash: directionSetHashOf(directionSet), stateManifestHash },
+    verifier: { verifierId: "independent-verifier", verifierCommit: sha("verifier"), command: "npm run frontend:render-check", browserName: "chromium", browserVersion: "1.61.1", startedAt: "2026-07-23T00:00:00.000Z", completedAt: "2026-07-23T00:02:00.000Z" },
+    coverage: { requiredStateIds: [...REQUIRED_RENDER_STATE_IDS], renderedStates },
+    checks: { browser: { status: "pass", pageErrors: 0, failedRequiredRequests: 0, missingRequiredStates: [] }, accessibility: { status: "pass", seriousOrCriticalCount: 0, incompleteCount: 0 }, overflow: { status: "pass", maxHorizontalOverflowPx: 0 }, stateCommunication: { status: "pass", silentStates: [] } },
+  };
+  const reviewReceipt = {
+    schemaVersion: "nodekit.frontend-review-receipt/v1", candidateId, reviewerId: "independent-critic",
+    generatingModelId: "generating-model", reviewedStateManifestHash: stateManifestHash, verdict: "pass",
+    unresolvedMajorFindings: [], reviewedAt: "2026-07-23T00:05:00.000Z",
+  };
+  await writeFile(path.join(root, "harness", "frontend", "render-receipt.json"), `${JSON.stringify(renderReceipt, null, 2)}\n`);
+  await writeFile(path.join(root, "harness", "frontend", "review-receipt.json"), `${JSON.stringify(reviewReceipt, null, 2)}\n`);
+  return { renderReceipt: "harness/frontend/render-receipt.json", reviewReceipt: "harness/frontend/review-receipt.json" };
+}
 
 async function fixture() {
   const root = await mkdtemp(path.join(os.tmpdir(), "nodekit-frontend-"));
@@ -60,10 +91,16 @@ test("Frontend Gym requires three materially distinct rendered directions and bl
   }
   await writeFile(directionOutput, `${JSON.stringify(directionSet, null, 2)}\n`);
   const score = (offset) => Object.fromEntries(["primaryJobClarity", "artifactDominance", "workflowHierarchy", "agentLegibility", "reviewSafety", "mobileOperation", "domainAppropriateness", "visualQuality"].map((key, index) => [key, Math.min(1, 0.7 + offset + index * 0.005)]));
+  // direction-c wins the pairwise; the decisive verdict now comes from its render and
+  // review receipts, not from candidate-asserted booleans.
+  const receipts = await writeRenderReceipts(root, "direction-c", directionSet);
   const benchmark = {
     schemaVersion: "nodekit.frontend-benchmark/v1",
     benchmarkId: "frontend-gym-1",
     directionSet: path.relative(root, directionOutput).replaceAll("\\", "/"),
+    repositoryCommit: REPO_COMMIT,
+    renderReceipt: receipts.renderReceipt,
+    reviewReceipt: receipts.reviewReceipt,
     scores: { "direction-a": score(0), "direction-b": score(0.05), "direction-c": score(0.1) },
     pairwiseResults: [
       { left: "direction-a", right: "direction-b", winner: "direction-b", evidenceRefs: ["critic-1"] },
@@ -71,9 +108,6 @@ test("Frontend Gym requires three materially distinct rendered directions and bl
       { left: "direction-b", right: "direction-c", winner: "direction-c", evidenceRefs: ["critic-3"] },
     ],
     criticIndependent: true,
-    browserChecksPassed: true,
-    accessibilityPassed: true,
-    overflowPassed: true,
     majorFindings: [],
     freshUserEvidenceRefs: ["fresh-user-1"],
   };
@@ -82,7 +116,17 @@ test("Frontend Gym requires three materially distinct rendered directions and bl
   const result = await evaluateFrontendTournament(root, path.relative(root, benchmarkPath));
   assert.equal(result.decision.selectedCandidateId, "direction-c");
   assert.equal(result.promotionAuthorized, false);
+  assert.equal(result.renderContract.status, "DECISIVE");
   assert.equal(result.decisive, true);
+
+  // The same tournament with an unresolved major finding in the independent review is
+  // NOT_DECISIVE: the review receipt flows through the live evaluator, not just the unit.
+  const review = JSON.parse(await readFile(path.join(root, "harness", "frontend", "review-receipt.json"), "utf8"));
+  review.unresolvedMajorFindings = ["primary action below the fold on mobile"];
+  await writeFile(path.join(root, "harness", "frontend", "review-receipt.json"), `${JSON.stringify(review, null, 2)}\n`);
+  const blocked = await evaluateFrontendTournament(root, path.relative(root, benchmarkPath));
+  assert.equal(blocked.renderContract.status, "NOT_DECISIVE");
+  assert.equal(blocked.decisive, false);
   assert.equal(plan.deploymentAuthorized, false);
 });
 
@@ -93,8 +137,11 @@ test("frontend repair is bounded and a canary requires exact model, screenshots,
     benchmarkId: "blocked-ui",
     directionSet: "harness/frontend/design-directions/unused.json",
     scores: { a: Object.fromEntries(["primaryJobClarity", "artifactDominance", "workflowHierarchy", "agentLegibility", "reviewSafety", "mobileOperation", "domainAppropriateness", "visualQuality"].map((key) => [key, 0.5])), b: Object.fromEntries(["primaryJobClarity", "artifactDominance", "workflowHierarchy", "agentLegibility", "reviewSafety", "mobileOperation", "domainAppropriateness", "visualQuality"].map((key) => [key, 0.5])), c: Object.fromEntries(["primaryJobClarity", "artifactDominance", "workflowHierarchy", "agentLegibility", "reviewSafety", "mobileOperation", "domainAppropriateness", "visualQuality"].map((key) => [key, 0.5])) },
+    repositoryCommit: REPO_COMMIT,
+    renderReceipt: "harness/frontend/render-receipt.json",
+    reviewReceipt: "harness/frontend/review-receipt.json",
     pairwiseResults: [{ left: "a", right: "b", winner: "a", evidenceRefs: ["e1"] }, { left: "a", right: "c", winner: "a", evidenceRefs: ["e2"] }, { left: "b", right: "c", winner: "b", evidenceRefs: ["e3"] }],
-    criticIndependent: true, browserChecksPassed: false, accessibilityPassed: true, overflowPassed: true, majorFindings: ["PRODUCT_TOPOLOGY_MISS"], freshUserEvidenceRefs: [],
+    criticIndependent: true, majorFindings: ["PRODUCT_TOPOLOGY_MISS"], freshUserEvidenceRefs: [],
   };
   const benchmarkPath = path.join(root, "harness", "frontend", "blocked.json");
   await writeFile(benchmarkPath, `${JSON.stringify(benchmark, null, 2)}\n`);

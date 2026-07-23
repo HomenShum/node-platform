@@ -3,6 +3,7 @@ import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { stringify as stringifyYaml } from "yaml";
 import { pathExists, readJson, readYaml } from "./files.mjs";
+import { directionSetHashOf, evaluateFrontendRenderContract } from "./frontend-render-contract.mjs";
 import { validateSchema } from "./schema-validation.mjs";
 
 export const FRONTEND_ROUTE_SCHEMA = "nodekit.frontend-route/v1";
@@ -198,7 +199,23 @@ export async function evaluateFrontendTournament(repoRoot, benchmarkFile) {
   for (const result of benchmark.pairwiseResults) wins[result.winner] += 1;
   const average = (id) => FRONTEND_EVALUATION_DIMENSIONS.reduce((sum, key) => sum + benchmark.scores[id][key], 0) / FRONTEND_EVALUATION_DIMENSIONS.length;
   const ranked = [...candidateIds].sort((left, right) => wins[right] - wins[left] || average(right) - average(left) || left.localeCompare(right));
-  const decisive = benchmark.browserChecksPassed && benchmark.accessibilityPassed && benchmark.overflowPassed && benchmark.majorFindings.length === 0;
+  // The decisive verdict is computed from verifier evidence, not from booleans the
+  // candidate asserted. Load the render and review receipts for the selected direction
+  // and grade them through the Frontend Render Contract.
+  const renderReceipt = await readJson(resolveInside(root, benchmark.renderReceipt, "frontend render receipt"));
+  await validateOrThrow("nodekit.frontend-render-receipt.v1.schema.json", renderReceipt, "frontend render receipt");
+  const reviewReceipt = await readJson(resolveInside(root, benchmark.reviewReceipt, "frontend review receipt"));
+  await validateOrThrow("nodekit.frontend-review-receipt.v1.schema.json", reviewReceipt, "frontend review receipt");
+  const renderContract = evaluateFrontendRenderContract({
+    renderReceipt,
+    reviewReceipt,
+    expected: {
+      candidateId: ranked[0],
+      repositoryCommit: benchmark.repositoryCommit,
+      directionSetHash: directionSetHashOf(directionSet),
+    },
+  });
+  const decisive = renderContract.decisive;
   const decision = {
     schemaVersion: "nodekit.design-decision/v1",
     decisionId: `design-decision-${hash({ benchmark, ranked }).slice(0, 12)}`,
@@ -214,8 +231,8 @@ export async function evaluateFrontendTournament(repoRoot, benchmarkFile) {
   };
   await validateOrThrow("nodekit.design-decision.v1.schema.json", decision, "design decision");
   const output = path.join(root, "harness", "frontend", "receipts", `${decision.decisionId}.json`);
-  await writeFile(output, `${JSON.stringify({ ...decision, decisive, promotionAuthorized: false, freshUserEvidenceRefs: benchmark.freshUserEvidenceRefs }, null, 2)}\n`);
-  return { benchmark, decision, decisive, output, promotionAuthorized: false, ranked, wins };
+  await writeFile(output, `${JSON.stringify({ ...decision, decisive, renderContractStatus: renderContract.status, renderContractReasons: renderContract.reasons, promotionAuthorized: false, freshUserEvidenceRefs: benchmark.freshUserEvidenceRefs }, null, 2)}\n`);
+  return { benchmark, decision, decisive, renderContract, output, promotionAuthorized: false, ranked, wins };
 }
 
 export async function createFrontendRepairPlan(repoRoot, benchmarkFile) {
