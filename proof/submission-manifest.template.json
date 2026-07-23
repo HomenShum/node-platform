@@ -16,6 +16,10 @@
     { "id": "freshHumanUsability", "passed": false, "evidence": [{ "path": "proof/ease/fresh-users-verdict.json", "sha256": "0000000000000000000000000000000000000000000000000000000000000000" }] },
     { "id": "threeConvexConsumers", "passed": false, "evidence": [{ "path": "proof/convex-consumers-verdict.json", "sha256": "0000000000000000000000000000000000000000000000000000000000000000" }] },
     { "id": "previewDeployment", "passed": false, "evidence": [{ "path": "proof/preview-verdict.json", "sha256": "0000000000000000000000000000000000000000000000000000000000000000" }] },
+    { "id": "managedSupabasePortability", "passed": false, "evidence": [{ "path": "proof/managed-supabase-portability-verdict.json", "sha256": "0000000000000000000000000000000000000000000000000000000000000000" }] },
+    { "id": "knowledgeEvolutionAdoption", "passed": false, "evidence": [{ "path": "proof/knowledge-evolution-adoption-verdict.json", "sha256": "0000000000000000000000000000000000000000000000000000000000000000" }] },
+    { "id": "modelIntelligenceHarness", "passed": false, "evidence": [{ "path": "proof/model-intelligence-harness-verdict.json", "sha256": "0000000000000000000000000000000000000000000000000000000000000000" }] },
+    { "id": "engineeringHealth", "passed": false, "evidence": [{ "path": "proof/engineering-health-verdict.json", "sha256": "0000000000000000000000000000000000000000000000000000000000000000" }] },
     { "id": "proofloopEaseVerification", "passed": false, "evidence": [{ "path": "proof/proofloop-final.json", "sha256": "0000000000000000000000000000000000000000000000000000000000000000" }] },
     { "id": "packageInstallProof", "passed": false, "evidence": [{ "path": "proof/package-install-verdict.json", "sha256": "0000000000000000000000000000000000000000000000000000000000000000" }] },
     { "id": "publicationApproval", "passed": false, "evidence": [{ "path": "proof/publication-approval.json", "sha256": "0000000000000000000000000000000000000000000000000000000000000000" }] }
