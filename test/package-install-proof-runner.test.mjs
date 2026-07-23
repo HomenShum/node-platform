@@ -4,6 +4,7 @@ import { chmod, cp, mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/prom
 import os from "node:os";
 import path from "node:path";
 import test from "node:test";
+import { resolveTarCommand } from "../src/lib/npm-cli-invocation.mjs";
 import {
   assertExactDistributableCandidate,
   compareIndependentPackResults,
@@ -29,12 +30,22 @@ async function createFixture() {
   const packageJson = {
     name: "@homenshum/nodekit",
     version: "9.9.9-test",
+    repository: { type: "git", url: "git+https://github.com/HomenShum/node-platform.git" },
+    homepage: "https://github.com/HomenShum/node-platform#readme",
+    bugs: { url: "https://github.com/HomenShum/node-platform/issues" },
+    keywords: ["ai-agents", "agent-applications", "convex", "evaluation", "proof", "scaffolding"],
+    author: "Homen Shum",
     type: "module",
     types: "./src/index.d.mts",
     exports: {
       ".": { types: "./src/index.d.mts", import: "./src/index.mjs" },
       "./caseflow": { types: "./src/caseflow.d.mts", import: "./src/caseflow.mjs" },
       "./submission-attestation": { types: "./src/submission-attestation.d.mts", import: "./src/submission-attestation.mjs" },
+      "./submission-evidence-finalizer": { types: "./src/submission-evidence-finalizer.d.mts", import: "./src/submission-evidence-finalizer.mjs" },
+      "./consumer-package-preparation": { types: "./src/consumer-package-preparation.d.mts", import: "./src/consumer-package-preparation.mjs" },
+      "./managed-evidence-capture": { types: "./src/managed-evidence-capture.d.mts", import: "./src/managed-evidence-capture.mjs" },
+      "./builder-gym": { types: "./src/builder-gym.d.mts", import: "./src/builder-gym.mjs" },
+      "./skill-evaluation": { types: "./src/skill-evaluation.d.mts", import: "./src/skill-evaluation.mjs" },
       "./adapters/postgres": { types: "./src/adapters/postgres.d.mts", import: "./src/adapters/postgres.mjs" },
       "./adapters/postgres/migration.sql": "./adapters/postgres/001_caseflow.sql",
       "./adapters/supabase/profile.sql": "./adapters/supabase/001_profile.sql",
@@ -49,15 +60,18 @@ async function createFixture() {
       nodekit: "src/cli.mjs",
       "nodekit-attestation-sign": "scripts/sign-submission-attestation.mjs",
       "nodekit-attestation-verify": "scripts/verify-submission-attestation.mjs",
+      "nodekit-evidence-finalize": "scripts/finalize-submission-evidence.mjs",
+      "nodekit-consumer-prepare": "scripts/prepare-consumer-package.mjs",
+      "nodekit-evidence-capture": "scripts/capture-managed-evidence.mjs",
     },
     peerDependencies: { convex: "^1.42.3" },
     peerDependenciesMeta: { convex: { optional: true } },
     devDependencies: { convex: "1.42.3", "convex-test": "0.0.54" },
-    files: ["src", "dist", "adapters", "templates", "scripts/sign-submission-attestation.mjs", "scripts/verify-submission-attestation.mjs"],
+    files: ["src", "dist", "adapters", "templates", "scripts/sign-submission-attestation.mjs", "scripts/verify-submission-attestation.mjs", "scripts/finalize-submission-evidence.mjs", "scripts/prepare-consumer-package.mjs", "scripts/capture-managed-evidence.mjs"],
   };
   await write(root, "package.json", `${JSON.stringify(packageJson, null, 2)}\n`);
-  await write(root, "src/index.mjs", "export const nodekit = true;\n");
-  await write(root, "src/index.d.mts", "export declare const nodekit: true;\n");
+  await write(root, "src/index.mjs", "export const nodekit = true; export * from './builder-gym.mjs';\n");
+  await write(root, "src/index.d.mts", "export declare const nodekit: true; export * from './builder-gym.mjs';\n");
   await write(root, "src/caseflow.mjs", `import { createHash } from "node:crypto";
 function canonical(value) {
   if (Array.isArray(value)) return \`[\${value.map(canonical).join(",")}]\`;
@@ -74,6 +88,22 @@ export function canonicalizeAttestationPayload(value) { return JSON.stringify(va
 export declare const SUBMISSION_ATTESTATION_SCHEMA_VERSION: "nodekit.detached-attestation/v1";
 export declare function canonicalizeAttestationPayload(value: unknown): string;
 `);
+  await write(root, "src/submission-evidence-finalizer.mjs", "export const FINALIZABLE_SUBMISSION_GATES = []; export const SIGNING_KEY_POLICY_SCHEMA_VERSION = 'nodekit.attestation-signing-key-policy/v1'; export async function finalizeSubmissionEvidence() {}\n");
+  await write(root, "src/submission-evidence-finalizer.d.mts", "export declare const FINALIZABLE_SUBMISSION_GATES: readonly string[]; export declare const SIGNING_KEY_POLICY_SCHEMA_VERSION: 'nodekit.attestation-signing-key-policy/v1'; export declare function finalizeSubmissionEvidence(value: unknown): Promise<unknown>;\n");
+  await write(root, "src/consumer-package-preparation.mjs", "export const CONSUMER_PACKAGE_PROVENANCE_SCHEMA_VERSION = 'nodekit.consumer-package-provenance/v1'; export async function prepareExactConsumerPackage() {}\n");
+  await write(root, "src/consumer-package-preparation.d.mts", "export declare const CONSUMER_PACKAGE_PROVENANCE_SCHEMA_VERSION: 'nodekit.consumer-package-provenance/v1'; export interface ConsumerPackagePreparationOptions { archivePath: string; candidateCommit: string; consumerRoot: string; expectedIntegrity: string; expectedName: string; expectedTarballSha256: string; expectedVersion: string; nodekitRoot: string; sourceHash: string; } export declare function prepareExactConsumerPackage(value: ConsumerPackagePreparationOptions): Promise<unknown>;\n");
+  await write(root, "src/managed-evidence-capture.mjs", "export const MANAGED_EVIDENCE_CAMPAIGN_SCHEMA_VERSION = 'nodekit.managed-evidence-campaign/v1'; export async function startManagedEvidenceCampaign() {}\n");
+  await write(root, "src/managed-evidence-capture.d.mts", "export declare const MANAGED_EVIDENCE_CAMPAIGN_SCHEMA_VERSION: 'nodekit.managed-evidence-campaign/v1'; export declare function startManagedEvidenceCampaign(value: unknown): Promise<unknown>;\n");
+  const builderGymFunctions = [
+    "builderGymContext", "builderGymStatus", "createBuilderGymLock", "evaluateBuilderGym",
+    "initializeBuilderGym", "inspectBuilderGymVerdict", "inspectNodeTraceTrajectory",
+    "recordNodeTraceTrajectory", "sealNodeTraceTrajectory", "verifyBuilderGymLock",
+    "verifyBuilderGymVerdict", "verifyNodeTraceTrajectory",
+  ];
+  await write(root, "src/builder-gym.mjs", `export const NODETRACE_VERDICT_DIMENSIONS = ['task', 'artifact', 'ui', 'safety', 'efficiency', 'evidence', 'humanPreference'];\n${builderGymFunctions.map((name) => `export function ${name}() {}`).join("\n")}\n`);
+  await write(root, "src/builder-gym.d.mts", `export declare const NODETRACE_VERDICT_DIMENSIONS: readonly ['task', 'artifact', 'ui', 'safety', 'efficiency', 'evidence', 'humanPreference'];\n${builderGymFunctions.map((name) => `export declare function ${name}(...args: unknown[]): unknown;`).join("\n")}\n`);
+  await write(root, "src/skill-evaluation.mjs", "export async function computeSkillEvidenceClosure() { return { entries: [], rootHash: '0'.repeat(64) }; }\n");
+  await write(root, "src/skill-evaluation.d.mts", "export type SkillTrustedKeyMap = Record<string, { publicKey: string; purposes: string[] }>; export declare function computeSkillEvidenceClosure(...args: unknown[]): Promise<{ entries: unknown[]; rootHash: string }>;\n");
   await write(root, "src/adapters/postgres.mjs", "export const postgres = true;\n");
   await write(root, "src/adapters/postgres.d.mts", "export declare const postgres: true;\n");
   await cp(path.resolve("dist"), path.join(root, "dist"), { recursive: true });
@@ -91,6 +121,9 @@ export type ComponentApi = { caseflow: {
   await write(root, "templates/base/README.md", "# Neutral app\n");
   await write(root, "scripts/sign-submission-attestation.mjs", "#!/usr/bin/env node\nconsole.log('sign fixture');\n");
   await write(root, "scripts/verify-submission-attestation.mjs", "#!/usr/bin/env node\nconsole.log('verify fixture');\n");
+  await write(root, "scripts/finalize-submission-evidence.mjs", "#!/usr/bin/env node\nif (process.argv.includes('--help')) console.log('Usage: nodekit-evidence-finalize'); else console.log('finalize fixture');\n");
+  await write(root, "scripts/prepare-consumer-package.mjs", "#!/usr/bin/env node\nif (process.argv.includes('--help')) console.log('Usage: nodekit-consumer-prepare'); else console.log('consumer preparation fixture');\n");
+  await write(root, "scripts/capture-managed-evidence.mjs", "#!/usr/bin/env node\nif (process.argv.includes('--help')) console.log('Usage: nodekit-evidence-capture'); else console.log('managed evidence fixture');\n");
   const cli = await write(root, "src/cli.mjs", `#!/usr/bin/env node
 import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
@@ -160,16 +193,64 @@ test("source identity uses locale-independent code-unit path ordering", async ()
   assert.doesNotMatch(source, /localeCompare/);
 });
 
+test("distribution verification fails closed for every new package surface and required metadata", () => {
+  const packageJson = {
+    author: "Homen Shum",
+    bin: {
+      "nodekit-consumer-prepare": "scripts/prepare-consumer-package.mjs",
+      "nodekit-evidence-finalize": "scripts/finalize-submission-evidence.mjs",
+    },
+    bugs: { url: "https://github.com/HomenShum/node-platform/issues" },
+    exports: {
+      "./builder-gym": { types: "./src/builder-gym.d.mts", import: "./src/builder-gym.mjs" },
+      "./skill-evaluation": { types: "./src/skill-evaluation.d.mts", import: "./src/skill-evaluation.mjs" },
+      "./consumer-package-preparation": { types: "./src/consumer-package-preparation.d.mts", import: "./src/consumer-package-preparation.mjs" },
+      "./submission-evidence-finalizer": { types: "./src/submission-evidence-finalizer.d.mts", import: "./src/submission-evidence-finalizer.mjs" },
+    },
+    homepage: "https://github.com/HomenShum/node-platform#readme",
+    keywords: ["ai-agents", "agent-applications", "convex", "evaluation", "proof", "scaffolding"],
+    repository: { type: "git", url: "git+https://github.com/HomenShum/node-platform.git" },
+  };
+  const files = [
+    "src/builder-gym.d.mts", "src/builder-gym.mjs",
+    "src/skill-evaluation.d.mts", "src/skill-evaluation.mjs",
+    "src/consumer-package-preparation.d.mts", "src/consumer-package-preparation.mjs",
+    "src/submission-evidence-finalizer.d.mts", "src/submission-evidence-finalizer.mjs",
+    "scripts/prepare-consumer-package.mjs", "scripts/finalize-submission-evidence.mjs",
+  ];
+  const complete = verifyPackedDistribution(packageJson, files);
+  for (const check of ["builderGym", "consumerPackagePreparation", "consumerPrepareBin", "evidenceFinalizeBin", "packageMetadata", "skillEvaluation", "submissionEvidenceFinalizer"]) {
+    assert.equal(complete.checks[check], true, `${check} should be present in the complete fixture`);
+  }
+
+  const cases = [
+    ["builderGym", (value) => delete value.exports["./builder-gym"]],
+    ["skillEvaluation", (value) => delete value.exports["./skill-evaluation"]],
+    ["consumerPackagePreparation", (value) => delete value.exports["./consumer-package-preparation"]],
+    ["consumerPrepareBin", (value) => delete value.bin["nodekit-consumer-prepare"]],
+    ["evidenceFinalizeBin", (value) => delete value.bin["nodekit-evidence-finalize"]],
+    ["submissionEvidenceFinalizer", (value) => delete value.exports["./submission-evidence-finalizer"]],
+    ["packageMetadata", (value) => delete value.repository],
+  ];
+  for (const [check, mutate] of cases) {
+    const changed = structuredClone(packageJson);
+    mutate(changed);
+    assert.equal(verifyPackedDistribution(changed, files).checks[check], false, `${check} must fail closed`);
+  }
+});
+
 test("distribution verification fails closed when the Convex component API is absent", () => {
   const packageJson = {
     bin: {
       nodekit: "src/cli.mjs",
       "nodekit-attestation-sign": "scripts/sign-submission-attestation.mjs",
       "nodekit-attestation-verify": "scripts/verify-submission-attestation.mjs",
+      "nodekit-evidence-finalize": "scripts/finalize-submission-evidence.mjs",
     },
     exports: {
       "./caseflow": { types: "./src/caseflow.d.mts" },
       "./submission-attestation": { types: "./src/submission-attestation.d.mts", import: "./src/submission-attestation.mjs" },
+      "./submission-evidence-finalizer": { types: "./src/submission-evidence-finalizer.d.mts", import: "./src/submission-evidence-finalizer.mjs" },
       "./convex-caseflow": { types: "./dist/client/index.d.ts", import: "./dist/client/index.js" },
       "./convex.config.js": { types: "./dist/component/convex.config.d.ts", import: "./dist/component/convex.config.js" },
       "./_generated/component.js": { types: "./dist/component/_generated/component.d.ts" },
@@ -180,8 +261,8 @@ test("distribution verification fails closed when the Convex component API is ab
     },
   };
   const files = [
-    "src/cli.mjs", "scripts/sign-submission-attestation.mjs", "scripts/verify-submission-attestation.mjs",
-    "src/caseflow.d.mts", "src/submission-attestation.d.mts", "src/submission-attestation.mjs",
+    "src/cli.mjs", "scripts/sign-submission-attestation.mjs", "scripts/verify-submission-attestation.mjs", "scripts/finalize-submission-evidence.mjs",
+    "src/caseflow.d.mts", "src/submission-attestation.d.mts", "src/submission-attestation.mjs", "src/submission-evidence-finalizer.d.mts", "src/submission-evidence-finalizer.mjs",
     "dist/client/index.d.ts", "dist/client/index.js",
     "dist/component/convex.config.d.ts", "dist/component/convex.config.js", "src/convex-test.ts",
     "src/adapters/postgres.d.mts", "src/adapters/postgres.mjs", "adapters/postgres/001_caseflow.sql",
@@ -193,6 +274,8 @@ test("distribution verification fails closed when the Convex component API is ab
   assert.equal(verdict.checks.submissionAttestation, true);
   assert.equal(verdict.checks.attestationSignBin, true);
   assert.equal(verdict.checks.attestationVerifyBin, true);
+  assert.equal(verdict.checks.evidenceFinalizeBin, true);
+  assert.equal(verdict.checks.submissionEvidenceFinalizer, true);
   assert.deepEqual(verdict.missingExportTargets, ["dist/component/_generated/component.d.ts"]);
 });
 
@@ -202,10 +285,12 @@ test("distribution verification requires the attestation subpath and both named 
       nodekit: "src/cli.mjs",
       "nodekit-attestation-sign": "scripts/sign-submission-attestation.mjs",
       "nodekit-attestation-verify": "scripts/verify-submission-attestation.mjs",
+      "nodekit-evidence-finalize": "scripts/finalize-submission-evidence.mjs",
     },
     exports: {
       "./caseflow": { types: "./src/caseflow.d.mts" },
       "./submission-attestation": { types: "./src/submission-attestation.d.mts", import: "./src/submission-attestation.mjs" },
+      "./submission-evidence-finalizer": { types: "./src/submission-evidence-finalizer.d.mts", import: "./src/submission-evidence-finalizer.mjs" },
     },
   };
   const files = [
@@ -215,12 +300,17 @@ test("distribution verification requires the attestation subpath and both named 
     "src/submission-attestation.mjs",
     "scripts/sign-submission-attestation.mjs",
     "scripts/verify-submission-attestation.mjs",
+    "src/submission-evidence-finalizer.d.mts",
+    "src/submission-evidence-finalizer.mjs",
+    "scripts/finalize-submission-evidence.mjs",
   ];
 
   const complete = verifyPackedDistribution(packageJson, files);
   assert.equal(complete.checks.submissionAttestation, true);
   assert.equal(complete.checks.attestationSignBin, true);
   assert.equal(complete.checks.attestationVerifyBin, true);
+  assert.equal(complete.checks.evidenceFinalizeBin, true);
+  assert.equal(complete.checks.submissionEvidenceFinalizer, true);
 
   const missingExport = structuredClone(packageJson);
   delete missingExport.exports["./submission-attestation"];
@@ -233,6 +323,14 @@ test("distribution verification requires the attestation subpath and both named 
   const missingVerify = structuredClone(packageJson);
   delete missingVerify.bin["nodekit-attestation-verify"];
   assert.equal(verifyPackedDistribution(missingVerify, files).checks.attestationVerifyBin, false);
+
+  const missingFinalizer = structuredClone(packageJson);
+  delete missingFinalizer.bin["nodekit-evidence-finalize"];
+  assert.equal(verifyPackedDistribution(missingFinalizer, files).checks.evidenceFinalizeBin, false);
+
+  const missingFinalizerExport = structuredClone(packageJson);
+  delete missingFinalizerExport.exports["./submission-evidence-finalizer"];
+  assert.equal(verifyPackedDistribution(missingFinalizerExport, files).checks.submissionEvidenceFinalizer, false);
 });
 
 test("independent package comparison fails closed on changed bytes or file manifests", () => {
@@ -303,6 +401,9 @@ test("runner proves the exact packed artifact in fresh consumers without publish
   assert.equal(verdict.nodekitIdentity, `${candidateCommit}/${sourceHash}`);
   assert.equal(verdict.publicationPerformed, false);
   assert.equal(verdict.deployPerformed, false);
+  assert.equal(verdict.checks.builderGymRuntime, true);
+  assert.equal(verdict.checks.consumerPrepareBinRuntime, true);
+  assert.equal(verdict.checks.evidenceFinalizeBinRuntime, true);
   assert.equal(verdict.checks.packagedCliCreate, true);
   assert.equal(verdict.checks.convexComponentRuntime, true);
   assert.equal(verdict.checks.receiptsValid, true);
@@ -311,7 +412,7 @@ test("runner proves the exact packed artifact in fresh consumers without publish
   assert.equal(Object.values(verdict.distributionChecks).every(Boolean), true);
   assert.match(verdict.tarball, new RegExp(`proof/ease/candidates/${candidateCommit}/${sourceHash}/package/.+\\.tgz$`));
   assert.equal((await readFile(path.join(root, "proof", "package-install-verdict.json"), "utf8")).includes('"passed": true'), true);
-  assert.equal(verdict.supportingEvidence.length, 15);
+  assert.equal(verdict.supportingEvidence.length, 17);
   assert.deepEqual(verdict.releaseCandidate, {
     nodekitCommit: candidateCommit,
     nodekitSourceHash: sourceHash,
@@ -327,8 +428,13 @@ test("runner proves the exact packed artifact in fresh consumers without publish
   assert.equal(new Set(verdict.supportingEvidence.map((entry) => path.basename(entry.path))).has("generated-app.tar.gz"), true);
   assert.equal(new Set(verdict.supportingEvidence.map((entry) => path.basename(entry.path))).has("generated-receipt-bindings.json"), true);
   assert.equal(new Set(verdict.supportingEvidence.map((entry) => path.basename(entry.path))).has("installed-runtime-identity.json"), true);
+  assert.equal(new Set(verdict.supportingEvidence.map((entry) => path.basename(entry.path))).has("builder-gym-runtime-proof.json"), true);
+  assert.equal(new Set(verdict.supportingEvidence.map((entry) => path.basename(entry.path))).has("installed-cli-help-proof.json"), true);
+  const installedCliHelpPath = verdict.supportingEvidence.find((entry) => path.basename(entry.path) === "installed-cli-help-proof.json").path;
+  const installedCliHelp = JSON.parse(await readFile(path.join(root, installedCliHelpPath), "utf8"));
+  assert.equal(installedCliHelp.checks.managedEvidenceCaptureBinRuntime, true);
   for (const evidence of verdict.supportingEvidence) assert.match(evidence.sha256, /^[a-f0-9]{64}$/);
-  const archiveEntries = execFileSync("tar", ["-tzf", path.join(root, verdict.generatedCandidateArchive)], { encoding: "utf8" });
+  const archiveEntries = execFileSync(resolveTarCommand(), ["-tzf", path.join(root, verdict.generatedCandidateArchive)], { encoding: "utf8" });
   for (const required of ["package.json", "package-lock.json", "vendor/nodekit.tgz", ".nodeagent/application-identity.json", "proof/demo-receipt.json", "proof/eval-receipt.json"]) {
     assert.match(archiveEntries, new RegExp(`(?:^|\\n)${required.replaceAll(".", "\\.")}(?:\\r?\\n|$)`));
   }
@@ -342,6 +448,7 @@ test("runner proves the exact packed artifact in fresh consumers without publish
   assert.equal(packageFiles.distribution.checks.submissionAttestation, true);
   assert.equal(packageFiles.distribution.checks.attestationSignBin, true);
   assert.equal(packageFiles.distribution.checks.attestationVerifyBin, true);
+  assert.equal(packageFiles.distribution.checks.packageMetadata, true);
   assert.equal(packageFiles.independentPacks.length, 2);
   assert.equal(new Set(packageFiles.independentPacks.map((entry) => entry.tarballSha256)).size, 1);
   assert.equal(packageFiles.archiveFiles.some((entry) => entry.path === "package.json"), true);

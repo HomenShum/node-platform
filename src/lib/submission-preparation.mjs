@@ -50,10 +50,14 @@ function validEvidenceReference(reference) {
     && SHA256.test(reference.sha256 ?? "");
 }
 
+// Node defaults execFileSync to a 1 MB buffer, which a large or dirty working tree
+// overflows (ENOBUFS). Bound it explicitly so preparation fails on evidence problems,
+// not on how many paths happen to be in the tree.
 function git(repoRoot, args, encoding = "utf8") {
   return execFileSync("git", args, {
     cwd: repoRoot,
     encoding,
+    maxBuffer: 16 * 1024 * 1024,
     stdio: ["ignore", "pipe", "pipe"],
   });
 }

@@ -240,9 +240,12 @@ test("default projects vendor the exact NodeKit runtime without polluting capabi
 
   const packageJson = JSON.parse(await readFile(path.join(root, "package.json"), "utf8"));
   const vendoredPackage = JSON.parse(await readFile(path.join(root, "vendor", "nodekit", "package.json"), "utf8"));
+  const sourcePackage = JSON.parse(await readFile(path.resolve("package.json"), "utf8"));
+  const buildFriction = JSON.parse(await readFile(path.join(root, "proof", "build-friction.json"), "utf8"));
   assert.equal(packageJson.dependencies["@homenshum/nodekit"], "file:vendor/nodekit");
   assert.equal(vendoredPackage.name, "@homenshum/nodekit");
-  assert.equal(vendoredPackage.version, "0.2.1");
+  assert.equal(vendoredPackage.version, sourcePackage.version);
+  assert.equal(buildFriction.nodekitVersion, sourcePackage.version);
   assert.equal(vendoredPackage.scripts, undefined, "the materialized file: runtime must not run NodeKit development lifecycle scripts");
   assert.equal(vendoredPackage.devDependencies, undefined);
   assert.equal(vendoredPackage.exports["./convex-caseflow"], undefined);
@@ -343,6 +346,27 @@ test("adopt is additive, runnable, and reports collisions", async (t) => {
   assert.equal(result.collisions.includes("agent/instructions.md"), true);
   assert.equal(result.collisions.includes(".claude/skills/nodekit-present/SKILL.md"), true);
   assert.equal(await readFile(path.join(root, "agent", "workflow.mjs"), "utf8").then(Boolean), true);
+});
+
+test("adopt with the default vendored runtime is runnable with zero install", async (t) => {
+  // Regression: adoptProject used to point the dependency at file:vendor/nodekit and
+  // import ../vendor/nodekit/... without ever materializing that directory, so a repo
+  // adopted with no --nodekit-specifier could neither install nor run its demo. The
+  // prior adopt test always passed an explicit specifier and never exercised this path.
+  const root = await mkdtemp(path.join(os.tmpdir(), "nodekit-adopt-default-"));
+  t.after(() => rm(root, { force: true, recursive: true }));
+  await writeFile(path.join(root, "package.json"), JSON.stringify({ name: "host", type: "module" }));
+  await adoptProject({ name: "host", target: root });
+  const packageJson = JSON.parse(await readFile(path.join(root, "package.json"), "utf8"));
+  assert.equal(packageJson.devDependencies["@homenshum/nodekit"], "file:vendor/nodekit");
+  assert.equal(
+    await readFile(path.join(root, "vendor", "nodekit", "src", "lib", "caseflow.mjs"), "utf8").then(Boolean),
+    true,
+  );
+  // The no-key deterministic demo must run with zero install because the vendored
+  // runtime is imported by relative path. A non-zero exit throws.
+  const demo = await execFileAsync(process.execPath, [path.join(root, "scripts", "demo.mjs")], { cwd: root });
+  assert.equal(JSON.parse(demo.stdout).passed, true);
 });
 
 test("a fresh no-key Git candidate reaches an honest local-ready proof", async (t) => {

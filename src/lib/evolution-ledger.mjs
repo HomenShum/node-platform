@@ -3,6 +3,7 @@ import { execFileSync } from "node:child_process";
 import { mkdir, readFile, readdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { pathExists, readJson } from "./files.mjs";
+import { evidenceSnapshotToGraphNode, ingestEvidenceBytes, readEvidenceSnapshot } from "./evidence-snapshots.mjs";
 import { proposeGraphPatch, readKnowledgeGraph } from "./knowledge-evolution.mjs";
 import { validateSchema } from "./schema-validation.mjs";
 
@@ -39,9 +40,11 @@ function resolveInside(repoRoot, relative, label) {
   return target;
 }
 
+// Bound the buffer explicitly: Node's 1 MB execFileSync default overflows on a large
+// working tree or a large `git show` payload, turning a readable ledger error into ENOBUFS.
 function git(repoRoot, args, { allowFailure = false } = {}) {
   try {
-    return execFileSync("git", args, { cwd: repoRoot, encoding: "utf8", stdio: ["ignore", "pipe", "pipe"] }).trim();
+    return execFileSync("git", args, { cwd: repoRoot, encoding: "utf8", maxBuffer: 16 * 1024 * 1024, stdio: ["ignore", "pipe", "pipe"] }).trim();
   } catch (error) {
     if (allowFailure) return null;
     throw error;
@@ -177,7 +180,7 @@ async function evidenceBytes(repoRoot, artifactRef) {
   if (artifactRef.startsWith("git:")) {
     const match = /^git:([a-f0-9]{40}):(.+)$/.exec(artifactRef);
     if (!match) throw new Error(`invalid git artifactRef: ${artifactRef}`);
-    return execFileSync("git", ["show", `${match[1]}:${match[2]}`], { cwd: repoRoot });
+    return execFileSync("git", ["show", `${match[1]}:${match[2]}`], { cwd: repoRoot, maxBuffer: 16 * 1024 * 1024 });
   }
   const relative = artifactRef.startsWith("file:") ? artifactRef.slice(5) : artifactRef;
   return readFile(resolveInside(repoRoot, relative, "evolution evidence"));
@@ -352,9 +355,31 @@ export async function proposeEvolutionKnowledgePatch(repoRoot, { graphPath } = {
   const operations = [];
   const evidenceNodeIds = new Map();
   for (const evidence of ledger.evidence) {
-    const id = `evolution:${evidence.id}`;
+    const bytes = await evidenceBytes(root, evidence.artifactRef);
+    const rawSha256 = digest(bytes);
+    const sourceUri = `https://nodekit.local/evolution/${encodeURIComponent(evidence.id)}`;
+    const id = `evidence_${digest(canonical({ sourceUri, capturedAt: evidence.generatedAt, rawSha256 })).slice(0, 24)}`;
     evidenceNodeIds.set(evidence.id, id);
-    if (!existing.has(id)) operations.push({ type: "INSERT", node: { id, kind: "evidence", label: evidence.id, layer: "source", confidence: evidence.result === "pass" ? 1 : 0.7, evidenceRefs: [], contentHash: evidence.sha256, sourceUri: evidence.artifactRef, capturedAt: evidence.generatedAt, metadata: { evolutionRecordId: evidence.id, sourceCommit: evidence.sourceCommit, result: evidence.result } } });
+    if (!existing.has(id)) {
+      let snapshot;
+      try {
+        snapshot = await readEvidenceSnapshot(root, id);
+      } catch (error) {
+        if (!String(error?.message ?? "").includes("ENOENT")) throw error;
+        snapshot = await ingestEvidenceBytes(root, {
+          bytes,
+          sourceUri,
+          mediaType: "application/octet-stream",
+          capturedAt: evidence.generatedAt,
+          expectedSha256: evidence.sha256,
+        });
+      }
+      operations.push({ type: "INSERT", node: evidenceSnapshotToGraphNode(snapshot, {
+        label: evidence.id,
+        confidence: evidence.result === "pass" ? 1 : 0.7,
+        properties: { artifactRef: evidence.artifactRef, evolutionRecordId: evidence.id, sourceCommit: evidence.sourceCommit, result: evidence.result },
+      }) });
+    }
   }
   const records = [...ledger.events, ...ledger.assumptions, ...ledger.invariants, ...ledger.adoptions];
   for (const record of records) {

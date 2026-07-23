@@ -11,6 +11,14 @@ const projectedSkillNames = ["nodekit-launch", "nodekit-present", "nodekit-qa"];
 const vendoredNodeKitSpecifier = "file:vendor/nodekit";
 const nodeKitRuntimeEntries = ["src", "schemas", "LICENSE"];
 
+async function nodeKitPackageVersion() {
+  const packageJson = JSON.parse(await readFile(path.join(packageRoot, "package.json"), "utf8"));
+  if (typeof packageJson.version !== "string" || packageJson.version.trim().length === 0) {
+    throw new Error("NodeKit package.json must declare a non-empty version");
+  }
+  return packageJson.version;
+}
+
 function vendoredExportIsAvailable(value) {
   if (typeof value === "string") {
     const target = value.replace(/^\.\//, "");
@@ -168,6 +176,7 @@ async function scaffoldProject(options) {
   if (!new Set(["npm", "pnpm"]).has(packageManager)) {
     throw new Error(`unsupported package manager ${packageManager}; available: npm, pnpm`);
   }
+  const nodekitVersion = await nodeKitPackageVersion();
   const launchStartedAt = options.launchStartedAt && Number.isFinite(Date.parse(options.launchStartedAt)) ? options.launchStartedAt : startedAt;
   const values = substitutions({ ...options, target });
   await mkdir(target, { recursive: true });
@@ -197,7 +206,7 @@ async function scaffoldProject(options) {
         name: "implementation_completed",
       },
     ],
-    nodekitVersion: "0.2.1",
+    nodekitVersion,
     packageManager,
     foundation: "domain-blank-base",
     repairLoops: 0,
@@ -259,6 +268,14 @@ export async function adoptProject(options) {
   }
   const values = substitutions({ ...options, target });
   const collisions = [];
+  // Materialize the vendored runtime the same way create does. Without this the
+  // generated package.json points @homenshum/nodekit at file:vendor/nodekit and
+  // scripts import ../vendor/nodekit/..., but the directory never exists, so an
+  // adopted repo cannot install or run its demo unless the caller passes an
+  // explicit --nodekit-specifier. Adopt must produce a runnable harness by default.
+  if (usesVendoredNodeKitRuntime(options.nodekitSpecifier)) {
+    await vendorNodeKitRuntime(target);
+  }
   const adoptRoots = [".gitattributes", "nodekit.yaml", "nodeagent.yaml", "hackathon.yaml", "agent", "packs", "integrations", "backend", "fixtures", "evals", "schemas", "scripts", "adw", "apps"];
   for (const root of adoptRoots) {
     const source = path.join(defaultTemplateRoot, root);

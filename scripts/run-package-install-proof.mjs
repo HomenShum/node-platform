@@ -1,5 +1,6 @@
 import { createHash } from "node:crypto";
 import { spawnSync } from "node:child_process";
+import { resolveTarCommand } from "../src/lib/npm-cli-invocation.mjs";
 import {
   copyFile,
   lstat,
@@ -26,7 +27,12 @@ import { resolveNpmCliInvocation } from "../src/lib/npm-cli-invocation.mjs";
 const COMMIT = /^[a-f0-9]{40}$/;
 const SHA256 = /^[a-f0-9]{64}$/;
 const PACKAGE_PROOF_DISTRIBUTION_CHECK_IDS = Object.freeze([
+  "attestationSignBin",
+  "attestationVerifyBin",
+  "builderGym",
   "caseflowTypes",
+  "consumerPackagePreparation",
+  "consumerPrepareBin",
   "convexClient",
   "convexConfig",
   "convexComponentApi",
@@ -34,6 +40,11 @@ const PACKAGE_PROOF_DISTRIBUTION_CHECK_IDS = Object.freeze([
   "convexTestExport",
   "postgresAdapter",
   "postgresMigration",
+  "evidenceFinalizeBin",
+  "packageMetadata",
+  "submissionAttestation",
+  "submissionEvidenceFinalizer",
+  "skillEvaluation",
   "supabaseProfile",
   "supabaseWorkers",
 ]);
@@ -125,6 +136,24 @@ function binIncludes(packageJson, files, key, matcher) {
     && hasPackedTarget(files, target);
 }
 
+function packageMetadataComplete(packageJson) {
+  const requiredKeywords = [
+    "ai-agents",
+    "agent-applications",
+    "convex",
+    "evaluation",
+    "proof",
+    "scaffolding",
+  ];
+  return packageJson.repository?.type === "git"
+    && packageJson.repository?.url === "git+https://github.com/HomenShum/node-platform.git"
+    && packageJson.homepage === "https://github.com/HomenShum/node-platform#readme"
+    && packageJson.bugs?.url === "https://github.com/HomenShum/node-platform/issues"
+    && packageJson.author === "Homen Shum"
+    && Array.isArray(packageJson.keywords)
+    && requiredKeywords.every((keyword) => packageJson.keywords.includes(keyword));
+}
+
 export function verifyPackedDistribution(packageJson, packedFiles) {
   const files = new Set(packedFiles.map((entry) => typeof entry === "string" ? entry : entry.path));
   const exportedTargets = exportTargets(packageJson.exports);
@@ -134,6 +163,12 @@ export function verifyPackedDistribution(packageJson, packedFiles) {
   const checks = {
     attestationSignBin: binIncludes(packageJson, files, "nodekit-attestation-sign", (target) => target === "scripts/sign-submission-attestation.mjs"),
     attestationVerifyBin: binIncludes(packageJson, files, "nodekit-attestation-verify", (target) => target === "scripts/verify-submission-attestation.mjs"),
+    builderGym: entryIncludes(packageJson, files, "./builder-gym", (target) => /builder-gym\.mjs$/.test(target))
+      && entryIncludes(packageJson, files, "./builder-gym", (target) => /builder-gym\.d\.mts$/.test(target)),
+    consumerPackagePreparation: entryIncludes(packageJson, files, "./consumer-package-preparation", (target) => /consumer-package-preparation\.mjs$/.test(target))
+      && entryIncludes(packageJson, files, "./consumer-package-preparation", (target) => /consumer-package-preparation\.d\.mts$/.test(target)),
+    consumerPrepareBin: binIncludes(packageJson, files, "nodekit-consumer-prepare", (target) => target === "scripts/prepare-consumer-package.mjs"),
+    evidenceFinalizeBin: binIncludes(packageJson, files, "nodekit-evidence-finalize", (target) => target === "scripts/finalize-submission-evidence.mjs"),
     caseflowTypes: entryIncludes(packageJson, files, "./caseflow", (target) => /caseflow\.d\.(?:mts|ts)$/.test(target)),
     convexClient: entryIncludes(packageJson, files, "./convex-caseflow", (target) => /dist\/client\/index\.js$/.test(target))
       && entryIncludes(packageJson, files, "./convex-caseflow", (target) => /dist\/client\/index\.d\.ts$/.test(target)),
@@ -146,8 +181,13 @@ export function verifyPackedDistribution(packageJson, packedFiles) {
     postgresAdapter: entryIncludes(packageJson, files, "./adapters/postgres", (target) => /postgres\.mjs$/.test(target))
       && entryIncludes(packageJson, files, "./adapters/postgres", (target) => /postgres\.d\.mts$/.test(target)),
     postgresMigration: entryIncludes(packageJson, files, "./adapters/postgres/migration.sql", (target) => /adapters\/postgres\/001_caseflow\.sql$/.test(target)),
+    packageMetadata: packageMetadataComplete(packageJson),
     submissionAttestation: entryIncludes(packageJson, files, "./submission-attestation", (target) => /submission-attestation\.mjs$/.test(target))
       && entryIncludes(packageJson, files, "./submission-attestation", (target) => /submission-attestation\.d\.mts$/.test(target)),
+    submissionEvidenceFinalizer: entryIncludes(packageJson, files, "./submission-evidence-finalizer", (target) => /submission-evidence-finalizer\.mjs$/.test(target))
+      && entryIncludes(packageJson, files, "./submission-evidence-finalizer", (target) => /submission-evidence-finalizer\.d\.mts$/.test(target)),
+    skillEvaluation: entryIncludes(packageJson, files, "./skill-evaluation", (target) => /skill-evaluation\.mjs$/.test(target))
+      && entryIncludes(packageJson, files, "./skill-evaluation", (target) => /skill-evaluation\.d\.mts$/.test(target)),
     supabaseProfile: entryIncludes(packageJson, files, "./adapters/supabase/profile.sql", (target) => /adapters\/supabase\/001_profile\.sql$/.test(target)),
     supabaseWorkers: entryIncludes(packageJson, files, "./adapters/supabase/workers.sql", (target) => /adapters\/supabase\/002_workers\.sql$/.test(target)),
   };
@@ -222,7 +262,7 @@ function npmCommand() {
 }
 
 function tarCommand() {
-  return process.platform === "win32" ? "tar.exe" : "tar";
+  return resolveTarCommand();
 }
 
 async function writeJson(file, value) {
@@ -330,6 +370,24 @@ import {
   canonicalizeAttestationPayload,
   type DetachedAttestation,
 } from "@homenshum/nodekit/submission-attestation";
+import {
+  FINALIZABLE_SUBMISSION_GATES,
+  SIGNING_KEY_POLICY_SCHEMA_VERSION,
+  finalizeSubmissionEvidence,
+} from "@homenshum/nodekit/submission-evidence-finalizer";
+import {
+  CONSUMER_PACKAGE_PROVENANCE_SCHEMA_VERSION,
+  prepareExactConsumerPackage,
+  type ConsumerPackagePreparationOptions,
+} from "@homenshum/nodekit/consumer-package-preparation";
+import {
+  NODETRACE_VERDICT_DIMENSIONS,
+  builderGymStatus,
+} from "@homenshum/nodekit/builder-gym";
+import {
+  computeSkillEvidenceClosure,
+  type SkillTrustedKeyMap,
+} from "@homenshum/nodekit/skill-evaluation";
 import * as convexClient from "@homenshum/nodekit/convex-caseflow";
 import convexConfig from "@homenshum/nodekit/convex.config.js";
 import type { ComponentApi } from "@homenshum/nodekit/_generated/component.js";
@@ -338,6 +396,15 @@ import * as convexTest from "@homenshum/nodekit/test";
 void [nodekit, caseflow, postgres, convexClient, convexConfig, convexTest];
 const attestationSchema: "nodekit.detached-attestation/v1" = SUBMISSION_ATTESTATION_SCHEMA_VERSION;
 const canonicalPayload: string = canonicalizeAttestationPayload({ gate: "package-consumer" });
+const consumerProvenanceSchema: "nodekit.consumer-package-provenance/v1" = CONSUMER_PACKAGE_PROVENANCE_SCHEMA_VERSION;
+declare const consumerPreparationOptions: ConsumerPackagePreparationOptions;
+void prepareExactConsumerPackage;
+void consumerPreparationOptions;
+void builderGymStatus;
+void computeSkillEvidenceClosure;
+declare const skillTrustedKeys: SkillTrustedKeyMap;
+void skillTrustedKeys;
+const builderDimension = NODETRACE_VERDICT_DIMENSIONS[0];
 declare const detachedAttestation: DetachedAttestation;
 type UpdateCaseInputArgs = FunctionArgs<ComponentApi["caseflow"]["updateCaseInput"]>;
 const updateCaseInputWithoutPrimaryJob = { caseId: "case", scopeKey: "scope", title: "Updated" } satisfies UpdateCaseInputArgs;
@@ -346,7 +413,7 @@ function assertReceiptV2(value: Completion) {
   const hashes: [string, string] = [value.receipt.caseHash, value.receipt.runHash];
   return hashes;
 }
-void [attestationSchema, canonicalPayload, detachedAttestation, updateCaseInputWithoutPrimaryJob, assertReceiptV2];
+void [attestationSchema, canonicalPayload, consumerProvenanceSchema, builderDimension, detachedAttestation, FINALIZABLE_SUBMISSION_GATES, SIGNING_KEY_POLICY_SCHEMA_VERSION, finalizeSubmissionEvidence, updateCaseInputWithoutPrimaryJob, assertReceiptV2];
 `;
 }
 
@@ -363,6 +430,48 @@ function publicTypecheckConfig() {
     },
     include: ["public-api.ts"],
   };
+}
+
+function builderGymRuntimeProofSource() {
+  return `import assert from "node:assert/strict";
+import * as nodekit from "@homenshum/nodekit";
+import * as builderGym from "@homenshum/nodekit/builder-gym";
+
+const dimensions = ["task", "artifact", "ui", "safety", "efficiency", "evidence", "humanPreference"];
+const functions = [
+  "builderGymContext",
+  "builderGymStatus",
+  "createBuilderGymLock",
+  "evaluateBuilderGym",
+  "initializeBuilderGym",
+  "inspectBuilderGymVerdict",
+  "inspectNodeTraceTrajectory",
+  "recordNodeTraceTrajectory",
+  "sealNodeTraceTrajectory",
+  "verifyBuilderGymLock",
+  "verifyBuilderGymVerdict",
+  "verifyNodeTraceTrajectory",
+];
+
+assert.deepEqual(builderGym.NODETRACE_VERDICT_DIMENSIONS, dimensions);
+assert.deepEqual(nodekit.NODETRACE_VERDICT_DIMENSIONS, dimensions);
+for (const name of functions) {
+  assert.equal(typeof builderGym[name], "function", \`builder-gym subpath must export \${name}\`);
+  assert.equal(nodekit[name], builderGym[name], \`package root and builder-gym subpath must share \${name}\`);
+}
+
+console.log(JSON.stringify({
+  checks: {
+    dimensionsExact: true,
+    functionsCallable: true,
+    rootAndSubpathMatch: true,
+  },
+  dimensions,
+  functions,
+  passed: true,
+  schemaVersion: "nodekit.installed-builder-gym-runtime-proof/v1",
+}));
+`;
 }
 
 function convexRuntimeProofSource() {
@@ -543,12 +652,15 @@ export async function runPackageInstallProof({
   const generatedRoot = path.join(tempRoot, "generated-app");
   const ledger = [];
   const checks = {
+    builderGymRuntime: false,
     candidateIdentityStable: false,
     check: false,
     compile: false,
+    consumerPrepareBinRuntime: false,
     convexComponentRuntime: false,
     demo: false,
     distributionComplete: false,
+    evidenceFinalizeBinRuntime: false,
     eval: false,
     freshConsumerInstall: false,
     generatedAppInstall: false,
@@ -610,6 +722,7 @@ export async function runPackageInstallProof({
         archiveManifestSha256: inspected.manifestSha256,
         packFiles,
         packFilesSha256: digest(JSON.stringify(packFiles)),
+        packageJson: inspected.packageJson,
         record,
         tarballSha256: archiveSha256,
       });
@@ -624,7 +737,7 @@ export async function runPackageInstallProof({
     const tarballSha256 = await fileDigest(tarballPath);
     if (tarballSha256 !== pack.tarballSha256) throw new Error("canonical proof tarball differs from the independently verified archive");
 
-    distribution = verifyPackedDistribution(packageJson, pack.archiveFiles);
+    distribution = verifyPackedDistribution(pack.packageJson, pack.archiveFiles);
     checks.distributionComplete = distribution.passed;
     if (!distribution.passed) {
       throw new Error(`packed distribution is incomplete: missing exports ${distribution.missingExportTargets.join(", ") || "none"}; missing bins ${distribution.missingBinTargets.join(", ") || "none"}; failed checks ${Object.entries(distribution.checks).filter(([, passed]) => !passed).map(([name]) => name).join(", ") || "none"}`);
@@ -660,6 +773,51 @@ export async function runPackageInstallProof({
       throw new Error("fresh consumer did not install the exact reopened package archive");
     }
 
+    const installedHelpProof = {
+      checks: {},
+      schemaVersion: "nodekit.installed-cli-help-proof/v1",
+    };
+    for (const [binName, checkName, usageMarker, decisiveCheckName] of [
+      ["nodekit-consumer-prepare", "consumerPrepareBinRuntime", "nodekit-consumer-prepare", "consumerPrepareBinRuntime"],
+      ["nodekit-evidence-capture", "managedEvidenceCaptureBinRuntime", "nodekit-evidence-capture", null],
+      ["nodekit-evidence-finalize", "evidenceFinalizeBinRuntime", "nodekit-evidence-finalize", "evidenceFinalizeBinRuntime"],
+    ]) {
+      const binTarget = installedRuntimePackage.bin?.[binName];
+      if (typeof binTarget !== "string") throw new Error(`installed package is missing ${binName}`);
+      const helpResult = requirePass(execute(ledger, {
+        args: [path.join(installedRuntimeRoot, binTarget), "--help"],
+        command: process.execPath,
+        cwd: consumerRoot,
+        displayArgs: [`<installed-${binName}>`, "--help"],
+        label: `installed ${binName} help`,
+        replacements,
+        timeoutMs,
+      }));
+      const passed = helpResult.stdout.includes("Usage:") && helpResult.stdout.includes(usageMarker);
+      if (decisiveCheckName) checks[decisiveCheckName] = passed;
+      installedHelpProof.checks[checkName] = passed;
+      installedHelpProof[`${checkName}StdoutSha256`] = digest(helpResult.stdout);
+      if (!passed) throw new Error(`installed ${binName} help did not expose its public usage contract`);
+    }
+    installedHelpProof.passed = Object.values(installedHelpProof.checks).every(Boolean);
+
+    const builderGymRuntimePath = path.join(consumerRoot, "builder-gym-runtime-proof.mjs");
+    await writeFile(builderGymRuntimePath, builderGymRuntimeProofSource(), "utf8");
+    const builderGymRuntimeResult = requirePass(execute(ledger, {
+      args: [builderGymRuntimePath],
+      command: process.execPath,
+      cwd: consumerRoot,
+      displayArgs: ["<builder-gym-runtime-proof>"],
+      label: "installed Builder Gym runtime proof",
+      replacements,
+      timeoutMs,
+    }));
+    const builderGymRuntimeProof = JSON.parse(builderGymRuntimeResult.stdout.trim());
+    checks.builderGymRuntime = builderGymRuntimeProof.schemaVersion === "nodekit.installed-builder-gym-runtime-proof/v1"
+      && builderGymRuntimeProof.passed === true
+      && Object.values(builderGymRuntimeProof.checks ?? {}).every(Boolean);
+    if (!checks.builderGymRuntime) throw new Error("installed Builder Gym runtime proof failed");
+
     const componentRuntimePath = path.join(consumerRoot, "convex-runtime-proof.mjs");
     await writeFile(componentRuntimePath, convexRuntimeProofSource(), "utf8");
     const componentRuntimeResult = requirePass(execute(ledger, {
@@ -677,7 +835,7 @@ export async function runPackageInstallProof({
       && SHA256.test(componentRuntimeProof.receiptHash ?? "");
     if (!checks.convexComponentRuntime) throw new Error("installed Convex component runtime proof failed");
 
-    const installedCli = path.join(installedRuntimeRoot, String(packageJson.bin.nodekit));
+    const installedCli = path.join(installedRuntimeRoot, String(installedRuntimePackage.bin.nodekit));
     requirePass(execute(ledger, {
       args: [
         installedCli,
@@ -920,11 +1078,17 @@ export async function runPackageInstallProof({
     await copyFile(path.join(consumerRoot, "public-api.ts"), publicTypecheckPath);
     const componentRuntimeReceiptPath = path.join(candidateProofRoot, "convex-runtime-proof.json");
     await writeJson(componentRuntimeReceiptPath, componentRuntimeProof);
+    const builderGymRuntimeReceiptPath = path.join(candidateProofRoot, "builder-gym-runtime-proof.json");
+    await writeJson(builderGymRuntimeReceiptPath, builderGymRuntimeProof);
+    const installedCliHelpReceiptPath = path.join(candidateProofRoot, "installed-cli-help-proof.json");
+    await writeJson(installedCliHelpReceiptPath, installedHelpProof);
     evidenceFiles.push(
       commandLedgerPath,
       packageFilesPath,
       publicTypecheckPath,
       componentRuntimeReceiptPath,
+      builderGymRuntimeReceiptPath,
+      installedCliHelpReceiptPath,
       generatedPackagePath,
       generatedLockPath,
       generatedNpmLsPath,
@@ -961,9 +1125,6 @@ export async function runPackageInstallProof({
       generatedCandidateCommit,
       generatedCandidateTree,
       checks,
-      // The decisive v1 receipt retains its frozen schema. Newly strengthened
-      // package-surface checks remain explicit in package-files.json and are
-      // included in distributionComplete and the final pass calculation.
       distributionChecks: packageProofDistributionChecks(distribution.checks),
       supportingEvidence: await supportingEvidence(repoRoot, evidenceFiles),
       commandLedger: relative(repoRoot, commandLedgerPath),

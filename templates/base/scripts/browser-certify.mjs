@@ -19,6 +19,7 @@ const generatedCandidateCommit = execFileSync("git", ["rev-parse", "HEAD"], { en
 const nodekitCommit = process.env.NODEKIT_SOURCE_COMMIT ?? null;
 const nodekitSourceHash = process.env.NODEKIT_SOURCE_HASH ?? null;
 const expectedNodekitTarballSha256 = process.env.NODEKIT_TARBALL_SHA256 ?? null;
+const postAgentTreeHash = process.env.NODEKIT_POST_AGENT_TREE_HASH ?? null;
 const COMMIT = /^[a-f0-9]{40}$/;
 const SHA256 = /^[a-f0-9]{64}$/;
 const nodekitSourceBound = COMMIT.test(nodekitCommit ?? "") && SHA256.test(nodekitSourceHash ?? "");
@@ -147,6 +148,7 @@ async function capture(page, state, viewport, theme, observations) {
     nodekitTarballBound,
     nodekitTarballSha256,
     pageUrl: page.url(),
+    postAgentTreeHash,
     pngSha256: sha256(bytes),
     runId,
     schemaVersion: "nodekit.screenshot-proof/v1",
@@ -172,23 +174,31 @@ async function capture(page, state, viewport, theme, observations) {
 async function assertReviewState(page, state, viewport, theme) {
   const context = `${state}/${viewport.id}/${theme}`;
   const mobile = viewport.width <= 640;
+  // Only the required ACTION is certified. The wording that accompanies it is the
+  // application's to choose; carrying expected copy here would reintroduce the preset.
   const expectation = completedReviewStates.has(state)
-    ? { action: "none", eyebrow: "VERIFIED RESULT", title: "Completion evidence" }
+    ? { action: "none" }
     : state === "conflict"
-      ? { action: "conflict", eyebrow: "CONFLICT CONTAINED", title: "Resolve version conflict" }
+      ? { action: "conflict" }
       : state === "recoverable_failure"
-        ? { action: "recovery", eyebrow: "RECOVERY REQUIRED", title: "Resume from preserved state" }
+        ? { action: "recovery" }
         : state === "external_wait"
-          ? { action: "none", eyebrow: "WAITING SAFELY", title: "External reviewer owns the next action" }
+          ? { action: "none" }
           : pendingReviewStates.has(state)
-            ? { action: "pending", eyebrow: "DECISION REQUIRED", title: "Review proposed change" }
+            ? { action: "pending" }
             : intakeReviewStates.has(state)
-              ? { action: "none", eyebrow: "NEXT STEP", title: "Confirm the intended outcome" }
-              : { action: "propose", eyebrow: "NEXT STEP", title: "Prepare a reviewable change" };
+              ? { action: "none" }
+              : { action: "propose" };
   const eyebrow = (await page.locator("#review-eyebrow").innerText()).trim();
   const title = (await page.locator("#review-title").innerText()).trim();
-  if (eyebrow !== expectation.eyebrow || title !== expectation.title) {
-    throw new Error(`review state copy is incoherent for ${context}: ${JSON.stringify({ eyebrow, expectedEyebrow: expectation.eyebrow, title, expectedTitle: expectation.title })}`);
+  // Certify that the review state is COMMUNICATED, not that it is worded identically.
+  // Requiring equality with the template's literal copy made every certified NodeKit
+  // application ship the same review language, and made domain-appropriate wording a
+  // certification failure — the harness enforcing a preset, which inverts the
+  // domain-blank invariant. The behavioural contract below (which controls are visible
+  // and hidden per state) remains the real gate and is unchanged.
+  if (eyebrow.length === 0 || title.length === 0) {
+    throw new Error(`review state copy is missing for ${context}: ${JSON.stringify({ eyebrow, title, expectedAction: expectation.action })}`);
   }
   const visible = expectation.action === "pending"
     ? mobile ? ["mobile-approve", "mobile-reject"] : ["approve", "reject"]
@@ -446,6 +456,7 @@ const manifest = {
   nodekitTarballSha256,
   passed,
   phases,
+  postAgentTreeHash,
   requiredStates,
   runId,
   schemaVersion: "nodekit.browser-certification/v1",

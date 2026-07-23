@@ -5,6 +5,26 @@ function nonempty(value) {
   return typeof value === "string" && value.trim().length > 0 ? value.trim() : null;
 }
 
+/**
+ * Resolve a tar binary that can read a Windows drive-letter path.
+ *
+ * Git-Bash/MSYS place a GNU tar earlier on PATH than the Windows system one, and
+ * GNU tar parses `C:\dir\file.tgz` as the rsh spec `host:path`, failing with
+ * "Cannot connect to C: resolve failed". Windows 10 1803+ ships bsdtar at
+ * System32, which handles drive letters natively. `--force-local` would fix GNU
+ * tar but is unsupported by bsdtar, so selecting the right binary is portable
+ * where a flag is not. Falls back to PATH lookup when the system binary is absent.
+ */
+export function resolveTarCommand({
+  env = process.env,
+  pathExists = existsSync,
+  platform = process.platform,
+} = {}) {
+  if (platform !== "win32") return "tar";
+  const systemTar = path.join(nonempty(env.SystemRoot) ?? "C:\\Windows", "System32", "tar.exe");
+  return pathExists(systemTar) ? systemTar : "tar";
+}
+
 export function resolveNpmCliInvocation(args, {
   env = process.env,
   nodeExecutable = process.execPath,
