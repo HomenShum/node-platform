@@ -26,6 +26,19 @@ export const REQUIRED_RENDER_STATE_IDS = Object.freeze([
   "mobile_review",
 ]);
 
+// The direction-set hash binds a render receipt to the exact frozen directions it was
+// taken against. It is derived from the direction set's stable identity so a verifier
+// authoring a receipt and the evaluator checking it compute the same value.
+export function directionSetHashOf(directionSet) {
+  return createHash("sha256")
+    .update(JSON.stringify({
+      directionSetId: directionSet.directionSetId,
+      productContractHash: directionSet.productContractHash,
+      routeHash: directionSet.routeHash,
+    }))
+    .digest("hex");
+}
+
 // The state manifest hash binds the exact rendered evidence. Recomputing it from the
 // per-state screenshot and check-report hashes makes candidate.stateManifestHash
 // tamper-evident: editing the manifest changes the hash and the receipt no longer

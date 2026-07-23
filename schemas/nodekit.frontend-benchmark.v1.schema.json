@@ -3,11 +3,14 @@
   "$id": "https://github.com/HomenShum/node-platform/blob/main/schemas/nodekit.frontend-benchmark.v1.schema.json",
   "title": "NodeKit Frontend Gym benchmark",
   "type": "object",
-  "required": ["schemaVersion", "benchmarkId", "directionSet", "scores", "pairwiseResults", "criticIndependent", "browserChecksPassed", "accessibilityPassed", "overflowPassed", "majorFindings", "freshUserEvidenceRefs"],
+  "required": ["schemaVersion", "benchmarkId", "directionSet", "repositoryCommit", "renderReceipt", "reviewReceipt", "scores", "pairwiseResults", "criticIndependent", "majorFindings", "freshUserEvidenceRefs"],
   "properties": {
     "schemaVersion": { "const": "nodekit.frontend-benchmark/v1" },
     "benchmarkId": { "type": "string", "minLength": 1 },
     "directionSet": { "type": "string", "minLength": 1 },
+    "repositoryCommit": { "type": "string", "pattern": "^[a-f0-9]{40}$|^[a-f0-9]{64}$" },
+    "renderReceipt": { "type": "string", "minLength": 1, "description": "Path to the nodekit.frontend-render-receipt/v1 for the selected direction. The decisive verdict is computed from it, not from candidate-asserted booleans." },
+    "reviewReceipt": { "type": "string", "minLength": 1, "description": "Path to the independent nodekit.frontend-review-receipt/v1 for the selected direction." },
     "scores": {
       "type": "object",
       "minProperties": 3,
@@ -43,10 +46,7 @@
       }
     },
     "criticIndependent": { "const": true },
-    "browserChecksPassed": { "type": "boolean" },
-    "accessibilityPassed": { "type": "boolean" },
-    "overflowPassed": { "type": "boolean" },
-    "majorFindings": { "type": "array", "items": { "type": "string", "minLength": 1 }, "uniqueItems": true },
+    "majorFindings": { "type": "array", "items": { "type": "string", "minLength": 1 }, "uniqueItems": true, "description": "Findings routed to the bounded repair plan. These no longer decide the tournament; the decisive verdict comes from the render and review receipts." },
     "freshUserEvidenceRefs": { "type": "array", "items": { "type": "string", "minLength": 1 }, "uniqueItems": true }
   },
   "$defs": { "score": { "type": "number", "minimum": 0, "maximum": 1 } },
