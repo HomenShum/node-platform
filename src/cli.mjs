@@ -28,6 +28,15 @@ import {
   verifyCanary,
 } from "./lib/harness-gym.mjs";
 import {
+  builderGymStatus,
+  createBuilderGymLock,
+  evaluateBuilderGym,
+  initializeBuilderGym,
+  inspectBuilderGymVerdict,
+  inspectNodeTraceTrajectory,
+  recordNodeTraceTrajectory,
+} from "./lib/builder-gym.mjs";
+import {
   importUnderstandAnythingCodeGraph,
   queryUnderstandAnythingCodeGraph,
   readUnderstandAnythingCodeGraph,
@@ -46,6 +55,16 @@ import {
   replayKnowledgeGraph,
   validateGraphPatch,
 } from "./lib/knowledge-evolution.mjs";
+import {
+  evidenceSnapshotToGraphNode,
+  ingestEvidenceFile,
+  verifyEvidenceSnapshot,
+} from "./lib/evidence-snapshots.mjs";
+import {
+  collectExternalResearch,
+  createLocalFixtureResearchProvider,
+  readLocalResearchFixture,
+} from "./lib/research-collector.mjs";
 import { proposeHarnessKnowledgePatch } from "./lib/harness-knowledge.mjs";
 import {
   compileFrontendPlan,
@@ -55,6 +74,20 @@ import {
   initializeFrontendHarness,
   verifyFrontendCanary,
 } from "./lib/frontend-specialist.mjs";
+import {
+  addAtlasAsset,
+  addAtlasFlow,
+  initializeAtlasStore,
+  inspectAtlasRecord,
+  listAtlasRecords,
+} from "./lib/atlas.mjs";
+import {
+  atlasDelta,
+  atlasPreview,
+  atlasRecipe,
+  atlasSearch,
+} from "./lib/atlas-retrieval.mjs";
+import { serveAtlasMcp } from "./lib/atlas-mcp.mjs";
 import {
   buildEvolutionDocs,
   checkEvolutionMateriality,
@@ -116,12 +149,19 @@ Usage:
   nodekit ecosystem check [--workspace <path>] [--json]
   nodekit dashboard [--workspace <path>] [--write] [--out <path>]
   nodekit graph import [--repo-root <path>] [--graph-dir <path>] [--repo-id <id>] [--commit <sha>] [--json]
-  nodekit graph init [--repo-root <path>] [--graph-id <id>] [--json]
+  nodekit graph init [--repo-root <path>] [--graph-id <id>] [--owner-id <id>] [--json]
   nodekit graph ingest --input <file> [--repo-root <path>] [--json]
+  nodekit graph evidence-ingest --file <path> --source-uri <uri> --media-type <type>
+      [--label <text>] [--captured-at <iso>] [--expected-sha256 <hash>] [--locators <json-file>]
+      [--expires-at <iso>] [--max-bytes <number>] [--max-locators <number>] [--repo-root <path>] [--json]
+  nodekit graph evidence-verify --snapshot <id> [--at <iso>] [--repo-root <path>] [--json]
   nodekit graph inspect [--repo-root <path>] [--json]
   nodekit graph query <terms> [--repo-root <path>] [--limit <number>] [--code] [--json]
   nodekit graph gaps [--repo-root <path>] [--json]
-  nodekit graph research <terms> [--repo-root <path>] [--run-id <id>] [--json]
+  nodekit graph research <terms> --provider-fixture <json-file>
+      [--max-searches <number>] [--max-results <number>] [--max-fetches <number>]
+      [--max-bytes-per-fetch <number>] [--max-total-bytes <number>] [--max-duration-ms <number>]
+      [--repo-root <path>] [--run-id <id>] [--json]
   nodekit graph propose --patch <file> [--repo-root <path>] [--json]
   nodekit graph validate --patch <id> [--repo-root <path>] [--json]
   nodekit graph apply --patch <id> --approved-by <principal> [--reason <text>] [--repo-root <path>] [--json]
@@ -135,6 +175,19 @@ Usage:
   nodekit frontend benchmark --manifest <file> [--repo-root <path>] [--json]
   nodekit frontend repair --benchmark <file> [--repo-root <path>] [--json]
   nodekit frontend canary --receipt <file> [--repo-root <path>] [--json]
+  nodekit atlas init [--repo-root <path>] [--json]
+  nodekit atlas add --asset <yaml-file> --observation <path>
+      [--vendor <path>] [--notice <path>] [--derived-from <sha256>] [--repo-root <path>] [--json]
+  nodekit atlas add --flow <yaml-file> [--repo-root <path>] [--json]
+  nodekit atlas list [--repo-root <path>] [--json]
+  nodekit atlas inspect --id <assetId-or-flowId> [--repo-root <path>] [--json]
+  nodekit atlas search <terms...> [--target asset|flow|both] [--kind <list>] [--framework <id>]
+      [--language <list>] [--mobile <mode>] [--accessibility A|AA|AAA] [--maturity <floor>]
+      [--license-allowlist <spdx-list>] [--no-new-deps] [--limit <1-50>] [--repo-root <path>] [--json]
+  nodekit atlas preview --ids <comma-list-max-4> [--repo-root <path>] [--json]
+  nodekit atlas recipe --id <assetId> [--flow <flowId>] [--allow-unvetted] [--repo-root <path>] [--json]
+  nodekit atlas repair --recipe <file> [--repo-root <path>] [--json]
+  nodekit atlas serve --mcp [--repo-root <path>]
   nodekit evolution init [--repo-root <path>] [--json]
   nodekit evolution draft --id <id> --track <track> --category <category> --challenge <text> --resolution <text> --reviewed-by <id>
   nodekit evolution record --file <file> [--repo-root <path>] [--json]
@@ -145,6 +198,13 @@ Usage:
   nodekit evolution build-docs [--repo-root <path>] [--json]
   nodekit evolution sync-graph [--graph-path <path>] [--repo-root <path>] [--json]
   nodekit harness init [--repo-root <path>] [--json]
+  nodekit harness builder init [--repo-root <path>] [--json]
+  nodekit harness builder lock --baseline <trajectory> [--repo-root <path>] [--json]
+  nodekit harness builder evaluate --lock <lock> --expected-lock-hash <sha256> --baseline <trajectory> --candidate <trajectory> [--repo-root <path>] [--json]
+  nodekit harness builder inspect --ref <hash-or-path> [--repo-root <path>] [--json]
+  nodekit harness builder status [--repo-root <path>] [--json]
+  nodekit harness trajectory record --file <trajectory> [--repo-root <path>] [--json]
+  nodekit harness trajectory inspect --ref <hash-or-path> [--repo-root <path>] [--json]
   nodekit models baseline [--repo-root <path>] [--json]
   nodekit models profile [--repo-root <path>] [--json]
   nodekit models inspect [--repo-root <path>] [--json]
@@ -152,7 +212,7 @@ Usage:
   nodekit skills propose [--repo-root <path>] [--json]
   nodekit skills review --candidate <id> [--repo-root <path>] [--json]
   nodekit skills benchmark --candidate <id> --comparison <file> [--repo-root <path>] [--json]
-  nodekit skills promote --candidate <id> --canary <file> --proof-receipt <file> --approved-by <id>
+  nodekit skills promote --candidate <id> --canary <file> --proof-receipt <file> --approval <signed-file>
   nodekit skills reject --candidate <id> --reason <text>
   nodekit routing compile [--repo-root <path>] [--json]
   nodekit routing canary --receipt <file> [--repo-root <path>] [--json]
@@ -510,8 +570,8 @@ async function runGraphQuery(parsed) {
       }
       await recordKnowledgeAction(repoRoot, {
         type: "GRAPH_RETRIEVE",
-        runId: parsed.options["run-id"],
-        caseId: parsed.options["case-id"],
+        runId: parsed.options["run-id"] ?? "run:nodekit-cli-query",
+        caseId: parsed.options["case-id"] ?? "case:nodekit-cli-query",
         actorId: parsed.options["actor-id"] ?? "nodekit-cli",
         input: { query, limit: parsed.options.limit ?? 12 },
         outputRefs: output.results.map((entry) => entry.entity.id),
@@ -553,8 +613,9 @@ async function runGraphInit(parsed) {
   const graph = await initializeKnowledgeGraph(repoRoot, {
     graphId: parsed.options["graph-id"],
     graphPath: parsed.options["graph-path"],
+    ownerId: parsed.options["owner-id"],
   });
-  const output = { passed: true, graphId: graph.graphId, graphVersion: graph.version, contentHash: graph.contentHash };
+  const output = { passed: true, graphId: graph.graphId, graphVersion: graph.version, ownerId: graph.authority.ownerId, contentHash: graph.contentHash };
   if (parsed.options.json) console.log(JSON.stringify(output, null, 2));
   else console.log(`INITIALIZED ${graph.graphId}@v${graph.version} ${graph.contentHash}`);
 }
@@ -600,9 +661,71 @@ async function runGraphIngest(parsed) {
     proposedBy: input.proposedBy ?? proposalActor(parsed),
     confidence: input.confidence ?? 1,
   }, { graphPath: parsed.options["graph-path"] });
-  const output = { passed: true, proposalOnly: true, patch };
+  const output = {
+    passed: true,
+    proposalOnly: true,
+    byteAuthenticated: false,
+    warning: "Preconstructed graph input is not a byte-authenticated evidence capture; use graph evidence-ingest for source evidence.",
+    patch,
+  };
   if (parsed.options.json) console.log(JSON.stringify(output, null, 2));
-  else console.log(`PROPOSED INGEST ${patch.patchId} (${patch.operations.length} operations); canonical graph unchanged`);
+  else console.log(`PROPOSED PRECONSTRUCTED GRAPH INPUT ${patch.patchId} (${patch.operations.length} operations); canonical graph unchanged; source bytes not authenticated`);
+}
+
+async function runGraphEvidenceIngest(parsed) {
+  const repoRoot = repoRootFrom(parsed);
+  const sourceFile = parsed.options.file;
+  const sourceUri = parsed.options["source-uri"];
+  const mediaType = parsed.options["media-type"];
+  if (!sourceFile || !sourceUri || !mediaType) {
+    throw new Error("graph evidence-ingest requires --file, --source-uri, and --media-type");
+  }
+  let locators = [];
+  if (parsed.options.locators) {
+    const locatorInput = await readJsonInput(repoRoot, parsed.options.locators, "evidence locators");
+    locators = Array.isArray(locatorInput) ? locatorInput : locatorInput.locators;
+    if (!Array.isArray(locators)) throw new Error("evidence locators file must be an array or contain a locators array");
+  }
+  const { snapshot, sourcePath } = await ingestEvidenceFile(repoRoot, {
+    file: sourceFile,
+    sourceUri,
+    mediaType,
+    capturedAt: parsed.options["captured-at"],
+    expectedSha256: parsed.options["expected-sha256"],
+    expiresAt: parsed.options["expires-at"],
+    locators,
+  }, {
+    limits: {
+      maximumBytes: parsed.options["max-bytes"],
+      maximumLocators: parsed.options["max-locators"],
+    },
+  });
+  const verification = await verifyEvidenceSnapshot(repoRoot, snapshot.snapshotId);
+  if (!verification.passed) throw new Error(`evidence snapshot failed immediate verification: ${snapshot.snapshotId}`);
+  const node = evidenceSnapshotToGraphNode(snapshot, {
+    label: parsed.options.label ?? path.basename(String(sourceFile)),
+    confidence: parsed.options.confidence ?? 1,
+    properties: { ingestSourcePath: sourcePath, ingestActor: proposalActor(parsed).agentId },
+  });
+  const patch = await proposeGraphPatch(repoRoot, {
+    operations: [{ type: "INSERT", node }],
+    evidenceRefs: [],
+    contradictionRefs: [],
+    proposedBy: proposalActor(parsed),
+    confidence: Number(parsed.options.confidence ?? 1),
+  }, { graphPath: parsed.options["graph-path"] });
+  const output = { passed: true, proposalOnly: true, sourcePath, snapshot, verification, patch };
+  if (parsed.options.json) console.log(JSON.stringify(output, null, 2));
+  else console.log(`SNAPSHOTTED ${snapshot.snapshotId} ${snapshot.raw.sha256}; proposed ${patch.patchId}; canonical graph unchanged`);
+}
+
+async function runGraphEvidenceVerify(parsed) {
+  const snapshotId = parsed.options.snapshot;
+  if (!snapshotId) throw new Error("graph evidence-verify requires --snapshot <id>");
+  const output = await verifyEvidenceSnapshot(repoRootFrom(parsed), String(snapshotId), { at: parsed.options.at });
+  if (parsed.options.json) console.log(JSON.stringify(output, null, 2));
+  else console.log(`EVIDENCE ${output.passed ? "VERIFIED" : "BLOCKED"} ${output.snapshotId} hash=${output.hashMatches} fresh=${output.fresh}`);
+  if (!output.passed) process.exitCode = 1;
 }
 
 async function runGraphPropose(parsed) {
@@ -662,17 +785,32 @@ async function runGraphGaps(parsed) {
 async function runGraphResearch(parsed) {
   const query = parsed.positional.slice(2).join(" ");
   if (!query) throw new Error("graph research requires a typed knowledge-gap query");
-  const receipt = await recordKnowledgeAction(repoRootFrom(parsed), {
-    type: "EXTERNAL_RESEARCH",
-    runId: parsed.options["run-id"],
-    caseId: parsed.options["case-id"],
+  const fixturePath = parsed.options["provider-fixture"];
+  if (!fixturePath) throw new Error("graph research requires --provider-fixture <json-file>; live providers must be supplied through the provider-neutral library port");
+  const repoRoot = repoRootFrom(parsed);
+  const fixture = await readLocalResearchFixture(repoRoot, fixturePath);
+  const provider = createLocalFixtureResearchProvider(repoRoot, fixture);
+  const output = await collectExternalResearch(repoRoot, {
+    provider,
+    query,
+    graphPath: parsed.options["graph-path"],
+    runId: parsed.options["run-id"] ?? `research:${Date.now()}`,
+    caseId: parsed.options["case-id"] ?? "case:knowledge-research",
     actorId: parsed.options["actor-id"] ?? "nodekit-cli",
-    input: { query, gapIds: String(parsed.options["gap-ids"] ?? "").split(",").filter(Boolean) },
-    budget: { maximumSearches: Number(parsed.options["max-searches"] ?? 1) },
-    status: "planned",
-  }, { graphPath: parsed.options["graph-path"] });
-  if (parsed.options.json) console.log(JSON.stringify({ passed: true, receipt }, null, 2));
-  else console.log(`PLANNED EXTERNAL_RESEARCH ${receipt.receiptId}; results require evidence anchors and a graph patch`);
+    gapIds: String(parsed.options["gap-ids"] ?? "").split(",").filter(Boolean),
+    proposedBy: proposalActor(parsed),
+    limits: {
+      maximumSearches: parsed.options["max-searches"],
+      maximumResultsPerSearch: parsed.options["max-results"],
+      maximumFetches: parsed.options["max-fetches"],
+      maximumBytesPerFetch: parsed.options["max-bytes-per-fetch"],
+      maximumTotalBytes: parsed.options["max-total-bytes"],
+      maximumLocatorsPerDocument: parsed.options["max-locators"],
+      maximumDurationMs: parsed.options["max-duration-ms"],
+    },
+  });
+  if (parsed.options.json) console.log(JSON.stringify({ passed: true, ...output }, null, 2));
+  else console.log(`COLLECTED ${output.collection.collectionId}; snapshotted ${output.collection.fetches.length} documents; proposed ${output.patch.patchId}; canonical graph unchanged`);
 }
 
 async function runGraphDiff(parsed) {
@@ -757,6 +895,121 @@ function optionList(parsed, name) {
   return String(value).split(",").map((entry) => entry.trim()).filter(Boolean);
 }
 
+function printAtlasUsage() {
+  console.log(`nodekit atlas <sub>
+
+  nodekit atlas init [--repo-root <path>] [--json]
+  nodekit atlas add --asset <yaml-file> --observation <path>
+      [--vendor <path>] [--notice <path>] [--derived-from <sha256>] [--repo-root <path>] [--json]
+  nodekit atlas add --flow <yaml-file> [--repo-root <path>] [--json]
+  nodekit atlas list [--repo-root <path>] [--json]
+  nodekit atlas inspect --id <assetId-or-flowId> [--repo-root <path>] [--json]
+  nodekit atlas search <terms...> [--target asset|flow|both] [--framework <id>] [--mobile <mode>]
+      [--accessibility A|AA|AAA] [--maturity <floor>] [--license-allowlist <spdx-list>] [--limit <1-50>] [--json]
+  nodekit atlas preview --ids <comma-list-max-4> [--repo-root <path>] [--json]
+  nodekit atlas recipe --id <assetId> [--flow <flowId>] [--allow-unvetted] [--repo-root <path>] [--json]
+  nodekit atlas repair --recipe <file> [--repo-root <path>] [--json]
+  nodekit atlas serve --mcp [--repo-root <path>]
+
+Flags come last: nodekit atlas list --repo-root . --json`);
+}
+
+async function runAtlasInit(parsed) {
+  const output = await initializeAtlasStore(repoRootFrom(parsed));
+  printStructured({ ...output, passed: true }, parsed, (value) => `INITIALIZED atlas store at ${value.atlasRoot}; no assets registered`);
+}
+
+async function runAtlasAdd(parsed) {
+  if (parsed.options.flow !== undefined && parsed.options.asset !== undefined) {
+    throw new Error("atlas add takes either --asset or --flow, not both");
+  }
+  if (parsed.options.flow !== undefined) {
+    const output = await addAtlasFlow(repoRootFrom(parsed), { flowFile: requireOption(parsed, "flow") });
+    printStructured(output, parsed, (value) => `${value.duplicate ? "UNCHANGED" : "REGISTERED"} ${value.flow.flowId}; ${value.flow.card.stateCoverage} states covered; maturity ${value.flow.quality.maturity}; nothing promoted`);
+    return;
+  }
+  const output = await addAtlasAsset(repoRootFrom(parsed), {
+    assetFile: requireOption(parsed, "asset"),
+    observationFile: requireOption(parsed, "observation"),
+    vendorFile: parsed.options.vendor === true ? undefined : parsed.options.vendor,
+    noticeFile: parsed.options.notice === true ? undefined : parsed.options.notice,
+    derivedFromSha256: parsed.options["derived-from"] === true ? undefined : parsed.options["derived-from"],
+  });
+  printStructured(output, parsed, (value) => `${value.duplicate ? "UNCHANGED" : "REGISTERED"} ${value.asset.assetId} (reuseMode ${value.asset.source.reuseMode}, ${value.asset.source.license.identifier}); maturity ${value.asset.quality.maturity}; nothing promoted`);
+}
+
+async function runAtlasList(parsed) {
+  const output = await listAtlasRecords(repoRootFrom(parsed));
+  printStructured(output, parsed, (value) => `LISTED ${value.counts.assets} assets, ${value.counts.flows} flows; byte identity not re-verified`);
+}
+
+async function runAtlasInspect(parsed) {
+  const output = await inspectAtlasRecord(repoRootFrom(parsed), requireOption(parsed, "id"));
+  printStructured(output, parsed, (value) => `ATLAS ${value.passed ? "PASS" : "BLOCKED"} ${value.id}: ${value.issues.length} issues, ${value.snapshotChecks.length} snapshots re-verified; nothing promoted`);
+  if (!output.passed) process.exitCode = 1;
+}
+
+async function runAtlasSearch(parsed) {
+  const terms = parsed.positional.slice(2).join(" ").trim();
+  if (!terms) throw new Error("atlas search requires search terms");
+  const target = parsed.options.target === true ? undefined : parsed.options.target;
+  const output = await atlasSearch(repoRootFrom(parsed), {
+    terms,
+    target,
+    kind: optionList(parsed, "kind"),
+    framework: parsed.options.framework === true ? undefined : parsed.options.framework,
+    language: optionList(parsed, "language"),
+    mobile: parsed.options.mobile === true ? undefined : parsed.options.mobile,
+    accessibility: parsed.options.accessibility === true ? undefined : parsed.options.accessibility,
+    maturityFloor: parsed.options.maturity === true ? undefined : parsed.options.maturity,
+    licenseAllowlist: optionList(parsed, "license-allowlist"),
+    noNewDeps: parsed.options["no-new-deps"] === true,
+    limit: parsed.options.limit === true ? undefined : parsed.options.limit,
+  });
+  printStructured(output, parsed, (value) => {
+    const excludedTotal = Object.values(value.excluded).reduce((sum, count) => sum + count, 0);
+    return `FOUND ${value.assets.length} assets, ${value.flows.length} flows (${excludedTotal} excluded by constraints); decision ${value.decision.status}; no compatibility determination made; nothing selected, vendored, or promoted`;
+  });
+  if (output.decision.status === "ABSTAIN") process.exitCode = 1;
+}
+
+async function runAtlasPreview(parsed) {
+  const ids = optionList(parsed, "ids");
+  const output = await atlasPreview(repoRootFrom(parsed), { ids });
+  printStructured(output, parsed, (value) => `PREVIEWED ${value.candidates.filter((entry) => entry.preview).length} candidates; ${value.differences.length} differing fields; decision ${value.decision.status}; nothing installed`);
+  if (output.decision.status === "ABSTAIN") process.exitCode = 1;
+}
+
+async function runAtlasRecipe(parsed) {
+  const output = await atlasRecipe(repoRootFrom(parsed), {
+    id: requireOption(parsed, "id"),
+    flowId: parsed.options.flow === true ? undefined : parsed.options.flow,
+    allowUnvetted: parsed.options["allow-unvetted"] === true,
+  });
+  printStructured(output, parsed, (value) => {
+    if (value.status) return `ATLAS ${value.status} ${value.reason}; nothing installed`;
+    return `RECIPE ${value.recipeId} for ${value.assetId}; ${value.files.length} files, ${value.responseBytes} bytes; deployment not authorized`;
+  });
+  if (output.status === "REFUSED" || output.status === "ABSTAIN") process.exitCode = 1;
+}
+
+async function runAtlasRepair(parsed) {
+  const repoRoot = repoRootFrom(parsed);
+  const recipe = await readJsonInput(repoRoot, requireOption(parsed, "recipe"), "atlas recipe");
+  const output = await atlasDelta(repoRoot, { recipe });
+  printStructured(output, parsed, (value) => {
+    if (value.status === "UNCHANGED") return `UNCHANGED ${value.recipeHash ?? "recipe"}; no repair needed`;
+    if (value.status === "CHANGED") return `CHANGED ${value.changedPaths.length} paths, ${value.changedFiles.length} files; ${value.repairSteps.length} repair steps; nothing installed`;
+    return `ATLAS ${value.status} ${value.reason ?? ""}; a fresh selection is required`.trim();
+  });
+  if (["SUPERSEDED", "GONE", "REFETCH_REQUIRED"].includes(output.status)) process.exitCode = 1;
+}
+
+async function runAtlasServe(parsed) {
+  if (parsed.options.mcp !== true) throw new Error("atlas serve currently supports only --mcp");
+  await serveAtlasMcp(repoRootFrom(parsed));
+}
+
 async function runEvolutionInit(parsed) {
   const output = await initializeEvolutionLedger(repoRootFrom(parsed));
   printStructured({ ...output, passed: true }, parsed, (value) => `INITIALIZED Evolution Ledger at ${value.evolutionRoot}`);
@@ -834,6 +1087,47 @@ async function runHarnessInit(parsed) {
     console.log("  Frontend Gym initialized with an unprofiled evidence-ranked route and three-direction contract");
     console.log("  automatic promotion disabled; no model capability claims were created");
   }
+}
+
+async function runBuilderGymInit(parsed) {
+  const output = await initializeBuilderGym(repoRootFrom(parsed));
+  printStructured(output, parsed, (value) => `INITIALIZED Builder Gym for ${value.applicationId}; evaluator ${value.evaluatorHash.slice(0, 12)}; promotion disabled`);
+}
+
+async function runBuilderGymEvaluate(parsed) {
+  const output = await evaluateBuilderGym(repoRootFrom(parsed), {
+    baseline: requireOption(parsed, "baseline"),
+    candidate: requireOption(parsed, "candidate"),
+    lock: requireOption(parsed, "lock"),
+    expectedLockHash: requireOption(parsed, "expected-lock-hash"),
+  });
+  printStructured(output, parsed, (value) => `BUILDER GYM ${value.passed ? "PASS" : "REGRESSION"}: ${value.outcome}; real-world claim and promotion not authorized`);
+  if (!output.passed) process.exitCode = 1;
+}
+
+async function runBuilderGymLock(parsed) {
+  const output = await createBuilderGymLock(repoRootFrom(parsed), requireOption(parsed, "baseline"));
+  printStructured(output, parsed, (value) => `LOCKED Builder Gym baseline ${value.baselineTrajectoryHash.slice(0, 12)}; evaluator ${value.evaluatorHash.slice(0, 12)}`);
+}
+
+async function runBuilderGymStatus(parsed) {
+  const output = await builderGymStatus(repoRootFrom(parsed));
+  printStructured(output, parsed, (value) => `BUILDER GYM: ${value.trajectoryCount} trajectories, ${value.lockCount} locks, ${value.verdictCount} verdicts, ${value.protectedTaskCount} protected tasks; real-world evidence absent`);
+}
+
+async function runBuilderGymInspect(parsed) {
+  const output = await inspectBuilderGymVerdict(repoRootFrom(parsed), requireOption(parsed, "ref"));
+  printStructured(output, parsed, (value) => `BUILDER GYM VERDICT VERIFIED ${value.verdict.comparisonId}; promotion not authorized`);
+}
+
+async function runTrajectoryRecord(parsed) {
+  const output = await recordNodeTraceTrajectory(repoRootFrom(parsed), requireOption(parsed, "file"));
+  printStructured(output, parsed, (value) => `RECORDED ${value.trajectory.trajectoryId}; protected evaluator ${value.evaluatorHash.slice(0, 12)}`);
+}
+
+async function runTrajectoryInspect(parsed) {
+  const output = await inspectNodeTraceTrajectory(repoRootFrom(parsed), requireOption(parsed, "ref"));
+  printStructured(output, parsed, (value) => `NODETRACE VERIFIED ${value.trajectory.trajectoryId}; seven verdict dimensions present`);
 }
 
 async function runModelsBaseline(parsed) {
@@ -931,7 +1225,7 @@ async function runSkillsBenchmark(parsed) {
 
 async function runSkillsPromote(parsed) {
   const output = await promoteSkillCandidate(repoRootFrom(parsed), requireOption(parsed, "candidate"), {
-    approvedBy: requireOption(parsed, "approved-by"),
+    approvalPath: requireOption(parsed, "approval"),
     canaryPath: requireOption(parsed, "canary"),
     proofPath: requireOption(parsed, "proof-receipt"),
   });
@@ -950,7 +1244,7 @@ async function runRoutingCompile(parsed) {
 
 async function runRoutingCanary(parsed) {
   const output = await verifyCanary(repoRootFrom(parsed), requireOption(parsed, "receipt"));
-  printStructured(output, parsed, (value) => `CANARY PASS ${value.canaryId} for ${value.candidateId}`);
+  printStructured(output, parsed, (value) => `CANARY PASS ${value.receiptId} for ${value.candidateId}; trusted evaluator ${value.trustedKeyId}`);
 }
 
 async function runHarnessTournament(parsed) {
@@ -960,7 +1254,7 @@ async function runHarnessTournament(parsed) {
 
 async function runHarnessStatus(parsed) {
   const output = await harnessStatus(repoRootFrom(parsed));
-  printStructured(output, parsed, (value) => `HARNESS ${value.version}: ${value.observations} observations, ${value.capabilityCards} cards, ${value.skillCandidates.length} candidates; routing uncertified`);
+  printStructured(output, parsed, (value) => `HARNESS ${value.version}: ${value.observations} observations, ${value.capabilityCards} cards, ${value.skillCandidates.length} candidates; Builder Gym ${value.builderGym.trajectories} trajectories; routing uncertified`);
 }
 
 async function runHarnessRollback(parsed) {
@@ -974,6 +1268,8 @@ async function runHarnessGate(parsed) {
     activeVersionPromoted: /^h[1-9]\d*$/.test(output.version),
     automaticPromotionDisabled: output.automaticPromotion === false,
     benchmarkBound: typeof output.benchmarkHash === "string" && output.benchmarkHash.length === 64,
+    builderGymMechanicsReady: output.builderGym.mechanicsReady === true,
+    builderGymPromotionDisabled: output.builderGym.automaticPromotion === false && output.builderGym.promotionAuthorized === false,
     noOpenCandidates: output.skillCandidates.every((entry) => !["proposed", "reviewed", "benchmark-passed"].includes(entry.status)),
     routingCertified: output.routingCertified === true,
   };
@@ -984,7 +1280,7 @@ async function runHarnessGate(parsed) {
 
 async function main() {
   const parsed = parseArgs(process.argv.slice(2));
-  const [first, second] = parsed.positional;
+  const [first, second, third] = parsed.positional;
   if (!first || first === "help" || first === "--help") {
     printHelp();
     return;
@@ -1045,6 +1341,14 @@ async function main() {
   }
   if (first === "graph" && second === "ingest") {
     await runGraphIngest(parsed);
+    return;
+  }
+  if (first === "graph" && second === "evidence-ingest") {
+    await runGraphEvidenceIngest(parsed);
+    return;
+  }
+  if (first === "graph" && second === "evidence-verify") {
+    await runGraphEvidenceVerify(parsed);
     return;
   }
   if (first === "graph" && second === "inspect") {
@@ -1115,6 +1419,47 @@ async function main() {
     await runFrontendCanary(parsed);
     return;
   }
+  if (first === "atlas" && second === "init") {
+    await runAtlasInit(parsed);
+    return;
+  }
+  if (first === "atlas" && second === "add") {
+    await runAtlasAdd(parsed);
+    return;
+  }
+  if (first === "atlas" && second === "list") {
+    await runAtlasList(parsed);
+    return;
+  }
+  if (first === "atlas" && second === "inspect") {
+    await runAtlasInspect(parsed);
+    return;
+  }
+  if (first === "atlas" && second === "search") {
+    await runAtlasSearch(parsed);
+    return;
+  }
+  if (first === "atlas" && second === "preview") {
+    await runAtlasPreview(parsed);
+    return;
+  }
+  if (first === "atlas" && second === "recipe") {
+    await runAtlasRecipe(parsed);
+    return;
+  }
+  if (first === "atlas" && second === "repair") {
+    await runAtlasRepair(parsed);
+    return;
+  }
+  if (first === "atlas" && second === "serve") {
+    await runAtlasServe(parsed);
+    return;
+  }
+  if (first === "atlas") {
+    printAtlasUsage();
+    if (second) process.exitCode = 1;
+    return;
+  }
   if (first === "evolution" && second === "init") {
     await runEvolutionInit(parsed);
     return;
@@ -1153,6 +1498,34 @@ async function main() {
   }
   if (first === "harness" && second === "init") {
     await runHarnessInit(parsed);
+    return;
+  }
+  if (first === "harness" && second === "builder" && third === "init") {
+    await runBuilderGymInit(parsed);
+    return;
+  }
+  if (first === "harness" && second === "builder" && third === "evaluate") {
+    await runBuilderGymEvaluate(parsed);
+    return;
+  }
+  if (first === "harness" && second === "builder" && third === "lock") {
+    await runBuilderGymLock(parsed);
+    return;
+  }
+  if (first === "harness" && second === "builder" && third === "status") {
+    await runBuilderGymStatus(parsed);
+    return;
+  }
+  if (first === "harness" && second === "builder" && third === "inspect") {
+    await runBuilderGymInspect(parsed);
+    return;
+  }
+  if (first === "harness" && second === "trajectory" && third === "record") {
+    await runTrajectoryRecord(parsed);
+    return;
+  }
+  if (first === "harness" && second === "trajectory" && third === "inspect") {
+    await runTrajectoryInspect(parsed);
     return;
   }
   if (first === "models" && second === "baseline") {
