@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://nodekit.dev/schemas/nodekit.opportunity-contract.v1.schema.json",
+  "title": "NodeKit opportunity contract",
+  "type": "object",
+  "required": ["schemaVersion", "user", "problem", "wedge", "primaryJob", "inputs", "primaryArtifact", "rejectedAlternatives", "openUnknowns", "successCondition", "authorityLimits"],
+  "properties": {
+    "schemaVersion": { "const": "nodekit.opportunity-contract/v1" },
+    "user": { "$ref": "#/$defs/nonEmpty" },
+    "problem": { "$ref": "#/$defs/nonEmpty" },
+    "wedge": { "$ref": "#/$defs/nonEmpty" },
+    "primaryJob": { "$ref": "#/$defs/nonEmpty" },
+    "inputs": { "$ref": "#/$defs/nonEmptyStrings" },
+    "primaryArtifact": { "$ref": "#/$defs/nonEmpty" },
+    "rejectedAlternatives": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 24,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["alternative", "reason"],
+        "properties": {
+          "alternative": { "$ref": "#/$defs/nonEmpty" },
+          "reason": { "$ref": "#/$defs/nonEmpty" }
+        }
+      }
+    },
+    "openUnknowns": { "$ref": "#/$defs/nonEmptyStrings" },
+    "successCondition": { "$ref": "#/$defs/nonEmpty" },
+    "authorityLimits": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["read", "propose", "approve", "prohibited"],
+      "properties": {
+        "read": { "$ref": "#/$defs/nonEmptyStrings" },
+        "propose": { "$ref": "#/$defs/stringList" },
+        "approve": { "$ref": "#/$defs/stringList" },
+        "prohibited": { "$ref": "#/$defs/nonEmptyStrings" }
+      }
+    }
+  },
+  "$defs": {
+    "nonEmpty": { "type": "string", "minLength": 1 },
+    "nonEmptyStrings": { "type": "array", "minItems": 1, "maxItems": 24, "uniqueItems": true, "items": { "$ref": "#/$defs/nonEmpty" } },
+    "stringList": { "type": "array", "minItems": 0, "maxItems": 24, "uniqueItems": true, "items": { "$ref": "#/$defs/nonEmpty" } }
+  },
+  "additionalProperties": false
+}

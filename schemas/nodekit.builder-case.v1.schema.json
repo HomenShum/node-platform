@@ -1,0 +1,78 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://nodekit.dev/schemas/nodekit.builder-case.v1.schema.json",
+  "title": "NodeKit builder case",
+  "type": "object",
+  "required": ["schemaVersion", "caseId", "title", "currentStage", "stages"],
+  "properties": {
+    "schemaVersion": { "const": "nodekit.builder-case/v1" },
+    "caseId": { "$ref": "#/$defs/nonEmpty" },
+    "title": { "$ref": "#/$defs/nonEmpty" },
+    "currentStage": { "$ref": "#/$defs/stageId" },
+    "stages": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["decide", "build", "explain", "launch", "learn"],
+      "properties": {
+        "decide": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["status", "opportunityContractRef", "receiptRef"],
+          "properties": {
+            "status": { "$ref": "#/$defs/stageStatus" },
+            "opportunityContractRef": { "$ref": "#/$defs/ref" },
+            "receiptRef": { "$ref": "#/$defs/ref" }
+          }
+        },
+        "build": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["status", "productContractRef", "applicationRef", "buildReceiptRef"],
+          "properties": {
+            "status": { "$ref": "#/$defs/stageStatus" },
+            "productContractRef": { "$ref": "#/$defs/ref" },
+            "applicationRef": { "$ref": "#/$defs/ref" },
+            "buildReceiptRef": { "$ref": "#/$defs/ref" }
+          }
+        },
+        "explain": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["status", "storyPackRef", "presentationReceiptRef"],
+          "properties": {
+            "status": { "$ref": "#/$defs/stageStatus" },
+            "storyPackRef": { "$ref": "#/$defs/ref" },
+            "presentationReceiptRef": { "$ref": "#/$defs/ref" }
+          }
+        },
+        "launch": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["status", "launchManifestRef", "deploymentReceiptRef"],
+          "properties": {
+            "status": { "$ref": "#/$defs/stageStatus" },
+            "launchManifestRef": { "$ref": "#/$defs/ref" },
+            "deploymentReceiptRef": { "$ref": "#/$defs/ref" }
+          }
+        },
+        "learn": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["status", "observationPackRef", "receiptRef"],
+          "properties": {
+            "status": { "$ref": "#/$defs/stageStatus" },
+            "observationPackRef": { "$ref": "#/$defs/ref" },
+            "receiptRef": { "$ref": "#/$defs/ref" }
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "nonEmpty": { "type": "string", "minLength": 1 },
+    "ref": { "type": "string" },
+    "stageId": { "enum": ["decide", "build", "explain", "launch", "learn"] },
+    "stageStatus": { "enum": ["pending", "active", "ready", "complete"] }
+  },
+  "additionalProperties": false
+}

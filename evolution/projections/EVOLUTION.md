@@ -34,6 +34,16 @@ Canonical JSON records remain authoritative. This projection explains why materi
 - Evidence: `evd:guided-intake-mobile-decisions-materiality` (partial)
 - Known limitations: The materiality review is not final screenshot evidence and does not certify an uncommitted or later source revision.; Fresh-user timing and consented human usability trials remain open external proof gates.
 
+### NodeKit had powerful engines but no coherent vehicle carrying a builder from an idea to a live, improving product, and its worst seam let the coding agent make product decisions while coding, so strong technical work still shipped the wrong interface.
+
+- Event: `evt:builder-journey-j0`
+- Source: `8325be69ee42c66ddc940f405e2bb0b3fe91e197`
+- Resolution: Added the Builder Journey J0: nodekit.builder-case/v1 carries one venture through DECIDE to BUILD to EXPLAIN to LAUNCH to LEARN with one handoff artifact and receipt per stage, reusing Caseflow. nodekit.opportunity-contract/v1 is the Decide handoff that records the user, problem, wedge, primary job, inputs, primary artifact, rejected alternatives, open unknowns, success condition, and authority limits, so scope cannot be re-decided while coding. advanceStage is fail-closed: it blocks unless the stage's handoff artifact and a receipt exist and the receipt binds that artifact by content hash.
+- Observed failure: There was no object sequencing the stages, and no approved boundary the coding agent had to build against; scope was re-decided during implementation.
+- Invariants: `inv:builder-journey-stage-handoff` (partially-verified)
+- Evidence: `evd:builder-journey-j0` (partial)
+- Known limitations: Only the Decide to Build seam has a real handoff contract; the other four handoff artifacts are named and referenced but not yet given schemas or generators.; The builder journey is a contract and a fail-closed advance rule, not yet a running product surface, and no real builder has carried a case end to end.; The salon slice is a fixture, not a certified application; the EASE verdict remains EASE_NOT_CERTIFIED.
+
 ## Architecture evolution
 
 ### Structural availability was mislabeled as browser certification.

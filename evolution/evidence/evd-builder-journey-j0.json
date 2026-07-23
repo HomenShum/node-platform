@@ -1,0 +1,18 @@
+{
+  "schemaVersion": "nodekit.evolution-evidence/v1",
+  "id": "evd:builder-journey-j0",
+  "kind": "test",
+  "artifactRef": "git:8325be69ee42c66ddc940f405e2bb0b3fe91e197:evolution/artifacts/builder-journey-j0.md",
+  "sha256": "d079ca840a6ad307da44cf72c2e675139961534417a9b6c336aff780f7e447bc",
+  "sourceCommit": "8325be69ee42c66ddc940f405e2bb0b3fe91e197",
+  "generatedAt": "2026-07-23T06:15:00-07:00",
+  "environment": {
+    "reviewSurface": "node-platform",
+    "suites": "builder-journey 7/7 (blocked-until-contract, advances-once-bound, forged-binding-stays-blocked, corrupt-receipt-blocked, salon-fixture-validates, view-reports-needs), schemas parse + validate, typecheck:public exit 0, zero new runtime deps",
+    "evidenceBoundary": "Proves the builder-case advance rule is fail-closed and reuses Caseflow. It does not run a real end-to-end builder journey or certify any application; EASE_NOT_CERTIFIED stands."
+  },
+  "verifiesInvariantIds": [
+    "inv:builder-journey-stage-handoff"
+  ],
+  "result": "partial"
+}
