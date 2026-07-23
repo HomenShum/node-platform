@@ -64,9 +64,13 @@
     "automaticPromotion": { "const": false },
     "compiledFrom": {
       "type": "object",
-      "required": ["harnessHash", "benchmarkHash", "cardHashes"],
+      "required": ["harnessHash", "harnessVersion", "harnessVersionManifestHash", "skillStackHash", "activeSkillHashes", "benchmarkHash", "cardHashes"],
       "properties": {
         "harnessHash": { "$ref": "#/$defs/hash" },
+        "harnessVersion": { "type": "string", "pattern": "^h[0-9]+$" },
+        "harnessVersionManifestHash": { "$ref": "#/$defs/hash" },
+        "skillStackHash": { "$ref": "#/$defs/hash" },
+        "activeSkillHashes": { "type": "array", "items": { "$ref": "#/$defs/hash" }, "uniqueItems": true },
         "benchmarkHash": { "$ref": "#/$defs/hash" },
         "cardHashes": { "type": "array", "items": { "$ref": "#/$defs/hash" }, "uniqueItems": true }
       },

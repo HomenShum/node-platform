@@ -2,15 +2,21 @@
 @media (max-width: 640px) {
   .state-banner {
     align-items: flex-start;
-    gap: 0.85rem;
+    flex-direction: column;
+    gap: 0.5rem;
   }
 
   .state-banner > div {
     min-width: 0;
+    width: 100%;
+    overflow-wrap: anywhere;
   }
 
   .state-kind {
     flex: 0 0 auto;
+    width: fit-content;
+    max-width: 100%;
+    white-space: nowrap;
   }
 
   aside {

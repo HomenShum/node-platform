@@ -45,6 +45,8 @@ The current source includes deterministic machinery for:
 - proof-bundle download, reopen, canonical artifact re-hash, and receipt-body re-hash;
 - cold/warm timing aggregation that requires exactly 60 unique self-hashed trials;
 - fresh coding-agent v2 aggregation that requires exactly 15 unique real CLI sessions;
+- fail-closed protected fresh-agent evaluation in two separately inspected Docker containers on an
+  internal-only bridge, bound to one exact image ID and a content-addressed browser lane;
 - fresh packed-consumer installation and execution of the installed Convex component;
 - recursive, fail-closed submission evaluation of decisive receipts, nested evidence, and tarball;
 - PostgreSQL conformance and the local Supabase managed-profile contract;
@@ -78,7 +80,10 @@ integrated and independently reviewed. Do not claim the full suite is green befo
 - [ ] Run the fresh-agent v2 matrix: research map, volunteer onboarding, and launch presentation,
       each through Codex three times, Claude once, and a lower-cost agent once. All 15 real CLI
       sessions must be unique, writable, isolated, zero-reprompt, and substantively change non-proof
-      files.
+      files. Provision Docker and the versioned Playwright image first; every protected evaluator
+      run must retain a distinct valid isolation receipt while sharing the exact image ID and browser
+      lane hash. Host fallback, external egress, candidate evidence access, or a writable candidate
+      server mount blocks the matrix.
 - [ ] Pack the candidate and pass the fresh-consumer install/create/compile/check/demo/eval path,
       including execution of the exact installed Convex component.
 - [ ] Run independent ProofLoop integrity verification over the final candidate archive and every
@@ -103,8 +108,10 @@ work. They do not close this gate for the current revision.
 - [ ] Consent, timestamps, recordings or exact screenshots, interventions, and participant-level
       receipts are retained.
 
-Template: `proof/ease/fresh-users.template.json`. This gate requires real people and cannot be
-replaced by an agent simulation. Evaluate the completed study with
+Template: `proof/ease/fresh-users.template.json`. The privacy-safe, append-only operator runbook is
+`docs/FRESH_HUMAN_USABILITY_STUDY.md`; start it with `npm run ease:human-study -- help`. It creates
+anonymous, timer- and byte-addressed session evidence but does not fabricate or replace the five
+real people. Evaluate the assembled study with
 `npm run ease:evaluate-humans -- proof/ease/fresh-users.json`.
 
 ### 2. Three authenticated Convex-backed consumers

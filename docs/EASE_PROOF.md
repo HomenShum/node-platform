@@ -14,21 +14,54 @@ Passing one subject never implies another.
 
 ```bash
 npm run acceptance:factory
-npm run acceptance:agent -- --task=volunteer-onboarding --agentProfile=codex --nodekit-tarball=<exact-candidate.tgz> --nodekit-tarball-sha256=<64-char-tarball-hash>
-npm run acceptance:agent -- --task=volunteer-onboarding --agentProfile=claude-code --executor=native --nodekit-tarball=<exact-candidate.tgz> --nodekit-tarball-sha256=<64-char-tarball-hash>
-npm run acceptance:agent -- --task=volunteer-onboarding --agentProfile=lower-cost --agentDriver=codex --agentModel=<explicit-lower-cost-model> --nodekit-tarball=<exact-candidate.tgz> --nodekit-tarball-sha256=<64-char-tarball-hash>
-npm run ease:evaluate-agents -- --candidate=<40-char-commit> --source-hash=<64-char-source-hash> --nodekit-tarball=<exact-candidate.tgz> --nodekit-tarball-sha256=<64-char-tarball-hash>
+docker pull mcr.microsoft.com/playwright:v1.61.1-noble
+npm run ease:run-agent-matrix -- \
+  --campaign=<immutable-campaign-id> \
+  --candidate=<40-char-commit> \
+  --source-hash=<64-char-source-hash> \
+  --nodekit-tarball=<exact-candidate.tgz> \
+  --nodekit-tarball-sha256=<64-char-tarball-hash> \
+  --lower-cost-driver=<codex-or-claude-code> \
+  --lower-cost-model=<explicit-materially-lower-cost-model> \
+  --lower-cost-evidence=<official-pricing-evidence.json> \
+  --codex-model=<exact-codex-model> \
+  --claude-model=<exact-claude-model> \
+  --protected-container-image=mcr.microsoft.com/playwright:v1.61.1-noble \
+  --concurrency=1
 ```
+
+`ease:run-agent-matrix` is the qualifying entry point: it pins the immutable task set and runner,
+builds all 15 required profile/task attempts, preserves the official lower-cost evidence snapshot,
+and invokes the protected aggregate evaluator. `acceptance:agent` remains an internal diagnostic
+primitive used by that orchestrator; a hand-written standalone invocation cannot supply the complete
+immutable campaign bindings and does not qualify as submission evidence. Use shell-appropriate line
+continuation syntax when copying the example (PowerShell uses a backtick instead of `\\`).
+Docker is mandatory for the qualifying fresh-agent matrix. The orchestrator resolves the selected
+image to its exact `sha256:` image ID before it creates any run. A missing daemon, absent image, or
+image-ID drift fails the campaign; there is no host-process evaluator fallback. Pulling the versioned
+Playwright image above is the one-time provisioning step for the default lane.
+
+These evaluator commands deliberately emit unsigned measurement bodies. After
+an independent reviewer checks the raw output, use
+`npm run submission:finalize-evidence` with the exact release identity and a
+one-purpose external key policy. The finalizer reopens all referenced evidence,
+validates the decisive schema, and embeds the canonical payload plus detached
+signature; it does not make the key trusted or turn a missing study into proof.
+See [Trusted submission attestations](./ATTESTATIONS.md).
 
 The factory command first packs the clean NodeKit candidate, then starts its decisive clock at an empty launcher before even `package.json` exists. The measured journey installs that exact tarball, invokes its installed CLI, binds the same tarball into the generated app, installs app and browser dependencies, and continues through compile, checks, demo, eval, rendered browser work, reload, and proof. It produces phase-level timers and 180 candidate-bound PNGs: 15 required lifecycle states across six viewport profiles and two themes. It also preserves screenshot sidecars, an archived generated candidate, exact application/config/tarball identities, CI runner provenance, and a fail-closed manifest under `proof/ease/latest/`. Candidate packaging and a warm-cache priming pass are disclosed separately and are never hidden inside the measured setup time.
 
-The coding-agent command starts with an empty launcher, inspects and installs the required exact `.tgz`, invokes the CLI from that installed package, binds the same tarball into the generated repository, installs dependencies, compiles, and commits that clean baseline before the fresh agent sees it. It never imports the current checkout's scaffold implementation as a shortcut. `--agentProfile` is mandatory evidence, not a label inferred after the run: `codex` uses the Codex driver, `claude-code` uses the Claude Code driver, and `lower-cost` requires an explicit driver and model identifier. It records the exact package name, package version, tarball SHA-256, generated `applicationHash` and `configHash`, prompt, JSONL session, command hashes, token-bearing events, zero-intervention ledger, candidate diff/archive, post-agent gates, screenshots, and a hash-bound evidence manifest. A process exit is insufficient: the run fails unless the agent makes substantive non-proof changes and its final report is not blocked. One successful run is a pilot, not repeatability certification.
+The coding-agent command starts with an empty launcher, inspects and installs the required exact `.tgz`, invokes the CLI from that installed package, binds the same tarball into the generated repository, installs dependencies, compiles, and commits that clean baseline before the fresh agent sees it. It never imports the current checkout's scaffold implementation as a shortcut. `--agentProfile` is mandatory evidence, not a label inferred after the run: `codex` uses the Codex driver, `claude-code` uses the Claude Code driver, and `lower-cost` uses its preregistered lower-cost driver. Every live profile requires an explicit model identifier. The short-lived provider broker receives that identifier as `NODEKIT_BROKER_ALLOWED_MODEL`, rejects model drift, and records the allowed model in its self-hashed isolation receipt. It records the exact package name, package version, tarball SHA-256, generated `applicationHash` and `configHash`, prompt, sanitized JSONL session, command hashes, numeric token totals plus raw-event hashes, zero-intervention ledger, candidate diff/archive, post-agent gates, screenshots, and a hash-bound evidence manifest. Candidate-controlled post-agent commands run with no network, a read-only container root, dropped capabilities, no new privileges, bounded resources, and only the generated workspace mounted. The protected empty-directory lane additionally requires the exact scaffold invocation to be the first recorded coding-agent command; a command-name heuristic is not accepted as proof of the first write. A process exit is insufficient: the run fails unless the agent makes substantive non-proof changes and its final report is not blocked. One successful run is a pilot, not repeatability certification.
 
-Only `nodekit.agent-ease-trial/v2` trials qualify. Every trial binds the starting and ending NodeKit commit and distributable source hash, the inspected package name/version/tarball hash, generated application identity, fresh CLI session ID found in its JSONL transcript, a recomputable receipt hash, and hashes for all required evidence files. All evidence paths must use their one canonical repository-relative POSIX spelling; aliases such as `agent//session.jsonl` or `agent/./session.jsonl` fail. All 15 session IDs and session-transcript hashes must be distinct. The evaluator independently reopens the same required tarball, selects every v2 attempt bound to the candidate commit/source identity, and rejects any attempt using another tarball rather than filtering it away. It also rejects extra, missing, failed, duplicate, tampered, or unreported attempts and emits the exact package identity as `releaseCandidate`. It never chooses the latest passing run. Historical v1 pilots remain useful diagnostics but cannot satisfy submission.
+After the candidate tree and archive are frozen, a content-addressed evaluator outside the generated repository creates a nonce-bearing hidden task input. The candidate never receives the evaluator, rubric, expected output, or protected evidence; it receives only that task input through the same browser form a user operates. The evaluator verifies the immutable task and task-set bytes, exact NodeKit identities, candidate archive/tree, generated application identity, and an exact task-specific transformation. Research cases use only supplied immutable source packet IDs, excerpts, timestamps, and content hashes; they make no live or “latest” claim. The candidate server receives an evidence-free extraction of the frozen archive as its only read-only bind mount. It runs as a non-root process with a read-only root filesystem, dropped capabilities, no new privileges, bounded resources, no published ports, and no external egress. A second container on the same Docker-internal bridge runs the content-addressed browser lane. That browser container cannot mount the candidate tree or evaluator oracle; its only writable mount is a new evaluator scratch directory. It first resets the server, captures the exact 15-state × six-viewport × two-theme matrix itself, resets again, and then completes the hidden guided task, export, reload, reopen, and receipt journey. Every matrix state runs pinned Axe 4.12.1; any serious or critical violation fails. Playwright, Playwright Core, Axe Playwright, and Axe Core are exact-version, read-only mounts whose complete package trees are hash-bound in the isolation receipt. The lane also proves public-network egress is blocked and captures the task-relevance PNG. Container IDs, dependency tree hashes, mount summaries, Docker server identity, image reference and exact image ID, internal-network ID, and every isolation check are self-hashed into both evaluator receipts. The evaluator output directory is created only after the coding agent exits; a pre-existing, candidate-authored, host-fallback, image-drifted, or incompletely isolated result is rejected. Candidate-owned browser output remains diagnostic. The separately hash-bound visual inventory and protected evaluation bind the protected manifest, all 180 PNGs, all 180 sidecars, the decoded-pixel evidence root, and the independent evaluator screenshot. Qualifying runs require zero open P0/P1 issues.
+
+That automated visual inventory is not the five-human usability study and says so in its typed receipt (`separateFromHumanUsability: true`, `humanUsabilityGateSatisfied: false`). It proves the enumerated layout, browser-health, serious/critical Axe, screenshot-integrity, and task-output checks. Moderate and minor Axe findings remain recorded rather than erased. It does not certify complete WCAG conformance, human comprehension, taste, or ease.
+
+Only `nodekit.agent-ease-trial/v2` trials qualify. Every trial binds the starting and ending NodeKit commit and distributable source hash, the inspected package name/version/tarball hash, generated application identity, fresh CLI session ID found in its JSONL transcript, protected evaluator and browser-lane SHA-256 values, protected Docker image reference and exact image ID, isolation self-hash, task-specific evaluation, independent evaluator screenshot, visual-review inventory, exact screenshot-evidence root, a recomputable receipt hash, and hashes for all required evidence files. All evidence paths must use their one canonical repository-relative POSIX spelling; aliases such as `agent//session.jsonl` or `agent/./session.jsonl` fail. All 15 session IDs, session-transcript hashes, and isolation hashes must be distinct, while every run must use the same protected lane and exact image. The aggregate evaluator independently reopens the same required tarball, evaluator, candidate archive, task-bound receipts, isolation records, and transitive screenshot closure; selects every v2 attempt bound to the candidate commit/source identity; and rejects any attempt using another tarball rather than filtering it away. It also rejects extra, missing, failed, duplicate, candidate-authored, host-fallback, isolation-tampered, or unreported attempts and emits the exact package identity as `releaseCandidate`. It never chooses the latest passing run. Historical v1 pilots remain useful diagnostics but cannot satisfy submission.
 
 ## Human protocol
 
-Recruit at least five people who did not build NodeKit. Give only:
+Recruit exactly five people who did not build NodeKit. Give only:
 
 > Use this app to complete the job shown on screen.
 
@@ -38,12 +71,16 @@ Each participant must have two repository-relative, content-addressed evidence o
 
 The human gate requires at least 4/5 unassisted completions, at least 4/5 participants able to explain the outcome, locate the canonical artifact, and locate unresolved issues, median first meaningful action under 30 seconds, median neutral journey under three minutes, median SEQ at least 6/7, and zero P0/P1 usability failures.
 
-Use `proof/ease/fresh-users.template.json` as the append-only recording shape. Identifying information is intentionally excluded.
+Use `npm run ease:human-study -- help` and
+`docs/FRESH_HUMAN_USABILITY_STUDY.md` to capture each real observation. The operator generates an
+anonymous ID, rejects participant PII flags, records hash-chained OS-monotonic events, requires an
+exact completion PNG, and materializes the existing evaluator-compatible shape without overwriting
+prior evidence. `proof/ease/fresh-users.template.json` remains a not-run example, not evidence.
 
 ## Required repeatability
 
 - Developer: exactly five cold and five warm trials for Windows/npm, Windows/pnpm, Ubuntu/npm, Ubuntu/pnpm, macOS/npm, and macOS/pnpm for one immutable commit/source-hash/tarball identity. Each raw timing receipt carries a self-hash over its complete body, the generated application identity, generated candidate archive identity, detailed launcher/app/browser installation times, package-manager version, and GitHub run/attempt/workflow/runner-image provenance. The evaluator recomputes all 60 hashes, rejects duplicate run IDs or hashes and extra/missing runs, and emits all 60 rows in `selectedRuns`; aggregate timing cells alone can never pass submission.
-- Coding agent: for each of the three held-out tasks, run exactly three fresh Codex sessions, one fresh Claude Code session, and one fresh lower-cost-agent session: 15 exact-candidate trials total. Use a materially lower-cost model for the lower-cost slot and record its exact model identifier. Report every attempt; any failed or additional v2 attempt bound to the candidate blocks the matrix instead of being cherry-picked away. Use `proof/ease/fresh-agent-matrix.template.json` as the execution ledger.
+- Coding agent: for each of the three held-out tasks, run exactly three fresh Codex sessions, one fresh Claude Code session, and one fresh lower-cost-agent session: 15 exact-candidate trials total. Pin and record the exact model for every live session; use a materially lower-cost model for the lower-cost slot. Report every attempt; any failed or additional v2 attempt bound to the candidate blocks the matrix instead of being cherry-picked away. Use `proof/ease/fresh-agent-matrix.template.json` as the execution ledger.
 - End user: five uncoached people.
 - Convex: NodeRoom, NodeSlide, and NodeVideo must materially adopt the same lifecycle and pass reactive two-session, reload, preview, and fresh-user journeys.
 
@@ -80,8 +117,13 @@ decisive verdict, rejects missing or extra entries, and rehashes every byte agai
 
 - Developer timing includes `proof/ease/developer-timing-runs.json`; the evaluator recomputes the
   verdict from all 60 complete self-hashed receipts and requires an exact match.
-- Fresh-agent evidence uses unambiguous repository-relative paths. Each of 15 manifests and all 16
-  evidence files per run are required: 255 transitive files in addition to the verdict.
+- Fresh-agent evidence uses unambiguous repository-relative paths. Each of 15 manifests and all 19
+  direct evidence files per run remain required. The candidate-owned browser closure is diagnostic;
+  the decisive evaluator separately contributes one protected manifest, 180 protected PNGs, and 180
+  protected sidecars per run. The trial runner, aggregate evaluator, and final signer reopen the full
+  protected closure, validate PNG CRC/dimensions/decoded pixels, reject visual reuse, recompute its
+  evidence root, and bind it through the protected evaluation. A candidate-authored browser script,
+  self-asserted task result, metadata-only PNG variation, or zero exit code cannot certify itself.
 - Human, consumer, preview, managed-Supabase, protected knowledge-evolution, model-intelligence,
   engineering-health, and ProofLoop verdicts carry typed repository-relative evidence references.
   Consumer and preview evidence kinds are exact, not minimum counts.

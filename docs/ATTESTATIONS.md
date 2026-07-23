@@ -96,6 +96,95 @@ all fail closed.
 
 ## Offline signing and verification
 
+### Fail-closed evidence finalization
+
+The preferred handoff is `nodekit-evidence-finalize` (or
+`npm run submission:finalize-evidence`). It accepts an already-measured,
+passing raw evaluator verdict. It never runs a study, fills missing fields,
+changes a threshold, chooses favorable attempts, or infers an observation.
+Before it writes a decisive verdict it:
+
+1. requires the caller to repeat the exact commit, source hash, package name,
+   package version, and tarball hash;
+2. compares those values with the raw verdict and its `releaseCandidate`;
+3. reopens and hashes every transitive evidence reference inside the repository;
+4. requires a one-purpose signing-key policy and proves that the external
+   private key matches that policy's public key;
+5. creates the canonical external-gate payload and detached Ed25519 envelope;
+6. validates the completed gate-specific JSON schema and submission contract;
+7. self-verifies the signature and reopens the evidence a second time.
+
+The workflow supports all eight externally observed gates. The developer
+timing, fresh-agent, and fresh-human evaluators can be passed directly as raw
+inputs; consumers, preview, managed Supabase, Knowledge Evolution, and Model
+Intelligence use the same command after an independent reviewer has produced
+the complete gate-specific draft verdict. No collector is hidden in the
+finalizer.
+
+It also has two explicit authority modes:
+
+- `proofloopEaseVerification` accepts only a complete independent draft that
+  already says `passed`, identifies the independent verifier, contains exactly
+  the 11 preregistered decisive evidence references, and contains the
+  independent verification reference in its reviewed `attestationPayload`.
+  The finalizer reopens all 12 files, recomputes the canonical payload, and
+  refuses missing, extra, aliased, or drifted evidence. It does not declare the
+  verification independent.
+- `publicationApproval` accepts only a complete owner-authored approval draft.
+  The draft must already contain approver identity, approval timestamp, exactly
+  `npm-publish` and `convex-directory-submit`, and a reviewed canonical payload
+  pointing to `proof/submission-candidate.json`. The finalizer reopens that
+  prepared candidate and signs the existing decision. It never approves a
+  release or invents an approver.
+
+The public signing policy contains no private material and must authorize
+exactly the gate being finalized. The machine-readable contract is
+`schemas/nodekit.attestation-signing-key-policy.v1.schema.json`; the finalizer
+also validates the PEM as an Ed25519 public key and compares it with the
+external private key before signing. The CLI refuses a private-key path inside
+the evidence repository. A policy looks like:
+
+```json
+{
+  "schemaVersion": "nodekit.attestation-signing-key-policy/v1",
+  "keyId": "human-reviewer-2026",
+  "publicKey": "-----BEGIN PUBLIC KEY-----\n...\n-----END PUBLIC KEY-----\n",
+  "purposes": ["freshHumanUsability"]
+}
+```
+
+Example:
+
+```powershell
+$env:NODEKIT_ATTESTATION_PRIVATE_KEY_FILE = "C:\secure\human-reviewer.pem"
+npm run submission:finalize-evidence -- `
+  --gate freshHumanUsability `
+  --input proof/ease/fresh-users-raw.json `
+  --output proof/ease/fresh-users-verdict.json `
+  --payload-output proof/ease/fresh-users-attestation-payload.json `
+  --attestation-output proof/ease/fresh-users-attestation.json `
+  --repo-root . `
+  --candidate-commit <40-char-commit> `
+  --source-hash <64-char-source-hash> `
+  --tarball-sha256 <64-char-tarball-hash> `
+  --package-name @homenshum/nodekit `
+  --package-version <exact-version> `
+  --key-policy C:\secure\human-reviewer-policy.json
+```
+
+Use distinct raw and decisive paths so the measured body remains available for
+audit. Optional payload and attestation outputs are byte-readable copies of the
+objects embedded in the decisive verdict.
+
+Crucially, successful finalization proves possession of the policy's private
+key, not that the key is trusted. The command prints
+`submissionTrustEvaluated: false` and never edits
+`NODEKIT_SUBMISSION_TRUSTED_KEYS_JSON`. A locally generated key and policy still
+fail submission until an external verifier independently places that public
+key in its caller-owned trust registry for the exact purpose.
+
+### Manual payload signing
+
 First create a payload with the public API after the decisive verdict body and
 its evidence references are final. For example:
 

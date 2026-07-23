@@ -152,6 +152,8 @@ export type MaybePromise<T> = Promise<T> | T;
 
 export interface CaseflowRuntime {
   capabilities: RuntimeCapabilities;
+  ownerId: string;
+  provider: string;
   createCase(input: { title: string; primaryJob: string; actor?: NodeKitActor }): MaybePromise<NodeKitCase>;
   updateCaseInput(input: { caseId: string; primaryJob?: string; title?: string; actor?: NodeKitActor }): MaybePromise<NodeKitCase>;
   startRun(input: { caseId: string; stages: Array<Pick<NodeKitStage, "id" | "label" | "owner">>; actor?: NodeKitActor }): MaybePromise<NodeKitRun>;
@@ -251,7 +253,7 @@ export function normalizeReceiptBindings<
   proposalBindings: TProposal[];
   proposalIds: string[];
 };
-export function createMemoryCaseflow(options?: { clock?: () => string }): CaseflowRuntime;
+export function createMemoryCaseflow(options?: { clock?: () => string; ownerId?: string }): CaseflowRuntime;
 export function runCaseflowConformance(
   createRuntime: () => MaybePromise<CaseflowRuntime>,
   options?: {

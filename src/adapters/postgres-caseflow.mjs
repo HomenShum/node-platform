@@ -874,6 +874,8 @@ export function createPostgresCaseflow({ pool, ownerId, clock = () => new Date()
 
   return {
     capabilities: runtimeProfiles.postgres,
+    ownerId: owner,
+    provider: "postgres",
     cancelRun,
     completeRun,
     createArtifact,

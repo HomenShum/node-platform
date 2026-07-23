@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/HomenShum/node-platform/blob/main/schemas/nodekit.protected-evaluator.v1.schema.json",
+  "title": "NodeKit protected evaluator manifest",
+  "type": "object",
+  "required": ["schemaVersion", "evaluatorId", "version", "gym", "taskIndexRefs", "protectedRoots", "dimensions", "thresholds", "automaticPromotion"],
+  "properties": {
+    "schemaVersion": { "const": "nodekit.protected-evaluator/v1" },
+    "evaluatorId": { "type": "string", "minLength": 1 },
+    "version": { "type": "integer", "minimum": 1 },
+    "gym": { "const": "builder" },
+    "taskIndexRefs": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/path" },
+      "uniqueItems": true
+    },
+    "protectedRoots": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/path" },
+      "uniqueItems": true
+    },
+    "dimensions": {
+      "type": "array",
+      "minItems": 7,
+      "maxItems": 7,
+      "items": { "enum": ["task", "artifact", "ui", "safety", "efficiency", "evidence", "humanPreference"] },
+      "uniqueItems": true
+    },
+    "thresholds": {
+      "type": "object",
+      "required": ["minimumScores", "maximumScoreRegression", "maxLatencyRatio", "maxTokenRatio", "maxCostRatio", "maxTurnIncrease", "requireHumanPreference"],
+      "properties": {
+        "minimumScores": {
+          "type": "object",
+          "required": ["task", "artifact", "ui", "safety", "evidence"],
+          "properties": {
+            "task": { "$ref": "#/$defs/score" },
+            "artifact": { "$ref": "#/$defs/score" },
+            "ui": { "$ref": "#/$defs/score" },
+            "safety": { "$ref": "#/$defs/score" },
+            "evidence": { "$ref": "#/$defs/score" }
+          },
+          "additionalProperties": false
+        },
+        "maximumScoreRegression": { "type": "number", "minimum": 0, "maximum": 1 },
+        "maxLatencyRatio": { "type": "number", "minimum": 1 },
+        "maxTokenRatio": { "type": "number", "minimum": 1 },
+        "maxCostRatio": { "type": "number", "minimum": 1 },
+        "maxTurnIncrease": { "type": "integer", "minimum": 0 },
+        "requireHumanPreference": { "type": "boolean" }
+      },
+      "additionalProperties": false
+    },
+    "automaticPromotion": { "const": false }
+  },
+  "$defs": {
+    "score": { "type": "number", "minimum": 0, "maximum": 1 },
+    "path": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^(?![A-Za-z]:)(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))(?!.*\\\\).+$"
+    }
+  },
+  "additionalProperties": false
+}

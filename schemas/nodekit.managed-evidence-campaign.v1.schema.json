@@ -1,0 +1,203 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://nodekit.dev/schemas/nodekit.managed-evidence-campaign.v1.schema.json",
+  "title": "NodeKit resumable managed-evidence campaign",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion", "campaignId", "gate", "candidate", "credentialPreflight",
+    "status", "startedAt", "updatedAt", "elapsedMs", "activePhase", "phaseAttempts",
+    "resources", "evidence", "screenshotManifest", "readiness", "eventLog",
+    "externalAttestationRequired", "submissionGateSatisfied"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "nodekit.managed-evidence-campaign/v1" },
+    "campaignId": { "$ref": "#/$defs/campaignId" },
+    "gate": { "$ref": "#/$defs/gate" },
+    "consumer": { "$ref": "#/$defs/consumer" },
+    "candidate": { "$ref": "#/$defs/candidate" },
+    "credentialPreflight": { "$ref": "#/$defs/credentialPreflight" },
+    "status": { "enum": ["active", "ready-for-independent-review"] },
+    "startedAt": { "$ref": "#/$defs/timestamp" },
+    "updatedAt": { "$ref": "#/$defs/timestamp" },
+    "elapsedMs": { "type": "integer", "minimum": 0 },
+    "activePhase": { "type": ["string", "null"], "pattern": "^[a-z][a-z0-9-]{0,63}$" },
+    "phaseAttempts": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/phaseAttempt" }
+    },
+    "resources": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/resource" }
+    },
+    "evidence": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/evidenceRef" }
+    },
+    "screenshotManifest": {
+      "oneOf": [
+        { "type": "null" },
+        { "$ref": "#/$defs/screenshotManifest" }
+      ]
+    },
+    "readiness": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ready", "errors"],
+      "properties": {
+        "ready": { "type": "boolean" },
+        "errors": { "type": "array", "items": { "type": "string", "minLength": 1 }, "uniqueItems": true }
+      }
+    },
+    "eventLog": { "$ref": "#/$defs/eventLog" },
+    "externalAttestationRequired": { "const": true },
+    "submissionGateSatisfied": { "const": false }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "gate": { "const": "threeConvexConsumers" } }, "required": ["gate"] },
+      "then": { "required": ["consumer"] },
+      "else": { "not": { "required": ["consumer"] } }
+    }
+  ],
+  "$defs": {
+    "campaignId": { "type": "string", "pattern": "^campaign_[a-f0-9]{24}$" },
+    "commit": { "type": "string", "pattern": "^[a-f0-9]{40}$" },
+    "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "timestamp": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{3}Z$" },
+    "path": { "type": "string", "minLength": 1, "pattern": "^(?!/)(?!\\./)(?!.*//)(?!.*\\/$)(?!.*(?:^|/)\\.\\.?(?:/|$))(?![A-Za-z]:)(?!.*\\u0000)[^\\\\]+$" },
+    "gate": { "enum": ["previewDeployment", "managedSupabasePortability", "threeConvexConsumers"] },
+    "consumer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "commit"],
+      "properties": {
+        "id": { "enum": ["noderoom", "nodeslide", "nodevideo"] },
+        "commit": { "$ref": "#/$defs/commit" }
+      }
+    },
+    "fileRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256", "bytes"],
+      "properties": {
+        "path": { "$ref": "#/$defs/path" },
+        "sha256": { "$ref": "#/$defs/sha256" },
+        "bytes": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "candidate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["nodekitCommit", "nodekitSourceHash", "nodekitIdentity", "packageName", "packageVersion", "candidateProof", "tarball"],
+      "properties": {
+        "nodekitCommit": { "$ref": "#/$defs/commit" },
+        "nodekitSourceHash": { "$ref": "#/$defs/sha256" },
+        "nodekitIdentity": { "type": "string", "pattern": "^[a-f0-9]{40}/[a-f0-9]{64}$" },
+        "packageName": { "const": "@homenshum/nodekit" },
+        "packageVersion": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+(?:-[0-9A-Za-z.-]+)?$" },
+        "candidateProof": { "$ref": "#/$defs/fileRef" },
+        "tarball": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["path", "sha256", "bytes", "canonicalManifestSha256"],
+          "properties": {
+            "path": { "$ref": "#/$defs/path" },
+            "sha256": { "$ref": "#/$defs/sha256" },
+            "bytes": { "type": "integer", "minimum": 1 },
+            "canonicalManifestSha256": { "$ref": "#/$defs/sha256" }
+          }
+        }
+      }
+    },
+    "credentialPreflight": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["requiredEnvironmentVariables", "checkedAt", "allPresent", "secretValuesRecorded"],
+      "properties": {
+        "requiredEnvironmentVariables": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "string", "pattern": "^[A-Z][A-Z0-9_]{1,127}$" }
+        },
+        "checkedAt": { "$ref": "#/$defs/timestamp" },
+        "allPresent": { "const": true },
+        "secretValuesRecorded": { "const": false }
+      }
+    },
+    "phaseAttempt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "startedAt", "monotonicStartedNs", "attempt", "completedAt", "monotonicCompletedNs", "durationMs", "timerSource", "outcome"],
+      "properties": {
+        "name": { "type": "string", "pattern": "^[a-z][a-z0-9-]{0,63}$" },
+        "startedAt": { "$ref": "#/$defs/timestamp" },
+        "monotonicStartedNs": { "type": "string", "pattern": "^\\d+$" },
+        "attempt": { "type": "integer", "minimum": 1 },
+        "completedAt": { "$ref": "#/$defs/timestamp" },
+        "monotonicCompletedNs": { "type": "string", "pattern": "^\\d+$" },
+        "durationMs": { "type": "number", "minimum": 0 },
+        "timerSource": { "enum": ["monotonic", "wall-clock-after-host-restart"] },
+        "outcome": { "enum": ["succeeded", "failed", "cancelled"] }
+      }
+    },
+    "evidenceRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "path", "sha256", "bytes"],
+      "properties": {
+        "kind": { "type": "string", "pattern": "^[a-z][a-z0-9-]{0,63}$" },
+        "path": { "$ref": "#/$defs/path" },
+        "sha256": { "$ref": "#/$defs/sha256" },
+        "bytes": { "type": "integer", "minimum": 1 },
+        "canonicalManifestSha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "resource": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "provider", "resourceId", "environment", "isolated", "cleanup"],
+      "properties": {
+        "kind": { "type": "string", "pattern": "^[a-z][a-z0-9-]{0,63}$" },
+        "provider": { "type": "string", "pattern": "^[a-z0-9][a-z0-9._-]{0,63}$" },
+        "resourceId": { "type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:@/-]{0,255}$" },
+        "environment": { "enum": ["preview", "managed-test", "adoption-test"] },
+        "isolated": { "const": true },
+        "url": { "type": "string", "pattern": "^https://[^?#\\s]+$", "maxLength": 2048 },
+        "cleanup": {
+          "oneOf": [
+            { "type": "null" },
+            { "$ref": "#/$defs/evidenceRef" }
+          ]
+        }
+      }
+    },
+    "screenshotManifest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["reference", "applicationCommit", "applicationHash", "configHash", "screenshotCount", "closureCount", "closureSha256", "deploymentOrigin"],
+      "properties": {
+        "reference": { "$ref": "#/$defs/evidenceRef" },
+        "applicationCommit": { "$ref": "#/$defs/commit" },
+        "applicationHash": { "$ref": "#/$defs/sha256" },
+        "configHash": { "$ref": "#/$defs/sha256" },
+        "screenshotCount": { "const": 180 },
+        "closureCount": { "type": "integer", "minimum": 366 },
+        "closureSha256": { "$ref": "#/$defs/sha256" },
+        "deploymentOrigin": { "type": "string", "pattern": "^https://[^/?#\\s]+(?::\\d+)?$", "maxLength": 2048 }
+      }
+    },
+    "eventLog": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256", "eventCount", "lastEventSha256"],
+      "properties": {
+        "path": { "$ref": "#/$defs/path" },
+        "sha256": { "$ref": "#/$defs/sha256" },
+        "eventCount": { "type": "integer", "minimum": 1 },
+        "lastEventSha256": { "$ref": "#/$defs/sha256" }
+      }
+    }
+  }
+}

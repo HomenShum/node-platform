@@ -36,6 +36,13 @@
       },
       "additionalProperties": false
     },
+    "gyms": {
+      "type": "object",
+      "properties": {
+        "builder": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    },
     "promotion": {
       "type": "object",
       "required": ["automatic", "freshAgentCanary", "proofReceipt"],

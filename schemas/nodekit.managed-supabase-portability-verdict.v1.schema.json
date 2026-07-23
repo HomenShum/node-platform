@@ -4,7 +4,7 @@
   "title": "NodeKit decisive managed Supabase portability verdict",
   "type": "object",
   "additionalProperties": false,
-  "required": ["schemaVersion", "candidateCommit", "nodekitCommit", "nodekitSourceHash", "nodekitIdentity", "releaseCandidate", "passed", "projectRef", "projectUrl", "environment", "testedAt", "checks", "exportImport", "evidence", "attestationPayload", "attestation"],
+  "required": ["schemaVersion", "candidateCommit", "nodekitCommit", "nodekitSourceHash", "nodekitIdentity", "releaseCandidate", "passed", "projectRef", "projectUrl", "environment", "testedAt", "checks", "postgresConformance", "exportImport", "evidence", "attestationPayload", "attestation"],
   "properties": {
     "schemaVersion": { "const": "nodekit.managed-supabase-portability-verdict/v1" },
     "candidateCommit": { "$ref": "#/$defs/commit" },
@@ -18,6 +18,7 @@
     "environment": { "const": "managed-supabase" },
     "testedAt": { "$ref": "#/$defs/timestamp" },
     "checks": { "$ref": "#/$defs/checks" },
+    "postgresConformance": { "$ref": "#/$defs/postgresConformance" },
     "exportImport": { "$ref": "#/$defs/exportImport" },
     "evidence": { "$ref": "#/$defs/evidence" },
     "attestationPayload": { "$ref": "#/$defs/externalPayload" },
@@ -50,6 +51,18 @@
         "boundedCronInvocation": { "const": true }, "exportImportHashesMatch": { "const": true }
       }
     },
+    "postgresConformance": {
+      "type": "object", "additionalProperties": false,
+      "required": ["schemaVersion", "path", "sha256", "serverVersionNum", "exactPackageInstalled", "passed"],
+      "properties": {
+        "schemaVersion": { "const": "nodekit.postgres-conformance/v2" },
+        "path": { "$ref": "#/$defs/evidencePath" },
+        "sha256": { "$ref": "#/$defs/sha256" },
+        "serverVersionNum": { "type": "integer", "minimum": 120000 },
+        "exactPackageInstalled": { "const": true },
+        "passed": { "const": true }
+      }
+    },
     "exportImport": {
       "type": "object", "additionalProperties": false,
       "required": ["sourceProvider", "targetProvider", "sourceArtifactSha256", "targetArtifactSha256", "sourceReceiptSha256", "targetReceiptSha256"],
@@ -62,14 +75,15 @@
     "evidenceRef": {
       "type": "object", "additionalProperties": false, "required": ["kind", "path", "sha256"],
       "properties": {
-        "kind": { "enum": ["auth-rls-report", "storage-roundtrip", "realtime-delivery", "queue-report", "cron-report", "export-import-report", "managed-service-receipt"] },
+        "kind": { "enum": ["postgres-conformance", "auth-rls-report", "storage-roundtrip", "realtime-delivery", "queue-report", "cron-report", "export-import-report", "managed-service-receipt"] },
         "path": { "$ref": "#/$defs/evidencePath" }, "sha256": { "$ref": "#/$defs/sha256" }
       }
     },
     "evidence": {
-      "type": "array", "minItems": 7, "maxItems": 7, "uniqueItems": true,
+      "type": "array", "minItems": 8, "maxItems": 8, "uniqueItems": true,
       "items": { "$ref": "#/$defs/evidenceRef" },
       "allOf": [
+        { "contains": { "properties": { "kind": { "const": "postgres-conformance" } }, "required": ["kind"] }, "minContains": 1, "maxContains": 1 },
         { "contains": { "properties": { "kind": { "const": "auth-rls-report" } }, "required": ["kind"] }, "minContains": 1, "maxContains": 1 },
         { "contains": { "properties": { "kind": { "const": "storage-roundtrip" } }, "required": ["kind"] }, "minContains": 1, "maxContains": 1 },
         { "contains": { "properties": { "kind": { "const": "realtime-delivery" } }, "required": ["kind"] }, "minContains": 1, "maxContains": 1 },

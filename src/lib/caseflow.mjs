@@ -67,7 +67,8 @@ function optionalFields(required, optional) {
   ]);
 }
 
-export function createMemoryCaseflow({ clock = () => new Date().toISOString() } = {}) {
+export function createMemoryCaseflow({ clock = () => new Date().toISOString(), ownerId = "local:memory" } = {}) {
+  const owner = requireTrimmedText(ownerId, "memory Caseflow ownerId");
   const state = {
     approvals: new Map(),
     artifacts: new Map(),
@@ -526,6 +527,8 @@ export function createMemoryCaseflow({ clock = () => new Date().toISOString() } 
 
   return {
     capabilities: runtimeProfiles.memory,
+    ownerId: owner,
+    provider: "memory",
     cancelRun,
     completeRun,
     createArtifact,

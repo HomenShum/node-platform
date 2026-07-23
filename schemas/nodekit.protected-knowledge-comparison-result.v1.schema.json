@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://nodekit.dev/schemas/nodekit.protected-knowledge-comparison-result.v1.schema.json",
+  "title": "NodeKit protected knowledge comparison result",
+  "type": "object",
+  "required": ["schemaVersion", "comparisonId", "definitionSha256", "protectedBenchmarkSha256", "evaluatorSha256", "releaseCandidate", "definitionEvidence", "sameInputs", "protectedEvaluatorUnchanged", "profiles", "completedAt", "adoptionClaim", "status", "resultSha256"],
+  "properties": {
+    "schemaVersion": { "const": "nodekit.protected-knowledge-comparison-result/v1" },
+    "comparisonId": { "$ref": "#/$defs/nonEmpty" }, "definitionSha256": { "$ref": "#/$defs/hash" }, "protectedBenchmarkSha256": { "$ref": "#/$defs/hash" }, "evaluatorSha256": { "$ref": "#/$defs/hash" }, "releaseCandidate": { "$ref": "#/$defs/releaseCandidate" }, "definitionEvidence": { "$ref": "#/$defs/evidenceRef" },
+    "sameInputs": { "const": true }, "protectedEvaluatorUnchanged": { "const": true },
+    "profiles": { "type": "object", "required": ["flat", "staticGraph", "evolvingGraph"], "properties": { "flat": { "$ref": "#/$defs/profile" }, "staticGraph": { "$ref": "#/$defs/profile" }, "evolvingGraph": { "$ref": "#/$defs/profile" } }, "additionalProperties": false },
+    "completedAt": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{3}Z$" }, "adoptionClaim": { "const": false }, "status": { "const": "ENGINEERING_COMPARISON_ONLY" }, "resultSha256": { "$ref": "#/$defs/hash" }
+  },
+  "$defs": {
+    "nonEmpty": { "type": "string", "minLength": 1 }, "hash": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "ids": { "type": "array", "items": { "$ref": "#/$defs/nonEmpty" }, "uniqueItems": true },
+    "evidencePath": { "type": "string", "minLength": 1, "pattern": "^(?!/)(?!\\./)(?!.*//)(?!.*\\/$)(?!.*(?:^|/)\\.\\.?(?:/|$))(?![A-Za-z]:)(?!.*\\u0000)[^\\\\]+$" },
+    "evidenceRef": { "type": "object", "required": ["path", "sha256"], "properties": { "path": { "$ref": "#/$defs/evidencePath" }, "sha256": { "$ref": "#/$defs/hash" } }, "additionalProperties": false },
+    "releaseCandidate": { "type": "object", "additionalProperties": false, "required": ["nodekitCommit", "nodekitSourceHash", "nodekitTarballSha256", "packageName", "packageVersion"], "properties": { "nodekitCommit": { "type": "string", "pattern": "^[a-f0-9]{40}$" }, "nodekitSourceHash": { "$ref": "#/$defs/hash" }, "nodekitTarballSha256": { "$ref": "#/$defs/hash" }, "packageName": { "const": "@homenshum/nodekit" }, "packageVersion": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+(?:-[0-9A-Za-z.-]+)?$" } } },
+    "metrics": { "type": "object", "required": ["turns", "tokens", "latencyMs", "costUsd", "executionReceipt"], "properties": { "turns": { "type": "integer", "minimum": 0 }, "tokens": { "type": "integer", "minimum": 0 }, "latencyMs": { "type": "number", "minimum": 0 }, "costUsd": { "type": "number", "minimum": 0 }, "executionReceipt": { "$ref": "#/$defs/evidenceRef" } }, "additionalProperties": false },
+    "case": { "type": "object", "required": ["caseId", "caseInputSha256", "evaluatorSha256", "decision", "returnedEntityIds", "missingExpected", "returnedForbidden", "abstainCorrect", "unsupportedEdgeCount", "surfacedUnsupportedEdgeIds", "success", "metrics", "retrievalReceiptHash"], "properties": { "caseId": { "$ref": "#/$defs/nonEmpty" }, "caseInputSha256": { "$ref": "#/$defs/hash" }, "evaluatorSha256": { "$ref": "#/$defs/hash" }, "decision": { "enum": ["SUPPORTED", "ABSTAIN"] }, "returnedEntityIds": { "$ref": "#/$defs/ids" }, "missingExpected": { "$ref": "#/$defs/ids" }, "returnedForbidden": { "$ref": "#/$defs/ids" }, "abstainCorrect": { "type": "boolean" }, "unsupportedEdgeCount": { "type": "integer", "minimum": 0 }, "surfacedUnsupportedEdgeIds": { "$ref": "#/$defs/ids" }, "success": { "type": "boolean" }, "metrics": { "$ref": "#/$defs/metrics" }, "retrievalReceiptHash": { "$ref": "#/$defs/hash" } }, "additionalProperties": false },
+    "profile": { "type": "object", "required": ["graphId", "graphVersion", "graphContentHash", "ownerId", "graphSnapshot", "cases", "successRate", "abstainAccuracy", "unsupportedEdgeCount", "turns", "tokens", "latencyMs", "costUsd"], "properties": { "graphId": { "$ref": "#/$defs/nonEmpty" }, "graphVersion": { "type": "integer", "minimum": 0 }, "graphContentHash": { "$ref": "#/$defs/hash" }, "ownerId": { "$ref": "#/$defs/nonEmpty" }, "graphSnapshot": { "$ref": "#/$defs/evidenceRef" }, "cases": { "type": "array", "minItems": 3, "items": { "$ref": "#/$defs/case" } }, "successRate": { "type": "number", "minimum": 0, "maximum": 1 }, "abstainAccuracy": { "type": "number", "minimum": 0, "maximum": 1 }, "unsupportedEdgeCount": { "type": "integer", "minimum": 0 }, "turns": { "type": "integer", "minimum": 0 }, "tokens": { "type": "integer", "minimum": 0 }, "latencyMs": { "type": "number", "minimum": 0 }, "costUsd": { "type": "number", "minimum": 0 } }, "additionalProperties": false }
+  },
+  "additionalProperties": false
+}

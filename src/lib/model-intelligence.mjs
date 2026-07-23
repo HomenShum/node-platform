@@ -2,6 +2,7 @@ import { createHash } from "node:crypto";
 import { mkdir, readFile, readdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { stringify as stringifyYaml } from "yaml";
+import { initializeBuilderGym } from "./builder-gym.mjs";
 import { pathExists, readYaml } from "./files.mjs";
 import { initializeFrontendHarness } from "./frontend-specialist.mjs";
 import { validateSchema } from "./schema-validation.mjs";
@@ -133,6 +134,7 @@ export async function initializeHarness(repoRoot) {
       cardRoot: "harness/models/cards",
       findingsLedger: "harness/models/findings.jsonl",
     },
+    gyms: { builder: "harness/gyms/builder/builder-gym.json" },
     promotion: { automatic: false, freshAgentCanary: true, proofReceipt: true },
   };
 
@@ -148,14 +150,21 @@ export async function initializeHarness(repoRoot) {
     stringifyYaml({ schemaVersion: "nodekit.routing-matrix/v0", status: "provisional-empty", routes: [] }),
     created,
   );
+  const baselineManifest = {
+    schemaVersion: "nodekit.harness-version/v1",
+    version: "h0",
+    status: "baseline-unmeasured",
+    activeSkills: [],
+    activeSkillBindings: [],
+  };
   await writeIfMissing(
     path.join(harnessRoot, "versions", "h0", "manifest.json"),
-    `${JSON.stringify({ schemaVersion: "nodekit.harness-version/v1", version: "h0", status: "baseline-unmeasured", activeSkills: [] }, null, 2)}\n`,
+    `${JSON.stringify(baselineManifest, null, 2)}\n`,
     created,
   );
   await writeIfMissing(
     path.join(harnessRoot, "versions", "current.json"),
-    `${JSON.stringify({ schemaVersion: "nodekit.harness-current/v1", version: "h0" }, null, 2)}\n`,
+    `${JSON.stringify({ schemaVersion: "nodekit.harness-current/v1", version: "h0", manifestHash: hash(baselineManifest) }, null, 2)}\n`,
     created,
   );
   await writeIfMissing(
@@ -172,8 +181,10 @@ export async function initializeHarness(repoRoot) {
   }
 
   const frontend = await initializeFrontendHarness(resolvedRoot);
+  const builder = await initializeBuilderGym(resolvedRoot);
   return {
     applicationId,
+    builder,
     created: created.map((file) => path.relative(resolvedRoot, file).replaceAll("\\", "/")),
     frontend,
     harnessRoot,

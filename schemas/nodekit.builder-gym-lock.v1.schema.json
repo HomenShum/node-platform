@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/HomenShum/node-platform/blob/main/schemas/nodekit.builder-gym-lock.v1.schema.json",
+  "title": "Content-addressed NodeKit Builder Gym protected lock",
+  "type": "object",
+  "required": ["schemaVersion", "lockId", "lockHash", "gymId", "applicationId", "evaluatorHash", "protectedTaskSetHash", "protectedRootHash", "baselineTrajectoryHash", "baselineRevision", "protectedRoots", "candidateWriteRoots", "fixedInputs", "automaticPromotion"],
+  "properties": {
+    "schemaVersion": { "const": "nodekit.builder-gym-lock/v1" },
+    "lockId": { "type": "string", "pattern": "^builder-gym-lock:sha256:[a-f0-9]{64}$" },
+    "lockHash": { "$ref": "#/$defs/hash" },
+    "gymId": { "const": "nodekit-builder" },
+    "applicationId": { "type": "string", "minLength": 1 },
+    "evaluatorHash": { "$ref": "#/$defs/hash" },
+    "protectedTaskSetHash": { "$ref": "#/$defs/hash" },
+    "protectedRootHash": { "$ref": "#/$defs/hash" },
+    "baselineTrajectoryHash": { "$ref": "#/$defs/hash" },
+    "baselineRevision": { "type": "string", "minLength": 1 },
+    "protectedRoots": { "$ref": "#/$defs/pathList" },
+    "candidateWriteRoots": { "$ref": "#/$defs/pathList" },
+    "fixedInputs": {
+      "type": "object",
+      "required": ["applicationId", "task", "model", "budgets", "runtimeHash", "interactionHash", "toolSurfaceHash", "contextPolicyHash", "skillStackHash", "evaluator"],
+      "properties": {
+        "applicationId": { "type": "string", "minLength": 1 },
+        "task": { "type": "object", "minProperties": 1 },
+        "model": { "type": "object", "minProperties": 1 },
+        "budgets": { "type": "object", "minProperties": 1 },
+        "runtimeHash": { "$ref": "#/$defs/hash" },
+        "interactionHash": { "$ref": "#/$defs/hash" },
+        "toolSurfaceHash": { "$ref": "#/$defs/hash" },
+        "contextPolicyHash": { "$ref": "#/$defs/hash" },
+        "skillStackHash": { "$ref": "#/$defs/hash" },
+        "evaluator": { "type": "object", "minProperties": 1 }
+      },
+      "additionalProperties": false
+    },
+    "automaticPromotion": { "const": false }
+  },
+  "$defs": {
+    "hash": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "path": { "type": "string", "minLength": 1, "pattern": "^(?![A-Za-z]:)(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))(?!.*\\\\).+$" },
+    "pathList": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/path" }, "uniqueItems": true }
+  },
+  "additionalProperties": false
+}

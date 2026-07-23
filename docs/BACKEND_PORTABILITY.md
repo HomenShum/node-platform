@@ -36,7 +36,11 @@ The SQL migration never hashes `jsonb::text`: legacy null hashes are quarantined
 cannot be applied, and require an explicit owner-scoped rehash through
 `rehashLegacyPostgresProposalPatches()`. This keeps migration success from
 silently manufacturing a provider-specific digest. Live PostgreSQL conformance
-also requires the exact distributable path set from `package.json` to be clean;
+requires `--candidate-tarball`; the runner installs that archive with lifecycle
+scripts disabled in a disposable consumer and imports the adapter from the
+installed package, never from the source checkout. Its v2 receipt is a mandatory,
+recursively reopened member of the managed-Supabase portability verdict.
+The runner also requires the exact distributable path set from `package.json` to be clean;
 that includes the packaged Evolution Ledger, even though ordinary non-packaged
 proof and documentation files are not part of the source candidate.
 

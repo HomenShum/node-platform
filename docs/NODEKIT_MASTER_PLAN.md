@@ -248,11 +248,12 @@ official outcomes, decisive judges, safety requirements, or proof thresholds in 
 - [x] Add `init`, `baseline`, `inspect`, `diagnose`, `propose`, `benchmark`, `tournament`, `canary`,
   `review`, `promote`, `rollback`, `status`, and `gate` commands.
 - [x] Require a hypothesis, expected impact, and risk for every harness candidate.
-- [ ] Capture complete NodeTrace trajectories and separate task, artifact, UI, safety, efficiency,
-  evidence, and human-preference verdicts.
+- [x] Capture content-addressed NodeTrace trajectories with separate task, artifact, UI, safety,
+  efficiency, evidence, and human-preference verdicts.
 - [x] Require fresh-agent canaries, rollback versions, and NodeProof promotion receipts.
 - [x] Keep automatic promotion disabled by default.
-- [ ] Implement NodeKit Builder Gym first.
+- [x] Implement NodeKit Builder Gym mechanics first inside Harness Gym with protected evaluator
+  boundaries. Real frozen-task fresh-agent evidence remains open.
 - [ ] Implement NodeSlide Deck Gym, NodeVideo Creator Gym, and NodeRoom Collaboration Gym next.
 - [ ] Prove Harness v1 beats or holds Harness v0 with a fresh agent on frozen tasks.
 
@@ -317,10 +318,15 @@ Implemented v1:
 - [x] Require an explicit approving principal before apply.
 - [x] Preserve stale proposals as conflicts instead of overwrites.
 - [x] Add query, gaps, diff, replay, benchmark, and action/evolution receipts.
+- [x] Add accepted-canonical runtime retrieval with typed hypergraph traversal beyond lexical matching.
+- [x] Add a real Caseflow context-pack consumer with source/evolution provenance, repeat-session receipts, and fail-closed `ABSTAIN`.
+- [x] Exclude rejected, deprecated, stale, unaccepted, unsupported, and non-canonical knowledge from default runtime context.
+- [x] Add memory tenant isolation/CAS plus an owner-scoped transactional PostgreSQL knowledge projection and durable session receipts.
+- [x] Add protected flat/static/evolving comparison mechanics with fixed input/evaluator hashes and measured success, abstention, unsupported-edge, turns, tokens, latency, and cost.
 - [x] Project Harness Gym observations into proposal-only task/model/harness/failure hyperedges.
 - [x] Preserve the Understand Anything graph as read-only, commit-pinned code evidence.
 - [ ] Run protected flat/static/evolving comparisons on real application tasks.
-- [ ] Add NodeGraph document/rendering, Neo4j traversal, Convex collaboration, and SQL persistence projections.
+- [ ] Add NodeGraph document/rendering, Neo4j projection, and Convex collaboration. The PostgreSQL persistence projection is implemented; live final-candidate service evidence remains separate.
 - [ ] Add graph-aware NodeRoom review and multimodal source-region navigation.
 - [ ] Export trajectories to NodeRL only after protected rewards stabilize.
 
@@ -393,6 +399,9 @@ historical Ease receipt does not certify a later source revision.
   and a lower-cost agent once.
 - [ ] Pass all 15 candidate-bound sessions with zero human reprompts, substantive non-proof changes,
   final reports, diffs, screenshots, transcripts, and self-hashed receipts.
+- [x] Implement a privacy-safe human-study operator with anonymous IDs, explicit consent and
+  recording-consent choices, append-only hash-chained monotonic events, byte-addressed PNG/session
+  evidence, immutable resume/finalize, and exact-candidate attempt enumeration.
 - [ ] Run five fresh-human sessions with consent and participant-level receipts.
 - [ ] Require at least four unassisted completions, median first action at most 30 seconds, median
   neutral journey at most 180 seconds, and median SEQ at least 6/7.
@@ -429,7 +438,7 @@ historical Ease receipt does not certify a later source revision.
 - [x] Implement generic PostgreSQL persistence, owner scoping, transactional lifecycle operations,
   and conditional version application.
 - [x] Retain the earlier PostgreSQL 17.10 live-conformance receipt as regression history.
-- [ ] Re-run live PostgreSQL conformance for the final immutable candidate.
+- [ ] Re-run exact-packed live PostgreSQL conformance for the final immutable candidate; the v2 runner and decisive managed-portability binding are implemented.
 - [x] Implement the local Supabase managed profile contract: Auth-derived authority, read-only
   lifecycle RLS, a narrow proposal RPC, private Storage policies, explicit Realtime tables, and an
   opt-in server-only PGMQ/pg_cron worker module.
@@ -469,6 +478,12 @@ historical Ease receipt does not certify a later source revision.
 
 - [x] Add the governed six-layer knowledge hypergraph and portable schemas.
 - [x] Add immutable multimodal evidence anchors and n-ary hyperedges.
+- [x] Add byte-authenticated evidence ingest and immutable content-addressed snapshots that compute
+  hashes from real bytes, preserve attributed text/PDF/image/video locators, recheck freshness and
+  byte anchors, and reject mismatch, escape, symlink, duplicate, and limit failures.
+- [x] Add a provider-neutral, typed, bounded external-research collector with separate
+  normalization, immutable search/fetch provenance, a deterministic local provider, and
+  proposal-only graph output.
 - [x] Add proposal, validation, approval, conflict, apply, diff, and replay semantics.
 - [x] Add graph CLI commands and Harness Gym proposal projection.
 - [x] Add deterministic conformance and safety tests.

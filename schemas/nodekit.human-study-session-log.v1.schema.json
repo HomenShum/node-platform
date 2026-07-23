@@ -1,0 +1,89 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://nodekit.dev/schemas/nodekit.human-study-session-log.v1.schema.json",
+  "title": "NodeKit finalized fresh-human study session log",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion", "participantId", "nodekitCommit", "nodekitSourceHash", "instruction",
+    "consentRecorded", "consentVersion", "recordingConsent", "fresh", "sessionStartedAt", "sessionCompletedAt",
+    "monotonicStartedNs", "monotonicCompletedNs", "firstMeaningfulActionMs",
+    "neutralJourneyMs", "firstMeaningfulActionReached", "wrongTurns", "helpRequests",
+    "p0P1Failures", "result", "singleEaseQuestion", "evidence", "events", "eventLogSha256"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "nodekit.human-study-session-log/v1" },
+    "participantId": { "$ref": "#/$defs/participantId" },
+    "nodekitCommit": { "$ref": "#/$defs/commit" },
+    "nodekitSourceHash": { "$ref": "#/$defs/sha256" },
+    "instruction": { "const": "Use this app to complete the job shown on screen." },
+    "consentRecorded": { "const": true },
+    "consentVersion": { "const": "nodekit-human-study-consent/v1" },
+    "recordingConsent": { "type": "boolean" },
+    "fresh": { "const": true },
+    "sessionStartedAt": { "$ref": "#/$defs/timestamp" },
+    "sessionCompletedAt": { "$ref": "#/$defs/timestamp" },
+    "monotonicStartedNs": { "type": "string", "pattern": "^[0-9]+$" },
+    "monotonicCompletedNs": { "type": "string", "pattern": "^[0-9]+$" },
+    "firstMeaningfulActionMs": { "type": "number", "minimum": 0 },
+    "neutralJourneyMs": { "type": "number", "minimum": 0 },
+    "firstMeaningfulActionReached": { "type": "boolean" },
+    "wrongTurns": { "type": "integer", "minimum": 0 },
+    "helpRequests": { "type": "integer", "minimum": 0 },
+    "p0P1Failures": { "type": "integer", "minimum": 0 },
+    "result": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["completed", "assisted", "canExplainOutcome", "locatedFinalArtifact", "locatedUnresolvedIssues"],
+      "properties": {
+        "completed": { "type": "boolean" },
+        "assisted": { "type": "boolean" },
+        "canExplainOutcome": { "type": "boolean" },
+        "locatedFinalArtifact": { "type": "boolean" },
+        "locatedUnresolvedIssues": { "type": "boolean" }
+      }
+    },
+    "singleEaseQuestion": { "type": "integer", "minimum": 1, "maximum": 7 },
+    "evidence": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "contains": {
+        "type": "object",
+        "required": ["kind", "label"],
+        "properties": { "kind": { "const": "screenshot" }, "label": { "const": "completion" } }
+      },
+      "items": { "$ref": "#/$defs/importedEvidence" }
+    },
+    "events": {
+      "type": "array",
+      "minItems": 5,
+      "uniqueItems": true,
+      "items": { "$ref": "nodekit.human-study-event.v1.schema.json" }
+    },
+    "eventLogSha256": { "$ref": "#/$defs/sha256" }
+  },
+  "$defs": {
+    "participantId": { "type": "string", "pattern": "^participant_[a-f0-9]{16}$" },
+    "commit": { "type": "string", "pattern": "^[a-f0-9]{40}$" },
+    "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "timestamp": { "type": "string", "format": "date-time" },
+    "evidencePath": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^(?!/)(?!\\./)(?!.*//)(?!.*\\/$)(?!.*(?:^|/)\\.\\.?(?:/|$))(?![A-Za-z]:)(?!.*\\u0000)[^\\\\]+$"
+    },
+    "importedEvidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "path", "sha256", "bytes", "label"],
+      "properties": {
+        "kind": { "enum": ["screenshot", "recording"] },
+        "path": { "$ref": "#/$defs/evidencePath" },
+        "sha256": { "$ref": "#/$defs/sha256" },
+        "bytes": { "type": "integer", "minimum": 1 },
+        "label": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{0,47}$" }
+      }
+    }
+  }
+}

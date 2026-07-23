@@ -1,0 +1,112 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://nodekit.dev/schemas/nodekit.protected-browser-screenshot-manifest.v1.schema.json",
+  "title": "NodeKit campaign-protected browser screenshot manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion", "runId", "taskId", "candidateArchiveSha256", "producer", "certified", "passed",
+    "certificationScope", "accessibilityAudit", "requiredStates", "coveredStates", "viewports", "themes",
+    "consoleErrors", "networkFailures", "screenshots", "screenshotEvidenceRootSha256", "generatedAt", "manifestSha256"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "nodekit.protected-browser-screenshot-manifest/v1" },
+    "runId": { "type": "string", "minLength": 1 },
+    "taskId": { "enum": ["research-map", "volunteer-onboarding", "launch-presentation"] },
+    "candidateArchiveSha256": { "$ref": "#/$defs/sha256" },
+    "producer": {
+      "type": "object", "additionalProperties": false,
+      "required": ["authority", "candidateHostAccess", "candidateWriteAccess", "externalNetworkEgress"],
+      "properties": {
+        "authority": { "const": "campaign-protected-browser" }, "candidateHostAccess": { "const": false },
+        "candidateWriteAccess": { "const": false }, "externalNetworkEgress": { "const": false }
+      }
+    },
+    "certified": { "const": true }, "passed": { "const": true },
+    "certificationScope": {
+      "type": "array", "minItems": 6, "maxItems": 6, "uniqueItems": true,
+      "items": { "enum": ["rendered-state-coverage", "console-health", "request-health", "horizontal-overflow", "mojibake", "axe-serious-critical"] }
+    },
+    "accessibilityAudit": {
+      "type": "object", "additionalProperties": false,
+      "required": ["engine", "engineVersion", "passed", "policy", "scans", "seriousCriticalViolations", "totalViolations", "violationCounts"],
+      "properties": {
+        "engine": { "const": "axe-core" }, "engineVersion": { "const": "4.12.1" }, "passed": { "const": true },
+        "policy": { "const": "serious-critical-zero" }, "scans": { "const": 180 }, "seriousCriticalViolations": { "const": 0 },
+        "totalViolations": { "type": "integer", "minimum": 0 }, "violationCounts": { "$ref": "#/$defs/violationCounts" }
+      }
+    },
+    "requiredStates": { "type": "array", "minItems": 15, "maxItems": 15, "uniqueItems": true, "items": { "$ref": "#/$defs/state" } },
+    "coveredStates": { "type": "array", "minItems": 15, "maxItems": 15, "uniqueItems": true, "items": { "$ref": "#/$defs/state" } },
+    "viewports": { "type": "array", "minItems": 6, "maxItems": 6, "items": { "$ref": "#/$defs/viewport" } },
+    "themes": { "type": "array", "minItems": 2, "maxItems": 2, "uniqueItems": true, "items": { "enum": ["light", "dark"] } },
+    "consoleErrors": { "type": "array", "maxItems": 0 }, "networkFailures": { "type": "array", "maxItems": 0 },
+    "screenshots": { "type": "array", "minItems": 180, "maxItems": 180, "items": { "$ref": "#/$defs/screenshot" } },
+    "screenshotEvidenceRootSha256": { "$ref": "#/$defs/sha256" },
+    "generatedAt": { "type": "string", "format": "date-time" }, "manifestSha256": { "$ref": "#/$defs/sha256" }
+  },
+  "$defs": {
+    "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "state": { "enum": [
+      "first_arrival", "orientation", "input", "validation_error", "running", "partial_result",
+      "external_wait", "proposal_pending", "approval", "conflict", "recoverable_failure",
+      "reload_resume", "completed_receipt", "receipt_inspection", "export_share"
+    ] },
+    "viewportId": { "enum": ["desktop", "wide", "tablet-landscape", "tablet-portrait", "mobile-portrait", "mobile-landscape"] },
+    "viewportSize": {
+      "type": "object", "additionalProperties": false, "required": ["height", "width"],
+      "properties": { "height": { "type": "integer", "minimum": 1 }, "width": { "type": "integer", "minimum": 1 } }
+    },
+    "viewport": {
+      "type": "object", "additionalProperties": false, "required": ["height", "id", "width"],
+      "properties": { "height": { "type": "integer", "minimum": 1 }, "id": { "$ref": "#/$defs/viewportId" }, "width": { "type": "integer", "minimum": 1 } }
+    },
+    "violationCounts": {
+      "type": "object", "additionalProperties": false,
+      "required": ["critical", "serious", "moderate", "minor", "unknown"],
+      "properties": {
+        "critical": { "const": 0 }, "serious": { "const": 0 },
+        "moderate": { "type": "integer", "minimum": 0 }, "minor": { "type": "integer", "minimum": 0 },
+        "unknown": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "violation": {
+      "type": "object", "additionalProperties": false, "required": ["id", "impact", "nodeCount"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 }, "impact": { "enum": ["moderate", "minor", "unknown"] },
+        "nodeCount": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "accessibilityResult": {
+      "type": "object", "additionalProperties": false,
+      "required": ["engine", "engineVersion", "passed", "policy", "seriousCriticalViolations", "totalViolations", "violationCounts", "violations"],
+      "properties": {
+        "engine": { "const": "axe-core" }, "engineVersion": { "const": "4.12.1" }, "passed": { "const": true },
+        "policy": { "const": "serious-critical-zero" }, "seriousCriticalViolations": { "const": 0 },
+        "totalViolations": { "type": "integer", "minimum": 0 }, "violationCounts": { "$ref": "#/$defs/violationCounts" },
+        "violations": { "type": "array", "items": { "$ref": "#/$defs/violation" } }
+      }
+    },
+    "screenshot": {
+      "type": "object", "additionalProperties": false,
+      "required": [
+        "schemaVersion", "authority", "candidateArchiveSha256", "runId", "taskId", "state", "theme", "viewport", "viewportId",
+        "pageUrl", "pngSha256", "pngBytes", "path", "sidecarSha256", "sidecarBytes", "sidecarPath",
+        "consoleErrors", "failedRequests", "horizontalOverflowPx", "mojibakeDetected", "accessibility"
+      ],
+      "properties": {
+        "schemaVersion": { "const": "nodekit.protected-screenshot-proof/v1" }, "authority": { "const": "campaign-protected-browser" },
+        "candidateArchiveSha256": { "$ref": "#/$defs/sha256" }, "runId": { "type": "string", "minLength": 1 },
+        "taskId": { "enum": ["research-map", "volunteer-onboarding", "launch-presentation"] },
+        "state": { "$ref": "#/$defs/state" }, "theme": { "enum": ["light", "dark"] },
+        "viewport": { "$ref": "#/$defs/viewportSize" }, "viewportId": { "$ref": "#/$defs/viewportId" },
+        "pageUrl": { "type": "string", "pattern": "^http://candidate:4173/" }, "pngSha256": { "$ref": "#/$defs/sha256" },
+        "pngBytes": { "type": "integer", "minimum": 256, "maximum": 26214400 }, "path": { "type": "string", "pattern": "^protected-browser/screenshots/[A-Za-z0-9_-]+\\.png$" },
+        "sidecarSha256": { "$ref": "#/$defs/sha256" }, "sidecarBytes": { "type": "integer", "minimum": 2, "maximum": 2097152 },
+        "sidecarPath": { "type": "string", "pattern": "^protected-browser/screenshots/[A-Za-z0-9_-]+\\.json$" },
+        "consoleErrors": { "const": 0 }, "failedRequests": { "const": 0 }, "horizontalOverflowPx": { "const": 0 },
+        "mojibakeDetected": { "const": false }, "accessibility": { "$ref": "#/$defs/accessibilityResult" }
+      }
+    }
+  }
+}

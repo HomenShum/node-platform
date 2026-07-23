@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://nodekit.dev/schemas/nodekit.protected-knowledge-comparison-definition.v1.schema.json",
+  "title": "NodeKit protected knowledge comparison definition",
+  "type": "object",
+  "required": ["schemaVersion", "comparisonId", "profiles", "cases", "evaluator", "protectedBenchmarkSha256", "evaluatorSha256", "definitionSha256"],
+  "properties": {
+    "schemaVersion": { "const": "nodekit.protected-knowledge-comparison-definition/v1" },
+    "comparisonId": { "$ref": "#/$defs/nonEmpty" },
+    "profiles": { "const": ["flat", "staticGraph", "evolvingGraph"] },
+    "cases": {
+      "type": "array", "minItems": 3,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["caseId", "query", "seedIds", "predicates", "expectedEntityIds", "forbiddenEntityIds", "expectAbstain", "minimumFacts", "maxDepth", "at", "inputSha256"],
+        "properties": {
+          "caseId": { "$ref": "#/$defs/nonEmpty" }, "query": { "type": "string" }, "seedIds": { "$ref": "#/$defs/ids" }, "predicates": { "$ref": "#/$defs/ids" },
+          "expectedEntityIds": { "$ref": "#/$defs/ids" }, "forbiddenEntityIds": { "$ref": "#/$defs/ids" }, "expectAbstain": { "type": "boolean" },
+          "minimumFacts": { "type": "integer", "minimum": 1 }, "maxDepth": { "type": "integer", "minimum": 0, "maximum": 8 }, "at": { "type": "string" }, "inputSha256": { "$ref": "#/$defs/hash" }
+        }
+      }
+    },
+    "evaluator": { "type": "object", "additionalProperties": false, "required": ["id", "version", "successRule", "unsupportedEdgeRule", "metrics"], "properties": { "id": { "const": "nodekit:accepted-knowledge-evaluator" }, "version": { "const": "1.0.0" }, "successRule": { "$ref": "#/$defs/nonEmpty" }, "unsupportedEdgeRule": { "$ref": "#/$defs/nonEmpty" }, "metrics": { "const": ["success", "abstainCorrect", "unsupportedEdgeCount", "turns", "tokens", "latencyMs", "costUsd"] } } },
+    "protectedBenchmarkSha256": { "$ref": "#/$defs/hash" }, "evaluatorSha256": { "$ref": "#/$defs/hash" }, "definitionSha256": { "$ref": "#/$defs/hash" }
+  },
+  "$defs": { "nonEmpty": { "type": "string", "minLength": 1 }, "hash": { "type": "string", "pattern": "^[a-f0-9]{64}$" }, "ids": { "type": "array", "items": { "$ref": "#/$defs/nonEmpty" }, "uniqueItems": true } },
+  "additionalProperties": false
+}

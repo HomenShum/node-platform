@@ -146,6 +146,14 @@ Accuracy, cost, latency, safety, artifact editability, export, and user completi
 regression dimensions. A P0 authority or safety incident may produce an emergency guardrail after
 one incident, but the regression suite is still mandatory before ordinary promotion.
 
+The threshold is no longer satisfied by a candidate-authored aggregate comparison. Each baseline
+and candidate run must produce a content-addressed `nodekit.skill-evaluator-receipt/v1`, signed by
+a protected Ed25519 evaluator key and bound to exact benchmark, harness, evaluator, model, task,
+input, and skill hashes. The protected path reopens task, input, output, and evaluation evidence,
+walks nested hashed evidence references, verifies the detached signature and authorized key
+purpose, then derives the aggregate verdict. The benchmark input and verdict are stored at immutable
+content addresses; a mutable candidate pointer is only a convenience and is never the authority.
+
 ## Controlled comparisons
 
 ```text
@@ -171,10 +179,16 @@ by default, and the compiler never reports routing certification.
 ## Implemented tournament and promotion guards
 
 The tournament evaluator rejects self-judging candidates, requires an unchanged protected
-evaluator, and returns a provisional winner without authorizing promotion. Manual promotion
-requires a passing controlled comparison, fresh-context canary, verified NodeProof receipt, and an
-explicit `approvedBy` identity; promoted harness versions retain a rollback pointer. These guards
-are covered by deterministic fixtures, not yet by a live application tournament.
+evaluator, and returns a provisional winner without authorizing promotion. Manual skill promotion
+requires a re-derived passing protected benchmark, a purpose-scoped signed fresh-context canary, a
+separately purpose-scoped signed NodeProof integrity receipt, and a detached promotion approval
+signed by a fourth independent key. The approval is bound to the exact candidate, benchmark,
+canary, integrity receipt, and current harness version; it is time-bounded and consumed exactly
+once before the first promotion write. Promotion reopens and re-hashes the benchmark input, every
+signed per-run receipt, all transitive evidence, the canary, and the integrity receipt immediately
+before its first write.
+Promoted harness versions retain a rollback pointer. These guards are covered by deterministic and
+adversarial fixtures, not yet by a live application tournament.
 
 ## Implementation ladder
 
@@ -196,7 +210,9 @@ are covered by deterministic fixtures, not yet by a live application tournament.
 - [x] Executable skill schema and five skill directories.
 - [x] Findings clustering into proposal-only candidates.
 - [x] Positive/negative examples, fixtures, traces, completion, and failure assertions.
-- [x] With-skill/without-skill comparison schema and fail-closed benchmark evaluator.
+- [x] With-skill/without-skill input and verdict schemas with protected per-run evaluator receipts.
+- [x] Content-addressed evidence closure, fixed arm repetitions, trusted-key verification, and
+      fail-closed verdict re-derivation.
 - [ ] Run the comparison against real application tasks and live model observations.
 
 ### P2 — implemented mechanics
@@ -209,13 +225,16 @@ are covered by deterministic fixtures, not yet by a live application tournament.
 ### P3 — implemented mechanics
 
 - [x] Blind pairwise comparison contract and independent-critic enforcement.
-- [x] Fresh-agent canary and NodeProof promotion-receipt gates.
+- [x] Purpose-scoped signed fresh-agent canary and independent NodeProof integrity-receipt gates.
+- [x] Pre-write re-open and transitive re-hash of benchmark, canary, and integrity evidence.
 - [x] Explicit manual promotion/rejection and versioned rollback.
 - [ ] Complete a real tournament, canary, independently verified promotion, and rollback drill.
 
 ### P4 — application gyms
 
-- [ ] NodeKit Builder Gym.
+- [x] NodeKit Builder Gym mechanics with content-addressed NodeTrace trajectories, protected
+      evaluator boundaries, and separate task/artifact/UI/safety/efficiency/evidence/preference
+      verdicts. Real fresh-agent evidence remains open.
 - [ ] NodeSlide Deck Gym.
 - [ ] NodeVideo Creator Gym.
 - [ ] NodeRoom Collaboration Gym.

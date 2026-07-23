@@ -1,0 +1,265 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://nodekit.dev/schemas/nodekit.agent-ease-trial.v2.schema.json",
+  "title": "NodeKit exact-candidate coding-agent trial",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion", "runId", "taskId", "agentProfile", "agentDriver", "agentModel", "agentExitCode",
+    "agentBootstrap", "agentBootstrapSession", "agentBootstrapSha256", "bootstrapMode",
+    "agentCommandSha256", "agentContainerImage", "agentContainerImageId", "agentProcessIsolation", "agentProcessIsolationSha256",
+    "agentInstructionPolicy", "agentInstructionPolicySha256",
+    "agentSessionId", "agentSessionMode", "agentVersion", "candidateRoot", "changedFiles", "substantiveFiles",
+    "applicationHash", "configHash", "postAgentTreeHash", "candidateArchiveSha256", "nodekitCommit",
+    "endingNodekitCommit", "nodekitSourceHash", "endingNodekitSourceHash", "nodekitTarballSha256", "nodekitPackage",
+    "nodekitVersion", "promptSha256", "taskSetSha256", "trialRunnerSha256", "protectedEvaluatorSha256",
+    "protectedBrowserLaneSha256", "providerBrokerSha256", "protectedContainerImage", "protectedContainerImageId", "protectedIsolationSha256",
+    "protectedEvaluationSha256", "evaluatorScreenshotSha256", "visualReviewInventorySha256",
+    "screenshotEvidenceRootSha256", "checks", "evidence", "evidenceSetSha256", "executor", "packageManager",
+    "freshSession", "trialStartedAt", "generatedAt", "durationMs", "interventions", "userReprompts", "passed",
+    "verdict", "receiptSha256"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "nodekit.agent-ease-trial/v2" },
+    "runId": { "$ref": "#/$defs/segment" },
+    "taskId": { "enum": ["research-map", "volunteer-onboarding", "launch-presentation"] },
+    "agentProfile": { "enum": ["codex", "claude-code", "lower-cost"] },
+    "agentDriver": { "enum": ["codex", "claude-code"] },
+    "agentModel": { "type": "string", "minLength": 1 },
+    "agentExitCode": { "const": 0 },
+    "agentSessionId": { "type": "string", "minLength": 1 },
+    "agentSessionMode": { "const": "ephemeral" },
+    "agentVersion": { "type": "string", "minLength": 1 },
+    "agentBootstrap": { "$ref": "#/$defs/agentBootstrap" },
+    "agentBootstrapSession": { "$ref": "#/$defs/agentBootstrapSession" },
+    "agentBootstrapSha256": { "$ref": "#/$defs/sha256" },
+    "bootstrapMode": { "enum": ["pre-scaffolded-packed-cli", "agent-process-packed-cli-from-empty"] },
+    "agentCommandSha256": { "$ref": "#/$defs/sha256" },
+    "agentContainerImage": { "type": "string", "minLength": 1 },
+    "agentContainerImageId": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+    "agentProcessIsolation": { "$ref": "#/$defs/codingAgentIsolation" },
+    "agentProcessIsolationSha256": { "$ref": "#/$defs/sha256" },
+    "agentInstructionPolicy": { "$ref": "#/$defs/agentInstructionPolicy" },
+    "agentInstructionPolicySha256": { "$ref": "#/$defs/sha256" },
+    "candidateRoot": { "type": "string", "minLength": 1 },
+    "changedFiles": { "type": "array", "items": { "type": "string" } },
+    "substantiveFiles": { "type": "array", "minItems": 1, "items": { "type": "string" } },
+    "applicationHash": { "$ref": "#/$defs/sha256" },
+    "configHash": { "$ref": "#/$defs/sha256" },
+    "postAgentTreeHash": { "$ref": "#/$defs/commit" },
+    "candidateArchiveSha256": { "$ref": "#/$defs/sha256" },
+    "nodekitCommit": { "$ref": "#/$defs/commit" },
+    "endingNodekitCommit": { "$ref": "#/$defs/commit" },
+    "nodekitSourceHash": { "$ref": "#/$defs/sha256" },
+    "endingNodekitSourceHash": { "$ref": "#/$defs/sha256" },
+    "nodekitTarballSha256": { "$ref": "#/$defs/sha256" },
+    "nodekitPackage": { "const": "@homenshum/nodekit" },
+    "nodekitVersion": { "type": "string", "minLength": 1 },
+    "promptSha256": { "$ref": "#/$defs/sha256" },
+    "taskSetSha256": { "$ref": "#/$defs/sha256" },
+    "trialRunnerSha256": { "$ref": "#/$defs/sha256" },
+    "protectedEvaluatorSha256": { "$ref": "#/$defs/sha256" },
+    "protectedBrowserLaneSha256": { "$ref": "#/$defs/sha256" },
+    "providerBrokerSha256": { "$ref": "#/$defs/sha256" },
+    "protectedContainerImage": { "type": "string", "minLength": 1 },
+    "protectedContainerImageId": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+    "protectedIsolationSha256": { "$ref": "#/$defs/sha256" },
+    "protectedEvaluationSha256": { "$ref": "#/$defs/sha256" },
+    "evaluatorScreenshotSha256": { "$ref": "#/$defs/sha256" },
+    "visualReviewInventorySha256": { "$ref": "#/$defs/sha256" },
+    "screenshotEvidenceRootSha256": { "$ref": "#/$defs/sha256" },
+    "checks": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "agentBootstrapBound", "agentEnvironmentIsolated", "agentImplemented", "agentReportedCompletion", "agentSessionIdentityRecorded",
+        "agentVersionRecorded", "applicationIdentityRecorded", "browserContract", "browserJourney", "browserRuntime",
+        "candidateArchive", "check", "compile", "demo", "eval", "evidenceComplete", "localInstructionsBound", "nodekitIdentityStable",
+        "nodekitRuntimeBound", "nodekitTarballStable", "postAgentTreeStable", "proof", "protectedEvaluation",
+        "protectedEvaluatorStable", "protectedIsolation", "taskSpecificOutput", "visualReview"
+      ],
+      "properties": {
+        "agentBootstrapBound": { "const": true }, "agentEnvironmentIsolated": { "const": true }, "agentImplemented": { "const": true },
+        "agentReportedCompletion": { "const": true }, "agentSessionIdentityRecorded": { "const": true },
+        "agentVersionRecorded": { "const": true }, "applicationIdentityRecorded": { "const": true },
+        "browserContract": { "const": true }, "browserJourney": { "const": true }, "browserRuntime": { "const": true },
+        "candidateArchive": { "const": true }, "check": { "const": true }, "compile": { "const": true },
+        "demo": { "const": true }, "eval": { "const": true }, "evidenceComplete": { "const": true },
+        "localInstructionsBound": { "const": true },
+        "nodekitIdentityStable": { "const": true }, "nodekitRuntimeBound": { "const": true },
+        "nodekitTarballStable": { "const": true }, "postAgentTreeStable": { "const": true }, "proof": { "const": true },
+        "protectedEvaluation": { "const": true }, "protectedEvaluatorStable": { "const": true },
+        "protectedIsolation": { "const": true }, "taskSpecificOutput": { "const": true }, "visualReview": { "const": true }
+      }
+    },
+    "evidence": {
+      "type": "array", "minItems": 19, "maxItems": 19,
+      "items": { "$ref": "#/$defs/evidence" }
+    },
+    "evidenceSetSha256": { "$ref": "#/$defs/sha256" },
+    "executor": { "const": "docker" },
+    "packageManager": { "enum": ["npm", "pnpm"] },
+    "freshSession": { "const": true },
+    "trialStartedAt": { "type": "string", "format": "date-time" },
+    "generatedAt": { "type": "string", "format": "date-time" },
+    "durationMs": { "type": "integer", "minimum": 0 },
+    "interventions": { "const": 0 },
+    "userReprompts": { "const": 0 },
+    "passed": { "const": true },
+    "verdict": { "const": "PILOT_PASS_NOT_REPEATABILITY_CERTIFIED" },
+    "receiptSha256": { "$ref": "#/$defs/sha256" }
+  },
+  "$defs": {
+    "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "commit": { "type": "string", "pattern": "^[a-f0-9]{40}$" },
+    "segment": { "type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$" },
+    "codingAgentIsolation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schemaVersion", "mode", "driver", "bootstrap", "broker", "containerId", "commandSha256", "credential", "image", "instructions", "mounts", "network", "checks", "isolationSha256"
+      ],
+      "properties": {
+        "schemaVersion": { "const": "nodekit.coding-agent-isolation/v1" },
+        "mode": { "const": "docker-candidate-only" },
+        "driver": { "enum": ["codex", "claude-code"] },
+        "bootstrap": { "$ref": "#/$defs/agentBootstrap" },
+        "broker": {
+          "type": "object", "additionalProperties": false, "required": ["allowedModel", "containerId", "expiresAt", "imageId", "runnerSha256"],
+          "properties": {
+            "allowedModel": { "type": "string", "minLength": 1 },
+            "containerId": { "$ref": "#/$defs/sha256" },
+            "expiresAt": { "type": "string", "format": "date-time" },
+            "imageId": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+            "runnerSha256": { "$ref": "#/$defs/sha256" }
+          }
+        },
+        "containerId": { "$ref": "#/$defs/sha256" },
+        "commandSha256": { "$ref": "#/$defs/sha256" },
+        "credential": {
+          "type": "object", "additionalProperties": false, "required": ["expiresAt", "fingerprintSha256", "provider", "scope"],
+          "properties": {
+            "expiresAt": { "type": "string", "format": "date-time" },
+            "fingerprintSha256": { "$ref": "#/$defs/sha256" },
+            "provider": { "enum": ["openai", "anthropic"] },
+            "scope": { "enum": ["responses:write", "messages:write"] }
+          }
+        },
+        "isolationSha256": { "$ref": "#/$defs/sha256" },
+        "image": {
+          "type": "object", "additionalProperties": false, "required": ["id", "reference"],
+          "properties": {
+            "id": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+            "reference": { "type": "string", "minLength": 1 }
+          }
+        },
+        "mounts": {
+          "type": "array", "minItems": 1, "maxItems": 6,
+          "items": {
+            "type": "object", "additionalProperties": false, "required": ["destination", "readOnly", "type"],
+            "properties": {
+              "destination": { "enum": ["/workspace", "/protected/nodekit-package", "/protected/nodekit.tgz", "/protected/npm-cache", "/AGENTS.md", "/CLAUDE.md"] },
+              "readOnly": { "type": "boolean" },
+              "type": { "const": "bind" }
+            }
+          }
+        },
+        "checks": {
+          "type": "object", "additionalProperties": false,
+          "required": [
+            "bootstrapContractBound", "brokerCredentialExpiryBound", "brokerExactImageBound", "brokerModelBound", "brokerNoPublishedPorts", "brokerRunnerBound", "capabilitiesDropped",
+            "candidateOnlyWritableHostMount", "containerCommandBound", "credentialBrokered", "dockerSocketAbsent", "exactImageBound",
+            "hostNamespacesNotShared", "instructionPolicyBound", "internalNetworkBound", "noCredentialMount",
+            "noEvidenceOrEvaluatorMount", "noNewPrivileges", "noPublishedPorts", "providerBrokerOnlyPeer",
+            "readOnlyRootFilesystem", "scopedMountSet"
+          ],
+          "properties": {
+            "bootstrapContractBound": { "const": true }, "brokerCredentialExpiryBound": { "const": true }, "brokerExactImageBound": { "const": true }, "brokerModelBound": { "const": true }, "brokerNoPublishedPorts": { "const": true },
+            "brokerRunnerBound": { "const": true }, "capabilitiesDropped": { "const": true },
+            "candidateOnlyWritableHostMount": { "const": true }, "containerCommandBound": { "const": true }, "dockerSocketAbsent": { "const": true },
+            "credentialBrokered": { "const": true },
+            "exactImageBound": { "const": true }, "hostNamespacesNotShared": { "const": true },
+            "instructionPolicyBound": { "const": true }, "internalNetworkBound": { "const": true },
+            "noCredentialMount": { "const": true },
+            "noEvidenceOrEvaluatorMount": { "const": true }, "noNewPrivileges": { "const": true },
+            "noPublishedPorts": { "const": true }, "providerBrokerOnlyPeer": { "const": true },
+            "readOnlyRootFilesystem": { "const": true },
+            "scopedMountSet": { "const": true }
+          }
+        },
+        "instructions": { "$ref": "#/$defs/agentInstructionPolicy" },
+        "network": {
+          "type": "object", "additionalProperties": false, "required": ["id", "internal", "name"],
+          "properties": {
+            "id": { "$ref": "#/$defs/sha256" },
+            "internal": { "const": true },
+            "name": { "type": "string", "minLength": 1 }
+          }
+        }
+      }
+    },
+    "agentBootstrap": {
+      "type": "object", "additionalProperties": false,
+      "required": ["schemaVersion", "mode", "candidateDirectoryInitiallyEmpty", "packedCliInvokedInsideAgentProcess", "offlineDependencyInstall", "agentInitiatedScaffold", "workspaceEmptyAtAgentStart", "firstWorkspaceWriteFromAgentSession", "nodekitCliSha256", "nodekitTarballSha256", "commandSha256", "bootstrapSha256"],
+      "properties": {
+        "schemaVersion": { "const": "nodekit.agent-bootstrap/v1" },
+        "mode": { "enum": ["pre-scaffolded-packed-cli", "agent-process-packed-cli-from-empty"] },
+        "candidateDirectoryInitiallyEmpty": { "type": "boolean" },
+        "packedCliInvokedInsideAgentProcess": { "type": "boolean" },
+        "offlineDependencyInstall": { "type": "boolean" },
+        "agentInitiatedScaffold": { "type": "boolean" },
+        "workspaceEmptyAtAgentStart": { "type": "boolean" },
+        "firstWorkspaceWriteFromAgentSession": { "type": "boolean" },
+        "nodekitCliSha256": { "$ref": "#/$defs/sha256" },
+        "nodekitTarballSha256": { "$ref": "#/$defs/sha256" },
+        "commandSha256": { "$ref": "#/$defs/sha256" },
+        "bootstrapSha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "agentBootstrapSession": {
+      "type": "object", "additionalProperties": false,
+      "required": ["commandCount", "firstMutatingCommandSha256", "passed", "scaffoldCommandSha256"],
+      "properties": {
+        "commandCount": { "type": "integer", "minimum": 0 },
+        "firstMutatingCommandSha256": { "oneOf": [{ "$ref": "#/$defs/sha256" }, { "type": "null" }] },
+        "passed": { "const": true },
+        "scaffoldCommandSha256": { "oneOf": [{ "$ref": "#/$defs/sha256" }, { "type": "null" }] }
+      }
+    },
+    "agentInstructionPolicy": {
+      "type": "object", "additionalProperties": false,
+      "required": ["schemaVersion", "automaticPath", "canonicalPath", "files", "loadedPaths", "parentContextInherited", "routingDirective", "rulesIgnored", "instructionSetSha256"],
+      "properties": {
+        "schemaVersion": { "const": "nodekit.agent-instruction-policy/v1" },
+        "automaticPath": { "enum": ["AGENTS.md", "CLAUDE.md"] },
+        "canonicalPath": { "const": "AGENTS.md" },
+        "files": {
+          "type": "array", "minItems": 2, "maxItems": 2,
+          "items": {
+            "type": "object", "additionalProperties": false, "required": ["path", "sha256"],
+            "properties": { "path": { "enum": ["AGENTS.md", "CLAUDE.md"] }, "sha256": { "$ref": "#/$defs/sha256" } }
+          }
+        },
+        "loadedPaths": { "type": "array", "minItems": 1, "maxItems": 2, "items": { "enum": ["AGENTS.md", "CLAUDE.md"] } },
+        "parentContextInherited": { "const": false },
+        "routingDirective": { "type": ["string", "null"] },
+        "rulesIgnored": { "const": false },
+        "instructionSetSha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "evidence": {
+      "type": "object", "additionalProperties": false, "required": ["bytes", "kind", "path", "sha256"],
+      "properties": {
+        "bytes": { "type": "integer", "minimum": 0 },
+        "kind": { "enum": [
+          "prompt", "prompt-hash", "environment", "interventions", "session", "final-report", "stderr",
+          "token-usage", "command-ledger", "candidate-diff", "candidate-status", "candidate-commit",
+          "application-identity", "candidate-archive", "browser-certification", "screenshot-manifest",
+          "protected-evaluation", "evaluator-screenshot", "visual-review-inventory"
+        ] },
+        "path": { "type": "string", "pattern": "^(?!/)(?![A-Za-z]:)(?!.*//)(?!.*(?:^|/)\\.{1,2}(?:/|$))[^\\\\]+$" },
+        "sha256": { "$ref": "#/$defs/sha256" }
+      }
+    }
+  }
+}

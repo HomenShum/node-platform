@@ -119,9 +119,29 @@ async function assertPublishedSurface(repoRoot) {
     || attestation?.default !== "./src/submission-attestation.mjs") {
     throw new Error("package metadata is missing the exact submission-attestation public export");
   }
+  const finalizer = packageJson.exports?.["./submission-evidence-finalizer"];
+  if (finalizer?.types !== "./src/submission-evidence-finalizer.d.mts"
+    || finalizer?.import !== "./src/submission-evidence-finalizer.mjs"
+    || finalizer?.default !== "./src/submission-evidence-finalizer.mjs") {
+    throw new Error("package metadata is missing the exact submission-evidence-finalizer public export");
+  }
+  const consumerPreparation = packageJson.exports?.["./consumer-package-preparation"];
+  if (consumerPreparation?.types !== "./src/consumer-package-preparation.d.mts"
+    || consumerPreparation?.import !== "./src/consumer-package-preparation.mjs"
+    || consumerPreparation?.default !== "./src/consumer-package-preparation.mjs") {
+    throw new Error("package metadata is missing the exact consumer-package-preparation public export");
+  }
+  const builderGym = packageJson.exports?.["./builder-gym"];
+  if (builderGym?.types !== "./src/builder-gym.d.mts"
+    || builderGym?.import !== "./src/builder-gym.mjs"
+    || builderGym?.default !== "./src/builder-gym.mjs") {
+    throw new Error("package metadata is missing the exact builder-gym public export");
+  }
   for (const [name, target] of [
     ["nodekit-attestation-sign", "scripts/sign-submission-attestation.mjs"],
     ["nodekit-attestation-verify", "scripts/verify-submission-attestation.mjs"],
+    ["nodekit-evidence-finalize", "scripts/finalize-submission-evidence.mjs"],
+    ["nodekit-consumer-prepare", "scripts/prepare-consumer-package.mjs"],
   ]) {
     if (packageJson.bin?.[name] !== target || !packageJson.files?.includes(target)) {
       throw new Error(`package metadata is missing the exact ${name} bin or packed file`);

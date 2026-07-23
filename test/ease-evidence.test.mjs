@@ -219,6 +219,28 @@ test("fresh-user verdict emits participant-level evidence and recomputable metri
   assert.equal(verdict.checks.evidenceFilesVerified, true);
 });
 
+test("fresh-user evidence requires exactly five participants", () => {
+  const participants = humanParticipants();
+  const sixth = structuredClone(participants[0]);
+  sixth.participantId = "participant-6";
+  sixth.evidenceRefs = sixth.evidenceRefs.map((entry) => ({
+    ...entry,
+    path: entry.path.replace("participant-1", "participant-6"),
+    sha256: entry.sha256 === "1".repeat(64) ? "b".repeat(64) : "c".repeat(64),
+  }));
+  participants.push(sixth);
+  const verdict = evaluateFreshUserStudy({
+    schemaVersion: "nodekit.fresh-user-study/v1",
+    nodekitCommit: "a".repeat(40),
+    nodekitSourceHash: "b".repeat(64),
+    instruction: "Use this app to complete the job shown on screen.",
+    participants,
+    thresholds: humanThresholds,
+  }, { evidenceFilesVerified: true, evidenceFileErrors: [] });
+  assert.equal(verdict.passed, false);
+  assert.match(verdict.errors.join("\n"), /exactly five fresh participants are required/);
+});
+
 test("human CLI evaluator reads and hashes the exact screenshot and session log files", async () => {
   const root = await mkdtemp(path.join(os.tmpdir(), "nodekit-human-evidence-"));
   const participants = humanParticipants();

@@ -1,5 +1,6 @@
 import { createHash } from "node:crypto";
 import { compileModelIntelligence } from "./model-intelligence.mjs";
+import { evidenceSnapshotToGraphNode, ingestEvidenceBytes } from "./evidence-snapshots.mjs";
 import { proposeGraphPatch, readKnowledgeGraph } from "./knowledge-evolution.mjs";
 
 function canonical(value) {
@@ -40,20 +41,24 @@ export async function proposeHarnessKnowledgePatch(repoRoot, {
 
   for (const observation of compiled.observations) {
     const observationHash = hash(observation);
-    const evidenceId = `evidence:model-observation:${safe(observation.runId)}@${observationHash.slice(0, 12)}`;
+    const rawBytes = Buffer.from(`${canonical(observation)}\n`, "utf8");
+    const rawSha256 = createHash("sha256").update(rawBytes).digest("hex");
+    const capturedAt = new Date(observation.observedAt ?? 0).toISOString();
+    const sourceUri = `https://nodekit.local/model-observation/${observationHash}`;
+    const evidenceId = `evidence_${hash({ sourceUri, capturedAt, rawSha256 }).slice(0, 24)}`;
     evidenceRefs.push(evidenceId);
-    insertNode({
-      id: evidenceId,
-      kind: "evidence",
-      label: `Evaluated model observation ${observation.runId}`,
-      layer: "source",
-      confidence: 1,
-      evidenceRefs: [],
-      contentHash: observationHash,
-      sourceUri: `nodekit:model-observation:${observation.runId}`,
-      capturedAt: observation.observedAt ?? new Date(0).toISOString(),
-      properties: { proofReceiptId: observation.proofReceiptId, evidenceRefs: observation.evidenceRefs },
-    });
+    if (!existing.has(evidenceId)) {
+      const snapshot = await ingestEvidenceBytes(repoRoot, {
+        bytes: rawBytes,
+        sourceUri,
+        mediaType: "application/json",
+        capturedAt,
+      });
+      insertNode(evidenceSnapshotToGraphNode(snapshot, {
+        label: `Evaluated model observation ${observation.runId}`,
+        properties: { proofReceiptId: observation.proofReceiptId, evidenceRefs: observation.evidenceRefs },
+      }));
+    }
 
     const taskId = `task:${safe(observation.applicationId)}:${safe(observation.taskId)}`;
     const modelId = `model:${safe(observation.model.resolvedProvider)}:${safe(observation.model.resolvedModel)}`;

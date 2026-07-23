@@ -3,7 +3,8 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 import test from "node:test";
 import { fileURLToPath } from "node:url";
-import Ajv2020 from "ajv/dist/2020.js";
+import { requiredSubmissionGates } from "../src/lib/submission-gate.mjs";
+import { createSchemaAjv } from "../src/lib/schema-validation.mjs";
 import { exactSubmissionVerdicts } from "./submission-fixtures.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -27,10 +28,21 @@ const verdictSchemas = Object.freeze({
 async function validators() {
   return Object.fromEntries(await Promise.all(Object.entries(verdictSchemas).map(async ([gateId, schemaFile]) => {
     const schema = JSON.parse(await readFile(path.join(root, "schemas", schemaFile), "utf8"));
-    const ajv = new Ajv2020({ allErrors: true, strict: false });
+    const ajv = createSchemaAjv();
     return [gateId, ajv.compile(schema)];
   })));
 }
+
+test("operator templates track the complete current submission contract", async () => {
+  const manifest = JSON.parse(await readFile(path.join(root, "proof", "submission-manifest.template.json"), "utf8"));
+  const approval = JSON.parse(await readFile(path.join(root, "proof", "publication-approval.template.json"), "utf8"));
+  assert.deepEqual(manifest.gates.map((gate) => gate.id), requiredSubmissionGates);
+  assert.equal(manifest.gates.length, 12);
+  const compiled = await validators();
+  assert.equal(compiled.publicationApproval(approval), true, validationMessage(compiled.publicationApproval));
+  assert.equal(approval.attestationPayload.submissionManifest.path, "proof/submission-candidate.json");
+  assert.deepEqual(approval.attestationPayload.scopes, ["convex-directory-submit", "npm-publish"]);
+});
 
 function validationMessage(validate) {
   return JSON.stringify(validate.errors ?? [], null, 2);
@@ -42,6 +54,14 @@ test("all decisive submission verdict schemas accept the exact fixture contracts
   for (const [gateId, validate] of Object.entries(compiled)) {
     assert.equal(validate(verdicts[gateId]), true, `${gateId}: ${validationMessage(validate)}`);
   }
+});
+
+test("decisive verdict schemas reject non-RFC3339 date-time values", async () => {
+  const compiled = await validators();
+  const verdict = exactSubmissionVerdicts(candidateCommit).freshAgentHeldout;
+  verdict.lowerCostPricingEvidence.pricingValidation.retrievedAt = "July 22, 2026 noon";
+  assert.equal(compiled.freshAgentHeldout(verdict), false, "fresh-agent verdict accepted a non-RFC3339 timestamp");
+  assert.match(validationMessage(compiled.freshAgentHeldout), /format.*date-time/);
 });
 
 test("decisive verdict schemas reject unknown top-level and release-candidate fields", async () => {

@@ -1,13 +1,15 @@
 import assert from "node:assert/strict";
 import { execFile } from "node:child_process";
-import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { link, mkdir, mkdtemp, readFile, rename, rm, symlink, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import test from "node:test";
+import { setTimeout as delay } from "node:timers/promises";
 import { promisify } from "node:util";
 import {
   applyGraphPatch,
   benchmarkKnowledgeRetrieval,
+  createFileKnowledgeGraphAdapter,
   createMemoryKnowledgeGraphAdapter,
   createKnowledgeState,
   decideGraphPatch,
@@ -22,6 +24,7 @@ import {
   validateGraphPatch,
 } from "../src/lib/knowledge-evolution.mjs";
 import { validateSchema } from "../src/lib/schema-validation.mjs";
+import { evidenceSnapshotToGraphNode, ingestEvidenceBytes } from "../src/lib/evidence-snapshots.mjs";
 import { createProject } from "../src/lib/scaffold.mjs";
 import { initializeHarness } from "../src/lib/model-intelligence.mjs";
 import { proposeHarnessKnowledgePatch } from "../src/lib/harness-knowledge.mjs";
@@ -34,18 +37,24 @@ const actor = {
 };
 const execFileAsync = promisify(execFile);
 
-const evidence = {
-  id: "evidence:paper",
-  kind: "evidence",
-  label: "EvoGraph-R1 paper",
-  layer: "source",
-  confidence: 1,
-  evidenceRefs: [],
-  contentHash: "a".repeat(64),
-  sourceUri: "https://arxiv.org/pdf/2607.12764",
-  capturedAt: "2026-07-21T00:00:00.000Z",
-  freshness: { checkedAt: "2026-07-21T00:00:00.000Z", expiresAt: "2027-07-21T00:00:00.000Z" },
-};
+async function storedEvidence(root, {
+  bytes = Buffer.from("EvoGraph-R1 evidence bytes", "utf8"),
+  label = "EvoGraph-R1 paper",
+  sourceUri = "https://arxiv.org/pdf/2607.12764",
+  expiresAt = "2027-07-21T00:00:00.000Z",
+  capturedAt = "2026-07-21T00:00:00.000Z",
+  checkedAt = "2026-07-21T00:00:00.000Z",
+} = {}) {
+  const snapshot = await ingestEvidenceBytes(root, {
+    bytes,
+    sourceUri,
+    mediaType: "text/plain",
+    capturedAt,
+    checkedAt,
+    expiresAt,
+  });
+  return evidenceSnapshotToGraphNode(snapshot, { label });
+}
 
 async function rootFor(t) {
   const root = await mkdtemp(path.join(os.tmpdir(), "nodekit-knowledge-"));
@@ -84,6 +93,7 @@ test("initializes a backend-neutral six-layer graph with proposal-only authority
 
 test("ingests immutable multimodal evidence only through an accepted patch", async (t) => {
   const root = await rootFor(t);
+  const evidence = await storedEvidence(root);
   const proposed = await proposeGraphPatch(root, {
     operations: [{ type: "INSERT", node: evidence }],
     evidenceRefs: [],
@@ -110,6 +120,7 @@ test("ingests immutable multimodal evidence only through an accepted patch", asy
 
 test("supports source-grounded hyperedges, retrieval, gaps, actions, replay, and benchmark", async (t) => {
   const root = await rootFor(t);
+  const evidence = await storedEvidence(root);
   await proposeValidateAcceptApply(root, {
     operations: [{ type: "INSERT", node: evidence }],
     evidenceRefs: [],
@@ -153,7 +164,7 @@ test("supports source-grounded hyperedges, retrieval, gaps, actions, replay, and
     evidenceRefs: [evidence.id],
     contradictionRefs: [],
   });
-  await recordKnowledgeAction(root, {
+  const actionReceipt = await recordKnowledgeAction(root, {
     type: "EXTERNAL_RESEARCH",
     runId: "run:1",
     caseId: "case:1",
@@ -163,6 +174,7 @@ test("supports source-grounded hyperedges, retrieval, gaps, actions, replay, and
     evidenceRefs: [evidence.id],
     status: "completed",
   });
+  assert.deepEqual(await validateSchema("nodekit.knowledge-action-receipt.v1.schema.json", actionReceipt, "knowledge action receipt"), []);
 
   const graph = await readKnowledgeGraph(root);
   const query = queryKnowledgeGraph(graph, "governed harness task");
@@ -187,6 +199,7 @@ test("supports source-grounded hyperedges, retrieval, gaps, actions, replay, and
 
 test("blocks ungrounded, stale, and direct source mutations while retaining deprecated history", async (t) => {
   const root = await rootFor(t);
+  const evidence = await storedEvidence(root);
   const ungrounded = await proposeGraphPatch(root, {
     operations: [{ type: "INSERT", node: { id: "claim:unsupported", kind: "claim", label: "Unsupported", layer: "canonical", confidence: 0.5, evidenceRefs: [] } }],
     evidenceRefs: [], contradictionRefs: [], proposedBy: actor, confidence: 0.5,
@@ -214,10 +227,92 @@ test("blocks ungrounded, stale, and direct source mutations while retaining depr
   assert.equal(queryKnowledgeGraph(graph, "old claim").results.length, 0);
 });
 
+test("reserves the source layer exclusively for authenticated evidence snapshots", async (t) => {
+  const root = await rootFor(t);
+  await assert.rejects(() => proposeGraphPatch(root, {
+    operations: [{ type: "INSERT", node: { id: "claim:laundered", kind: "claim", label: "Laundered claim", layer: "source", confidence: 1, evidenceRefs: [] } }],
+    evidenceRefs: [], contradictionRefs: [], proposedBy: actor, confidence: 1,
+  }), /source layer is reserved/);
+  await assert.rejects(() => proposeGraphPatch(root, {
+    operations: [{ type: "INSERT", node: { id: "evidence:misplaced", kind: "evidence", label: "Misplaced evidence", layer: "derived", confidence: 1, evidenceRefs: [] } }],
+    evidenceRefs: [], contradictionRefs: [], proposedBy: actor, confidence: 1,
+  }), /evidence nodes must remain in the source layer/);
+  await assert.rejects(() => proposeGraphPatch(root, {
+    operations: [{ type: "INSERT", hyperedge: {
+      id: "hyperedge:laundered", predicate: "pretends-to-be-source", layer: "source",
+      participants: [{ nodeId: "a", role: "left" }, { nodeId: "b", role: "right" }], confidence: 1, evidenceRefs: [],
+    } }],
+    evidenceRefs: [], contradictionRefs: [], proposedBy: actor, confidence: 1,
+  }), /source layer is reserved/);
+
+  const evidence = await storedEvidence(root);
+  await proposeValidateAcceptApply(root, { operations: [{ type: "INSERT", node: evidence }], evidenceRefs: [], contradictionRefs: [] });
+  const claim = { id: "claim:canonical", kind: "claim", label: "Canonical claim", layer: "canonical", confidence: 1, evidenceRefs: [evidence.id] };
+  await proposeValidateAcceptApply(root, { operations: [{ type: "INSERT", node: claim }], evidenceRefs: [evidence.id], contradictionRefs: [] });
+  await assert.rejects(() => proposeGraphPatch(root, {
+    operations: [{ type: "UPDATE", targetId: claim.id, patch: { layer: "source" }, evidenceRefs: [evidence.id] }],
+    evidenceRefs: [evidence.id], contradictionRefs: [], proposedBy: actor, confidence: 1,
+  }), /cannot promote an entity into the immutable source layer/);
+});
+
+test("rejects fabricated source anchors and every stale reference location", async (t) => {
+  const root = await rootFor(t);
+  const fabricated = await proposeGraphPatch(root, {
+    operations: [{ type: "INSERT", node: {
+      id: "evidence_fabricated0000000000000",
+      kind: "evidence",
+      label: "Fabricated source",
+      layer: "source",
+      confidence: 1,
+      evidenceRefs: [],
+      contentHash: "a".repeat(64),
+      sourceUri: "https://example.test/fabricated",
+      capturedAt: "2026-07-21T00:00:00.000Z",
+      freshness: { checkedAt: "2026-07-21T00:00:00.000Z", expiresAt: "2027-07-21T00:00:00.000Z" },
+      properties: { snapshotId: "evidence_000000000000000000000000", snapshotContentHash: "b".repeat(64) },
+    } }],
+    evidenceRefs: [], contradictionRefs: [], proposedBy: actor, confidence: 1,
+  });
+  const fabricatedValidation = await validateGraphPatch(root, fabricated.patchId);
+  assert.ok(fabricatedValidation.validation.errors.some((error) => error.includes("authentication failed")));
+
+  const expiresAt = new Date(Date.now() + 2_000).toISOString();
+  const durable = await storedEvidence(root, { bytes: Buffer.from("durable freshness source"), sourceUri: "https://example.test/durable-freshness", expiresAt: "2035-01-01T00:00:00.000Z" });
+  const expiring = await storedEvidence(root, { bytes: Buffer.from("expiring source"), sourceUri: "https://example.test/expiring", expiresAt });
+  await proposeValidateAcceptApply(root, {
+    operations: [{ type: "INSERT", node: durable }, { type: "INSERT", node: expiring }],
+    evidenceRefs: [], contradictionRefs: [],
+  });
+  const target = { id: "claim:freshness-target", kind: "claim", label: "Target", layer: "canonical", confidence: 1, evidenceRefs: [durable.id] };
+  await proposeValidateAcceptApply(root, { operations: [{ type: "INSERT", node: target }], evidenceRefs: [durable.id], contradictionRefs: [] });
+  await delay(2_100);
+
+  const cases = [
+    await proposeGraphPatch(root, {
+      operations: [{ type: "INSERT", node: { id: "claim:patch-stale", kind: "claim", label: "Patch stale", layer: "canonical", confidence: 1, evidenceRefs: [] } }],
+      evidenceRefs: [expiring.id], contradictionRefs: [], proposedBy: actor, confidence: 1,
+    }),
+    await proposeGraphPatch(root, {
+      operations: [{ type: "INSERT", node: { id: "claim:entity-stale", kind: "claim", label: "Entity stale", layer: "canonical", confidence: 1, evidenceRefs: [expiring.id] } }],
+      evidenceRefs: [], contradictionRefs: [], proposedBy: actor, confidence: 1,
+    }),
+    await proposeGraphPatch(root, {
+      operations: [{ type: "UPDATE", targetId: target.id, patch: { label: "Changed" }, evidenceRefs: [expiring.id] }],
+      evidenceRefs: [durable.id], contradictionRefs: [], proposedBy: actor, confidence: 1,
+    }),
+  ];
+  for (const patch of cases) {
+    const validation = await validateGraphPatch(root, patch.patchId);
+    assert.ok(validation.validation.errors.some((error) => error.includes(`evidence is stale: ${expiring.id}`)));
+    assert.equal(validation.validation.freshnessValid, false);
+  }
+});
+
 test("rejects stale accepted proposals instead of overwriting a newer graph version", async (t) => {
   const root = await rootFor(t);
+  const evidence = await storedEvidence(root);
   const first = await proposeGraphPatch(root, { operations: [{ type: "INSERT", node: evidence }], evidenceRefs: [], contradictionRefs: [], proposedBy: actor, confidence: 1 });
-  const secondEvidence = { ...evidence, id: "evidence:second", label: "Second source", contentHash: "b".repeat(64) };
+  const secondEvidence = await storedEvidence(root, { bytes: Buffer.from("second source", "utf8"), label: "Second source", sourceUri: "https://example.test/second" });
   const second = await proposeGraphPatch(root, { operations: [{ type: "INSERT", node: secondEvidence }], evidenceRefs: [], contradictionRefs: [], proposedBy: actor, confidence: 1 });
   await validateGraphPatch(root, first.patchId);
   await decideGraphPatch(root, first.patchId, { decision: "accept", principalId: "human:reviewer" });
@@ -226,6 +321,149 @@ test("rejects stale accepted proposals instead of overwriting a newer graph vers
   assert.equal(stale.status, "conflicted");
   await assert.rejects(() => applyGraphPatch(root, second.patchId), /only accepted/);
   assert.equal((await readKnowledgeGraph(root)).nodes.length, 1);
+});
+
+test("serializes same-base applies and concurrent action receipts without lost updates", async (t) => {
+  const root = await rootFor(t);
+  const evidenceA = await storedEvidence(root, { bytes: Buffer.from("race source a", "utf8"), label: "Race source A", sourceUri: "https://example.test/race-a" });
+  const evidenceB = await storedEvidence(root, { bytes: Buffer.from("race source b", "utf8"), label: "Race source B", sourceUri: "https://example.test/race-b" });
+  const first = await proposeGraphPatch(root, { operations: [{ type: "INSERT", node: evidenceA }], evidenceRefs: [], contradictionRefs: [], proposedBy: actor, confidence: 1 });
+  const second = await proposeGraphPatch(root, { operations: [{ type: "INSERT", node: evidenceB }], evidenceRefs: [], contradictionRefs: [], proposedBy: actor, confidence: 1 });
+  await validateGraphPatch(root, first.patchId);
+  await validateGraphPatch(root, second.patchId);
+  await decideGraphPatch(root, first.patchId, { decision: "accept", principalId: "human:race" });
+  await decideGraphPatch(root, second.patchId, { decision: "accept", principalId: "human:race" });
+
+  const outcomes = await Promise.all([
+    applyGraphPatch(root, first.patchId),
+    applyGraphPatch(root, second.patchId),
+  ]);
+  assert.deepEqual(outcomes.map((entry) => entry.status).sort(), ["applied", "conflicted"]);
+  let graph = await readKnowledgeGraph(root);
+  assert.equal(graph.version, 1);
+  assert.equal(graph.evolutionReceipts.length, 1);
+  assert.equal(graph.nodes.length, 1);
+  assert.deepEqual(graph.proposals.map((entry) => entry.status).sort(), ["applied", "conflicted"]);
+
+  await Promise.all(Array.from({ length: 12 }, (_, index) => recordKnowledgeAction(root, {
+    type: "INSPECT_ARTIFACT",
+    receiptId: `knowledge_action_race_${index}`,
+    runId: "run:race",
+    caseId: "case:race",
+    actorId: `agent:${index}`,
+  })));
+  graph = await readKnowledgeGraph(root);
+  assert.equal(graph.actionReceipts.filter((entry) => entry.runId === "run:race").length, 12);
+  assert.deepEqual(graph.actionReceipts.map((entry) => entry.sequence), Array.from({ length: 12 }, (_, index) => index + 1));
+  assert.equal(graph.actionReceipts[0].previousReceiptHash, null);
+  for (let index = 1; index < graph.actionReceipts.length; index += 1) {
+    assert.equal(graph.actionReceipts[index].previousReceiptHash, graph.actionReceipts[index - 1].receiptHash);
+  }
+});
+
+test("rejects tampered, dropped, and reordered action receipt histories", async (t) => {
+  const root = await rootFor(t);
+  for (const index of [1, 2, 3]) {
+    await recordKnowledgeAction(root, {
+      type: "INSPECT_ARTIFACT", receiptId: `knowledge_action_chain_${index}`,
+      runId: "run:chain", caseId: "case:chain", actorId: "agent:chain", input: { index },
+    });
+  }
+  const graphPath = path.join(root, ".nodeagent", "knowledge", "graph.json");
+  const originalBytes = await readFile(graphPath);
+  const original = JSON.parse(originalBytes.toString("utf8"));
+
+  const tampered = structuredClone(original);
+  tampered.actionReceipts[1].input.index = 999;
+  await writeFile(graphPath, `${JSON.stringify(tampered, null, 2)}\n`);
+  await assert.rejects(() => readKnowledgeGraph(root), /actionReceipts\[1\]\.receiptHash/);
+
+  const dropped = structuredClone(original);
+  dropped.actionReceipts.splice(1, 1);
+  await writeFile(graphPath, `${JSON.stringify(dropped, null, 2)}\n`);
+  await assert.rejects(() => readKnowledgeGraph(root), /sequence|previousReceiptHash/);
+
+  const reordered = structuredClone(original);
+  [reordered.actionReceipts[0], reordered.actionReceipts[1]] = [reordered.actionReceipts[1], reordered.actionReceipts[0]];
+  await writeFile(graphPath, `${JSON.stringify(reordered, null, 2)}\n`);
+  await assert.rejects(() => readKnowledgeGraph(root), /sequence|previousReceiptHash/);
+  await writeFile(graphPath, originalBytes);
+  assert.deepEqual(await readKnowledgeGraph(root), original);
+});
+
+test("file adapter keeps the prior valid bytes when atomic persistence fails before rename", async (t) => {
+  const root = await rootFor(t);
+  const graphPath = path.join(root, ".nodeagent", "knowledge", "graph.json");
+  const beforeBytes = await readFile(graphPath);
+  const before = JSON.parse(beforeBytes.toString("utf8"));
+  const next = structuredClone(before);
+  next.genesis.atomicWriteProbe = "must-not-land";
+  const adapter = createFileKnowledgeGraphAdapter(root, {
+    beforeAtomicRename: async () => { throw new Error("injected-before-rename"); },
+  });
+  await assert.rejects(
+    () => adapter.compareAndSwap({ version: before.version, contentHash: before.contentHash }, next),
+    /injected-before-rename/,
+  );
+  assert.deepEqual(await readFile(graphPath), beforeBytes);
+  assert.deepEqual(await readKnowledgeGraph(root), before);
+});
+
+test("rejects graph symlink, hard-link, and target-swap filesystem attacks", async (t) => {
+  const parentRoot = await mkdtemp(path.join(os.tmpdir(), "nodekit-knowledge-path-"));
+  t.after(() => rm(parentRoot, { force: true, recursive: true }));
+  const redirectedRoot = path.join(parentRoot, "redirected");
+  const symlinkRoot = path.join(parentRoot, "symlink-repo");
+  await mkdir(path.join(symlinkRoot, ".nodeagent"), { recursive: true });
+  await mkdir(redirectedRoot, { recursive: true });
+  try {
+    await symlink(redirectedRoot, path.join(symlinkRoot, ".nodeagent", "knowledge"), process.platform === "win32" ? "junction" : "dir");
+    await assert.rejects(() => initializeKnowledgeGraph(symlinkRoot, { graphId: "knowledge:redirected" }), /symbolic link|unsafe parent/);
+  } catch (error) {
+    if (!["EPERM", "EACCES", "ENOTSUP"].includes(error?.code)) throw error;
+  }
+
+  const root = await rootFor(t);
+  const graphPath = path.join(root, ".nodeagent", "knowledge", "graph.json");
+  const aliasPath = path.join(root, "graph-alias.json");
+  try {
+    await link(graphPath, aliasPath);
+    await assert.rejects(() => readKnowledgeGraph(root), /regular unaliased file/);
+  } catch (error) {
+    if (!["EPERM", "EACCES", "ENOTSUP"].includes(error?.code)) throw error;
+  } finally {
+    await rm(aliasPath, { force: true });
+  }
+
+  const outside = path.join(root, "outside-graph.json");
+  const beforeBytes = await readFile(graphPath);
+  await writeFile(outside, beforeBytes);
+  await rm(graphPath);
+  try {
+    await symlink(outside, graphPath, "file");
+    await assert.rejects(() => readKnowledgeGraph(root), /symbolic link|regular unaliased file/);
+  } catch (error) {
+    if (!["EPERM", "EACCES", "ENOTSUP"].includes(error?.code)) throw error;
+  } finally {
+    await rm(graphPath, { force: true });
+    await writeFile(graphPath, beforeBytes);
+  }
+
+  const alternate = path.join(root, ".nodeagent", "knowledge", "alternate.json");
+  const next = JSON.parse(beforeBytes.toString("utf8"));
+  next.genesis.targetSwapProbe = true;
+  const adapter = createFileKnowledgeGraphAdapter(root, {
+    beforeAtomicRename: async ({ target }) => {
+      await writeFile(alternate, "alternate-target\n");
+      await rename(target, `${target}.displaced`);
+      await rename(alternate, target);
+    },
+  });
+  await assert.rejects(
+    () => adapter.compareAndSwap({ version: next.version, contentHash: next.contentHash }, next),
+    /target identity changed/,
+  );
+  assert.equal(await readFile(graphPath, "utf8"), "alternate-target\n");
 });
 
 test("projects evaluated Harness Gym observations as a proposal, never as an automatic promotion", async (t) => {
@@ -274,6 +512,7 @@ test("CLI exposes the complete safe graph lifecycle", async (t) => {
   const run = async (...args) => JSON.parse((await execFileAsync(process.execPath, [cli, ...args, "--repo-root", root, "--json"])).stdout);
   const initialized = await run("graph", "init", "--graph-id", "knowledge:cli");
   assert.equal(initialized.graphVersion, 0);
+  const evidence = await storedEvidence(root);
   const inputPath = path.join(root, "evidence.json");
   await writeFile(inputPath, `${JSON.stringify({ nodes: [evidence] }, null, 2)}\n`);
   const ingest = await run("graph", "ingest", "--input", "evidence.json");

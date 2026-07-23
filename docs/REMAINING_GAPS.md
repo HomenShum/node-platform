@@ -38,16 +38,26 @@ missing external receipt is a real blocker and must never be replaced with synth
 - [x] EvoGraph-R1-inspired Knowledge Evolution Plane and Evolution Ledger: governed hypergraph
   patches, immutable evidence, human-reviewed causal records, replay, receipts, CLI operations, and
   Harness Gym projection.
+- [x] Provider-neutral bounded research collection and byte-authenticated evidence snapshots:
+  exact URI/time/raw-byte SHA provenance, separate normalization, content-addressed storage,
+  attributed multimodal locators, freshness/hash recheck, proposal-only graph changes, and
+  adversarial path/symlink/duplicate/mismatch/limit coverage.
+- [x] Provider-neutral accepted-knowledge runtime: typed hypergraph traversal, canonical-only
+  Caseflow context packs, exact source/evolution provenance, repeat-session retrieval, safe
+  abstention, tenant isolation, transactional PostgreSQL projection, and protected
+  flat/static/evolving comparison mechanics. This engineering pass does not claim real-task or
+  consumer adoption.
 
 ## Candidate-freeze work
 
-- [x] Integrate and independently review the current lifecycle, portability, package, browser,
-  evidence-verifier, attestation, and Knowledge Evolution changes.
-- [x] Run the complete repository and component tests, public and component TypeScript checks,
+- [ ] Finish integrating and independently reviewing the current lifecycle, portability, package,
+  browser, protected-evaluator, evidence-verifier, attestation, and Knowledge Evolution changes.
+- [ ] Re-run the complete repository and component tests, public and component TypeScript checks,
   component build, production dependency audit, registry check, ecosystem check, and Evolution
-  Ledger verification. The final pre-freeze local run passed 205 Node tests, eight component tests,
-  both TypeScript surfaces, the component build, a zero-vulnerability production audit, registry
-  and ecosystem conformance, and Evolution Ledger verification.
+  Ledger verification after the final source change. A historical pre-hardening run passed 205 Node
+  tests, eight component tests, both TypeScript surfaces, the component build, a zero-vulnerability
+  production audit, registry and ecosystem conformance, and Evolution Ledger verification; those
+  results do not certify the current mutable working tree.
 - [ ] Freeze one clean immutable commit and compute its NodeKit source identity.
 - [ ] Re-run the packed-consumer component proof and local browser download/reopen proof against
   that exact commit. Historical or mutable-working-tree receipts do not qualify.
@@ -68,6 +78,11 @@ missing external receipt is a real blocker and must never be replaced with synth
 | Model/Harness learning | Live exact-model observations, a protected application gym, independent evaluation, and a fresh-agent canary produce a provisional promotion receipt | Fixture-based machinery cannot certify a model or routing policy |
 | Final ProofLoop | An independent verifier re-hashes the immutable candidate, every decisive receipt, and all transitive evidence | It must run after every other required receipt exists |
 | Publication | Exact tarball is authorized for npm publication and a human approves the final public claims and Convex submission | Publication is externally visible and intentionally last |
+
+The fresh-human collection mechanics are closed: `npm run ease:human-study -- help` now records
+anonymous consented sessions with append-only monotonic timers and byte-addressed evidence, then
+assembles all five exact-candidate attempts for the existing independent evaluator. The external
+gap remains 0/5 because tooling cannot stand in for real people or their consent.
 
 ## Deterministic final rule
 

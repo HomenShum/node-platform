@@ -1,0 +1,251 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/HomenShum/node-platform/blob/main/schemas/nodekit.nodetrace-trajectory.v1.schema.json",
+  "title": "Content-addressed NodeTrace trajectory",
+  "type": "object",
+  "required": [
+    "schemaVersion", "trajectoryId", "trajectoryHash", "recordedAt", "applicationId", "runId",
+    "candidateId", "arm", "task", "model", "harness", "evaluator", "budgets", "changedPaths", "changeSet",
+    "events", "artifacts", "verdicts", "evidence", "proofReceiptId", "measurementAuthority"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "nodekit.nodetrace-trajectory/v1" },
+    "trajectoryId": { "type": "string", "pattern": "^nodetrace:sha256:[a-f0-9]{64}$" },
+    "trajectoryHash": { "$ref": "#/$defs/hash" },
+    "recordedAt": { "$ref": "#/$defs/nonEmpty" },
+    "applicationId": { "$ref": "#/$defs/nonEmpty" },
+    "runId": { "$ref": "#/$defs/nonEmpty" },
+    "candidateId": { "$ref": "#/$defs/nonEmpty" },
+    "arm": { "enum": ["baseline", "candidate"] },
+    "task": {
+      "type": "object",
+      "required": ["id", "family", "taskSetHash", "briefHash"],
+      "properties": {
+        "id": { "$ref": "#/$defs/nonEmpty" },
+        "family": { "$ref": "#/$defs/nonEmpty" },
+        "taskSetHash": { "$ref": "#/$defs/hash" },
+        "briefHash": { "$ref": "#/$defs/hash" }
+      },
+      "additionalProperties": false
+    },
+    "model": {
+      "type": "object",
+      "required": ["requestedRoute", "resolvedProvider", "resolvedModel"],
+      "properties": {
+        "requestedRoute": { "$ref": "#/$defs/nonEmpty" },
+        "resolvedProvider": { "$ref": "#/$defs/nonEmpty" },
+        "resolvedModel": { "$ref": "#/$defs/nonEmpty" },
+        "modelRevision": { "$ref": "#/$defs/nonEmpty" }
+      },
+      "additionalProperties": false
+    },
+    "harness": {
+      "type": "object",
+      "required": ["version", "builderHash", "runtimeHash", "interactionHash", "toolSurfaceHash", "contextPolicyHash", "skillStackHash"],
+      "properties": {
+        "version": { "$ref": "#/$defs/nonEmpty" },
+        "builderHash": { "$ref": "#/$defs/hash" },
+        "runtimeHash": { "$ref": "#/$defs/hash" },
+        "interactionHash": { "$ref": "#/$defs/hash" },
+        "toolSurfaceHash": { "$ref": "#/$defs/hash" },
+        "contextPolicyHash": { "$ref": "#/$defs/hash" },
+        "skillStackHash": { "$ref": "#/$defs/hash" }
+      },
+      "additionalProperties": false
+    },
+    "evaluator": {
+      "type": "object",
+      "required": ["id", "version", "hash"],
+      "properties": {
+        "id": { "$ref": "#/$defs/nonEmpty" },
+        "version": { "type": "integer", "minimum": 1 },
+        "hash": { "$ref": "#/$defs/hash" }
+      },
+      "additionalProperties": false
+    },
+    "budgets": {
+      "type": "object",
+      "required": ["maximumTokens", "maximumCostUsd", "maximumDurationMs"],
+      "properties": {
+        "maximumTokens": { "type": "integer", "minimum": 0 },
+        "maximumCostUsd": { "type": "number", "minimum": 0 },
+        "maximumDurationMs": { "type": "integer", "minimum": 0 }
+      },
+      "additionalProperties": false
+    },
+    "changedPaths": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/repositoryPath" },
+      "uniqueItems": true
+    },
+    "changeSet": {
+      "type": "object",
+      "required": ["generatedBy", "baseRevision", "candidateRevision", "lockHash", "changedPaths", "evidencePath", "evidenceHash"],
+      "properties": {
+        "generatedBy": { "enum": ["trusted-vcs", "external-orchestrator"] },
+        "baseRevision": { "$ref": "#/$defs/nonEmpty" },
+        "candidateRevision": { "$ref": "#/$defs/nonEmpty" },
+        "lockHash": { "type": ["string", "null"], "pattern": "^[a-f0-9]{64}$" },
+        "changedPaths": { "type": "array", "items": { "$ref": "#/$defs/repositoryPath" }, "uniqueItems": true },
+        "evidencePath": { "$ref": "#/$defs/repositoryPath" },
+        "evidenceHash": { "$ref": "#/$defs/hash" }
+      },
+      "additionalProperties": false
+    },
+    "events": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/event" }
+    },
+    "artifacts": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/artifact" }
+    },
+    "verdicts": {
+      "type": "object",
+      "required": ["task", "artifact", "ui", "safety", "efficiency", "evidence", "humanPreference"],
+      "properties": {
+        "task": { "$ref": "#/$defs/dimensionVerdict" },
+        "artifact": { "$ref": "#/$defs/dimensionVerdict" },
+        "ui": { "$ref": "#/$defs/dimensionVerdict" },
+        "safety": { "$ref": "#/$defs/dimensionVerdict" },
+        "efficiency": { "$ref": "#/$defs/efficiencyVerdict" },
+        "evidence": { "$ref": "#/$defs/dimensionVerdict" },
+        "humanPreference": { "$ref": "#/$defs/humanPreferenceVerdict" }
+      },
+      "additionalProperties": false
+    },
+    "evidence": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/evidenceObject" }
+    },
+    "proofReceiptId": { "$ref": "#/$defs/nonEmpty" },
+    "measurementAuthority": {
+      "type": "object",
+      "required": ["dimensionVerdicts", "proofReceiptId", "protectedEvaluatorDerived"],
+      "properties": {
+        "dimensionVerdicts": { "const": "trajectory-self-reported" },
+        "proofReceiptId": { "const": "trajectory-self-reported" },
+        "protectedEvaluatorDerived": { "const": false }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$defs": {
+    "nonEmpty": { "type": "string", "minLength": 1 },
+    "hash": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "score": { "type": "number", "minimum": 0, "maximum": 1 },
+    "repositoryPath": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^(?![A-Za-z]:)(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))(?!.*\\\\).+$"
+    },
+    "hashList": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/hash" },
+      "uniqueItems": true
+    },
+    "event": {
+      "type": "object",
+      "required": ["sequence", "eventId", "name", "summary", "type", "actor", "occurredAt", "status", "inputHashes", "outputHashes", "evidenceHashes"],
+      "properties": {
+        "sequence": { "type": "integer", "minimum": 0 },
+        "eventId": { "$ref": "#/$defs/nonEmpty" },
+        "name": { "$ref": "#/$defs/nonEmpty" },
+        "summary": { "$ref": "#/$defs/nonEmpty" },
+        "type": { "enum": ["task", "decision", "tool", "artifact", "ui", "safety", "verification", "human-preference", "completion"] },
+        "actor": { "enum": ["user", "builder-agent", "runtime", "tool", "critic", "evaluator", "reviewer"] },
+        "occurredAt": { "$ref": "#/$defs/nonEmpty" },
+        "status": { "enum": ["started", "completed", "failed", "blocked", "skipped"] },
+        "inputHashes": { "$ref": "#/$defs/hashList" },
+        "outputHashes": { "$ref": "#/$defs/hashList" },
+        "evidenceHashes": { "$ref": "#/$defs/hashList" }
+      },
+      "additionalProperties": false
+    },
+    "artifact": {
+      "type": "object",
+      "required": ["artifactId", "kind", "version", "contentHash", "evidenceHashes"],
+      "properties": {
+        "artifactId": { "$ref": "#/$defs/nonEmpty" },
+        "kind": { "$ref": "#/$defs/nonEmpty" },
+        "version": { "$ref": "#/$defs/nonEmpty" },
+        "contentHash": { "$ref": "#/$defs/hash" },
+        "evidenceHashes": { "$ref": "#/$defs/hashList" }
+      },
+      "additionalProperties": false
+    },
+    "finding": {
+      "type": "object",
+      "required": ["code", "severity", "message", "evidenceHashes"],
+      "properties": {
+        "code": { "$ref": "#/$defs/nonEmpty" },
+        "severity": { "enum": ["P0", "P1", "P2", "P3"] },
+        "message": { "$ref": "#/$defs/nonEmpty" },
+        "evidenceHashes": { "$ref": "#/$defs/hashList" }
+      },
+      "additionalProperties": false
+    },
+    "dimensionVerdict": {
+      "type": "object",
+      "required": ["passed", "score", "findings", "evidenceHashes"],
+      "properties": {
+        "passed": { "type": "boolean" },
+        "score": { "$ref": "#/$defs/score" },
+        "findings": { "type": "array", "items": { "$ref": "#/$defs/finding" } },
+        "evidenceHashes": { "$ref": "#/$defs/hashList" }
+      },
+      "additionalProperties": false
+    },
+    "efficiencyVerdict": {
+      "type": "object",
+      "required": ["passed", "score", "findings", "evidenceHashes", "metrics"],
+      "properties": {
+        "passed": { "type": "boolean" },
+        "score": { "$ref": "#/$defs/score" },
+        "findings": { "type": "array", "items": { "$ref": "#/$defs/finding" } },
+        "evidenceHashes": { "$ref": "#/$defs/hashList" },
+        "metrics": {
+          "type": "object",
+          "required": ["durationMs", "tokensIn", "tokensOut", "costUsd", "turns", "toolCalls", "retries", "repairRounds"],
+          "properties": {
+            "durationMs": { "type": "integer", "minimum": 0 },
+            "tokensIn": { "type": "integer", "minimum": 0 },
+            "tokensOut": { "type": "integer", "minimum": 0 },
+            "costUsd": { "type": "number", "minimum": 0 },
+            "turns": { "type": "integer", "minimum": 0 },
+            "toolCalls": { "type": "integer", "minimum": 0 },
+            "retries": { "type": "integer", "minimum": 0 },
+            "repairRounds": { "type": "integer", "minimum": 0 }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "humanPreferenceVerdict": {
+      "type": "object",
+      "required": ["status", "score", "reviewerClass", "evidenceHashes"],
+      "properties": {
+        "status": { "enum": ["not-collected", "baseline-preferred", "candidate-preferred", "tie"] },
+        "score": { "type": ["number", "null"], "minimum": 0, "maximum": 1 },
+        "reviewerClass": { "enum": ["none", "operator", "domain-expert", "independent-reviewer"] },
+        "evidenceHashes": { "$ref": "#/$defs/hashList" }
+      },
+      "additionalProperties": false
+    },
+    "evidenceObject": {
+      "type": "object",
+      "required": ["kind", "path", "sha256"],
+      "properties": {
+        "kind": { "enum": ["task", "artifact", "screenshot", "trace", "test", "receipt", "human-preference", "other"] },
+        "path": { "$ref": "#/$defs/repositoryPath" },
+        "sha256": { "$ref": "#/$defs/hash" }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

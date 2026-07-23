@@ -21,6 +21,17 @@ Keep the application blank in domain until the real user workflow is researched.
 - Ask before paid activation, production writes, deployment, or publication.
 - Run `npm run compile`, `npm run check`, `npm run eval`, and `npm run proof` after lifecycle changes.
 
+## Canonical artifact interoperability
+
+Keep this contract backend-neutral. A generated application that can complete a case must make its canonical result independently inspectable without requiring a Convex, Supabase, SQL, or in-memory client:
+
+- Render the canonical artifact at `#artifact` and keep these attributes synchronized with the accepted version: `data-nodekit-artifact-type`, `data-nodekit-artifact-id`, `data-nodekit-artifact-version`, and `data-nodekit-artifact-content-sha256`.
+- Use a stable domain artifact type, a stable NodeKit-owned artifact ID, a positive canonical version, and the lowercase SHA-256 of the normalized canonical content. Do not derive this metadata from presentation copy.
+- Preserve the user's exact submitted outcome in the canonical artifact content. A summary, task label, or chat transcript alone is not an input-to-result binding.
+- Export a JSON `nodekit.portable-proof-bundle/v1` after completion. Its artifact record must contain the same type, ID, canonical version, content hash, and canonical content exposed by `#artifact`.
+- Include a `nodekit.receipt/v2` whose artifact binding names that same artifact ID, version, and content hash. The downloadable bundle, rendered artifact, and receipt must describe one canonical result.
+- Treat reload, reopen in a fresh browser context, download, and independent hash verification as required completion behavior. Provider-specific storage mechanics may differ; these observable guarantees may not.
+
 When the real workflow needs durable cross-run knowledge, initialize the NodeKit Knowledge Evolution Plane rather than accumulating scattered prompt notes:
 
 - Retrieve existing graph knowledge before broad external research.

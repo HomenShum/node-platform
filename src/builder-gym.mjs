@@ -1,0 +1,15 @@
+export {
+  NODETRACE_VERDICT_DIMENSIONS,
+  builderGymContext,
+  builderGymStatus,
+  createBuilderGymLock,
+  evaluateBuilderGym,
+  initializeBuilderGym,
+  inspectBuilderGymVerdict,
+  inspectNodeTraceTrajectory,
+  recordNodeTraceTrajectory,
+  sealNodeTraceTrajectory,
+  verifyBuilderGymLock,
+  verifyBuilderGymVerdict,
+  verifyNodeTraceTrajectory,
+} from "./lib/builder-gym.mjs";

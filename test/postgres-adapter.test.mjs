@@ -173,6 +173,17 @@ test("live PostgreSQL proof exercises a two-client artifact-versus-completion lo
   assert.match(source, /run is terminal: completed/);
   assert.match(source, /distributablePathspecs\(packageJson\)/);
   assert.match(source, /assertCleanDistributablePaths\(dirtySource, "PostgreSQL conformance"\)/);
+  assert.match(source, /--candidate-tarball is required/);
+  assert.match(source, /npmCommand, \[\s*"install", "--ignore-scripts"/);
+  assert.match(source, /consumerRequire\.resolve\("@homenshum\/nodekit\/adapters\/postgres"\)/);
+  assert.match(source, /consumerRequire\.resolve\("@homenshum\/nodekit\/adapters\/postgres\/knowledge"\)/);
+  assert.match(source, /consumerRequire\.resolve\("@homenshum\/nodekit\/adapters\/postgres\/knowledge-migration\.sql"\)/);
+  assert.match(source, /immutable candidate tarball copy hash mismatch/);
+  assert.match(source, /knowledgeFirstCreateRaceAtomic/);
+  assert.match(source, /knowledgeRetrievalReceiptDurable/);
+  assert.match(source, /sourceCheckoutImported: false/);
+  assert.match(source, /schemaVersion: "nodekit\.postgres-conformance\/v2"/);
+  assert.doesNotMatch(source, /from "\.\.\/src\/adapters\/postgres-caseflow\.mjs"/);
   assert.doesNotMatch(source, /NODEKIT_ALLOW_DIRTY_CONFORMANCE/);
   assert.doesNotMatch(source, /\(\?:proof\|docs\|evolution\)/);
 });

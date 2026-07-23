@@ -1,0 +1,17 @@
+export {
+  MANAGED_EVIDENCE_CAMPAIGN_SCHEMA_VERSION,
+  MANAGED_EVIDENCE_CLEANUP_SCHEMA_VERSION,
+  MANAGED_EVIDENCE_EVENT_SCHEMA_VERSION,
+  MANAGED_EVIDENCE_RECEIPT_SCHEMA_VERSION,
+  MANAGED_EVIDENCE_ROOT,
+  finalizeManagedEvidenceCampaign,
+  getManagedEvidenceCampaign,
+  importManagedEvidence,
+  linkManagedBrowserManifest,
+  recordManagedEvidenceCleanup,
+  recordManagedEvidencePhase,
+  recordManagedEvidenceResource,
+  resumeManagedEvidenceCampaign,
+  startManagedEvidenceCampaign,
+  verifyManagedEvidenceCandidate,
+} from "./lib/managed-evidence-capture.mjs";

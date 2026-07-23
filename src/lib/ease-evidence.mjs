@@ -117,7 +117,7 @@ export function evaluateFreshUserStudy(study, options = {}) {
   if (!COMMIT.test(study?.nodekitCommit ?? "")) errors.push("study requires an immutable NodeKit commit");
   if (!SHA256.test(study?.nodekitSourceHash ?? "")) errors.push("study requires a NodeKit source hash");
   if (study?.instruction !== "Use this app to complete the job shown on screen.") errors.push("study instruction changed");
-  if (participants.length < 5) errors.push("at least five fresh participants are required");
+  if (participants.length !== 5) errors.push("exactly five fresh participants are required");
   if (normalizedParticipants.some((entry) => typeof entry.participantId !== "string" || entry.participantId.trim().length === 0)) errors.push("participant IDs must be non-empty strings");
   if (new Set(normalizedParticipants.map((entry) => entry.participantId)).size !== participants.length) errors.push("participant IDs must be unique");
   const evidencePaths = new Set();
@@ -170,7 +170,7 @@ export function evaluateFreshUserStudy(study, options = {}) {
   const medianSingleEaseQuestion = median(normalizedParticipants.map((entry) => entry.singleEaseQuestion).filter(Number.isFinite));
   const p0P1Failures = normalizedParticipants.reduce((sum, entry) => sum + (Number.isFinite(entry.p0P1Failures) ? entry.p0P1Failures : 0), 0);
   const checks = {
-    participantCount: participants.length >= 5,
+    participantCount: participants.length === 5,
     unassistedCompletion: unassistedCompletions >= thresholds.minimumUnassistedCompletions,
     outcomeUnderstood: outcomeExplanations >= thresholds.minimumOutcomeComprehensions,
     finalArtifactLocated: finalArtifactsLocated >= thresholds.minimumFinalArtifactsLocated,

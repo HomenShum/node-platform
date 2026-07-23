@@ -10,11 +10,12 @@
     "version": { "type": "integer", "minimum": 0 },
     "authority": {
       "type": "object",
-      "required": ["canonicalMutation", "destructiveDelete", "oneAuthoritativeGraph"],
+      "required": ["canonicalMutation", "destructiveDelete", "oneAuthoritativeGraph", "ownerId"],
       "properties": {
         "canonicalMutation": { "const": "accepted-patch-only" },
         "destructiveDelete": { "const": false },
-        "oneAuthoritativeGraph": { "const": true }
+        "oneAuthoritativeGraph": { "const": true },
+        "ownerId": { "$ref": "#/$defs/nonEmpty" }
       },
       "additionalProperties": false
     },
@@ -34,8 +35,8 @@
     "nodes": { "type": "array", "items": { "$ref": "#/$defs/node" } },
     "hyperedges": { "type": "array", "items": { "$ref": "#/$defs/hyperedge" } },
     "proposals": { "type": "array", "items": { "type": "object" } },
-    "actionReceipts": { "type": "array", "items": { "type": "object" } },
-    "evolutionReceipts": { "type": "array", "items": { "type": "object" } },
+    "actionReceipts": { "type": "array", "items": { "$ref": "#/$defs/actionReceipt" } },
+    "evolutionReceipts": { "type": "array", "items": { "$ref": "#/$defs/evolutionReceipt" } },
     "genesis": { "type": "object", "required": ["createdAt", "graphId"] },
     "createdAt": { "$ref": "#/$defs/dateTime" },
     "updatedAt": { "$ref": "#/$defs/dateTime" },
@@ -69,7 +70,65 @@
         "deprecatedAt": { "$ref": "#/$defs/dateTime" },
         "deprecationReason": { "type": "string" }
       },
+      "allOf": [
+        {
+          "if": { "properties": { "layer": { "const": "source" } }, "required": ["layer"] },
+          "then": { "properties": { "kind": { "const": "evidence" } }, "required": ["kind"] }
+        },
+        {
+          "if": { "properties": { "kind": { "const": "evidence" } }, "required": ["kind"] },
+          "then": { "properties": { "layer": { "const": "source" } }, "required": ["layer"] }
+        }
+      ],
       "additionalProperties": true
+    },
+    "actionReceipt": {
+      "type": "object",
+      "required": ["schemaVersion", "receiptId", "receiptHash", "previousReceiptHash", "sequence", "graphId", "graphVersion", "runId", "caseId", "actorId", "type", "input", "outputRefs", "evidenceRefs", "budget", "status", "occurredAt"],
+      "properties": {
+        "schemaVersion": { "const": "nodekit.knowledge-action-receipt/v1" },
+        "receiptId": { "$ref": "#/$defs/nonEmpty" },
+        "receiptHash": { "$ref": "#/$defs/hash" },
+        "previousReceiptHash": { "oneOf": [{ "type": "null" }, { "$ref": "#/$defs/hash" }] },
+        "sequence": { "type": "integer", "minimum": 1 },
+        "graphId": { "$ref": "#/$defs/nonEmpty" },
+        "graphVersion": { "type": "integer", "minimum": 0 },
+        "runId": { "$ref": "#/$defs/nonEmpty" },
+        "caseId": { "$ref": "#/$defs/nonEmpty" },
+        "actorId": { "$ref": "#/$defs/nonEmpty" },
+        "type": { "enum": ["GRAPH_RETRIEVE", "EXTERNAL_RESEARCH", "PROPOSE_GRAPH_PATCH", "INSPECT_ARTIFACT", "EXECUTE_TOOL", "REQUEST_APPROVAL", "COMPLETE", "ABSTAIN"] },
+        "input": { "type": "object" },
+        "outputRefs": { "$ref": "#/$defs/stringList" },
+        "evidenceRefs": { "$ref": "#/$defs/stringList" },
+        "budget": { "type": "object" },
+        "status": { "enum": ["completed", "failed", "blocked", "cancelled"] },
+        "occurredAt": { "$ref": "#/$defs/dateTime" }
+      },
+      "additionalProperties": false
+    },
+    "evolutionReceipt": {
+      "type": "object",
+      "required": ["schemaVersion", "receiptId", "receiptHash", "previousReceiptHash", "graphId", "patchId", "fromVersion", "toVersion", "beforeHash", "afterHash", "operations", "entityBindings", "evidenceRefs", "decision", "appliedAt", "actionReceiptCount", "actionReceiptRootHash"],
+      "properties": {
+        "schemaVersion": { "const": "nodekit.graph-evolution-receipt/v1" },
+        "receiptId": { "$ref": "#/$defs/nonEmpty" },
+        "receiptHash": { "$ref": "#/$defs/hash" },
+        "previousReceiptHash": { "oneOf": [{ "type": "null" }, { "$ref": "#/$defs/hash" }] },
+        "graphId": { "$ref": "#/$defs/nonEmpty" },
+        "patchId": { "$ref": "#/$defs/nonEmpty" },
+        "fromVersion": { "type": "integer", "minimum": 0 },
+        "toVersion": { "type": "integer", "minimum": 1 },
+        "beforeHash": { "$ref": "#/$defs/hash" },
+        "afterHash": { "$ref": "#/$defs/hash" },
+        "operations": { "type": "array", "minItems": 1, "items": { "type": "object" } },
+        "entityBindings": { "type": "array", "minItems": 1, "items": { "type": "object", "required": ["entityId", "entityHash"], "properties": { "entityId": { "$ref": "#/$defs/nonEmpty" }, "entityHash": { "$ref": "#/$defs/hash" } }, "additionalProperties": false } },
+        "evidenceRefs": { "$ref": "#/$defs/stringList" },
+        "decision": { "type": "object", "required": ["decision", "principalId", "reason", "decidedAt"], "properties": { "decision": { "const": "accept" }, "principalId": { "$ref": "#/$defs/nonEmpty" }, "reason": { "type": "string" }, "decidedAt": { "$ref": "#/$defs/dateTime" } }, "additionalProperties": false },
+        "appliedAt": { "$ref": "#/$defs/dateTime" },
+        "actionReceiptCount": { "type": "integer", "minimum": 0 },
+        "actionReceiptRootHash": { "$ref": "#/$defs/hash" }
+      },
+      "additionalProperties": false
     },
     "hyperedge": {
       "type": "object",
@@ -77,7 +136,7 @@
       "properties": {
         "id": { "$ref": "#/$defs/nonEmpty" },
         "predicate": { "$ref": "#/$defs/nonEmpty" },
-        "layer": { "$ref": "#/$defs/layer" },
+        "layer": { "enum": ["derived", "working", "proposal", "canonical", "hypothesis"] },
         "participants": {
           "type": "array",
           "minItems": 2,

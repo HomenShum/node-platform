@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto";
-import { readFile, realpath, writeFile } from "node:fs/promises";
+import { lstat, readFile, realpath, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { evaluateDeveloperTimingMatrix, evaluateFreshUserStudy } from "../src/lib/ease-evidence.mjs";
 
@@ -8,6 +8,7 @@ const sha256 = (bytes) => createHash("sha256").update(bytes).digest("hex");
 async function verifyHumanEvidenceFiles(study, repoRoot) {
   const errors = [];
   const root = await realpath(repoRoot);
+  const physicalFiles = new Set();
   for (const participant of Array.isArray(study?.participants) ? study.participants : []) {
     for (const evidence of Array.isArray(participant?.evidenceRefs) ? participant.evidenceRefs : []) {
       if (typeof evidence?.path !== "string" || evidence.path.length === 0) continue;
@@ -18,6 +19,21 @@ async function verifyHumanEvidenceFiles(study, repoRoot) {
         continue;
       }
       try {
+        if (evidence.path.includes("\\") || evidence.path.startsWith("/") || /^[A-Za-z]:/.test(evidence.path) || evidence.path.split("/").some((segment) => segment === "" || segment === "." || segment === "..")) {
+          errors.push(`${participant?.participantId ?? "unknown"}: evidence path is not one canonical repository-relative POSIX path: ${evidence.path}`);
+          continue;
+        }
+        const link = await lstat(absolute, { bigint: true });
+        if (!link.isFile() || link.isSymbolicLink() || link.nlink !== 1n) {
+          errors.push(`${participant?.participantId ?? "unknown"}: evidence must be one unaliased regular file: ${evidence.path}`);
+          continue;
+        }
+        const physicalIdentity = `${link.dev}:${link.ino}`;
+        if (physicalFiles.has(physicalIdentity)) {
+          errors.push(`${participant?.participantId ?? "unknown"}: evidence reuses a physical file: ${evidence.path}`);
+          continue;
+        }
+        physicalFiles.add(physicalIdentity);
         const resolved = await realpath(absolute);
         const resolvedRelative = path.relative(root, resolved);
         if (resolvedRelative.startsWith("..") || path.isAbsolute(resolvedRelative)) {

@@ -1,0 +1,140 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://nodekit.dev/schemas/nodekit.human-study-event.v1.schema.json",
+  "title": "NodeKit append-only fresh-human study event",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion", "participantId", "sequence", "type", "occurredAt",
+    "monotonicNs", "previousEventSha256", "payload", "eventSha256"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "nodekit.human-study-event/v1" },
+    "participantId": { "$ref": "#/$defs/participantId" },
+    "sequence": { "type": "integer", "minimum": 1 },
+    "type": {
+      "enum": [
+        "session.started", "session.resumed",
+        "first-meaningful-action.recorded", "first-meaningful-action.not-reached",
+        "journey.ended", "wrong-turn.recorded", "help-request.recorded",
+        "p0-p1-failure.recorded", "evidence.imported", "session.finalized"
+      ]
+    },
+    "occurredAt": { "$ref": "#/$defs/timestamp" },
+    "monotonicNs": { "type": "string", "pattern": "^[0-9]+$" },
+    "previousEventSha256": {
+      "oneOf": [{ "type": "null" }, { "$ref": "#/$defs/sha256" }]
+    },
+    "payload": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "consentRecorded": { "const": true },
+        "consentVersion": { "const": "nodekit-human-study-consent/v1" },
+        "recordingConsent": { "type": "boolean" },
+        "fresh": { "const": true },
+        "evidenceKind": { "enum": ["screenshot", "recording"] },
+        "evidencePath": { "$ref": "#/$defs/evidencePath" },
+        "evidenceSha256": { "$ref": "#/$defs/sha256" },
+        "bytes": { "type": "integer", "minimum": 1 },
+        "label": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{0,47}$" },
+        "completed": { "type": "boolean" },
+        "assisted": { "type": "boolean" },
+        "canExplainOutcome": { "type": "boolean" },
+        "locatedFinalArtifact": { "type": "boolean" },
+        "locatedUnresolvedIssues": { "type": "boolean" },
+        "singleEaseQuestion": { "type": "integer", "minimum": 1, "maximum": 7 }
+      }
+    },
+    "eventSha256": { "$ref": "#/$defs/sha256" }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "type": { "const": "session.started" } }, "required": ["type"] },
+      "then": {
+        "properties": {
+          "sequence": { "const": 1 },
+          "previousEventSha256": { "type": "null" },
+          "payload": {
+            "type": "object",
+            "required": ["consentRecorded", "consentVersion", "recordingConsent", "fresh"],
+            "properties": {
+              "consentRecorded": { "const": true },
+              "consentVersion": { "const": "nodekit-human-study-consent/v1" },
+              "recordingConsent": { "type": "boolean" },
+              "fresh": { "const": true }
+            },
+            "maxProperties": 4
+          }
+        }
+      }
+    },
+    {
+      "if": { "properties": { "type": { "const": "evidence.imported" } }, "required": ["type"] },
+      "then": {
+        "properties": {
+          "payload": {
+            "type": "object",
+            "required": ["evidenceKind", "evidencePath", "evidenceSha256", "bytes", "label"],
+            "properties": {
+              "evidenceKind": { "enum": ["screenshot", "recording"] },
+              "evidencePath": { "$ref": "#/$defs/evidencePath" },
+              "evidenceSha256": { "$ref": "#/$defs/sha256" },
+              "bytes": { "type": "integer", "minimum": 1 },
+              "label": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{0,47}$" }
+            },
+            "maxProperties": 5
+          }
+        }
+      }
+    },
+    {
+      "if": { "properties": { "type": { "const": "session.finalized" } }, "required": ["type"] },
+      "then": {
+        "properties": {
+          "payload": {
+            "type": "object",
+            "required": [
+              "completed", "assisted", "canExplainOutcome", "locatedFinalArtifact",
+              "locatedUnresolvedIssues", "singleEaseQuestion"
+            ],
+            "properties": {
+              "completed": { "type": "boolean" },
+              "assisted": { "type": "boolean" },
+              "canExplainOutcome": { "type": "boolean" },
+              "locatedFinalArtifact": { "type": "boolean" },
+              "locatedUnresolvedIssues": { "type": "boolean" },
+              "singleEaseQuestion": { "type": "integer", "minimum": 1, "maximum": 7 }
+            },
+            "maxProperties": 6
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "enum": [
+              "session.resumed", "first-meaningful-action.recorded",
+              "first-meaningful-action.not-reached", "journey.ended",
+              "wrong-turn.recorded", "help-request.recorded", "p0-p1-failure.recorded"
+            ]
+          }
+        },
+        "required": ["type"]
+      },
+      "then": { "properties": { "payload": { "type": "object", "maxProperties": 0 } } }
+    }
+  ],
+  "$defs": {
+    "participantId": { "type": "string", "pattern": "^participant_[a-f0-9]{16}$" },
+    "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "timestamp": { "type": "string", "format": "date-time" },
+    "evidencePath": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^(?!/)(?!\\./)(?!.*//)(?!.*\\/$)(?!.*(?:^|/)\\.\\.?(?:/|$))(?![A-Za-z]:)(?!.*\\u0000)[^\\\\]+$"
+    }
+  }
+}

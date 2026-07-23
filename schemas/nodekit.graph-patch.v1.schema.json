@@ -3,19 +3,39 @@
   "$id": "https://github.com/HomenShum/node-platform/blob/main/schemas/nodekit.graph-patch.v1.schema.json",
   "title": "NodeKit governed graph patch proposal",
   "type": "object",
-  "required": ["schemaVersion", "patchId", "graphId", "baseVersion", "operations", "evidenceRefs", "contradictionRefs", "proposedBy", "confidence", "validation", "status", "proposedAt"],
+  "required": ["schemaVersion", "patchId", "graphId", "baseVersion", "baseCanonicalHash", "operations", "evidenceRefs", "contradictionRefs", "proposedBy", "confidence", "validation", "status", "proposedAt"],
   "properties": {
     "schemaVersion": { "const": "nodekit.graph-patch/v1" },
     "patchId": { "$ref": "#/$defs/nonEmpty" },
     "graphId": { "$ref": "#/$defs/nonEmpty" },
     "baseVersion": { "type": "integer", "minimum": 0 },
+    "baseCanonicalHash": { "$ref": "#/$defs/hash" },
     "operations": {
       "type": "array",
       "minItems": 1,
       "items": {
         "oneOf": [
-          { "type": "object", "required": ["type"], "properties": { "type": { "const": "INSERT" }, "node": { "type": "object" }, "hyperedge": { "type": "object" } }, "additionalProperties": true },
-          { "type": "object", "required": ["type", "targetId", "patch"], "properties": { "type": { "const": "UPDATE" }, "targetId": { "$ref": "#/$defs/nonEmpty" }, "patch": { "type": "object" }, "evidenceRefs": { "$ref": "#/$defs/stringList" } }, "additionalProperties": false },
+          {
+            "type": "object",
+            "required": ["type"],
+            "properties": {
+              "type": { "const": "INSERT" },
+              "node": {
+                "type": "object",
+                "allOf": [
+                  { "if": { "properties": { "layer": { "const": "source" } }, "required": ["layer"] }, "then": { "properties": { "kind": { "const": "evidence" } }, "required": ["kind"] } },
+                  { "if": { "properties": { "kind": { "const": "evidence" } }, "required": ["kind"] }, "then": { "properties": { "layer": { "const": "source" } }, "required": ["layer"] } }
+                ]
+              },
+              "hyperedge": { "type": "object", "properties": { "layer": { "not": { "const": "source" } } } }
+            },
+            "oneOf": [
+              { "required": ["node"], "not": { "required": ["hyperedge"] } },
+              { "required": ["hyperedge"], "not": { "required": ["node"] } }
+            ],
+            "additionalProperties": true
+          },
+          { "type": "object", "required": ["type", "targetId", "patch"], "properties": { "type": { "const": "UPDATE" }, "targetId": { "$ref": "#/$defs/nonEmpty" }, "patch": { "type": "object", "properties": { "layer": { "not": { "const": "source" } } } }, "evidenceRefs": { "$ref": "#/$defs/stringList" } }, "additionalProperties": false },
           { "type": "object", "required": ["type", "targetId", "reason"], "properties": { "type": { "const": "DEPRECATE" }, "targetId": { "$ref": "#/$defs/nonEmpty" }, "reason": { "$ref": "#/$defs/nonEmpty" }, "evidenceRefs": { "$ref": "#/$defs/stringList" } }, "additionalProperties": false }
         ]
       }
@@ -51,10 +71,22 @@
     "proposedAt": { "$ref": "#/$defs/dateTime" },
     "validatedAt": { "$ref": "#/$defs/dateTime" },
     "appliedAt": { "$ref": "#/$defs/dateTime" },
-    "decision": { "type": "object" }
+    "decision": { "type": "object" },
+    "conflict": {
+      "type": "object",
+      "required": ["actualCanonicalHash", "actualVersion", "expectedCanonicalHash", "expectedVersion"],
+      "properties": {
+        "actualCanonicalHash": { "$ref": "#/$defs/hash" },
+        "actualVersion": { "type": "integer", "minimum": 0 },
+        "expectedCanonicalHash": { "$ref": "#/$defs/hash" },
+        "expectedVersion": { "type": "integer", "minimum": 0 }
+      },
+      "additionalProperties": false
+    }
   },
   "$defs": {
     "nonEmpty": { "type": "string", "minLength": 1 },
+    "hash": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
     "dateTime": { "type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T.*Z$" },
     "stringList": { "type": "array", "items": { "type": "string", "minLength": 1 }, "uniqueItems": true }
   },

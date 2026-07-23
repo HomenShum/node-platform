@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://nodekit.dev/schemas/nodekit.knowledge-retrieval-receipt.v1.schema.json",
+  "title": "NodeKit accepted-knowledge retrieval receipt",
+  "type": "object",
+  "required": ["schemaVersion", "receiptId", "receiptHash", "ownerId", "graphId", "graphVersion", "graphContentHash", "projectionHash", "sessionId", "caseId", "runId", "repeatSession", "historySequence", "previousReceiptIds", "previousReceiptHash", "query", "queryHash", "policy", "selectedFactIds", "traversedHyperedgeIds", "evolutionReceiptIds", "evidence", "excluded", "decision", "occurredAt"],
+  "properties": {
+    "schemaVersion": { "const": "nodekit.knowledge-retrieval-receipt/v1" },
+    "receiptId": { "$ref": "#/$defs/nonEmpty" }, "receiptHash": { "$ref": "#/$defs/hash" },
+    "ownerId": { "$ref": "#/$defs/nonEmpty" }, "graphId": { "$ref": "#/$defs/nonEmpty" },
+    "graphVersion": { "type": "integer", "minimum": 0 }, "graphContentHash": { "$ref": "#/$defs/hash" }, "projectionHash": { "$ref": "#/$defs/hash" },
+    "sessionId": { "$ref": "#/$defs/nonEmpty" }, "caseId": { "type": "string" }, "runId": { "type": "string" },
+    "repeatSession": { "type": "boolean" },
+    "historySequence": { "type": "integer", "minimum": 1, "maximum": 9007199254740991 },
+    "previousReceiptIds": { "$ref": "#/$defs/previousIds" },
+    "previousReceiptHash": { "oneOf": [{ "$ref": "#/$defs/hash" }, { "type": "null" }] },
+    "query": { "type": "string", "maxLength": 4096 }, "queryHash": { "$ref": "#/$defs/hash" },
+    "policy": {
+      "type": "object", "additionalProperties": false,
+      "required": ["acceptedCanonicalOnly", "excludeDeprecated", "excludeRejected", "excludeStale", "queryHash", "seedIds", "predicates", "limit", "minimumFacts", "maxDepth", "mode", "projectionAt", "history"],
+      "properties": {
+        "acceptedCanonicalOnly": { "const": true },
+        "excludeDeprecated": { "const": true },
+        "excludeRejected": { "const": true },
+        "excludeStale": { "const": true },
+        "queryHash": { "$ref": "#/$defs/hash" },
+        "seedIds": { "$ref": "#/$defs/queryIds" },
+        "predicates": { "$ref": "#/$defs/predicates" },
+        "limit": { "type": "integer", "minimum": 1, "maximum": 100 },
+        "minimumFacts": { "type": "integer", "minimum": 1, "maximum": 100 },
+        "maxDepth": { "type": "integer", "minimum": 0, "maximum": 8 },
+        "mode": { "enum": ["flat", "graph"] },
+        "projectionAt": { "$ref": "#/$defs/dateTime" },
+        "history": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["linkage", "maxPreviousReceiptIds", "replayOrder", "replayPageSize"],
+          "properties": {
+            "linkage": { "const": "immediate-predecessor" },
+            "maxPreviousReceiptIds": { "const": 1 },
+            "replayOrder": { "const": "ascending-sequence" },
+            "replayPageSize": { "const": 100 }
+          }
+        }
+      }
+    },
+    "selectedFactIds": { "$ref": "#/$defs/ids" }, "traversedHyperedgeIds": { "$ref": "#/$defs/ids" }, "evolutionReceiptIds": { "$ref": "#/$defs/ids" },
+    "evidence": { "type": "array", "items": { "type": "object", "required": ["id", "contentHash", "sourceUri", "capturedAt"], "properties": { "id": { "$ref": "#/$defs/nonEmpty" }, "contentHash": { "$ref": "#/$defs/hash" }, "sourceUri": { "$ref": "#/$defs/nonEmpty" }, "capturedAt": { "$ref": "#/$defs/dateTime" } }, "additionalProperties": false } },
+    "excluded": { "type": "object", "required": ["deprecated", "rejected", "stale", "unaccepted", "unsupported", "wrongLayer"], "additionalProperties": { "$ref": "#/$defs/ids" } },
+    "decision": { "type": "object", "additionalProperties": false, "required": ["status", "reason"], "properties": { "status": { "enum": ["SUPPORTED", "ABSTAIN"] }, "reason": { "enum": ["ACCEPTED_CANONICAL_EVIDENCE_FOUND", "INSUFFICIENT_ACCEPTED_EVIDENCE"] } } },
+    "occurredAt": { "$ref": "#/$defs/dateTime" }
+  },
+  "$defs": {
+    "nonEmpty": { "type": "string", "minLength": 1 },
+    "boundedId": { "type": "string", "minLength": 1, "maxLength": 512 },
+    "hash": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "dateTime": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{3}Z$" },
+    "ids": { "type": "array", "items": { "$ref": "#/$defs/nonEmpty" }, "uniqueItems": true },
+    "previousIds": { "type": "array", "maxItems": 1, "items": { "$ref": "#/$defs/boundedId" }, "uniqueItems": true },
+    "queryIds": { "type": "array", "maxItems": 100, "items": { "$ref": "#/$defs/boundedId" }, "uniqueItems": true },
+    "predicates": { "type": "array", "maxItems": 100, "items": { "type": "string", "minLength": 1, "maxLength": 256 }, "uniqueItems": true }
+  },
+  "additionalProperties": false
+}

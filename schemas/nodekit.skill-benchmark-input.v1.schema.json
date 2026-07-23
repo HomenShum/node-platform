@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/HomenShum/node-platform/blob/main/schemas/nodekit.skill-benchmark-input.v1.schema.json",
+  "title": "Immutable protected skill benchmark comparison input",
+  "type": "object",
+  "required": ["schemaVersion", "candidateId", "benchmarkHash", "harnessHash", "evaluatorHash", "resolvedModel", "baselineSkillHash", "candidateSkillHash", "taskInputs", "arms"],
+  "properties": {
+    "schemaVersion": { "const": "nodekit.skill-benchmark-input/v1" },
+    "candidateId": { "type": "string", "pattern": "^skill-candidate-[a-z0-9-]+$" },
+    "benchmarkHash": { "$ref": "#/$defs/hash" },
+    "harnessHash": { "$ref": "#/$defs/hash" },
+    "evaluatorHash": { "$ref": "#/$defs/hash" },
+    "resolvedModel": { "type": "string", "minLength": 1 },
+    "baselineSkillHash": { "$ref": "#/$defs/hash" },
+    "candidateSkillHash": { "$ref": "#/$defs/hash" },
+    "taskInputs": {
+      "type": "array",
+      "minItems": 2,
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "required": ["taskId", "taskHash", "inputHash"],
+        "properties": {
+          "taskId": { "type": "string", "minLength": 1 },
+          "taskHash": { "$ref": "#/$defs/hash" },
+          "inputHash": { "$ref": "#/$defs/hash" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "arms": {
+      "type": "object",
+      "required": ["baseline", "candidate"],
+      "properties": {
+        "baseline": { "$ref": "#/$defs/receipts" },
+        "candidate": { "$ref": "#/$defs/receipts" }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$defs": {
+    "hash": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "path": { "type": "string", "minLength": 1, "pattern": "^(?![A-Za-z]:)(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))(?!.*\\\\).+$" },
+    "receipt": {
+      "type": "object",
+      "required": ["path", "sha256"],
+      "properties": { "path": { "$ref": "#/$defs/path" }, "sha256": { "$ref": "#/$defs/hash" } },
+      "additionalProperties": false
+    },
+    "receipts": { "type": "array", "minItems": 3, "items": { "$ref": "#/$defs/receipt" }, "uniqueItems": true }
+  },
+  "additionalProperties": false
+}

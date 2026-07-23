@@ -32,8 +32,8 @@
     "distributionChecks": { "$ref": "#/$defs/distributionChecks" },
     "supportingEvidence": {
       "type": "array",
-      "minItems": 15,
-      "maxItems": 15,
+      "minItems": 17,
+      "maxItems": 17,
       "uniqueItems": true,
       "items": { "$ref": "#/$defs/packageEvidenceRef" },
       "allOf": [
@@ -45,6 +45,8 @@
         { "contains": { "$ref": "#/$defs/packageFilesEvidence" }, "minContains": 1, "maxContains": 1 },
         { "contains": { "$ref": "#/$defs/publicApiEvidence" }, "minContains": 1, "maxContains": 1 },
         { "contains": { "$ref": "#/$defs/convexRuntimeProofEvidence" }, "minContains": 1, "maxContains": 1 },
+        { "contains": { "$ref": "#/$defs/builderGymRuntimeProofEvidence" }, "minContains": 1, "maxContains": 1 },
+        { "contains": { "$ref": "#/$defs/installedCliHelpProofEvidence" }, "minContains": 1, "maxContains": 1 },
         { "contains": { "$ref": "#/$defs/generatedPackageEvidence" }, "minContains": 1, "maxContains": 1 },
         { "contains": { "$ref": "#/$defs/generatedPackageLockEvidence" }, "minContains": 1, "maxContains": 1 },
         { "contains": { "$ref": "#/$defs/generatedNpmLsEvidence" }, "minContains": 1, "maxContains": 1 },
@@ -77,13 +79,17 @@
       "type": "object",
       "additionalProperties": false,
       "required": [
-        "candidateIdentityStable", "convexComponentRuntime", "freshConsumerInstall",
+        "builderGymRuntime", "candidateIdentityStable", "consumerPrepareBinRuntime",
+        "convexComponentRuntime", "evidenceFinalizeBinRuntime", "freshConsumerInstall",
         "packagedCliCreate", "generatedAppInstall", "compile", "check", "demo", "eval",
         "typecheckPublic", "receiptsValid", "tarballHashStable", "distributionComplete"
       ],
       "properties": {
+        "builderGymRuntime": { "const": true },
         "candidateIdentityStable": { "const": true },
+        "consumerPrepareBinRuntime": { "const": true },
         "convexComponentRuntime": { "const": true },
+        "evidenceFinalizeBinRuntime": { "const": true },
         "freshConsumerInstall": { "const": true },
         "packagedCliCreate": { "const": true },
         "generatedAppInstall": { "const": true },
@@ -101,12 +107,19 @@
       "type": "object",
       "additionalProperties": false,
       "required": [
-        "caseflowTypes", "convexClient", "convexConfig", "convexComponentApi",
+        "attestationSignBin", "attestationVerifyBin", "builderGym", "caseflowTypes",
+        "consumerPackagePreparation", "consumerPrepareBin", "convexClient", "convexConfig", "convexComponentApi",
         "convexComponentRuntime", "convexTestExport", "postgresAdapter",
-        "postgresMigration", "supabaseProfile", "supabaseWorkers"
+        "postgresMigration", "evidenceFinalizeBin", "packageMetadata", "submissionAttestation",
+        "submissionEvidenceFinalizer", "skillEvaluation", "supabaseProfile", "supabaseWorkers"
       ],
       "properties": {
+        "attestationSignBin": { "const": true },
+        "attestationVerifyBin": { "const": true },
+        "builderGym": { "const": true },
         "caseflowTypes": { "const": true },
+        "consumerPackagePreparation": { "const": true },
+        "consumerPrepareBin": { "const": true },
         "convexClient": { "const": true },
         "convexConfig": { "const": true },
         "convexComponentApi": { "const": true },
@@ -114,6 +127,11 @@
         "convexTestExport": { "const": true },
         "postgresAdapter": { "const": true },
         "postgresMigration": { "const": true },
+        "evidenceFinalizeBin": { "const": true },
+        "packageMetadata": { "const": true },
+        "submissionAttestation": { "const": true },
+        "submissionEvidenceFinalizer": { "const": true },
+        "skillEvaluation": { "const": true },
         "supabaseProfile": { "const": true },
         "supabaseWorkers": { "const": true }
       }
@@ -126,7 +144,7 @@
         "path": {
           "allOf": [
             { "$ref": "#/$defs/evidencePath" },
-            { "pattern": "(?:^|/)(?:application-identity\\.json|demo-receipt\\.json|eval-receipt\\.json|convex-runtime-proof\\.mjs|command-ledger\\.json|package-files\\.json|public-api\\.ts|convex-runtime-proof\\.json|generated-package\\.json|generated-package-lock\\.json|generated-npm-ls\\.json|installed-runtime-identity\\.json|generated-receipt-bindings\\.json|generated-app\\.tar\\.gz|generated-candidate\\.json)$" }
+            { "pattern": "(?:^|/)(?:application-identity\\.json|demo-receipt\\.json|eval-receipt\\.json|convex-runtime-proof\\.mjs|command-ledger\\.json|package-files\\.json|public-api\\.ts|convex-runtime-proof\\.json|builder-gym-runtime-proof\\.json|installed-cli-help-proof\\.json|generated-package\\.json|generated-package-lock\\.json|generated-npm-ls\\.json|installed-runtime-identity\\.json|generated-receipt-bindings\\.json|generated-app\\.tar\\.gz|generated-candidate\\.json)$" }
           ]
         },
         "sha256": { "$ref": "#/$defs/sha256" }
@@ -140,6 +158,8 @@
     "packageFilesEvidence": { "type": "object", "required": ["path"], "properties": { "path": { "pattern": "(?:^|/)package-files\\.json$" } } },
     "publicApiEvidence": { "type": "object", "required": ["path"], "properties": { "path": { "pattern": "(?:^|/)public-api\\.ts$" } } },
     "convexRuntimeProofEvidence": { "type": "object", "required": ["path"], "properties": { "path": { "pattern": "(?:^|/)convex-runtime-proof\\.json$" } } },
+    "builderGymRuntimeProofEvidence": { "type": "object", "required": ["path"], "properties": { "path": { "pattern": "(?:^|/)builder-gym-runtime-proof\\.json$" } } },
+    "installedCliHelpProofEvidence": { "type": "object", "required": ["path"], "properties": { "path": { "pattern": "(?:^|/)installed-cli-help-proof\\.json$" } } },
     "generatedPackageEvidence": { "type": "object", "required": ["path"], "properties": { "path": { "pattern": "(?:^|/)generated-package\\.json$" } } },
     "generatedPackageLockEvidence": { "type": "object", "required": ["path"], "properties": { "path": { "pattern": "(?:^|/)generated-package-lock\\.json$" } } },
     "generatedNpmLsEvidence": { "type": "object", "required": ["path"], "properties": { "path": { "pattern": "(?:^|/)generated-npm-ls\\.json$" } } },
