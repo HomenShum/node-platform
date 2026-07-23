@@ -108,3 +108,13 @@ Canonical JSON records remain authoritative. This projection explains why materi
 - Evidence: `evd:nodevideo-topology-failure` (partial)
 - Known limitations: No real NodeVideo or NodeSlide consumer has yet completed the three-direction tournament and fresh-browser canary.; No exact resolved model identity was preserved for the historical failed attempt, so this event makes no model capability claim.
 
+### The frontend tournament could print TOURNAMENT DECISIVE from booleans the candidate wrote into its own benchmark, so the NodeSlide pilot metric would have measured how cheaply an agent claimed to pass rather than whether a direction passed an independently observed gate.
+
+- Event: `evt:frontend-decisive-evidence`
+- Source: `f4bf70f5356c913aa3d7f28fab83ccba3f94877c`
+- Resolution: The decisive verdict is computed from a Frontend Render Contract. A verifier-authored render receipt over the six required states, whose check statuses are derived from raw observations, plus an independent review receipt bound to the same state manifest, are graded DECISIVE / NOT_DECISIVE / FAIL / INCOMPLETE / UNVERIFIED; only DECISIVE authorizes. The benchmark schema dropped the three candidate booleans. A corruption corpus proves each self-attested shortcut lands on the correct graded verdict.
+- Observed failure: decisive was browserChecksPassed && accessibilityPassed && overflowPassed && majorFindings.length === 0 over candidate-supplied fields; three true values and two empty arrays authorized the verdict with no evidence binding.
+- Invariants: `inv:major-frontend-direction-tournament` (partially-verified)
+- Evidence: `evd:frontend-decisive-evidence` (partial)
+- Known limitations: The verifier command that drives a real browser over the six states and calls the assembler is not yet wired; receipts are assembled from observations, not from a live browser run.; Freezing a new tournament version so a benchmark cannot be replayed against a stale contract is a separate follow-on.; This makes the tournament's decisiveness honest; it does not by itself certify any real frontend, model, or consumer.
+
