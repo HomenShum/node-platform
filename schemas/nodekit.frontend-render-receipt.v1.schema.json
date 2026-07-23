@@ -1,0 +1,139 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://nodekit.dev/schemas/nodekit.frontend-render-receipt.v1.schema.json",
+  "title": "NodeKit frontend render receipt",
+  "description": "Evidence that a verifier — not the candidate — observed a frontend direction rendering. It replaces the self-asserted browserChecksPassed / accessibilityPassed / overflowPassed booleans in the tournament benchmark. The decisive verdict is computed from these verifier-observed checks; the candidate cannot assert it. The heavy screenshots and traces stay CI or PR artifacts; only this receipt, its manifests, and its hashes are committed.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "candidate", "verifier", "coverage", "checks"],
+  "properties": {
+    "schemaVersion": { "const": "nodekit.frontend-render-receipt/v1" },
+    "candidate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["candidateId", "repositoryCommit", "productContractHash", "directionSetHash", "stateManifestHash"],
+      "properties": {
+        "candidateId": { "type": "string", "pattern": "^direction-[abc]$" },
+        "repositoryCommit": { "$ref": "#/$defs/sha1OrSha256" },
+        "productContractHash": { "$ref": "#/$defs/sha256" },
+        "directionSetHash": { "$ref": "#/$defs/sha256" },
+        "stateManifestHash": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "verifier": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Who ran the checks. The evaluator rejects a receipt whose verifier identity equals the generating candidate's, so a candidate cannot review its own output.",
+      "required": ["verifierId", "verifierCommit", "command", "browserName", "browserVersion", "startedAt", "completedAt"],
+      "properties": {
+        "verifierId": { "type": "string", "minLength": 1 },
+        "verifierCommit": { "$ref": "#/$defs/sha1OrSha256" },
+        "command": { "type": "string", "minLength": 1 },
+        "browserName": { "type": "string", "minLength": 1 },
+        "browserVersion": { "type": "string", "minLength": 1 },
+        "startedAt": { "type": "string", "format": "date-time" },
+        "completedAt": { "type": "string", "format": "date-time" }
+      }
+    },
+    "coverage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["requiredStateIds", "renderedStates"],
+      "properties": {
+        "requiredStateIds": {
+          "type": "array",
+          "minItems": 6,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/stateId" },
+          "description": "The six-state minimum. The evaluator additionally checks this set equals the canonical required set."
+        },
+        "renderedStates": {
+          "type": "array",
+          "minItems": 6,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["stateId", "route", "viewport", "screenshotSha256", "checkReportSha256"],
+            "properties": {
+              "stateId": { "$ref": "#/$defs/stateId" },
+              "route": { "type": "string", "minLength": 1 },
+              "viewport": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["width", "height"],
+                "properties": {
+                  "width": { "type": "integer", "minimum": 1 },
+                  "height": { "type": "integer", "minimum": 1 }
+                }
+              },
+              "screenshotSha256": { "$ref": "#/$defs/sha256" },
+              "checkReportSha256": { "$ref": "#/$defs/sha256" }
+            }
+          }
+        }
+      }
+    },
+    "checks": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "The verifier's own observations. Statuses are graded pass | fail | incomplete; the evaluator treats anything other than pass as not-decisive. Raw counts are recorded so a summary cannot claim zero while a raw report shows a real issue.",
+      "required": ["browser", "accessibility", "overflow", "stateCommunication"],
+      "properties": {
+        "browser": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["status", "pageErrors", "failedRequiredRequests", "missingRequiredStates"],
+          "properties": {
+            "status": { "$ref": "#/$defs/checkStatus" },
+            "pageErrors": { "type": "integer", "minimum": 0 },
+            "failedRequiredRequests": { "type": "integer", "minimum": 0 },
+            "missingRequiredStates": { "type": "array", "items": { "$ref": "#/$defs/stateId" } }
+          }
+        },
+        "accessibility": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["status", "seriousOrCriticalCount", "incompleteCount"],
+          "properties": {
+            "status": { "$ref": "#/$defs/checkStatus" },
+            "seriousOrCriticalCount": { "type": "integer", "minimum": 0 },
+            "incompleteCount": { "type": "integer", "minimum": 0 }
+          }
+        },
+        "overflow": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["status", "maxHorizontalOverflowPx"],
+          "properties": {
+            "status": { "$ref": "#/$defs/checkStatus" },
+            "maxHorizontalOverflowPx": { "type": "number", "minimum": 0 }
+          }
+        },
+        "stateCommunication": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["status", "silentStates"],
+          "properties": {
+            "status": { "$ref": "#/$defs/checkStatus" },
+            "silentStates": { "type": "array", "items": { "$ref": "#/$defs/stateId" } }
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "sha1OrSha256": { "type": "string", "pattern": "^[a-f0-9]{40}$|^[a-f0-9]{64}$" },
+    "checkStatus": { "enum": ["pass", "fail", "incomplete"] },
+    "stateId": {
+      "enum": [
+        "desktop_first_arrival",
+        "desktop_active_workspace",
+        "desktop_proposal_review",
+        "mobile_primary_artifact",
+        "mobile_agent",
+        "mobile_review"
+      ]
+    }
+  }
+}
