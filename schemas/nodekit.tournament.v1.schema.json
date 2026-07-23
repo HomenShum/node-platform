@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/HomenShum/node-platform/blob/main/schemas/nodekit.tournament.v1.schema.json",
+  "title": "NodeKit blind controlled tournament",
+  "type": "object",
+  "required": ["schemaVersion", "tournamentId", "benchmarkHash", "harnessHash", "candidates", "pairwiseResults", "protectedEvaluatorUnchanged"],
+  "properties": {
+    "schemaVersion": { "const": "nodekit.tournament/v1" },
+    "tournamentId": { "type": "string", "minLength": 1 },
+    "benchmarkHash": { "$ref": "#/$defs/hash" },
+    "harnessHash": { "$ref": "#/$defs/hash" },
+    "candidates": { "type": "array", "minItems": 2, "items": { "type": "string", "minLength": 1 }, "uniqueItems": true },
+    "pairwiseResults": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["taskId", "left", "right", "winner", "criticId", "criticIndependent", "deterministicChecksPassed", "evidenceRefs"],
+        "properties": {
+          "taskId": { "type": "string", "minLength": 1 },
+          "left": { "type": "string", "minLength": 1 },
+          "right": { "type": "string", "minLength": 1 },
+          "winner": { "type": "string", "minLength": 1 },
+          "criticId": { "type": "string", "minLength": 1 },
+          "criticIndependent": { "const": true },
+          "deterministicChecksPassed": { "const": true },
+          "evidenceRefs": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 }, "uniqueItems": true }
+        },
+        "additionalProperties": false
+      }
+    },
+    "protectedEvaluatorUnchanged": { "const": true }
+  },
+  "$defs": { "hash": { "type": "string", "pattern": "^[a-f0-9]{64}$" } },
+  "additionalProperties": false
+}

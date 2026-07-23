@@ -1,0 +1,25 @@
+{
+  "schemaVersion": "nodekit.invariant-claim/v1",
+  "id": "inv:guided-intake-mobile-decisions",
+  "statement": "Generated applications reject proposals until the intended outcome is confirmed and expose exactly one state-appropriate mobile decision surface inside the initial viewport.",
+  "scope": {
+    "applications": [
+      "NodeKit factory"
+    ],
+    "packages": [
+      "@homenshum/nodekit"
+    ],
+    "surfaces": [
+      "generated guided intake",
+      "mobile proposal review",
+      "browser certification"
+    ]
+  },
+  "enforcement": "test",
+  "verifierRefs": [
+    "test/ease-proof.test.mjs",
+    "templates/base/scripts/browser-certify.mjs"
+  ],
+  "introducedByEventId": "evt:guided-intake-mobile-decisions",
+  "status": "partially-verified"
+}

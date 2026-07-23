@@ -1,0 +1,242 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://nodekit.dev/schemas/nodekit.interaction-flow.v1.schema.json",
+  "title": "NodeKit governed interaction flow",
+  "type": "object",
+  "required": ["schemaVersion", "flowId", "version", "title", "user", "nodes", "transitions", "authority", "coverage", "assetBindings", "quality", "card", "knownLimitations", "recordedAt", "flowHash"],
+  "properties": {
+    "schemaVersion": { "const": "nodekit.interaction-flow/v1" },
+    "flowId": { "$ref": "#/$defs/flowId" },
+    "version": { "type": "integer", "minimum": 1, "maximum": 10000 },
+    "title": { "type": "string", "minLength": 1, "maxLength": 80 },
+    "user": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["role", "primaryJob"],
+      "properties": {
+        "role": { "type": "string", "minLength": 1, "maxLength": 80 },
+        "primaryJob": { "type": "string", "minLength": 1, "maxLength": 160 }
+      }
+    },
+    "nodes": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 32,
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["nodeId", "productStage", "surfaceAssetIds", "primaryArtifact", "primaryAction", "requiredData", "visibleUncertainty", "mobileMode"],
+        "properties": {
+          "nodeId": { "$ref": "#/$defs/slug" },
+          "productStage": { "$ref": "#/$defs/contractState" },
+          "surfaceAssetIds": { "type": "array", "maxItems": 8, "uniqueItems": true, "items": { "$ref": "#/$defs/assetId" } },
+          "primaryArtifact": { "type": "string", "minLength": 1, "maxLength": 120 },
+          "primaryAction": { "type": "string", "minLength": 1, "maxLength": 120 },
+          "requiredData": { "type": "array", "maxItems": 12, "uniqueItems": true, "items": { "$ref": "#/$defs/slug" } },
+          "visibleUncertainty": { "type": "boolean" },
+          "mobileMode": { "enum": ["primary-artifact", "agent", "review", "unavailable"] }
+        }
+      }
+    },
+    "transitions": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 64,
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["from", "to", "action", "effect", "approvalRequired"],
+        "properties": {
+          "from": { "$ref": "#/$defs/slug" },
+          "to": { "$ref": "#/$defs/slug" },
+          "action": { "$ref": "#/$defs/slug" },
+          "guard": { "type": "string", "minLength": 1, "maxLength": 240 },
+          "effect": { "enum": ["read", "local-mutate", "propose", "approve", "navigate"] },
+          "approvalRequired": { "type": "boolean" }
+        },
+        "allOf": [
+          {
+            "$comment": "A transition that approves canonical state is always approval gated. Encoded as an enum plus const, NOT an inline-flag regex: JavaScript RegExp rejects (?i) and the schema would fail to compile.",
+            "if": { "type": "object", "required": ["effect"], "properties": { "effect": { "const": "approve" } } },
+            "then": { "type": "object", "required": ["approvalRequired"], "properties": { "approvalRequired": { "const": true } } }
+          }
+        ]
+      }
+    },
+    "authority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["read", "propose", "approve", "prohibited", "proofGateMutable", "completionClaimAllowed"],
+      "properties": {
+        "read": { "$ref": "#/$defs/principals" },
+        "propose": { "$ref": "#/$defs/principals" },
+        "approve": { "$ref": "#/$defs/principals" },
+        "prohibited": { "type": "array", "minItems": 1, "maxItems": 16, "uniqueItems": true, "items": { "type": "string", "minLength": 1, "maxLength": 160 } },
+        "proofGateMutable": { "const": false },
+        "completionClaimAllowed": { "const": false }
+      }
+    },
+    "coverage": {
+      "$comment": "Derived from nodes and transitions, re-verified by nodekit atlas verify. Stored so a flow card can report coverage without a second read; a cache, never an authority. startNodeId and terminalNodeIds are derived from the transition graph rather than declared, so there is no second source of truth to disagree with.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["requiredStates", "coveredStates", "missingStates", "startNodeId", "terminalNodeIds", "complete"],
+      "properties": {
+        "requiredStates": { "type": "array", "minItems": 9, "maxItems": 9, "uniqueItems": true, "items": { "$ref": "#/$defs/contractState" } },
+        "coveredStates": { "type": "array", "maxItems": 9, "uniqueItems": true, "items": { "$ref": "#/$defs/contractState" } },
+        "missingStates": { "type": "array", "maxItems": 9, "uniqueItems": true, "items": { "$ref": "#/$defs/contractState" } },
+        "startNodeId": { "$ref": "#/$defs/slug" },
+        "terminalNodeIds": { "type": "array", "minItems": 1, "maxItems": 8, "uniqueItems": true, "items": { "$ref": "#/$defs/slug" } },
+        "complete": { "type": "boolean" }
+      }
+    },
+    "assetBindings": {
+      "type": "array",
+      "maxItems": 64,
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["assetId", "assetVersion", "assetHash"],
+        "properties": {
+          "assetId": { "$ref": "#/$defs/assetId" },
+          "assetVersion": { "type": "integer", "minimum": 1, "maximum": 10000 },
+          "assetHash": { "$ref": "#/$defs/hash" }
+        }
+      }
+    },
+    "quality": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["maturity", "receipts"],
+      "properties": {
+        "maturity": { "enum": ["discovered", "extracted", "vetted", "proven", "certified", "deprecated"] },
+        "receipts": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "journey": { "$ref": "#/$defs/receiptBinding" },
+            "experienceBuild": { "type": "array", "maxItems": 32, "uniqueItems": true, "items": { "$ref": "#/$defs/receiptBinding" } }
+          }
+        },
+        "evidenceRootSha256": { "$ref": "#/$defs/hash" },
+        "deprecation": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["supersededByFlowId", "reason", "decidedBy", "decidedAt"],
+          "properties": {
+            "supersededByFlowId": { "$ref": "#/$defs/flowId" },
+            "reason": { "type": "string", "minLength": 1, "maxLength": 512 },
+            "decidedBy": { "type": "string", "minLength": 1, "maxLength": 128 },
+            "decidedAt": { "$ref": "#/$defs/dateTime" }
+          }
+        }
+      }
+    },
+    "card": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["flowId", "version", "title", "role", "nodeCount", "transitionCount", "approvalGates", "stateCoverage", "maturity", "tags"],
+      "properties": {
+        "flowId": { "$ref": "#/$defs/flowId" },
+        "version": { "type": "integer", "minimum": 1, "maximum": 10000 },
+        "title": { "type": "string", "minLength": 1, "maxLength": 80 },
+        "role": { "type": "string", "minLength": 1, "maxLength": 80 },
+        "nodeCount": { "type": "integer", "minimum": 2, "maximum": 32 },
+        "transitionCount": { "type": "integer", "minimum": 1, "maximum": 64 },
+        "approvalGates": { "type": "integer", "minimum": 0, "maximum": 64 },
+        "stateCoverage": { "type": "string", "pattern": "^[0-9]/9$" },
+        "maturity": { "enum": ["discovered", "extracted", "vetted", "proven", "certified", "deprecated"] },
+        "tags": { "type": "array", "maxItems": 8, "uniqueItems": true, "items": { "type": "string", "minLength": 2, "maxLength": 24 } }
+      }
+    },
+    "knownLimitations": { "type": "array", "maxItems": 8, "uniqueItems": true, "items": { "type": "string", "minLength": 1, "maxLength": 240 } },
+    "recordedAt": { "$ref": "#/$defs/dateTime" },
+    "flowHash": { "$ref": "#/$defs/hash" }
+  },
+  "allOf": [
+    {
+      "$comment": "LOCK 1. A flow may only claim complete coverage when nothing is missing.",
+      "if": { "type": "object", "required": ["coverage"], "properties": { "coverage": { "type": "object", "required": ["complete"], "properties": { "complete": { "const": true } } } } },
+      "then": {
+        "type": "object",
+        "required": ["coverage"],
+        "properties": {
+          "coverage": {
+            "type": "object",
+            "required": ["missingStates", "coveredStates"],
+            "properties": { "missingStates": { "type": "array", "maxItems": 0 }, "coveredStates": { "type": "array", "minItems": 9 } }
+          }
+        }
+      }
+    },
+    {
+      "$comment": "LOCK 2. Vetted or higher maturity requires full nine-state coverage.",
+      "if": { "type": "object", "required": ["quality"], "properties": { "quality": { "type": "object", "required": ["maturity"], "properties": { "maturity": { "enum": ["vetted", "proven", "certified"] } } } } },
+      "then": { "type": "object", "required": ["coverage"], "properties": { "coverage": { "type": "object", "required": ["complete"], "properties": { "complete": { "const": true } } } } }
+    },
+    {
+      "$comment": "LOCK 3. Proven or higher maturity requires a passing journey receipt and an evidence closure root.",
+      "if": { "type": "object", "required": ["quality"], "properties": { "quality": { "type": "object", "required": ["maturity"], "properties": { "maturity": { "enum": ["proven", "certified"] } } } } },
+      "then": {
+        "type": "object",
+        "required": ["quality"],
+        "properties": {
+          "quality": {
+            "type": "object",
+            "required": ["receipts", "evidenceRootSha256"],
+            "properties": {
+              "receipts": { "type": "object", "required": ["journey"], "properties": { "journey": { "$ref": "#/$defs/receiptBinding" } } },
+              "evidenceRootSha256": { "$ref": "#/$defs/hash" }
+            }
+          }
+        }
+      }
+    },
+    {
+      "$comment": "LOCK 4. Certified maturity requires at least one experience-build receipt.",
+      "if": { "type": "object", "required": ["quality"], "properties": { "quality": { "type": "object", "required": ["maturity"], "properties": { "maturity": { "const": "certified" } } } } },
+      "then": {
+        "type": "object",
+        "required": ["quality"],
+        "properties": {
+          "quality": {
+            "type": "object",
+            "required": ["receipts"],
+            "properties": { "receipts": { "type": "object", "required": ["experienceBuild"], "properties": { "experienceBuild": { "type": "array", "minItems": 1 } } } }
+          }
+        }
+      }
+    },
+    {
+      "$comment": "LOCK 5. A deprecated flow must name its successor and the human who decided.",
+      "if": { "type": "object", "required": ["quality"], "properties": { "quality": { "type": "object", "required": ["maturity"], "properties": { "maturity": { "const": "deprecated" } } } } },
+      "then": { "type": "object", "required": ["quality"], "properties": { "quality": { "type": "object", "required": ["deprecation"], "properties": { "deprecation": { "type": "object" } } } } }
+    }
+  ],
+  "$defs": {
+    "nonEmpty": { "type": "string", "minLength": 1 },
+    "hash": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "assetId": { "type": "string", "pattern": "^asset_[a-f0-9]{24}$" },
+    "flowId": { "type": "string", "pattern": "^flow_[a-f0-9]{24}$" },
+    "slug": { "type": "string", "pattern": "^[a-z][a-z0-9_-]{1,63}$" },
+    "dateTime": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{3}Z$" },
+    "repositoryPath": { "type": "string", "minLength": 1, "maxLength": 512, "pattern": "^(?!/)(?!\\./)(?!.*//)(?!.*\\/$)(?!.*(?:^|/)\\.\\.?(?:/|$))(?![A-Za-z]:)(?!.*\\u0000)[^\\\\]+$" },
+    "contractState": { "enum": ["first_arrival", "loading", "populated", "exception", "proposal", "conflict", "failed_safe", "completed", "mobile"] },
+    "principals": { "type": "array", "minItems": 1, "maxItems": 16, "uniqueItems": true, "items": { "type": "string", "minLength": 1, "maxLength": 120 } },
+    "receiptBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["receiptId", "receiptSha256", "repositoryPath", "passed"],
+      "properties": {
+        "receiptId": { "type": "string", "minLength": 1, "maxLength": 256 },
+        "receiptSha256": { "$ref": "#/$defs/hash" },
+        "repositoryPath": { "$ref": "#/$defs/repositoryPath" },
+        "passed": { "const": true }
+      }
+    }
+  },
+  "additionalProperties": false
+}

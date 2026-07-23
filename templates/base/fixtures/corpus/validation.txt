@@ -1,0 +1,1 @@
+This neutral fixture exists so compiled identity and drift detection remain deterministic.

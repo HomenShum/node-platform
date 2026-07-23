@@ -1,0 +1,149 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://nodekit.dev/schemas/nodekit.experience-build.v1.schema.json",
+  "title": "NodeKit experience build receipt",
+  "type": "object",
+  "required": ["schemaVersion", "experienceBuildId", "candidateCommit", "nodekitSourceHash", "nodekitIdentity", "productContractPath", "productContractSha256", "atlasIndexHash", "rankerHash", "assetBindings", "flowBindings", "recipeBindings", "retrievalBindings", "modelRoute", "repairRounds", "checks", "evidenceRootSha256", "evidenceBindings", "command", "exitCode", "startedAt", "completedAt", "measurementAuthority", "candidateAuthored", "promotionAuthorized", "deploymentAuthorized", "experienceBuildHash"],
+  "properties": {
+    "schemaVersion": { "const": "nodekit.experience-build/v1" },
+    "experienceBuildId": { "type": "string", "pattern": "^atlas-experience-build:sha256:[a-f0-9]{64}$" },
+    "candidateCommit": { "$ref": "#/$defs/sha" },
+    "nodekitSourceHash": { "$ref": "#/$defs/hash" },
+    "nodekitIdentity": { "type": "string", "pattern": "^[a-f0-9]{40}/[a-f0-9]{64}$" },
+    "productContractPath": { "$ref": "#/$defs/repositoryPath" },
+    "productContractSha256": { "$ref": "#/$defs/hash" },
+    "atlasIndexHash": { "$ref": "#/$defs/hash" },
+    "rankerHash": { "$ref": "#/$defs/hash" },
+    "assetBindings": {
+      "type": "array",
+      "maxItems": 64,
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["assetId", "assetVersion", "assetHash", "reuseMode", "licenseIdentifier"],
+        "properties": {
+          "assetId": { "type": "string", "pattern": "^asset_[a-f0-9]{24}$" },
+          "assetVersion": { "type": "integer", "minimum": 1, "maximum": 10000 },
+          "assetHash": { "$ref": "#/$defs/hash" },
+          "reuseMode": { "enum": ["reference", "benchmark", "copy", "wrap", "adapt", "reimplement"] },
+          "licenseIdentifier": { "type": "string", "pattern": "^[A-Za-z0-9.+-]{1,64}$" },
+          "noticeRef": { "$ref": "#/$defs/repositoryPath" }
+        }
+      }
+    },
+    "flowBindings": {
+      "type": "array",
+      "maxItems": 16,
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["flowId", "flowVersion", "flowHash", "coverageComplete"],
+        "properties": {
+          "flowId": { "type": "string", "pattern": "^flow_[a-f0-9]{24}$" },
+          "flowVersion": { "type": "integer", "minimum": 1, "maximum": 10000 },
+          "flowHash": { "$ref": "#/$defs/hash" },
+          "coverageComplete": { "const": true }
+        }
+      }
+    },
+    "recipeBindings": {
+      "type": "array",
+      "maxItems": 64,
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["recipeHash", "repositoryPath", "assetId"],
+        "properties": {
+          "recipeHash": { "$ref": "#/$defs/hash" },
+          "repositoryPath": { "$ref": "#/$defs/repositoryPath" },
+          "assetId": { "type": "string", "pattern": "^asset_[a-f0-9]{24}$" }
+        }
+      }
+    },
+    "retrievalBindings": {
+      "type": "array",
+      "maxItems": 64,
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["receiptId", "receiptHash", "repositoryPath", "queryHash"],
+        "properties": {
+          "receiptId": { "type": "string", "pattern": "^atlas-retrieval:sha256:[a-f0-9]{64}$" },
+          "receiptHash": { "$ref": "#/$defs/hash" },
+          "repositoryPath": { "$ref": "#/$defs/repositoryPath" },
+          "queryHash": { "$ref": "#/$defs/hash" }
+        }
+      }
+    },
+    "modelRoute": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["requestedRoute", "resolvedModel", "provider", "harnessVersion"],
+      "properties": {
+        "requestedRoute": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "resolvedModel": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "provider": { "type": "string", "minLength": 1, "maxLength": 64 },
+        "harnessVersion": { "type": "string", "minLength": 1, "maxLength": 64 },
+        "promptHash": { "$ref": "#/$defs/hash" }
+      }
+    },
+    "repairRounds": { "type": "integer", "minimum": 0, "maximum": 8 },
+    "checks": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 32,
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "passed", "evidencePath", "evidenceSha256"],
+        "properties": {
+          "id": { "enum": ["atlas-verify", "asset-snapshots-verified", "flow-reachability", "required-states-covered", "ports-bound", "licenses-satisfied", "guardrails-clear", "evolution-ledger", "repository-check", "distributable-clean"] },
+          "passed": { "const": true },
+          "evidencePath": { "$ref": "#/$defs/repositoryPath" },
+          "evidenceSha256": { "$ref": "#/$defs/hash" }
+        }
+      }
+    },
+    "evidenceRootSha256": { "$ref": "#/$defs/hash" },
+    "evidenceBindings": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 256,
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["path", "sha256", "byteLength"],
+        "properties": {
+          "path": { "$ref": "#/$defs/repositoryPath" },
+          "sha256": { "$ref": "#/$defs/hash" },
+          "byteLength": { "type": "integer", "minimum": 1, "maximum": 268435456 },
+          "kind": { "type": "string", "minLength": 1, "maxLength": 64 }
+        }
+      }
+    },
+    "command": { "type": "string", "minLength": 1, "maxLength": 2048 },
+    "exitCode": { "const": 0 },
+    "startedAt": { "$ref": "#/$defs/dateTime" },
+    "completedAt": { "$ref": "#/$defs/dateTime" },
+    "measurementAuthority": { "const": "atlas-recomputed-from-bytes" },
+    "candidateAuthored": { "const": false },
+    "promotionAuthorized": { "const": false },
+    "deploymentAuthorized": { "const": false },
+    "knownLimitations": { "type": "array", "maxItems": 16, "uniqueItems": true, "items": { "type": "string", "minLength": 1, "maxLength": 240 } },
+    "experienceBuildHash": { "$ref": "#/$defs/hash" }
+  },
+  "$defs": {
+    "nonEmpty": { "type": "string", "minLength": 1 },
+    "hash": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "sha": { "type": "string", "pattern": "^[a-f0-9]{40}$" },
+    "dateTime": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{3}Z$" },
+    "repositoryPath": { "type": "string", "minLength": 1, "maxLength": 512, "pattern": "^(?!/)(?!\\./)(?!.*//)(?!.*\\/$)(?!.*(?:^|/)\\.\\.?(?:/|$))(?![A-Za-z]:)(?!.*\\u0000)[^\\\\]+$" }
+  },
+  "additionalProperties": false
+}

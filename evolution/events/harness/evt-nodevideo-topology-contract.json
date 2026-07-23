@@ -1,0 +1,33 @@
+{
+  "schemaVersion": "nodekit.evolution-event/v1",
+  "id": "evt:nodevideo-topology-contract",
+  "projectId": "nodekit",
+  "repository": "HomenShum/node-platform",
+  "source": {
+    "commitSha": "678f2e0b82c2c50c3741c8bbb2a80ed95ff5b159",
+    "occurredAt": "2026-07-22T00:36:59-07:00"
+  },
+  "track": "harness",
+  "category": "ui",
+  "challenge": "Visually polished frontend output could still miss the intended creator-workspace topology.",
+  "observedFailure": "NodeVideo was organized as a proof dashboard instead of keeping the primary media artifact, agent context, and proposal review boundary legible across desktop and mobile.",
+  "resolution": "Added Frontend Specialist Routing with a protected product contract, three required rendered directions, independent criticism, explicit mobile topology, bounded repair, and a NodeProof-controlled canary.",
+  "assumptionIds": [
+    "asm:strong-model-infers-topology"
+  ],
+  "invariantIds": [
+    "inv:major-frontend-direction-tournament"
+  ],
+  "evidenceIds": [
+    "evd:nodevideo-topology-failure"
+  ],
+  "knownLimitations": [
+    "No real NodeVideo or NodeSlide consumer has yet completed the three-direction tournament and fresh-browser canary.",
+    "No exact resolved model identity was preserved for the historical failed attempt, so this event makes no model capability claim."
+  ],
+  "interpretation": {
+    "status": "human-reviewed",
+    "reviewedBy": "project-owner",
+    "reviewedAt": "2026-07-22T00:36:59-07:00"
+  }
+}

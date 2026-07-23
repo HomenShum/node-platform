@@ -2,15 +2,147 @@
   "name": "@homenshum/nodekit",
   "version": "0.2.1",
   "description": "Portable agent-application scaffolding, compilation, conformance, and proof tooling",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HomenShum/node-platform.git"
+  },
+  "homepage": "https://github.com/HomenShum/node-platform#readme",
+  "bugs": {
+    "url": "https://github.com/HomenShum/node-platform/issues"
+  },
+  "keywords": [
+    "ai-agents",
+    "agent-applications",
+    "convex",
+    "evaluation",
+    "proof",
+    "scaffolding"
+  ],
+  "author": "Homen Shum",
   "type": "module",
+  "types": "./src/index.d.mts",
+  "exports": {
+    ".": {
+      "types": "./src/index.d.mts",
+      "import": "./src/index.mjs",
+      "default": "./src/index.mjs"
+    },
+    "./caseflow": {
+      "types": "./src/caseflow.d.mts",
+      "import": "./src/caseflow.mjs",
+      "default": "./src/caseflow.mjs"
+    },
+    "./submission-attestation": {
+      "types": "./src/submission-attestation.d.mts",
+      "import": "./src/submission-attestation.mjs",
+      "default": "./src/submission-attestation.mjs"
+    },
+    "./submission-evidence-finalizer": {
+      "types": "./src/submission-evidence-finalizer.d.mts",
+      "import": "./src/submission-evidence-finalizer.mjs",
+      "default": "./src/submission-evidence-finalizer.mjs"
+    },
+    "./consumer-package-preparation": {
+      "types": "./src/consumer-package-preparation.d.mts",
+      "import": "./src/consumer-package-preparation.mjs",
+      "default": "./src/consumer-package-preparation.mjs"
+    },
+    "./managed-evidence-capture": {
+      "types": "./src/managed-evidence-capture.d.mts",
+      "import": "./src/managed-evidence-capture.mjs",
+      "default": "./src/managed-evidence-capture.mjs"
+    },
+    "./builder-gym": {
+      "types": "./src/builder-gym.d.mts",
+      "import": "./src/builder-gym.mjs",
+      "default": "./src/builder-gym.mjs"
+    },
+    "./knowledge-runtime": {
+      "types": "./src/knowledge-runtime.d.mts",
+      "import": "./src/knowledge-runtime.mjs",
+      "default": "./src/knowledge-runtime.mjs"
+    },
+    "./skill-evaluation": {
+      "types": "./src/skill-evaluation.d.mts",
+      "import": "./src/skill-evaluation.mjs",
+      "default": "./src/skill-evaluation.mjs"
+    },
+    "./evidence-snapshots": {
+      "types": "./src/evidence-snapshots.d.mts",
+      "import": "./src/evidence-snapshots.mjs",
+      "default": "./src/evidence-snapshots.mjs"
+    },
+    "./research-collector": {
+      "types": "./src/research-collector.d.mts",
+      "import": "./src/research-collector.mjs",
+      "default": "./src/research-collector.mjs"
+    },
+    "./adapters/postgres": {
+      "types": "./src/adapters/postgres.d.mts",
+      "import": "./src/adapters/postgres.mjs",
+      "default": "./src/adapters/postgres.mjs"
+    },
+    "./adapters/postgres/knowledge": {
+      "types": "./src/adapters/postgres-knowledge.d.mts",
+      "import": "./src/adapters/postgres-knowledge.mjs",
+      "default": "./src/adapters/postgres-knowledge.mjs"
+    },
+    "./adapters/postgres/migration.sql": "./adapters/postgres/001_caseflow.sql",
+    "./adapters/postgres/knowledge-migration.sql": "./adapters/postgres/002_knowledge_runtime.sql",
+    "./adapters/supabase/profile.sql": "./adapters/supabase/001_profile.sql",
+    "./adapters/supabase/workers.sql": "./adapters/supabase/002_workers.sql",
+    "./convex-caseflow": {
+      "types": "./dist/client/index.d.ts",
+      "import": "./dist/client/index.js",
+      "default": "./dist/client/index.js"
+    },
+    "./convex.config.js": {
+      "types": "./dist/component/convex.config.d.ts",
+      "import": "./dist/component/convex.config.js",
+      "default": "./dist/component/convex.config.js"
+    },
+    "./convex.config": {
+      "types": "./dist/component/convex.config.d.ts",
+      "import": "./dist/component/convex.config.js",
+      "default": "./dist/component/convex.config.js"
+    },
+    "./_generated/component.js": {
+      "types": "./src/component/_generated/component.d.ts"
+    },
+    "./_generated/component": {
+      "types": "./src/component/_generated/component.d.ts"
+    },
+    "./test": {
+      "types": "./dist/convex-test.d.ts",
+      "import": "./dist/convex-test.js",
+      "default": "./dist/convex-test.js"
+    },
+    "./package.json": "./package.json"
+  },
   "bin": {
-    "nodekit": "src/cli.mjs"
+    "nodekit": "src/cli.mjs",
+    "nodekit-attestation-sign": "scripts/sign-submission-attestation.mjs",
+    "nodekit-attestation-verify": "scripts/verify-submission-attestation.mjs",
+    "nodekit-evidence-finalize": "scripts/finalize-submission-evidence.mjs",
+    "nodekit-consumer-prepare": "scripts/prepare-consumer-package.mjs",
+    "nodekit-evidence-capture": "scripts/capture-managed-evidence.mjs",
+    "nodekit-human-study": "scripts/capture-human-study.mjs"
   },
   "files": [
+    "dist",
     "src",
+    "scripts/sign-submission-attestation.mjs",
+    "scripts/verify-submission-attestation.mjs",
+    "scripts/finalize-submission-evidence.mjs",
+    "scripts/prepare-consumer-package.mjs",
+    "scripts/capture-human-study.mjs",
+    "scripts/capture-managed-evidence.mjs",
+    "scripts/run-knowledge-runtime-comparison.mjs",
+    "adapters",
     "schemas",
     "templates",
     "plugins",
+    "evolution",
     "ownership.yaml",
     "repositories.yaml",
     "architecture.yaml",
@@ -19,14 +151,44 @@
   ],
   "scripts": {
     "doctor": "node src/cli.mjs registry check --registry-root .",
+    "component:codegen": "convex codegen --component-dir ./src/component",
+    "build:component": "node scripts/clean-component-dist.mjs && tsc --project ./tsconfig.component.json && node scripts/copy-component-types.mjs",
+    "typecheck:component": "tsc --noEmit --project ./tsconfig.component-test.json",
+    "test:component": "vitest run --config ./vitest.component.config.mjs",
+    "prepare": "npm run build:component",
     "audit:prod": "npm audit --omit=dev",
-    "test": "node --test test/*.test.mjs",
+    "typecheck:public": "tsc -p tsconfig.public.json",
+    "test:repository": "node --test test/*.test.mjs",
+    "test": "npm run test:repository && npm run test:component",
     "presentation:nodekit-proof": "node scripts/generate-nodekit-proof-presentation.mjs",
     "acceptance:factory": "node src/factory-acceptance.mjs",
+    "ease:aggregate-developer": "node scripts/aggregate-developer-timing.mjs",
+    "ease:run-agent-matrix": "node scripts/run-agent-ease-matrix.mjs",
+    "acceptance:agent": "node scripts/run-agent-ease-trial.mjs",
+    "ease:evaluate-agents": "node scripts/evaluate-agent-ease.mjs",
+    "ease:evaluate-developer": "node scripts/evaluate-ease-evidence.mjs developer",
+    "ease:evaluate-humans": "node scripts/evaluate-ease-evidence.mjs humans",
+    "ease:human-study": "node scripts/capture-human-study.mjs",
+    "submission:prepare": "node scripts/prepare-submission.mjs",
+    "submission:evaluate": "node scripts/evaluate-submission.mjs",
+    "attestation:sign": "node scripts/sign-submission-attestation.mjs",
+    "attestation:verify": "node scripts/verify-submission-attestation.mjs",
+    "submission:finalize-evidence": "node scripts/finalize-submission-evidence.mjs",
+    "consumer:prepare": "node scripts/prepare-consumer-package.mjs",
+    "evidence:capture": "node scripts/capture-managed-evidence.mjs",
+    "proof:package-install": "node scripts/run-package-install-proof.mjs",
+    "candidate:check": "node scripts/run-local-candidate-gate.mjs --preflight",
+    "candidate:prove": "node scripts/run-local-candidate-gate.mjs",
+    "candidate:distribution": "node scripts/run-local-distribution-gate.mjs",
+    "conformance:postgres": "node scripts/run-postgres-conformance.mjs",
+    "conformance:supabase-local": "node scripts/run-supabase-local-conformance.mjs",
     "registry:check": "node src/cli.mjs registry check --registry-root .",
     "ecosystem:check": "node src/cli.mjs ecosystem check --registry-root . --workspace ..",
     "dashboard": "node src/cli.mjs dashboard --registry-root . --workspace .. --write",
-    "check": "npm run test && npm run audit:prod && npm run registry:check && npm run ecosystem:check"
+    "evolution:verify": "node src/cli.mjs evolution verify --repo-root .",
+    "evolution:docs": "node src/cli.mjs evolution build-docs --repo-root .",
+    "knowledge:compare": "node scripts/run-knowledge-runtime-comparison.mjs",
+    "check": "npm run test && npm run typecheck:public && npm run audit:prod && npm run registry:check && npm run ecosystem:check"
   },
   "engines": {
     "node": ">=20"
@@ -36,7 +198,28 @@
   },
   "dependencies": {
     "ajv": "8.20.0",
+    "ajv-formats": "3.0.1",
+    "pngjs": "^7.0.0",
     "yaml": "^2.9.0"
   },
-  "license": "MIT"
+  "peerDependencies": {
+    "convex": "^1.42.3"
+  },
+  "peerDependenciesMeta": {
+    "convex": {
+      "optional": true
+    }
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@axe-core/playwright": "4.12.1",
+    "@edge-runtime/vm": "5.0.0",
+    "@types/node": "24.12.2",
+    "convex": "1.42.3",
+    "convex-test": "0.0.54",
+    "pg": "^8.22.0",
+    "playwright": "1.61.1",
+    "typescript": "^7.0.2",
+    "vitest": "4.1.10"
+  }
 }

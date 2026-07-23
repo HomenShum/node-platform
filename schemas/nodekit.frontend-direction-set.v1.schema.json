@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/HomenShum/node-platform/blob/main/schemas/nodekit.frontend-direction-set.v1.schema.json",
+  "title": "NodeKit three-direction frontend hypothesis set",
+  "type": "object",
+  "required": ["schemaVersion", "directionSetId", "productContractHash", "routeHash", "blind", "requiredViews", "candidates"],
+  "properties": {
+    "schemaVersion": { "const": "nodekit.frontend-direction-set/v1" },
+    "directionSetId": { "type": "string", "minLength": 1 },
+    "productContractHash": { "$ref": "#/$defs/hash" },
+    "routeHash": { "$ref": "#/$defs/hash" },
+    "blind": { "const": true },
+    "requiredViews": { "type": "array", "minItems": 6, "items": { "type": "string", "minLength": 1 }, "uniqueItems": true },
+    "candidates": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "items": {
+        "type": "object",
+        "required": ["candidateId", "archetype", "status", "viewEvidence"],
+        "properties": {
+          "candidateId": { "type": "string", "pattern": "^direction-[abc]$" },
+          "archetype": { "enum": ["collaborative-workspace", "artifact-studio", "domain-native"] },
+          "status": { "enum": ["planned", "rendered", "evaluated"] },
+          "viewEvidence": { "type": "object", "additionalProperties": { "type": "string", "minLength": 1 } }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "$defs": { "hash": { "type": "string", "pattern": "^[a-f0-9]{64}$" } },
+  "additionalProperties": false
+}

@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://nodekit.dev/schemas/nodekit.submission-manifest.v1.schema.json",
+  "title": "NodeKit submission manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "candidateCommit", "candidateSourceHash", "releaseCandidate", "evidenceRootSha256", "gates"],
+  "properties": {
+    "schemaVersion": { "const": "nodekit.submission-manifest/v1" },
+    "candidateCommit": { "type": "string", "pattern": "^[a-f0-9]{40}$" },
+    "candidateSourceHash": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "releaseCandidate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["nodekitCommit", "nodekitSourceHash", "nodekitTarballSha256", "packageName", "packageVersion"],
+      "properties": {
+        "nodekitCommit": { "type": "string", "pattern": "^[a-f0-9]{40}$" },
+        "nodekitSourceHash": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+        "nodekitTarballSha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+        "packageName": { "const": "@homenshum/nodekit" },
+        "packageVersion": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+(?:-[0-9A-Za-z.-]+)?$" }
+      }
+    },
+    "evidenceRootSha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "gates": {
+      "type": "array",
+      "minItems": 12,
+      "maxItems": 12,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "passed", "evidence"],
+        "properties": {
+          "id": { "enum": ["developerTimingMatrix", "freshAgentHeldout", "freshHumanUsability", "threeConvexConsumers", "previewDeployment", "managedSupabasePortability", "knowledgeEvolutionAdoption", "modelIntelligenceHarness", "engineeringHealth", "proofloopEaseVerification", "packageInstallProof", "publicationApproval"] },
+          "passed": { "type": "boolean" },
+          "evidence": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["path", "sha256"],
+              "properties": {
+                "path": { "type": "string", "minLength": 1, "pattern": "^(?!/)(?!\\./)(?!.*//)(?!.*\\/$)(?!.*(?:^|/)\\.\\.?(?:/|$))(?![A-Za-z]:)[^\\\\]+$" },
+                "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

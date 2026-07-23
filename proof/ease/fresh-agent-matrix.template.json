@@ -1,0 +1,27 @@
+{
+  "schemaVersion": "nodekit.agent-ease-matrix-plan/v1",
+  "candidateCommit": null,
+  "nodekitSourceHash": null,
+  "nodekitPackage": "@homenshum/nodekit",
+  "nodekitVersion": null,
+  "nodekitTarballSha256": null,
+  "instructions": "Copy this file for one immutable commit/source/tarball candidate. Record every v2 attempt and its generated applicationHash/configHash. Do not replace failed runs with later winners; any extra, failed, or different-tarball candidate-bound attempt blocks certification.",
+  "requiredRuns": 15,
+  "slots": [
+    { "taskId": "research-map", "agentProfile": "codex", "ordinal": 1, "runId": null, "status": "pending" },
+    { "taskId": "research-map", "agentProfile": "codex", "ordinal": 2, "runId": null, "status": "pending" },
+    { "taskId": "research-map", "agentProfile": "codex", "ordinal": 3, "runId": null, "status": "pending" },
+    { "taskId": "research-map", "agentProfile": "claude-code", "ordinal": 1, "runId": null, "status": "pending" },
+    { "taskId": "research-map", "agentProfile": "lower-cost", "ordinal": 1, "agentDriver": null, "agentModel": null, "runId": null, "status": "pending" },
+    { "taskId": "volunteer-onboarding", "agentProfile": "codex", "ordinal": 1, "runId": null, "status": "pending" },
+    { "taskId": "volunteer-onboarding", "agentProfile": "codex", "ordinal": 2, "runId": null, "status": "pending" },
+    { "taskId": "volunteer-onboarding", "agentProfile": "codex", "ordinal": 3, "runId": null, "status": "pending" },
+    { "taskId": "volunteer-onboarding", "agentProfile": "claude-code", "ordinal": 1, "runId": null, "status": "pending" },
+    { "taskId": "volunteer-onboarding", "agentProfile": "lower-cost", "ordinal": 1, "agentDriver": null, "agentModel": null, "runId": null, "status": "pending" },
+    { "taskId": "launch-presentation", "agentProfile": "codex", "ordinal": 1, "runId": null, "status": "pending" },
+    { "taskId": "launch-presentation", "agentProfile": "codex", "ordinal": 2, "runId": null, "status": "pending" },
+    { "taskId": "launch-presentation", "agentProfile": "codex", "ordinal": 3, "runId": null, "status": "pending" },
+    { "taskId": "launch-presentation", "agentProfile": "claude-code", "ordinal": 1, "runId": null, "status": "pending" },
+    { "taskId": "launch-presentation", "agentProfile": "lower-cost", "ordinal": 1, "agentDriver": null, "agentModel": null, "runId": null, "status": "pending" }
+  ]
+}

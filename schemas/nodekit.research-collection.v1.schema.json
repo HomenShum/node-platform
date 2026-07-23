@@ -1,0 +1,115 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/HomenShum/node-platform/blob/main/schemas/nodekit.research-collection.v1.schema.json",
+  "title": "NodeKit bounded external research collection receipt",
+  "type": "object",
+  "required": ["schemaVersion", "collectionId", "provider", "normalizer", "queries", "limits", "searches", "fetches", "totalRawBytes", "patchId", "actionReceiptId", "proposalOnly", "canonicalGraphVersionBefore", "canonicalGraphVersionAfter", "canonicalGraphStateHashBefore", "canonicalGraphStateHashAfter", "completedAt", "contentHash"],
+  "properties": {
+    "schemaVersion": { "const": "nodekit.research-collection/v1" },
+    "collectionId": { "type": "string", "pattern": "^research_[a-f0-9]{24}$" },
+    "provider": {
+      "type": "object",
+      "required": ["id", "version", "contractVersion", "isolation"],
+      "properties": {
+        "id": { "$ref": "#/$defs/nonEmpty" },
+        "version": { "$ref": "#/$defs/nonEmpty" },
+        "contractVersion": { "const": "nodekit.research-provider/v1" },
+        "isolation": {
+          "type": "object",
+          "required": ["mode", "networkEgress"],
+          "properties": {
+            "mode": { "const": "trusted-local-fixture" },
+            "networkEgress": { "const": false }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "normalizer": {
+      "type": "object",
+      "required": ["id", "version", "isolation"],
+      "properties": {
+        "id": { "$ref": "#/$defs/nonEmpty" },
+        "version": { "$ref": "#/$defs/nonEmpty" },
+        "isolation": {
+          "type": "object",
+          "required": ["mode", "userCode"],
+          "properties": {
+            "mode": { "const": "nodekit-declarative" },
+            "userCode": { "const": false },
+            "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+            "labelField": { "const": "title" },
+            "labelTransform": { "enum": ["identity", "uppercase", "lowercase"] },
+            "metadataFields": { "type": "array", "uniqueItems": true, "items": { "$ref": "#/$defs/nonEmpty" } }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "queries": { "type": "array", "minItems": 1, "maxItems": 10, "uniqueItems": true, "items": { "$ref": "#/$defs/nonEmpty" } },
+    "limits": {
+      "type": "object",
+      "required": ["maximumSearches", "maximumResultsPerSearch", "maximumFetches", "maximumBytesPerFetch", "maximumTotalBytes", "maximumLocatorsPerDocument", "maximumLocatorBytesPerDocument", "maximumMetadataBytesPerResult", "maximumDurationMs"],
+      "additionalProperties": { "type": "integer", "minimum": 1 }
+    },
+    "searches": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/search" } },
+    "fetches": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/fetch" } },
+    "totalRawBytes": { "type": "integer", "minimum": 1 },
+    "patchId": { "$ref": "#/$defs/nonEmpty" },
+    "actionReceiptId": { "$ref": "#/$defs/nonEmpty" },
+    "proposalOnly": { "const": true },
+    "canonicalGraphVersionBefore": { "type": "integer", "minimum": 0 },
+    "canonicalGraphVersionAfter": { "type": "integer", "minimum": 0 },
+    "canonicalGraphStateHashBefore": { "$ref": "#/$defs/hash" },
+    "canonicalGraphStateHashAfter": { "$ref": "#/$defs/hash" },
+    "completedAt": { "$ref": "#/$defs/dateTime" },
+    "contentHash": { "$ref": "#/$defs/hash" }
+  },
+  "$defs": {
+    "nonEmpty": { "type": "string", "minLength": 1 },
+    "dateTime": { "type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T.*Z$" },
+    "hash": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "snapshotId": { "type": "string", "pattern": "^evidence_[a-f0-9]{24}$" },
+    "provenance": {
+      "type": "object",
+      "required": ["uri", "capturedAt", "rawByteSha256", "byteLength"],
+      "properties": {
+        "uri": { "type": "string", "pattern": "^[A-Za-z][A-Za-z0-9+.-]*://.+$" },
+        "capturedAt": { "$ref": "#/$defs/dateTime" },
+        "rawByteSha256": { "$ref": "#/$defs/hash" },
+        "byteLength": { "type": "integer", "minimum": 1 }
+      },
+      "additionalProperties": false
+    },
+    "search": {
+      "type": "object",
+      "required": ["query", "provenance", "snapshotId", "resultCount"],
+      "properties": {
+        "query": { "$ref": "#/$defs/nonEmpty" },
+        "provenance": { "$ref": "#/$defs/provenance" },
+        "snapshotId": { "$ref": "#/$defs/snapshotId" },
+        "resultCount": { "type": "integer", "minimum": 0 }
+      },
+      "additionalProperties": false
+    },
+    "fetch": {
+      "type": "object",
+      "required": ["resultUri", "provenance", "snapshotId", "normalization"],
+      "properties": {
+        "resultUri": { "type": "string", "pattern": "^[A-Za-z][A-Za-z0-9+.-]*://.+$" },
+        "provenance": { "$ref": "#/$defs/provenance" },
+        "snapshotId": { "$ref": "#/$defs/snapshotId" },
+        "normalization": {
+          "type": "object",
+          "required": ["id", "version"],
+          "properties": { "id": { "$ref": "#/$defs/nonEmpty" }, "version": { "$ref": "#/$defs/nonEmpty" } },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

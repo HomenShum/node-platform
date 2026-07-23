@@ -1,0 +1,5 @@
+{
+  "schemaVersion": "nodekit.engineering-issue-input/v1",
+  "scope": "Local NodeKit engineering defects only. External certification, hosted evidence, consumer adoption, deployment, publication, and submission blockers remain governed by docs/REMAINING_GAPS.md and docs/RELEASE_LADDER.md.",
+  "issues": []
+}

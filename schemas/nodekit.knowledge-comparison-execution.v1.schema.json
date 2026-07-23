@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://nodekit.dev/schemas/nodekit.knowledge-comparison-execution.v1.schema.json",
+  "title": "Content-addressed protected knowledge comparison execution",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion", "comparisonId", "profile", "caseId", "definitionSha256", "caseInputSha256",
+    "evaluatorSha256", "ownerId", "graphId", "graphVersion", "graphContentHash", "releaseCandidate", "retrievalReceipt",
+    "turns", "tokens", "latencyMs", "costUsd", "generatedAt", "executionSha256"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "nodekit.knowledge-comparison-execution/v1" },
+    "comparisonId": { "$ref": "#/$defs/nonEmpty" },
+    "profile": { "enum": ["flat", "staticGraph", "evolvingGraph"] },
+    "caseId": { "$ref": "#/$defs/nonEmpty" },
+    "definitionSha256": { "$ref": "#/$defs/hash" },
+    "caseInputSha256": { "$ref": "#/$defs/hash" },
+    "evaluatorSha256": { "$ref": "#/$defs/hash" },
+    "ownerId": { "$ref": "#/$defs/nonEmpty" },
+    "graphId": { "$ref": "#/$defs/nonEmpty" },
+    "graphVersion": { "type": "integer", "minimum": 0 },
+    "graphContentHash": { "$ref": "#/$defs/hash" },
+    "releaseCandidate": { "$ref": "#/$defs/releaseCandidate" },
+    "retrievalReceipt": {
+      "type": "object",
+      "required": ["schemaVersion", "ownerId", "graphId", "graphVersion", "graphContentHash", "projectionHash", "sessionId", "queryHash", "decision", "receiptId", "receiptHash"],
+      "properties": {
+        "schemaVersion": { "const": "nodekit.knowledge-retrieval-receipt/v1" },
+        "ownerId": { "$ref": "#/$defs/nonEmpty" },
+        "graphId": { "$ref": "#/$defs/nonEmpty" },
+        "graphVersion": { "type": "integer", "minimum": 0 },
+        "graphContentHash": { "$ref": "#/$defs/hash" },
+        "projectionHash": { "$ref": "#/$defs/hash" },
+        "sessionId": { "$ref": "#/$defs/nonEmpty" },
+        "queryHash": { "$ref": "#/$defs/hash" },
+        "decision": { "type": "object" },
+        "receiptId": { "$ref": "#/$defs/nonEmpty" },
+        "receiptHash": { "$ref": "#/$defs/hash" }
+      },
+      "additionalProperties": true
+    },
+    "turns": { "type": "integer", "minimum": 0 },
+    "tokens": { "type": "integer", "minimum": 0 },
+    "latencyMs": { "type": "number", "minimum": 0 },
+    "costUsd": { "type": "number", "minimum": 0 },
+    "generatedAt": { "type": "string", "format": "date-time" },
+    "executionSha256": { "$ref": "#/$defs/hash" }
+  },
+  "$defs": {
+    "nonEmpty": { "type": "string", "minLength": 1 },
+    "hash": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "releaseCandidate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["nodekitCommit", "nodekitSourceHash", "nodekitTarballSha256", "packageName", "packageVersion"],
+      "properties": {
+        "nodekitCommit": { "type": "string", "pattern": "^[a-f0-9]{40}$" },
+        "nodekitSourceHash": { "$ref": "#/$defs/hash" },
+        "nodekitTarballSha256": { "$ref": "#/$defs/hash" },
+        "packageName": { "const": "@homenshum/nodekit" },
+        "packageVersion": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+(?:-[0-9A-Za-z.-]+)?$" }
+      }
+    }
+  }
+}

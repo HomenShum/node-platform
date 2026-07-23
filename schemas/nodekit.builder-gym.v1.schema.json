@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/HomenShum/node-platform/blob/main/schemas/nodekit.builder-gym.v1.schema.json",
+  "title": "NodeKit Builder Gym configuration",
+  "type": "object",
+  "required": ["schemaVersion", "gymId", "applicationId", "harnessRef", "evaluatorRef", "evaluatorHash", "trajectoryRoot", "lockRoot", "receiptRoot", "protectedRoots", "candidateWriteRoots", "fixedInputs", "automaticPromotion"],
+  "properties": {
+    "schemaVersion": { "const": "nodekit.builder-gym/v1" },
+    "gymId": { "const": "nodekit-builder" },
+    "applicationId": { "$ref": "#/$defs/nonEmpty" },
+    "harnessRef": { "$ref": "#/$defs/path" },
+    "evaluatorRef": { "$ref": "#/$defs/path" },
+    "evaluatorHash": { "$ref": "#/$defs/hash" },
+    "trajectoryRoot": { "$ref": "#/$defs/path" },
+    "lockRoot": { "$ref": "#/$defs/path" },
+    "receiptRoot": { "$ref": "#/$defs/path" },
+    "protectedRoots": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/path" },
+      "uniqueItems": true
+    },
+    "candidateWriteRoots": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/path" },
+      "uniqueItems": true
+    },
+    "fixedInputs": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "enum": ["application", "task", "task-set", "model", "budgets", "runtime-harness", "interaction-harness", "tool-surface", "context-policy", "skill-stack", "protected-evaluator"]
+      },
+      "uniqueItems": true
+    },
+    "automaticPromotion": { "const": false }
+  },
+  "$defs": {
+    "nonEmpty": { "type": "string", "minLength": 1 },
+    "hash": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "path": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^(?![A-Za-z]:)(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))(?!.*\\\\).+$"
+    }
+  },
+  "additionalProperties": false
+}

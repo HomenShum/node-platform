@@ -1,0 +1,5 @@
+{
+  "id": "stale-proposal-conflict",
+  "schemaVersion": "nodekit.eval/v1",
+  "assertions": ["stale-proposal-cannot-overwrite", "canonical-version-preserved"]
+}

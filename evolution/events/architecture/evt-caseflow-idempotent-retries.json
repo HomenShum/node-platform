@@ -1,0 +1,36 @@
+{
+  "schemaVersion": "nodekit.evolution-event/v1",
+  "id": "evt:caseflow-idempotent-retries",
+  "projectId": "nodekit",
+  "repository": "HomenShum/node-platform",
+  "source": {
+    "commitSha": "f3471c7fd31b4839ffeb9c9f43bd0d4ab7ef6bfc",
+    "occurredAt": "2026-07-22T01:08:47-07:00"
+  },
+  "track": "architecture",
+  "category": "runtime",
+  "challenge": "The portable Caseflow conformance suite named idempotency as a requirement without repeating decisions or completion calls.",
+  "observedFailure": "An adapter could pass conformance while duplicating artifact versions, approvals, or receipts during an ordinary retry.",
+  "resolution": "Caseflow now reuses an active run, returns the original approval for a repeated matching decision, returns the original completion receipt, and verifies all three behaviors in shared conformance.",
+  "assumptionIds": [
+    "asm:caseflow-idempotency-can-be-inferred"
+  ],
+  "invariantIds": [
+    "inv:caseflow-idempotent-retries"
+  ],
+  "evidenceIds": [
+    "evd:caseflow-idempotent-retries"
+  ],
+  "predecessorIds": [
+    "evt:exact-candidate-contract"
+  ],
+  "knownLimitations": [
+    "Each provider adapter must still demonstrate this contract against its real transactional backend.",
+    "Cross-tenant authorization remains an application-wrapper responsibility and is tested separately by each consumer."
+  ],
+  "interpretation": {
+    "status": "human-reviewed",
+    "reviewedBy": "project-owner",
+    "reviewedAt": "2026-07-22T01:08:47-07:00"
+  }
+}

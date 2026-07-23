@@ -1,0 +1,257 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://nodekit.dev/schemas/nodekit.protected-agent-evaluation.v2.schema.json",
+  "title": "NodeKit protected typed-artifact task evaluation",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion", "runId", "taskId", "taskBriefSha256", "taskSetSha256", "evaluatorSha256",
+    "nodekitCommit", "nodekitSourceHash", "nodekitTarballSha256", "postAgentTreeHash", "candidateArchiveSha256",
+    "applicationHash", "configHash", "browserManifestSha256", "candidateBrowserManifestSha256", "protectedBrowserManifestFile", "screenshotEvidenceRootSha256",
+    "evaluatorScreenshotSha256", "visualReviewInventorySha256", "visualReviewInventorySelfHash", "isolation", "isolationSha256",
+    "producer", "checks", "protectedTaskInput", "protectedTaskInputSha256", "taskArtifactEvidence", "taskRelevance",
+    "sourceFilesInspected", "generatedAt", "passed", "evaluationSha256"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "nodekit.protected-agent-evaluation/v2" },
+    "runId": { "type": "string", "minLength": 1 },
+    "taskId": { "enum": ["research-map", "volunteer-onboarding", "launch-presentation"] },
+    "taskBriefSha256": { "$ref": "#/$defs/sha256" }, "taskSetSha256": { "$ref": "#/$defs/sha256" },
+    "evaluatorSha256": { "$ref": "#/$defs/sha256" }, "nodekitCommit": { "$ref": "#/$defs/commit" },
+    "nodekitSourceHash": { "$ref": "#/$defs/sha256" }, "nodekitTarballSha256": { "$ref": "#/$defs/sha256" },
+    "postAgentTreeHash": { "$ref": "#/$defs/commit" }, "candidateArchiveSha256": { "$ref": "#/$defs/sha256" },
+    "applicationHash": { "$ref": "#/$defs/sha256" }, "configHash": { "$ref": "#/$defs/sha256" },
+    "browserManifestSha256": { "$ref": "#/$defs/sha256" }, "candidateBrowserManifestSha256": { "$ref": "#/$defs/sha256" },
+    "protectedBrowserManifestFile": { "const": "protected-browser/screenshot-manifest.json" },
+    "screenshotEvidenceRootSha256": { "$ref": "#/$defs/sha256" },
+    "evaluatorScreenshotSha256": { "$ref": "#/$defs/sha256" }, "visualReviewInventorySha256": { "$ref": "#/$defs/sha256" },
+    "visualReviewInventorySelfHash": { "$ref": "#/$defs/sha256" }, "isolation": { "$ref": "#/$defs/isolation" },
+    "isolationSha256": { "$ref": "#/$defs/sha256" }, "producer": { "$ref": "#/$defs/producer" },
+    "checks": { "$ref": "#/$defs/checks" },
+    "protectedTaskInput": { "$ref": "#/$defs/protectedTaskInput" }, "protectedTaskInputSha256": { "$ref": "#/$defs/sha256" },
+    "taskArtifactEvidence": { "$ref": "#/$defs/taskArtifactEvidence" },
+    "taskRelevance": { "$ref": "#/$defs/taskRelevance" },
+    "sourceFilesInspected": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } },
+    "generatedAt": { "type": "string", "format": "date-time" }, "passed": { "const": true },
+    "evaluationSha256": { "$ref": "#/$defs/sha256" }
+  },
+  "$defs": {
+    "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "commit": { "type": "string", "pattern": "^[a-f0-9]{40}$" },
+    "producer": {
+      "type": "object", "additionalProperties": false,
+      "required": ["authority", "candidateEvidenceAccess", "candidateHostAccess", "candidateWriteAccess", "executedAfterCandidateArchive", "externalNetworkEgress", "isolationMode"],
+      "properties": {
+        "authority": { "const": "campaign-protected-evaluator" }, "candidateEvidenceAccess": { "const": false },
+        "candidateHostAccess": { "const": false }, "candidateWriteAccess": { "const": false },
+        "executedAfterCandidateArchive": { "const": true }, "externalNetworkEgress": { "const": false },
+        "isolationMode": { "const": "docker-internal-two-container" }
+      }
+    },
+    "mount": {
+      "type": "object", "additionalProperties": false, "required": ["destination", "readOnly", "type"],
+      "properties": { "destination": { "type": "string", "pattern": "^/" }, "readOnly": { "type": "boolean" }, "type": { "const": "bind" } }
+    },
+    "candidateContainer": {
+      "type": "object", "additionalProperties": false, "required": ["containerId", "mounts", "readOnlyRootFilesystem"],
+      "properties": {
+        "containerId": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+        "mounts": { "type": "array", "minItems": 1, "maxItems": 1, "items": { "$ref": "#/$defs/mount" } },
+        "readOnlyRootFilesystem": { "const": true }
+      }
+    },
+    "browserContainer": {
+      "type": "object", "additionalProperties": false, "required": ["containerId", "mounts", "readOnlyRootFilesystem"],
+      "properties": {
+        "containerId": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+        "mounts": { "type": "array", "minItems": 6, "maxItems": 6, "items": { "$ref": "#/$defs/mount" } },
+        "readOnlyRootFilesystem": { "const": true }
+      }
+    },
+    "browserDependency": {
+      "type": "object", "additionalProperties": false,
+      "required": ["destination", "fileCount", "name", "treeSha256", "version"],
+      "properties": {
+        "destination": { "enum": ["/runner/node_modules/playwright", "/runner/node_modules/playwright-core", "/runner/node_modules/@axe-core/playwright", "/runner/node_modules/axe-core"] },
+        "fileCount": { "type": "integer", "minimum": 1 },
+        "name": { "enum": ["playwright", "playwright-core", "@axe-core/playwright", "axe-core"] },
+        "treeSha256": { "$ref": "#/$defs/sha256" }, "version": { "enum": ["1.61.1", "4.12.1"] }
+      }
+    },
+    "isolation": {
+      "type": "object", "additionalProperties": false,
+      "required": ["schemaVersion", "mode", "browserLaneSha256", "browserDependencies", "docker", "image", "network", "candidateContainer", "browserContainer", "checks", "isolationSha256"],
+      "properties": {
+        "schemaVersion": { "const": "nodekit.protected-evaluator-isolation/v1" }, "mode": { "const": "docker-internal-two-container" },
+        "browserLaneSha256": { "$ref": "#/$defs/sha256" }, "isolationSha256": { "$ref": "#/$defs/sha256" },
+        "docker": { "type": "object", "additionalProperties": false, "required": ["apiVersion", "architecture", "operatingSystem", "serverVersion"],
+          "properties": { "apiVersion": { "type": "string", "minLength": 1 }, "architecture": { "type": "string", "minLength": 1 },
+            "operatingSystem": { "type": "string", "minLength": 1 }, "serverVersion": { "type": "string", "minLength": 1 } } },
+        "image": { "type": "object", "additionalProperties": false, "required": ["architecture", "id", "operatingSystem", "reference", "repoDigests"],
+          "properties": { "architecture": { "type": "string", "minLength": 1 }, "id": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+            "operatingSystem": { "type": "string", "minLength": 1 }, "reference": { "type": "string", "minLength": 1 },
+            "repoDigests": { "type": "array", "uniqueItems": true, "items": { "type": "string", "minLength": 1 } } } },
+        "network": { "type": "object", "additionalProperties": false, "required": ["driver", "internal", "networkId"],
+          "properties": { "driver": { "const": "bridge" }, "internal": { "const": true }, "networkId": { "type": "string", "pattern": "^[a-f0-9]{64}$" } } },
+        "browserDependencies": { "type": "array", "minItems": 4, "maxItems": 4, "items": { "$ref": "#/$defs/browserDependency" } },
+        "candidateContainer": { "$ref": "#/$defs/candidateContainer" }, "browserContainer": { "$ref": "#/$defs/browserContainer" },
+        "checks": { "$ref": "#/$defs/isolationChecks" }
+      }
+    },
+    "isolationChecks": {
+      "type": "object", "additionalProperties": false,
+      "required": ["browserCannotReadCandidate", "browserEgressBlocked", "browserReadOnlyRootFilesystem", "candidateCertificationOracleAbsent", "candidateEgressBlocked", "candidateHasNoEvidenceMount", "candidateReadOnlyRootFilesystem", "candidateSourceReadOnly", "exactImageBound", "hostNamespacesNotShared", "internalNetworkOnly", "noPublishedPorts", "separateEvaluatorContainer"],
+      "properties": {
+        "browserCannotReadCandidate": { "const": true }, "browserEgressBlocked": { "const": true }, "browserReadOnlyRootFilesystem": { "const": true },
+        "candidateCertificationOracleAbsent": { "const": true }, "candidateEgressBlocked": { "const": true }, "candidateHasNoEvidenceMount": { "const": true },
+        "candidateReadOnlyRootFilesystem": { "const": true }, "candidateSourceReadOnly": { "const": true }, "exactImageBound": { "const": true },
+        "hostNamespacesNotShared": { "const": true }, "internalNetworkOnly": { "const": true }, "noPublishedPorts": { "const": true },
+        "separateEvaluatorContainer": { "const": true }
+      }
+    },
+    "checks": {
+      "type": "object", "additionalProperties": false,
+      "required": ["applicationIdentityBound", "artifactDownloadVerified", "artifactReloadPersistenceVerified", "artifactReopenPersistenceVerified",
+        "browserEvidenceBound", "candidateArchiveBound", "candidateTreeBound", "evaluatorBytesBound", "guidedInteractionPassed",
+        "independentScreenshotCaptured", "isolationBound", "renderedTaskRelevant", "sourceTaskRelevant", "taskBytesBound",
+        "taskInputBound", "taskSetBound", "typedArtifactVerified", "visualReviewPassed"],
+      "properties": {
+        "applicationIdentityBound": { "const": true }, "artifactDownloadVerified": { "const": true },
+        "artifactReloadPersistenceVerified": { "const": true }, "artifactReopenPersistenceVerified": { "const": true },
+        "browserEvidenceBound": { "const": true }, "candidateArchiveBound": { "const": true }, "candidateTreeBound": { "const": true },
+        "evaluatorBytesBound": { "const": true }, "guidedInteractionPassed": { "const": true }, "independentScreenshotCaptured": { "const": true },
+        "isolationBound": { "const": true }, "renderedTaskRelevant": { "const": true }, "sourceTaskRelevant": { "const": true },
+        "taskBytesBound": { "const": true }, "taskInputBound": { "const": true }, "taskSetBound": { "const": true },
+        "typedArtifactVerified": { "const": true }, "visualReviewPassed": { "const": true }
+      }
+    },
+    "group": {
+      "type": "object", "additionalProperties": false, "required": ["alternatives", "group", "matches", "passed"],
+      "properties": {
+        "alternatives": { "type": "array", "minItems": 1, "items": { "type": "string" } }, "group": { "type": "integer", "minimum": 1 },
+        "matches": { "type": "array", "minItems": 1, "items": { "type": "string" } }, "passed": { "const": true }
+      }
+    },
+    "groups": { "type": "array", "minItems": 4, "maxItems": 4, "items": { "$ref": "#/$defs/group" } },
+    "taskRelevance": {
+      "type": "object", "additionalProperties": false,
+      "required": ["renderedGroups", "renderedTextSha256", "sourceGroups", "sourceTextSha256"],
+      "properties": {
+        "renderedGroups": { "$ref": "#/$defs/groups" }, "sourceGroups": { "$ref": "#/$defs/groups" },
+        "renderedTextSha256": { "$ref": "#/$defs/sha256" }, "sourceTextSha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "portableValue": {
+      "oneOf": [
+        { "type": "null" }, { "type": "boolean" }, { "type": "number" }, { "type": "string" },
+        { "type": "array", "items": { "$ref": "#/$defs/portableValue" } },
+        { "type": "object", "additionalProperties": { "$ref": "#/$defs/portableValue" } }
+      ]
+    },
+    "protectedTaskInputEnvelope": {
+      "type": "object",
+      "required": ["schemaVersion", "taskId", "inputToken", "nonce", "generatedAfterCandidateArchiveSha256"],
+      "properties": {
+        "schemaVersion": { "const": "nodekit.protected-task-input/v1" },
+        "taskId": { "enum": ["research-map", "volunteer-onboarding", "launch-presentation"] },
+        "inputToken": { "type": "string", "minLength": 1 },
+        "nonce": { "type": "string", "pattern": "^challenge_[a-f0-9]{32,64}$" },
+        "generatedAfterCandidateArchiveSha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "protectedResearchSource": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "title", "url", "publishedAtIso", "contentSha256", "excerpt"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 }, "title": { "type": "string", "minLength": 1 },
+        "url": { "type": "string", "pattern": "^https://" }, "publishedAtIso": { "type": "string", "format": "date-time" },
+        "contentSha256": { "$ref": "#/$defs/sha256" }, "excerpt": { "type": "string", "minLength": 1 }
+      }
+    },
+    "protectedVolunteer": {
+      "type": "object", "additionalProperties": false, "required": ["id", "name", "email"],
+      "properties": { "id": { "type": "string", "minLength": 1 }, "name": { "type": "string", "minLength": 1 }, "email": { "type": "string", "minLength": 3 } }
+    },
+    "protectedVolunteerDocument": {
+      "type": "object", "additionalProperties": false, "required": ["id", "type", "reviewStatus"],
+      "properties": { "id": { "type": "string", "minLength": 1 }, "type": { "type": "string", "minLength": 1 }, "reviewStatus": { "enum": ["reviewed", "approved"] } }
+    },
+    "protectedLaunchBrief": {
+      "type": "object", "additionalProperties": false, "required": ["product", "audience", "positioning"],
+      "properties": { "product": { "type": "string", "minLength": 1 }, "audience": { "type": "string", "minLength": 1 }, "positioning": { "type": "string", "minLength": 1 } }
+    },
+    "protectedLaunchMetric": {
+      "type": "object", "additionalProperties": false, "required": ["id", "label", "value", "unit"],
+      "properties": { "id": { "type": "string", "minLength": 1 }, "label": { "type": "string", "minLength": 1 }, "value": { "type": "number" }, "unit": { "type": "string", "minLength": 1 } }
+    },
+    "protectedTaskInput": {
+      "oneOf": [
+        {
+          "allOf": [{ "$ref": "#/$defs/protectedTaskInputEnvelope" }], "additionalProperties": false,
+          "required": ["schemaVersion", "taskId", "inputToken", "nonce", "generatedAfterCandidateArchiveSha256", "question", "sources"],
+          "properties": {
+            "schemaVersion": { "const": "nodekit.protected-task-input/v1" }, "taskId": { "const": "research-map" },
+            "inputToken": { "type": "string", "minLength": 1 }, "nonce": { "type": "string", "pattern": "^challenge_[a-f0-9]{32,64}$" },
+            "generatedAfterCandidateArchiveSha256": { "$ref": "#/$defs/sha256" }, "question": { "type": "string", "minLength": 1 },
+            "sources": { "type": "array", "minItems": 2, "uniqueItems": true, "items": { "$ref": "#/$defs/protectedResearchSource" } }
+          }
+        },
+        {
+          "allOf": [{ "$ref": "#/$defs/protectedTaskInputEnvelope" }], "additionalProperties": false,
+          "required": ["schemaVersion", "taskId", "inputToken", "nonce", "generatedAfterCandidateArchiveSha256", "volunteer", "documents"],
+          "properties": {
+            "schemaVersion": { "const": "nodekit.protected-task-input/v1" }, "taskId": { "const": "volunteer-onboarding" },
+            "inputToken": { "type": "string", "minLength": 1 }, "nonce": { "type": "string", "pattern": "^challenge_[a-f0-9]{32,64}$" },
+            "generatedAfterCandidateArchiveSha256": { "$ref": "#/$defs/sha256" }, "volunteer": { "$ref": "#/$defs/protectedVolunteer" },
+            "documents": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "$ref": "#/$defs/protectedVolunteerDocument" } }
+          }
+        },
+        {
+          "allOf": [{ "$ref": "#/$defs/protectedTaskInputEnvelope" }], "additionalProperties": false,
+          "required": ["schemaVersion", "taskId", "inputToken", "nonce", "generatedAfterCandidateArchiveSha256", "brief", "metrics"],
+          "properties": {
+            "schemaVersion": { "const": "nodekit.protected-task-input/v1" }, "taskId": { "const": "launch-presentation" },
+            "inputToken": { "type": "string", "minLength": 1 }, "nonce": { "type": "string", "pattern": "^challenge_[a-f0-9]{32,64}$" },
+            "generatedAfterCandidateArchiveSha256": { "$ref": "#/$defs/sha256" }, "brief": { "$ref": "#/$defs/protectedLaunchBrief" },
+            "metrics": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "$ref": "#/$defs/protectedLaunchMetric" } }
+          }
+        }
+      ]
+    },
+    "artifactMarker": {
+      "type": "object", "additionalProperties": false, "required": ["artifactId", "canonicalVersion", "contentSha256", "type"],
+      "properties": {
+        "artifactId": { "type": "string", "minLength": 1 }, "canonicalVersion": { "type": "integer", "minimum": 2 },
+        "contentSha256": { "$ref": "#/$defs/sha256" },
+        "type": { "enum": ["research-map", "volunteer-onboarding-record", "launch-presentation"] }
+      }
+    },
+    "domainSummary": {
+      "type": "object", "additionalProperties": false, "minProperties": 3,
+      "properties": {
+        "briefPresent": { "type": "boolean" }, "comparisonCount": { "type": "integer", "minimum": 1 },
+        "completionConfirmed": { "type": "boolean" }, "documentCount": { "type": "integer", "minimum": 1 },
+        "identityPresent": { "type": "boolean" }, "metricCount": { "type": "integer", "minimum": 1 },
+        "questionPresent": { "type": "boolean" }, "reviewApproved": { "type": "boolean" },
+        "slideCount": { "type": "integer", "minimum": 3 }, "sourceCount": { "type": "integer", "minimum": 2 }
+      }
+    },
+    "taskArtifactEvidence": {
+      "type": "object", "additionalProperties": false,
+      "required": ["artifactId", "artifactType", "canonicalContent", "canonicalVersion", "contentSha256", "domainSummary", "exportBytes",
+        "exportFile", "exportSha256", "inputToken", "inputTokenSha256", "marker", "reloadMarker", "reopenMarker", "taskId"],
+      "properties": {
+        "artifactId": { "type": "string", "minLength": 1 },
+        "artifactType": { "enum": ["research-map", "volunteer-onboarding-record", "launch-presentation"] },
+        "canonicalContent": { "type": "object", "additionalProperties": { "$ref": "#/$defs/portableValue" } },
+        "canonicalVersion": { "type": "integer", "minimum": 2 }, "contentSha256": { "$ref": "#/$defs/sha256" },
+        "domainSummary": { "$ref": "#/$defs/domainSummary" }, "exportBytes": { "type": "integer", "minimum": 32, "maximum": 5242880 },
+        "exportFile": { "const": "task-artifact.json" }, "exportSha256": { "$ref": "#/$defs/sha256" },
+        "inputToken": { "type": "string", "minLength": 1 }, "inputTokenSha256": { "$ref": "#/$defs/sha256" },
+        "marker": { "$ref": "#/$defs/artifactMarker" },
+        "reloadMarker": { "$ref": "#/$defs/artifactMarker" }, "reopenMarker": { "$ref": "#/$defs/artifactMarker" },
+        "taskId": { "enum": ["research-map", "volunteer-onboarding", "launch-presentation"] }
+      }
+    }
+  }
+}

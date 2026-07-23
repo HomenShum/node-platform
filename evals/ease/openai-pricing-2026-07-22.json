@@ -1,0 +1,39 @@
+{
+  "schemaVersion": "nodekit.external-source-snapshot/v1",
+  "retrievedAt": "2026-07-22T13:49:31.4227751Z",
+  "retrievalMethod": "OpenAI Developer Docs MCP fetch_openai_doc",
+  "source": "https://developers.openai.com/api/docs/pricing",
+  "section": "Flagship models / Standard",
+  "unit": "USD per 1M tokens",
+  "columns": [
+    "model",
+    "input",
+    "cachedInput",
+    "cacheWrite",
+    "output"
+  ],
+  "rows": [
+    [
+      "gpt-5.6-sol",
+      5,
+      0.5,
+      6.25,
+      30
+    ],
+    [
+      "gpt-5.6-terra",
+      2.5,
+      0.25,
+      3.125,
+      15
+    ],
+    [
+      "gpt-5.6-luna",
+      1,
+      0.1,
+      1.25,
+      6
+    ]
+  ],
+  "scope": "A minimal factual snapshot used only to verify the lower-cost trial label; the live official page remains authoritative."
+}

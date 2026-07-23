@@ -1,0 +1,11 @@
+{
+  "schemaVersion": "nodekit.assumption/v1",
+  "id": "asm:domain-preset-harmless",
+  "statement": "Silently choosing a reference workflow is harmless when the user makes no domain choice.",
+  "scope": { "applications": ["NodeKit factory"], "taskFamilies": ["new-agent-application"] },
+  "status": "disproven",
+  "introducedByEventId": "evt:domain-blank-factory",
+  "invalidatedByEventId": "evt:domain-blank-factory",
+  "supportingEvidenceIds": [],
+  "contradictingEvidenceIds": ["evd:domain-blank-factory"]
+}

@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://nodekit.dev/schemas/nodekit.engineering-check-receipt.v1.schema.json",
+  "title": "NodeKit machine-recorded engineering check receipt",
+  "type": "object", "additionalProperties": false,
+  "required": ["schemaVersion", "candidateCommit", "nodekitSourceHash", "checkId", "command", "exitCode", "startedAt", "completedAt"],
+  "properties": {
+    "schemaVersion": { "const": "nodekit.engineering-check-receipt/v1" },
+    "candidateCommit": { "type": "string", "pattern": "^[a-f0-9]{40}$" },
+    "nodekitSourceHash": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "checkId": { "enum": ["repositoryTests", "componentTests", "publicTypecheck", "componentTypecheck", "componentBuild", "packageAudit", "registry", "ecosystem", "evolution", "distributionClean"] },
+    "command": { "type": "string", "minLength": 1, "maxLength": 2048 },
+    "exitCode": { "const": 0 },
+    "startedAt": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{3}Z$" },
+    "completedAt": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{3}Z$" }
+  }
+}

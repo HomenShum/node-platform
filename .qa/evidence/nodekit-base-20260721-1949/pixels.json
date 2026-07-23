@@ -1,0 +1,17 @@
+{
+  "repo": "D:/VSCode Projects/cafecorner_nodebench/nodebench_ai4/nodebench-ai",
+  "url": "http://127.0.0.1:4173/",
+  "outDir": "D:/VSCode Projects/cafecorner_nodebench/nodebench_ai4/node-platform/.qa/evidence/nodekit-base-20260721-1949",
+  "assert": ["One clear job.", "Primary artifact", "Review proposal", "Blank in domain. Figured out in behavior."],
+  "shots": [
+    { "name": "desktop-light", "scheme": "light", "viewport": { "width": 1440, "height": 900 }, "fullPage": true },
+    { "name": "desktop-dark", "scheme": "dark", "viewport": { "width": 1440, "height": 900 }, "fullPage": true },
+    { "name": "tablet-light", "scheme": "light", "viewport": { "width": 1024, "height": 768 }, "fullPage": true },
+    { "name": "tablet-dark", "scheme": "dark", "viewport": { "width": 1024, "height": 768 }, "fullPage": true },
+    { "name": "mobile-light", "scheme": "light", "viewport": { "width": 390, "height": 844 }, "fullPage": true },
+    { "name": "mobile-dark", "scheme": "dark", "viewport": { "width": 390, "height": 844 }, "fullPage": true, "reducedMotion": true },
+    { "name": "proposal-desktop", "scheme": "light", "viewport": { "width": 1440, "height": 900 }, "clicks": ["#reset", "#propose", "#artifact"], "assert": ["Proposed change", "Based on artifact v1"], "fullPage": false },
+    { "name": "completed-desktop", "scheme": "light", "viewport": { "width": 1440, "height": 900 }, "clicks": ["#reset", "#propose", "#approve", "#artifact"], "assert": ["Completion verified", "Receipt"], "fullPage": false },
+    { "name": "completed-mobile-dark", "scheme": "dark", "viewport": { "width": 390, "height": 844 }, "clicks": ["#reset", "#propose", "#approve", "#artifact"], "assert": ["Completion verified", "Receipt"], "fullPage": false }
+  ]
+}

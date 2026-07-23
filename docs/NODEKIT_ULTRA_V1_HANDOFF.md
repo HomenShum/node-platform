@@ -1,5 +1,7 @@
 # NodeKit Ultra V1: overnight delivery and morning verification
 
+> Historical handoff: the preset-first factory described below has been superseded by the domain-blank foundation in `NODEKIT_FIGURED_OUT_HANDOFF.md`. Domain examples now live under `reference-apps/` and require the explicit `nodekit reference create` command.
+
 ## Honest outcome
 
 This delivery makes NodeKit usable for a **next bounded application** without

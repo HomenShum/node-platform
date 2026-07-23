@@ -1,0 +1,10 @@
+{
+  "schemaVersion": "nodekit.invariant-claim/v1",
+  "id": "inv:rendered-browser-evidence",
+  "statement": "Browser certification requires rendered interaction evidence bound to the exact generated candidate.",
+  "scope": { "applications": ["NodeKit factory"], "packages": ["@homenshum/nodekit"], "surfaces": ["browser certification"] },
+  "enforcement": "runtime-gate",
+  "verifierRefs": ["templates/base/scripts/browser-certify.mjs", "test/ease-proof.test.mjs"],
+  "introducedByEventId": "evt:rendered-browser-certification",
+  "status": "verified"
+}

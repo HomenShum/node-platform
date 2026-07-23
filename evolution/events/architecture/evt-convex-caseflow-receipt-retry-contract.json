@@ -1,0 +1,35 @@
+{
+  "schemaVersion": "nodekit.evolution-event/v1",
+  "id": "evt:convex-caseflow-receipt-retry-contract",
+  "projectId": "nodekit",
+  "repository": "HomenShum/node-platform",
+  "source": {
+    "commitSha": "4407b70c616c89b022e0d3d36ba02f00519b1688",
+    "occurredAt": "2026-07-22T02:33:14-07:00"
+  },
+  "track": "architecture",
+  "category": "runtime",
+  "challenge": "Extracting Caseflow as an installable Convex Component could weaken receipt bindings, exception containment, retry idempotency, or host authorization boundaries.",
+  "observedFailure": "A reusable-looking component could reopen a still-blocked run, duplicate lifecycle objects during an ordinary retry, or emit a receipt that proves identifiers without proving content and actor bindings.",
+  "resolution": "The human-reviewed contract requires one portable Caseflow lifecycle across memory, PostgreSQL, and Convex; host-owned authorization; receipt v2 content bindings; multi-exception containment; and fail-closed idempotency-key reuse.",
+  "assumptionIds": [],
+  "invariantIds": [
+    "inv:caseflow-receipt-retry-containment"
+  ],
+  "evidenceIds": [
+    "evd:convex-caseflow-receipt-retry-materiality"
+  ],
+  "predecessorIds": [
+    "evt:caseflow-idempotent-retries"
+  ],
+  "knownLimitations": [
+    "The materiality review is not an exact-revision live PostgreSQL or Convex provider result.",
+    "Authenticated consumer adoption and application-wrapper authorization remain separate proof gates.",
+    "The review grants no npm publication, production deployment, or Convex directory submission authority."
+  ],
+  "interpretation": {
+    "status": "human-reviewed",
+    "reviewedBy": "project-owner",
+    "reviewedAt": "2026-07-22T02:33:14-07:00"
+  }
+}

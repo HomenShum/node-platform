@@ -1,0 +1,25 @@
+/* Small-screen refinements kept separate from the compact base sheet. */
+@media (max-width: 640px) {
+  .state-banner {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .state-banner > div {
+    min-width: 0;
+    width: 100%;
+    overflow-wrap: anywhere;
+  }
+
+  .state-kind {
+    flex: 0 0 auto;
+    width: fit-content;
+    max-width: 100%;
+    white-space: nowrap;
+  }
+
+  aside {
+    scroll-margin-top: 70px;
+  }
+}

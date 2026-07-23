@@ -1,0 +1,18 @@
+schemaVersion: nodekit.brief/v1
+application: __APP_NAME__
+problem: __BRIEF_JSON__
+outcome:
+  - Carry one user intention through a guided case to a reviewable artifact.
+  - Keep agent work provisional until an explicit approval applies it.
+  - Preserve the last canonical version when work conflicts or fails.
+  - Emit a content-addressed completion receipt.
+sponsors:
+__SPONSORS_YAML__
+constraints:
+  domainBlank: true
+  noKeyDemo: true
+  productionWrites: false
+approvals:
+  paidResourceActivation: human
+  productionDeployment: human
+  publicSubmission: human

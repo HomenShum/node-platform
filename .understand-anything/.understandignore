@@ -1,0 +1,21 @@
+# .understandignore — paths excluded from architecture analysis
+# Syntax follows .gitignore.
+
+# Generated evidence and temporary work are not source architecture.
+proof/
+outputs/
+.tmp/
+.qa/
+
+# Generated or vendored dependencies are covered by built-in exclusions.
+# node_modules/
+# dist/
+# coverage/
+# vendor/
+
+# Optional scopes; leave included for the first NodeKit architecture graph.
+# test/
+# docs/
+# scripts/
+# templates/
+# plugins/

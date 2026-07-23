@@ -1,0 +1,23 @@
+{
+  "schemaVersion": "nodekit.assumption/v1",
+  "id": "asm:postgres-ddl-is-adapter",
+  "statement": "A transactional PostgreSQL DDL foundation is sufficient to claim an implemented NodeKit backend adapter.",
+  "scope": {
+    "applications": [
+      "NodeKit factory"
+    ],
+    "packages": [
+      "@homenshum/nodekit"
+    ],
+    "taskFamilies": [
+      "backend portability"
+    ]
+  },
+  "status": "disproven",
+  "introducedByEventId": "evt:domain-blank-factory",
+  "invalidatedByEventId": "evt:postgres-caseflow-adapter",
+  "supportingEvidenceIds": [],
+  "contradictingEvidenceIds": [
+    "evd:postgres-caseflow-conformance"
+  ]
+}

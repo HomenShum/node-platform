@@ -1,0 +1,27 @@
+{
+  "applicationHash": "429f8396206cb5c8bc014473012beaaee57cb41ba45eb1fea2595a3b9c9881ef",
+  "capturedAt": "2026-07-21T22:27:33.595Z",
+  "configHash": "429f8396206cb5c8bc014473012beaaee57cb41ba45eb1fea2595a3b9c9881ef",
+  "consoleErrors": 0,
+  "elapsedMs": 61385,
+  "failedRequests": 0,
+  "generatedCandidateCommit": "2fd4b30957ef794aebc4ce618f804b2b1e25484b",
+  "horizontalOverflowPx": 0,
+  "mojibakeDetected": false,
+  "nodekitCommit": "1036650717c1b8cff76939cf6e2a5bef3c965da9",
+  "nodekitSourceHash": "784beca380484e6fbd9eda515cfe246c1b5a04448d9e519147067bae320417eb",
+  "pageUrl": "http://127.0.0.1:43552/?scenario=external_wait",
+  "pngSha256": "719b4c23c7fb85e2d49e14ed789c64cbdded494625010ff4b09c8a3dd30af6b5",
+  "runId": "ease_e320fe62fdc746a0a286",
+  "schemaVersion": "nodekit.screenshot-proof/v1",
+  "serverProcess": {
+    "command": "C:\\nvm4w\\nodejs\\node.exe apps/web/server.mjs",
+    "pid": 47704
+  },
+  "state": "external_wait",
+  "theme": "dark",
+  "viewport": {
+    "height": 1080,
+    "width": 1920
+  }
+}

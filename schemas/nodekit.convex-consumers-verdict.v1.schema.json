@@ -1,0 +1,156 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://nodekit.dev/schemas/nodekit.convex-consumers-verdict.v1.schema.json",
+  "title": "NodeKit decisive Convex consumer-adoption verdict",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion", "candidateCommit", "nodekitCommit", "nodekitSourceHash",
+    "nodekitIdentity", "releaseCandidate", "passed", "qualifyingConsumers", "consumers",
+    "attestationPayload", "attestation"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "nodekit.convex-consumers-verdict/v1" },
+    "candidateCommit": { "$ref": "#/$defs/commit" },
+    "nodekitCommit": { "$ref": "#/$defs/commit" },
+    "nodekitSourceHash": { "$ref": "#/$defs/sha256" },
+    "nodekitIdentity": { "$ref": "#/$defs/nodekitIdentity" },
+    "releaseCandidate": { "$ref": "#/$defs/releaseCandidate" },
+    "passed": { "const": true },
+    "qualifyingConsumers": { "const": 3 },
+    "attestationPayload": { "$ref": "#/$defs/externalPayload" },
+    "attestation": { "$ref": "#/$defs/attestation" },
+    "consumers": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/consumer" },
+      "allOf": [
+        { "contains": { "type": "object", "required": ["id"], "properties": { "id": { "const": "noderoom" } } }, "minContains": 1, "maxContains": 1 },
+        { "contains": { "type": "object", "required": ["id"], "properties": { "id": { "const": "nodeslide" } } }, "minContains": 1, "maxContains": 1 },
+        { "contains": { "type": "object", "required": ["id"], "properties": { "id": { "const": "nodevideo" } } }, "minContains": 1, "maxContains": 1 }
+      ]
+    }
+  },
+  "$defs": {
+    "commit": { "type": "string", "pattern": "^[a-f0-9]{40}$" },
+    "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "nodekitIdentity": { "type": "string", "pattern": "^[a-f0-9]{40}/[a-f0-9]{64}$" },
+    "canonicalTimestamp": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{3}Z$" },
+    "evidencePath": { "type": "string", "minLength": 1, "pattern": "^(?!/)(?!\\./)(?!.*//)(?!.*\\/$)(?!.*(?:^|/)\\.\\.?(?:/|$))(?![A-Za-z]:)(?!.*\\u0000)[^\\\\]+$" },
+    "releaseCandidate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["nodekitCommit", "nodekitSourceHash", "nodekitTarballSha256", "packageName", "packageVersion"],
+      "properties": {
+        "nodekitCommit": { "$ref": "#/$defs/commit" },
+        "nodekitSourceHash": { "$ref": "#/$defs/sha256" },
+        "nodekitTarballSha256": { "$ref": "#/$defs/sha256" },
+        "packageName": { "const": "@homenshum/nodekit" },
+        "packageVersion": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+(?:-[0-9A-Za-z.-]+)?$" }
+      }
+    },
+    "evidenceRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "path", "sha256"],
+      "properties": {
+        "kind": { "enum": ["component-tarball", "consumer-verdict", "screenshot-manifest"] },
+        "path": { "$ref": "#/$defs/evidencePath" },
+        "sha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "externalPayload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schemaVersion", "type", "candidateCommit", "nodekitSourceHash", "nodekitTarballSha256", "verdict", "evidenceRootSha256", "verdictBodySha256"],
+      "properties": {
+        "schemaVersion": { "const": "nodekit.external-gate-verification-attestation-payload/v1" },
+        "type": { "const": "threeConvexConsumers" },
+        "candidateCommit": { "$ref": "#/$defs/commit" },
+        "nodekitSourceHash": { "$ref": "#/$defs/sha256" },
+        "nodekitTarballSha256": { "$ref": "#/$defs/sha256" },
+        "verdict": { "const": "passed" },
+        "evidenceRootSha256": { "$ref": "#/$defs/sha256" },
+        "verdictBodySha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "attestation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schemaVersion", "algorithm", "keyId", "signedAt", "payloadType", "payloadSha256", "signatureEncoding", "signature"],
+      "properties": {
+        "schemaVersion": { "const": "nodekit.detached-attestation/v1" },
+        "algorithm": { "const": "Ed25519" },
+        "keyId": { "type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:@-]{0,127}$" },
+        "signedAt": { "$ref": "#/$defs/canonicalTimestamp" },
+        "payloadType": { "const": "threeConvexConsumers" },
+        "payloadSha256": { "$ref": "#/$defs/sha256" },
+        "signatureEncoding": { "const": "base64url" },
+        "signature": { "type": "string", "pattern": "^[A-Za-z0-9_-]{86}$" }
+      }
+    },
+    "checks": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "packagedComponentInstalled", "componentRegistered", "authenticatedOwnerScope",
+        "crossOwnerDenied", "staleConflictProtected", "idempotentRetries",
+        "exceptionRecovery", "receiptVerified", "conformancePassed"
+      ],
+      "properties": {
+        "packagedComponentInstalled": { "const": true },
+        "componentRegistered": { "const": true },
+        "authenticatedOwnerScope": { "const": true },
+        "crossOwnerDenied": { "const": true },
+        "staleConflictProtected": { "const": true },
+        "idempotentRetries": { "const": true },
+        "exceptionRecovery": { "const": true },
+        "receiptVerified": { "const": true },
+        "conformancePassed": { "const": true }
+      }
+    },
+    "liveFlowAdoption": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["passed", "signedIn", "browserJourneyPassed", "screenshotManifestSha256"],
+      "properties": {
+        "passed": { "const": true },
+        "signedIn": { "const": true },
+        "browserJourneyPassed": { "const": true },
+        "screenshotManifestSha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "consumer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id", "nodekitCommit", "nodekitSourceHash", "consumerCommit",
+        "componentTarballSha256", "verdictSha256", "checks", "liveFlowAdoption", "evidence"
+      ],
+      "properties": {
+        "id": { "enum": ["noderoom", "nodeslide", "nodevideo"] },
+        "nodekitCommit": { "$ref": "#/$defs/commit" },
+        "nodekitSourceHash": { "$ref": "#/$defs/sha256" },
+        "consumerCommit": { "$ref": "#/$defs/commit" },
+        "componentTarballSha256": { "$ref": "#/$defs/sha256" },
+        "verdictSha256": { "$ref": "#/$defs/sha256" },
+        "checks": { "$ref": "#/$defs/checks" },
+        "liveFlowAdoption": { "$ref": "#/$defs/liveFlowAdoption" },
+        "evidence": {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 3,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/evidenceRef" },
+          "allOf": [
+            { "contains": { "type": "object", "required": ["kind"], "properties": { "kind": { "const": "component-tarball" } } }, "minContains": 1, "maxContains": 1 },
+            { "contains": { "type": "object", "required": ["kind"], "properties": { "kind": { "const": "consumer-verdict" } } }, "minContains": 1, "maxContains": 1 },
+            { "contains": { "type": "object", "required": ["kind"], "properties": { "kind": { "const": "screenshot-manifest" } } }, "minContains": 1, "maxContains": 1 }
+          ]
+        }
+      }
+    }
+  }
+}

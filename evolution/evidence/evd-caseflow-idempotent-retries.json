@@ -1,0 +1,18 @@
+{
+  "schemaVersion": "nodekit.evolution-evidence/v1",
+  "id": "evd:caseflow-idempotent-retries",
+  "kind": "test",
+  "artifactRef": "git:f3471c7fd31b4839ffeb9c9f43bd0d4ab7ef6bfc:src/lib/caseflow-conformance.mjs",
+  "sha256": "24371533189699e1a519bf331e0c4babe95e9c1b985191ef738fff8351b37481",
+  "sourceCommit": "f3471c7fd31b4839ffeb9c9f43bd0d4ab7ef6bfc",
+  "generatedAt": "2026-07-22T01:08:47-07:00",
+  "command": "npm run check",
+  "environment": {
+    "repository": "HomenShum/node-platform",
+    "tests": "105 passed"
+  },
+  "verifiesInvariantIds": [
+    "inv:caseflow-idempotent-retries"
+  ],
+  "result": "pass"
+}

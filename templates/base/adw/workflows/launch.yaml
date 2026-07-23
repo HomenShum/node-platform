@@ -1,0 +1,4 @@
+schemaVersion: nodekit.workflow/v1
+name: figured-out-application
+steps: [research, specialize, compile, deterministic-demo, conformance, browser-proof, deployment-proof]
+gates: [figured-out-contract, tests, accessibility, artifact-proof, receipt-verification]

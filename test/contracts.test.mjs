@@ -126,6 +126,21 @@ test("canonical event envelopes are strict and traceable", async () => {
     /must match pattern/,
   );
   assert.deepEqual(CONTRACT_SCHEMA_FILES.repository, "nodekit.schema.json");
+  assert.deepEqual(
+    {
+      skillBenchmarkInput: CONTRACT_SCHEMA_FILES.skillBenchmarkInput,
+      skillBenchmarkVerdict: CONTRACT_SCHEMA_FILES.skillBenchmarkVerdict,
+      skillEvaluatorReceipt: CONTRACT_SCHEMA_FILES.skillEvaluatorReceipt,
+      skillIntegrityReceipt: CONTRACT_SCHEMA_FILES.skillIntegrityReceipt,
+    },
+    {
+      skillBenchmarkInput: "nodekit.skill-benchmark-input.v1.schema.json",
+      skillBenchmarkVerdict: "nodekit.skill-benchmark-verdict.v1.schema.json",
+      skillEvaluatorReceipt: "nodekit.skill-evaluator-receipt.v1.schema.json",
+      skillIntegrityReceipt: "nodekit.skill-integrity-receipt.v1.schema.json",
+    },
+  );
+  assert.equal(Object.hasOwn(CONTRACT_SCHEMA_FILES, "skillComparison"), false);
 });
 
 test("NodeBenchAI is tracked honestly as an active production application", async () => {

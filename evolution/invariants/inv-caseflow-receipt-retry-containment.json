@@ -1,0 +1,29 @@
+{
+  "schemaVersion": "nodekit.invariant-claim/v1",
+  "id": "inv:caseflow-receipt-retry-containment",
+  "statement": "Every supported Caseflow provider preserves host authorization boundaries, receipt-v2 content bindings, all-open-exception containment, and idempotent same-request retries while rejecting conflicting key reuse.",
+  "scope": {
+    "applications": [
+      "NodeKit factory",
+      "NodeRoom",
+      "NodeSlide",
+      "NodeVideo"
+    ],
+    "packages": [
+      "@homenshum/nodekit"
+    ],
+    "surfaces": [
+      "portable Caseflow runtime",
+      "Convex Component boundary",
+      "provider conformance"
+    ]
+  },
+  "enforcement": "test",
+  "verifierRefs": [
+    "src/lib/caseflow-conformance.mjs",
+    "test/caseflow.test.mjs",
+    "src/component/caseflow.test.ts"
+  ],
+  "introducedByEventId": "evt:convex-caseflow-receipt-retry-contract",
+  "status": "partially-verified"
+}

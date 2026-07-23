@@ -1,0 +1,47 @@
+{
+  "schemaVersion": "nodekit.package-install-proof/v1",
+  "candidateCommit": "5cc61578b3c1bd5b5c8195b83347b91f8b83242b",
+  "nodekitSourceHash": "0ced0adf6e0f719be9a5fabefd69754a79102f39b6b6a54b20daeb60ceba7c0b",
+  "package": "@homenshum/nodekit",
+  "version": "0.2.1",
+  "tarball": "proof/ease/candidates/5cc61578b3c1bd5b5c8195b83347b91f8b83242b/0ced0adf6e0f719be9a5fabefd69754a79102f39b6b6a54b20daeb60ceba7c0b/package/homenshum-nodekit-0.2.1.tgz",
+  "tarballSha256": "7893ed5ce41f4454fa03f6d7c33eab6667ea8271de9fa37d878085d3b6cd3882",
+  "tarballBytes": 139409,
+  "unpackedSize": 575049,
+  "fileCount": 161,
+  "checks": {
+    "freshConsumerInstall": true,
+    "packagedCliCreate": true,
+    "compile": true,
+    "check": true,
+    "demo": true,
+    "eval": true,
+    "typecheckPublic": true,
+    "distributionComplete": true
+  },
+  "distributionChecks": {
+    "postgresAdapter": true,
+    "postgresTypes": true,
+    "postgresMigration": true,
+    "supabaseProfile": true,
+    "caseflowTypes": true
+  },
+  "supportingEvidence": [
+    {
+      "path": "proof/ease/candidates/5cc61578b3c1bd5b5c8195b83347b91f8b83242b/0ced0adf6e0f719be9a5fabefd69754a79102f39b6b6a54b20daeb60ceba7c0b/package/application-identity.json",
+      "sha256": "8125fde7b20e113849b908bd9eda6418fd5553b375e0fbfd748c0e57b2d22f5a"
+    },
+    {
+      "path": "proof/ease/candidates/5cc61578b3c1bd5b5c8195b83347b91f8b83242b/0ced0adf6e0f719be9a5fabefd69754a79102f39b6b6a54b20daeb60ceba7c0b/package/demo-receipt.json",
+      "sha256": "eb28e3256b510b41eae8b68559cae715861b89d783e77a5d9777016ba237044c"
+    },
+    {
+      "path": "proof/ease/candidates/5cc61578b3c1bd5b5c8195b83347b91f8b83242b/0ced0adf6e0f719be9a5fabefd69754a79102f39b6b6a54b20daeb60ceba7c0b/package/eval-receipt.json",
+      "sha256": "6ba85ab58163b4f386108675685005533548528c7329d7bc07fe93ef22e04bac"
+    }
+  ],
+  "publicationPerformed": false,
+  "passed": true,
+  "startedAt": "2026-07-22T08:43:15.000Z",
+  "generatedAt": "2026-07-22T08:43:48.670Z"
+}

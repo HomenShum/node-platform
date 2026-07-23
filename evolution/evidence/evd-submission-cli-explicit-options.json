@@ -1,0 +1,18 @@
+{
+  "schemaVersion": "nodekit.evolution-evidence/v1",
+  "id": "evd:submission-cli-explicit-options",
+  "kind": "test",
+  "artifactRef": "git:d0d9bb5b0a2cde1cdc2b236025ac985595613a5d:test/submission-cli.test.mjs",
+  "sha256": "5a90c892d1df1b57014bcb08cebe39922a8d4156544a174c5f46fe882d7e705c",
+  "sourceCommit": "d0d9bb5b0a2cde1cdc2b236025ac985595613a5d",
+  "generatedAt": "2026-07-22T01:20:48-07:00",
+  "command": "node --test test/submission-cli.test.mjs test/submission-preparation.test.mjs test/submission-gate.test.mjs",
+  "environment": {
+    "repository": "HomenShum/node-platform",
+    "tests": "9 passed"
+  },
+  "verifiesInvariantIds": [
+    "inv:submission-cli-explicit-options"
+  ],
+  "result": "pass"
+}

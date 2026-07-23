@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/HomenShum/node-platform/blob/main/schemas/nodekit.builder-change-set.v1.schema.json",
+  "title": "NodeKit Builder Gym externally derived change set",
+  "type": "object",
+  "required": ["schemaVersion", "generatedBy", "baseRevision", "candidateRevision", "lockHash", "changedPaths"],
+  "properties": {
+    "schemaVersion": { "const": "nodekit.builder-change-set/v1" },
+    "generatedBy": { "enum": ["trusted-vcs", "external-orchestrator"] },
+    "baseRevision": { "type": "string", "minLength": 1 },
+    "candidateRevision": { "type": "string", "minLength": 1 },
+    "lockHash": { "type": ["string", "null"], "pattern": "^[a-f0-9]{64}$" },
+    "changedPaths": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1, "pattern": "^(?![A-Za-z]:)(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))(?!.*\\\\).+$" },
+      "uniqueItems": true
+    }
+  },
+  "additionalProperties": false
+}

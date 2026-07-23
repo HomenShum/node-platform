@@ -1,0 +1,18 @@
+{
+  "schemaVersion": "nodekit.evolution-evidence/v1",
+  "id": "evd:caseflow-public-api",
+  "kind": "code",
+  "artifactRef": "git:1df155370258239ddd315c1f8842ecf0aa55b7e0:src/caseflow.mjs",
+  "sha256": "08c8c36a131b8ad6fdc8ba84e25f1a5331adc5f745936bbe9b756b32952856a1",
+  "sourceCommit": "1df155370258239ddd315c1f8842ecf0aa55b7e0",
+  "generatedAt": "2026-07-22T01:00:51-07:00",
+  "command": "node --test test/public-api.test.mjs test/caseflow.test.mjs test/factory.test.mjs",
+  "environment": {
+    "repository": "HomenShum/node-platform",
+    "entrypoint": "@homenshum/nodekit/caseflow"
+  },
+  "verifiesInvariantIds": [
+    "inv:stable-caseflow-package-entrypoint"
+  ],
+  "result": "pass"
+}

@@ -1,0 +1,7 @@
+node_modules/
+.nodeagent/
+.data/
+.env
+.env.local
+proof/*.json
+!proof/build-friction.json

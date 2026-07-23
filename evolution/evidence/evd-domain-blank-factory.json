@@ -1,0 +1,14 @@
+{
+  "schemaVersion": "nodekit.evolution-evidence/v1",
+  "id": "evd:domain-blank-factory",
+  "kind": "code",
+  "artifactRef": "git:8d4f7e6e8235751d07c456208f841b15edf8de39:src/lib/scaffold.mjs",
+  "sha256": "53e2201233593f537f3ec729e48f920b1a9a7ce3879168f4fe5b24e6c376409a",
+  "sourceCommit": "8d4f7e6e8235751d07c456208f841b15edf8de39",
+  "generatedAt": "2026-07-21T15:53:03-07:00",
+  "command": "node --test test/factory.test.mjs",
+  "environment": { "repository": "HomenShum/node-platform" },
+  "verifiesInvariantIds": ["inv:domain-blank-create"],
+  "nodeProofReceiptId": "nodeproof:factory-8d4f7e6",
+  "result": "pass"
+}

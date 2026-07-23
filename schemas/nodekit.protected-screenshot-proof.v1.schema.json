@@ -1,0 +1,65 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://nodekit.dev/schemas/nodekit.protected-screenshot-proof.v1.schema.json",
+  "title": "NodeKit campaign-protected screenshot proof sidecar",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion", "authority", "candidateArchiveSha256", "runId", "taskId", "state", "theme",
+    "viewport", "viewportId", "pageUrl", "pngSha256", "consoleErrors", "failedRequests",
+    "horizontalOverflowPx", "mojibakeDetected", "accessibility"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "nodekit.protected-screenshot-proof/v1" },
+    "authority": { "const": "campaign-protected-browser" },
+    "candidateArchiveSha256": { "$ref": "#/$defs/sha256" },
+    "runId": { "type": "string", "minLength": 1 },
+    "taskId": { "enum": ["research-map", "volunteer-onboarding", "launch-presentation"] },
+    "state": { "$ref": "#/$defs/state" }, "theme": { "enum": ["light", "dark"] },
+    "viewport": { "$ref": "#/$defs/viewportSize" }, "viewportId": { "$ref": "#/$defs/viewportId" },
+    "pageUrl": { "type": "string", "pattern": "^http://candidate:4173/" },
+    "pngSha256": { "$ref": "#/$defs/sha256" },
+    "consoleErrors": { "const": 0 }, "failedRequests": { "const": 0 },
+    "horizontalOverflowPx": { "const": 0 }, "mojibakeDetected": { "const": false },
+    "accessibility": { "$ref": "#/$defs/accessibilityResult" }
+  },
+  "$defs": {
+    "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "state": { "enum": [
+      "first_arrival", "orientation", "input", "validation_error", "running", "partial_result",
+      "external_wait", "proposal_pending", "approval", "conflict", "recoverable_failure",
+      "reload_resume", "completed_receipt", "receipt_inspection", "export_share"
+    ] },
+    "viewportId": { "enum": ["desktop", "wide", "tablet-landscape", "tablet-portrait", "mobile-portrait", "mobile-landscape"] },
+    "viewportSize": {
+      "type": "object", "additionalProperties": false, "required": ["height", "width"],
+      "properties": { "height": { "type": "integer", "minimum": 1 }, "width": { "type": "integer", "minimum": 1 } }
+    },
+    "violationCounts": {
+      "type": "object", "additionalProperties": false,
+      "required": ["critical", "serious", "moderate", "minor", "unknown"],
+      "properties": {
+        "critical": { "const": 0 }, "serious": { "const": 0 },
+        "moderate": { "type": "integer", "minimum": 0 }, "minor": { "type": "integer", "minimum": 0 },
+        "unknown": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "violation": {
+      "type": "object", "additionalProperties": false, "required": ["id", "impact", "nodeCount"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 }, "impact": { "enum": ["moderate", "minor", "unknown"] },
+        "nodeCount": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "accessibilityResult": {
+      "type": "object", "additionalProperties": false,
+      "required": ["engine", "engineVersion", "passed", "policy", "seriousCriticalViolations", "totalViolations", "violationCounts", "violations"],
+      "properties": {
+        "engine": { "const": "axe-core" }, "engineVersion": { "const": "4.12.1" }, "passed": { "const": true },
+        "policy": { "const": "serious-critical-zero" }, "seriousCriticalViolations": { "const": 0 },
+        "totalViolations": { "type": "integer", "minimum": 0 }, "violationCounts": { "$ref": "#/$defs/violationCounts" },
+        "violations": { "type": "array", "items": { "$ref": "#/$defs/violation" } }
+      }
+    }
+  }
+}

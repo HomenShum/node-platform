@@ -1,0 +1,118 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://nodekit.dev/schemas/nodekit.fresh-user-study.v1.schema.json",
+  "title": "NodeKit independently evaluable five-person fresh-user study input",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion", "nodekitCommit", "nodekitSourceHash", "instruction",
+    "evidenceRequirements", "participants", "thresholds", "status"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "nodekit.fresh-user-study/v1" },
+    "nodekitCommit": { "$ref": "#/$defs/commit" },
+    "nodekitSourceHash": { "$ref": "#/$defs/sha256" },
+    "instruction": { "const": "Use this app to complete the job shown on screen." },
+    "evidenceRequirements": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["pathFormat", "requiredKindsPerParticipant", "optionalKinds", "hashAlgorithm"],
+      "properties": {
+        "pathFormat": { "const": "repository-relative POSIX path" },
+        "requiredKindsPerParticipant": {
+          "const": ["screenshot", "session-log"]
+        },
+        "optionalKinds": { "const": ["recording"] },
+        "hashAlgorithm": { "const": "sha256" }
+      }
+    },
+    "participants": {
+      "type": "array",
+      "minItems": 5,
+      "maxItems": 5,
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/participant" }
+    },
+    "thresholds": { "$ref": "#/$defs/thresholds" },
+    "status": { "const": "completed" }
+  },
+  "$defs": {
+    "participantId": { "type": "string", "pattern": "^participant_[a-f0-9]{16}$" },
+    "commit": { "type": "string", "pattern": "^[a-f0-9]{40}$" },
+    "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "timestamp": { "type": "string", "format": "date-time" },
+    "evidencePath": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^(?!/)(?!\\./)(?!.*//)(?!.*\\/$)(?!.*(?:^|/)\\.\\.?(?:/|$))(?![A-Za-z]:)(?!.*\\u0000)[^\\\\]+$"
+    },
+    "evidenceRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "path", "sha256"],
+      "properties": {
+        "kind": { "enum": ["screenshot", "session-log", "recording"] },
+        "path": { "$ref": "#/$defs/evidencePath" },
+        "sha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "participant": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "participantId", "fresh", "consentRecorded", "sessionStartedAt", "sessionCompletedAt",
+        "evidenceRefs", "firstMeaningfulActionMs", "neutralJourneyMs", "wrongTurns",
+        "helpRequests", "singleEaseQuestion", "p0P1Failures", "completed", "assisted",
+        "canExplainOutcome", "locatedFinalArtifact", "locatedUnresolvedIssues"
+      ],
+      "properties": {
+        "participantId": { "$ref": "#/$defs/participantId" },
+        "fresh": { "const": true },
+        "consentRecorded": { "const": true },
+        "sessionStartedAt": { "$ref": "#/$defs/timestamp" },
+        "sessionCompletedAt": { "$ref": "#/$defs/timestamp" },
+        "evidenceRefs": {
+          "type": "array",
+          "minItems": 2,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/evidenceRef" },
+          "allOf": [
+            { "contains": { "type": "object", "properties": { "kind": { "const": "screenshot" } }, "required": ["kind"] }, "minContains": 1 },
+            { "contains": { "type": "object", "properties": { "kind": { "const": "session-log" } }, "required": ["kind"] }, "minContains": 1 }
+          ]
+        },
+        "firstMeaningfulActionMs": { "type": "number", "minimum": 0 },
+        "neutralJourneyMs": { "type": "number", "minimum": 0 },
+        "wrongTurns": { "type": "integer", "minimum": 0 },
+        "helpRequests": { "type": "integer", "minimum": 0 },
+        "singleEaseQuestion": { "type": "integer", "minimum": 1, "maximum": 7 },
+        "p0P1Failures": { "type": "integer", "minimum": 0 },
+        "completed": { "type": "boolean" },
+        "assisted": { "type": "boolean" },
+        "canExplainOutcome": { "type": "boolean" },
+        "locatedFinalArtifact": { "type": "boolean" },
+        "locatedUnresolvedIssues": { "type": "boolean" }
+      }
+    },
+    "thresholds": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "minimumUnassistedCompletions", "minimumOutcomeComprehensions",
+        "minimumFinalArtifactsLocated", "minimumUnresolvedIssuesLocated",
+        "maximumMedianFirstMeaningfulActionMs", "maximumMedianNeutralJourneyMs",
+        "minimumMedianSingleEaseQuestion", "maximumP0P1Failures"
+      ],
+      "properties": {
+        "minimumUnassistedCompletions": { "const": 4 },
+        "minimumOutcomeComprehensions": { "const": 4 },
+        "minimumFinalArtifactsLocated": { "const": 4 },
+        "minimumUnresolvedIssuesLocated": { "const": 4 },
+        "maximumMedianFirstMeaningfulActionMs": { "const": 30000 },
+        "maximumMedianNeutralJourneyMs": { "const": 180000 },
+        "minimumMedianSingleEaseQuestion": { "const": 6 },
+        "maximumP0P1Failures": { "const": 0 }
+      }
+    }
+  }
+}

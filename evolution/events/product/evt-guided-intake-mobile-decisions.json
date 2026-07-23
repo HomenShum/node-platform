@@ -1,0 +1,34 @@
+{
+  "schemaVersion": "nodekit.evolution-event/v1",
+  "id": "evt:guided-intake-mobile-decisions",
+  "projectId": "nodekit",
+  "repository": "HomenShum/node-platform",
+  "source": {
+    "commitSha": "4407b70c616c89b022e0d3d36ba02f00519b1688",
+    "occurredAt": "2026-07-22T02:33:14-07:00"
+  },
+  "track": "product",
+  "category": "ui",
+  "challenge": "A generated app could display guided intake and review controls without actually enforcing the intake transition or making the current decision usable in the initial mobile viewport.",
+  "observedFailure": "DOM presence alone could pass while a premature proposal was accepted or the only meaningful mobile action began below the fold.",
+  "resolution": "The human-reviewed product contract requires explicit outcome confirmation before proposal creation, persisted progression into active work, proposal absence during intake, and one state-appropriate mobile decision surface inside the initial viewport.",
+  "assumptionIds": [],
+  "invariantIds": [
+    "inv:guided-intake-mobile-decisions"
+  ],
+  "evidenceIds": [
+    "evd:guided-intake-mobile-decisions-materiality"
+  ],
+  "predecessorIds": [
+    "evt:rendered-browser-certification"
+  ],
+  "knownLimitations": [
+    "The materiality review is not final screenshot evidence and does not certify an uncommitted or later source revision.",
+    "Fresh-user timing and consented human usability trials remain open external proof gates."
+  ],
+  "interpretation": {
+    "status": "human-reviewed",
+    "reviewedBy": "project-owner",
+    "reviewedAt": "2026-07-22T02:33:14-07:00"
+  }
+}

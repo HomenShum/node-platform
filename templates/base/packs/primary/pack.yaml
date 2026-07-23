@@ -1,0 +1,14 @@
+schemaVersion: nodeagent.pack/v1
+id: guided-case
+version: 1.0.0
+description: Domain-blank Caseflow lifecycle demonstration.
+tools: []
+artifacts:
+  - primary-artifact
+validators:
+  - proposal-before-mutation
+  - stale-proposal-conflicts
+policies: []
+evals:
+  - ../../evals/figured-out-journey.json
+  - ../../evals/stale-proposal-conflict.json

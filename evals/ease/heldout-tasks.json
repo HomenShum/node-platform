@@ -1,0 +1,17 @@
+{
+  "schemaVersion": "nodekit.agent-ease-tasks/v1",
+  "tasks": [
+    {
+      "id": "research-map",
+      "goal": "Use this repository to build an application that turns a supplied, immutable Agentic RL source packet into a reviewable research map. The completed app must accept a JSON outcome containing schemaVersion, taskId, inputToken, question, and at least two sources with exact id, title, HTTPS url, publishedAtIso, contentSha256, and excerpt fields. It must preserve the exact question, input token, source IDs, source hashes, and dates in a typed canonical research-map artifact; produce at least one comparison that references the supplied source IDs; support proposal review and approval; visibly export the proof-bound artifact; and survive reload and a fresh browser context. Do not fetch or invent sources. Build the smallest useful vertical slice and prove it end to end. Continue until complete or legitimately blocked."
+    },
+    {
+      "id": "volunteer-onboarding",
+      "goal": "Use this repository to build an application that carries a small nonprofit volunteer from a supplied application through document review and confirmed onboarding. The completed app must accept a JSON outcome containing schemaVersion, taskId, inputToken, volunteer with exact id, name, and email, and documents with exact id, type, and reviewStatus fields. It must preserve the exact input token, volunteer fields, document IDs, types, and statuses in a typed canonical volunteer-onboarding-record artifact; confirm completion only when the supplied records permit it; support proposal review and approval; visibly export the proof-bound artifact; and survive reload and a fresh browser context. Build the smallest useful vertical slice and prove it end to end. Continue until complete or legitimately blocked."
+    },
+    {
+      "id": "launch-presentation",
+      "goal": "Use this repository to build an application that turns a supplied product brief and metrics packet into a reviewable launch presentation. The completed app must accept a JSON outcome containing schemaVersion, taskId, inputToken, brief with exact product, audience, and positioning fields, and metrics with exact id, label, numeric value, and unit fields. It must preserve the exact input token, brief fields, metric IDs, values, and units in a typed canonical launch-presentation artifact; create at least three slides grounded in the supplied brief and metrics; support proposal review and approval; visibly export the proof-bound artifact; and survive reload and a fresh browser context. Build the smallest useful vertical slice and prove it end to end. Continue until complete or legitimately blocked."
+    }
+  ]
+}

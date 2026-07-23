@@ -1,0 +1,111 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/HomenShum/node-platform/blob/main/schemas/nodekit.skill-evaluator-receipt.v1.schema.json",
+  "title": "Protected-evaluator-owned per-run skill receipt",
+  "type": "object",
+  "required": ["schemaVersion", "receiptId", "receiptHash", "purpose", "candidateId", "arm", "runId", "benchmarkHash", "harnessHash", "evaluatorHash", "resolvedModel", "taskId", "taskHash", "inputHash", "skillHash", "metrics", "evidence", "evidenceRootSha256", "measurementAuthority", "candidateAuthored", "issuedAt", "attestation"],
+  "properties": {
+    "schemaVersion": { "const": "nodekit.skill-evaluator-receipt/v1" },
+    "receiptId": { "type": "string", "pattern": "^skill-evaluator:sha256:[a-f0-9]{64}$" },
+    "receiptHash": { "$ref": "#/$defs/hash" },
+    "purpose": { "enum": ["skill-benchmark", "skill-canary"] },
+    "candidateId": { "type": "string", "pattern": "^skill-candidate-[a-z0-9-]+$" },
+    "arm": { "enum": ["baseline", "candidate", "canary"] },
+    "runId": { "type": "string", "minLength": 1 },
+    "benchmarkHash": { "$ref": "#/$defs/hash" },
+    "harnessHash": { "$ref": "#/$defs/hash" },
+    "evaluatorHash": { "$ref": "#/$defs/hash" },
+    "resolvedModel": { "type": "string", "minLength": 1 },
+    "taskId": { "type": "string", "minLength": 1 },
+    "taskHash": { "$ref": "#/$defs/hash" },
+    "inputHash": { "$ref": "#/$defs/hash" },
+    "skillHash": { "$ref": "#/$defs/hash" },
+    "metrics": {
+      "type": "object",
+      "required": ["success", "targetFailureObserved", "accuracy", "safety", "editability", "exportQuality", "userCompletion", "latencyMs", "costUsd"],
+      "properties": {
+        "success": { "type": "boolean" },
+        "targetFailureObserved": { "type": "boolean" },
+        "accuracy": { "$ref": "#/$defs/score" },
+        "safety": { "$ref": "#/$defs/score" },
+        "editability": { "$ref": "#/$defs/score" },
+        "exportQuality": { "$ref": "#/$defs/score" },
+        "userCompletion": { "$ref": "#/$defs/score" },
+        "latencyMs": { "type": "integer", "minimum": 0 },
+        "costUsd": { "type": "number", "minimum": 0 }
+      },
+      "additionalProperties": false
+    },
+    "canary": {
+      "type": "object",
+      "required": ["freshContext", "humanReprompts", "substantiveChanges", "checksPassed"],
+      "properties": {
+        "freshContext": { "const": true },
+        "humanReprompts": { "const": 0 },
+        "substantiveChanges": { "const": true },
+        "checksPassed": { "const": true }
+      },
+      "additionalProperties": false
+    },
+    "evidence": {
+      "type": "array",
+      "minItems": 4,
+      "items": { "$ref": "#/$defs/evidence" },
+      "uniqueItems": true,
+      "allOf": [
+        { "contains": { "properties": { "kind": { "const": "task" } }, "required": ["kind"] }, "minContains": 1, "maxContains": 1 },
+        { "contains": { "properties": { "kind": { "const": "input" } }, "required": ["kind"] }, "minContains": 1, "maxContains": 1 },
+        { "contains": { "properties": { "kind": { "const": "output" } }, "required": ["kind"] }, "minContains": 1, "maxContains": 1 },
+        { "contains": { "properties": { "kind": { "const": "evaluation" } }, "required": ["kind"] }, "minContains": 1, "maxContains": 1 }
+      ]
+    },
+    "evidenceRootSha256": { "$ref": "#/$defs/hash" },
+    "measurementAuthority": { "const": "protected-evaluator-signed" },
+    "candidateAuthored": { "const": false },
+    "issuedAt": { "$ref": "#/$defs/timestamp" },
+    "attestation": { "$ref": "#/$defs/attestation" }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "purpose": { "const": "skill-benchmark" } }, "required": ["purpose"] },
+      "then": { "properties": { "arm": { "enum": ["baseline", "candidate"] } }, "not": { "required": ["canary"] } }
+    },
+    {
+      "if": { "properties": { "purpose": { "const": "skill-canary" } }, "required": ["purpose"] },
+      "then": { "properties": { "arm": { "const": "canary" } }, "required": ["canary"] }
+    }
+  ],
+  "$defs": {
+    "hash": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "score": { "type": "number", "minimum": 0, "maximum": 1 },
+    "timestamp": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{3}Z$" },
+    "path": { "type": "string", "minLength": 1, "pattern": "^(?![A-Za-z]:)(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))(?!.*\\\\).+$" },
+    "evidence": {
+      "type": "object",
+      "required": ["kind", "path", "sha256", "bytes"],
+      "properties": {
+        "kind": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$" },
+        "path": { "$ref": "#/$defs/path" },
+        "sha256": { "$ref": "#/$defs/hash" },
+        "bytes": { "type": "integer", "minimum": 0 }
+      },
+      "additionalProperties": false
+    },
+    "attestation": {
+      "type": "object",
+      "required": ["schemaVersion", "algorithm", "keyId", "signedAt", "purpose", "payloadSha256", "signatureEncoding", "signature"],
+      "properties": {
+        "schemaVersion": { "const": "nodekit.skill-detached-attestation/v1" },
+        "algorithm": { "const": "Ed25519" },
+        "keyId": { "type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:@-]{0,127}$" },
+        "signedAt": { "$ref": "#/$defs/timestamp" },
+        "purpose": { "enum": ["skill-benchmark", "skill-canary"] },
+        "payloadSha256": { "$ref": "#/$defs/hash" },
+        "signatureEncoding": { "const": "base64url" },
+        "signature": { "type": "string", "pattern": "^[A-Za-z0-9_-]{86}$" }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

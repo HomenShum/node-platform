@@ -1,0 +1,23 @@
+{
+  "schemaVersion": "nodekit.assumption/v1",
+  "id": "asm:caseflow-idempotency-can-be-inferred",
+  "statement": "A lifecycle adapter can be treated as idempotent without executing the same start, decision, and completion operations twice.",
+  "scope": {
+    "applications": [
+      "NodeKit factory",
+      "NodeRoom",
+      "NodeSlide",
+      "NodeVideo"
+    ],
+    "taskFamilies": [
+      "Caseflow adapter conformance"
+    ]
+  },
+  "status": "disproven",
+  "introducedByEventId": "evt:caseflow-idempotent-retries",
+  "invalidatedByEventId": "evt:caseflow-idempotent-retries",
+  "supportingEvidenceIds": [],
+  "contradictingEvidenceIds": [
+    "evd:caseflow-idempotent-retries"
+  ]
+}

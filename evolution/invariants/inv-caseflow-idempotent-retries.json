@@ -1,0 +1,27 @@
+{
+  "schemaVersion": "nodekit.invariant-claim/v1",
+  "id": "inv:caseflow-idempotent-retries",
+  "statement": "Repeating an active-run start, matching proposal decision, or completed-run request never creates an extra run, artifact version, approval, or receipt.",
+  "scope": {
+    "applications": [
+      "NodeKit factory",
+      "NodeRoom",
+      "NodeSlide",
+      "NodeVideo"
+    ],
+    "packages": [
+      "@homenshum/nodekit"
+    ],
+    "surfaces": [
+      "Caseflow runtime",
+      "adapter conformance"
+    ]
+  },
+  "enforcement": "test",
+  "verifierRefs": [
+    "src/lib/caseflow-conformance.mjs",
+    "test/caseflow.test.mjs"
+  ],
+  "introducedByEventId": "evt:caseflow-idempotent-retries",
+  "status": "verified"
+}

@@ -1,0 +1,11 @@
+schemaVersion: nodekit.experience/v1
+primaryJob: __BRIEF_JSON__
+startAction: Start guided case
+canonicalOutput: reviewed artifact
+stages:
+  - { id: intake, title: Confirm the intended outcome, owner: user }
+  - { id: working, title: Prepare a proposal, owner: agent }
+  - { id: review, title: Review the proposed change, owner: user }
+  - { id: complete, title: Verify and export, owner: system }
+terminalStates: [completed, awaiting_review, blocked, conflicted, cancelled, failed_safely]
+requiredSurfaces: [orientation, progress, current_action, artifact, proposal_review, exception, completion, receipt]

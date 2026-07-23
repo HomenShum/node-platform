@@ -1,0 +1,243 @@
+{
+  "applicationHash": "54b73137eb0c1ae6f8904e3812eec1142e33f56ea06d3ecd752e43bd7f9a5daf",
+  "configHash": "54b73137eb0c1ae6f8904e3812eec1142e33f56ea06d3ecd752e43bd7f9a5daf",
+  "identity": {
+    "files": [
+      {
+        "bytes": 36,
+        "digest": "9d6fc5919cd132fde6e40ef9bba6875218ae78d6f8029a01fd35d7d0820c88b4",
+        "path": ".dockerignore"
+      },
+      {
+        "bytes": 19,
+        "digest": "d60f352d0db1404c70afb4bb8b2ca3fd1c610572aa40720e8a0b7baa7885418c",
+        "path": ".gitattributes"
+      },
+      {
+        "bytes": 89,
+        "digest": "55ec5d517810c1e9962d9640dcbaaca1a81444d805774ab80510d030fd8a84cd",
+        "path": ".gitignore"
+      },
+      {
+        "bytes": 260,
+        "digest": "7dfb37bb520b6fb180c50f7af450cd34347228bbb4acba1c8d379f06721ee850",
+        "path": "adw/workflows/launch.yaml"
+      },
+      {
+        "bytes": 336,
+        "digest": "0ef4755e9a5c3f01c30e5e02eb3d474e4146c0f04d25a012ffd4f7f6a0525f47",
+        "path": "agent/instructions.md"
+      },
+      {
+        "bytes": 2140,
+        "digest": "7365f940c07c7ca3bd69643a6c1dcc9852a261e17ec537e1396e818d42dab1dd",
+        "path": "agent/workflow.mjs"
+      },
+      {
+        "bytes": 5643,
+        "digest": "f52276b8fe2572f02efa954b4598d84e163aae5fa9340db71500efc2ba4e3bfb",
+        "path": "apps/web/public/app.js"
+      },
+      {
+        "bytes": 4220,
+        "digest": "fc02b7ca29933f412d7bf132592c3daa5c28109995aefaeba15e91c5470faa28",
+        "path": "apps/web/public/index.html"
+      },
+      {
+        "bytes": 10621,
+        "digest": "025fe2934dea3117036045c27ff035a39d8798ae0037b0734cdf610390118320",
+        "path": "apps/web/public/styles.css"
+      },
+      {
+        "bytes": 8615,
+        "digest": "ed3449ac48ed5549ac65d2970ab9fd4726b9e90a313649c6254ef027e0408e23",
+        "path": "apps/web/server.mjs"
+      },
+      {
+        "bytes": 191,
+        "digest": "016bf6921aaea9bbfe804eae0400c0ee10aaee19d094b03d9cd83fc22ed17b8d",
+        "path": "Dockerfile"
+      },
+      {
+        "bytes": 161,
+        "digest": "511a24b4039f43755ec97e9fb86fb5c92bb963445fddc53859e7e08c5987adb7",
+        "path": "evals/figured-out-journey.json"
+      },
+      {
+        "bytes": 160,
+        "digest": "dc72ffb91ce882c50c89943532f4688e98b35e894519c5fdc189b953f41fafce",
+        "path": "evals/stale-proposal-conflict.json"
+      },
+      {
+        "bytes": 91,
+        "digest": "da0d5619735d0818f89cfedeb4a3cacd8413ab0a5d8ce0695a564ce21a73fbee",
+        "path": "fixtures/corpus/validation.txt"
+      },
+      {
+        "bytes": 597,
+        "digest": "43219fddcfcf0fdb16942ae29d5b858a2dfcfe3afcbde84c21a47751f9885e4a",
+        "path": "hackathon.yaml"
+      },
+      {
+        "bytes": 597,
+        "digest": "02f5e3f50a855d30251dc13064610a253c7f67114d760a0ae679085ff6f10648",
+        "path": "integrations/convex/capability-plan.yaml"
+      },
+      {
+        "bytes": 714,
+        "digest": "bca07e75ef691b96f1998456534497ed910e350c42d26bd8d6482650519963cb",
+        "path": "integrations/convex/README.md"
+      },
+      {
+        "bytes": 868,
+        "digest": "5a015365f21bfa82556bfb95ccc2e20f759fa9c8dea26aaa076cf6efe6d11139",
+        "path": "nodekit.yaml"
+      },
+      {
+        "bytes": 5836,
+        "digest": "e6f341aea25d0996184fa100a7f3479048325bf3a3da1d119ccbaa78d9240fb9",
+        "path": "package-lock.json"
+      },
+      {
+        "bytes": 896,
+        "digest": "ac2e65fa7e05097bc85388930899aca895f73fd6f8c52a2036e46139daf6d8f6",
+        "path": "package.json"
+      },
+      {
+        "bytes": 342,
+        "digest": "1f25c7d2707019691ae036901bcbd458419cfd42d1b5765dae46e797cb3b4ab5",
+        "path": "packs/primary/pack.yaml"
+      },
+      {
+        "bytes": 123,
+        "digest": "f62c2c3838c464f1146874919b4c8e4dec72ac0c6f2d238821910acde430776b",
+        "path": "render.yaml"
+      },
+      {
+        "bytes": 328,
+        "digest": "23eb74d85b55e102aa4ec4213b56666c8993ed5c84d9e2c36572986cd5e3bf5c",
+        "path": "scripts/audit-prod.mjs"
+      },
+      {
+        "bytes": 15184,
+        "digest": "83632d43ca75a7afc3d071cd9d1e05b8c779324a6cb17d7b935bfe9fdeaed239",
+        "path": "scripts/browser-certify.mjs"
+      },
+      {
+        "bytes": 2279,
+        "digest": "6f0335536b2a3b30c6a538b340016cdabc96996a34d9303e025001450d730a75",
+        "path": "scripts/browser-proof.mjs"
+      },
+      {
+        "bytes": 777,
+        "digest": "1040c9466364f5e348b68177759dc6b9456c0153b44c2b6aa610a8351c37496f",
+        "path": "scripts/check.mjs"
+      },
+      {
+        "bytes": 1386,
+        "digest": "95813e7c557e069d87d5b52088b209f838e4dab7c30ebfac0e46900745cc0f28",
+        "path": "scripts/demo.mjs"
+      },
+      {
+        "bytes": 1947,
+        "digest": "d0309beccd122a1b2bf8a63a91eca61c58f6638d6438af81d56c436f338633a4",
+        "path": "scripts/eval.mjs"
+      },
+      {
+        "bytes": 681,
+        "digest": "02d3ead38d129440339675dc1906f8edfdeabc16512cf68b9b8a197169c8b05a",
+        "path": "scripts/lib/friction.mjs"
+      },
+      {
+        "bytes": 2500,
+        "digest": "c32a024944ab9a523ad41073faf41baf83c0f81b8fe00840cd0cf4174087bf89",
+        "path": "scripts/proof.mjs"
+      },
+      {
+        "bytes": 692,
+        "digest": "6ef82b96ea99e761c70ca627ef778ebabb999f8fdc9c6ce8e66ce53d3424037b",
+        "path": "test/workflow.test.mjs"
+      }
+    ],
+    "roots": {
+      "directories": [
+        "api",
+        "agent",
+        "packs",
+        "integrations",
+        "backend",
+        "workers",
+        "evals",
+        "fixtures",
+        "schemas",
+        "src",
+        "apps",
+        "scripts",
+        "adw",
+        "test",
+        "tests",
+        "e2e"
+      ],
+      "identityOnlyDirectories": [
+        "vendor"
+      ],
+      "resolvedDirectories": [
+        "adw",
+        "agent",
+        "api",
+        "apps",
+        "backend",
+        "e2e",
+        "evals",
+        "fixtures",
+        "integrations",
+        "packs",
+        "packs/primary",
+        "schemas",
+        "scripts",
+        "src",
+        "test",
+        "tests",
+        "vendor",
+        "workers"
+      ],
+      "files": [
+        ".dockerignore",
+        ".gitattributes",
+        ".gitignore",
+        ".npmrc",
+        ".nvmrc",
+        ".vercelignore",
+        "nodekit.yaml",
+        "hackathon.yaml",
+        "package.json",
+        "package-lock.json",
+        "pnpm-lock.yaml",
+        "yarn.lock",
+        "bun.lockb",
+        "Dockerfile",
+        "server.ts",
+        "server.js",
+        "server.mjs",
+        "docker-compose.yml",
+        "docker-compose.yaml",
+        "render.yaml",
+        "railway.json",
+        "vercel.json",
+        "netlify.toml",
+        "fly.toml",
+        "Procfile",
+        "convex.json",
+        "vite.config.js",
+        "vite.config.ts",
+        "next.config.js",
+        "next.config.mjs",
+        "playwright.config.js",
+        "playwright.config.ts",
+        "tsconfig.json"
+      ]
+    }
+  },
+  "manifestDigest": "646dd36854d72763e636511c7547d15cbadcf0abcf1ce1a1741cf26323db7080",
+  "schemaVersion": "nodeagent.application-identity/v1"
+}

@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/HomenShum/node-platform/blob/main/schemas/nodekit.evolution-event.v1.schema.json",
+  "title": "NodeKit material evolution event",
+  "type": "object",
+  "required": ["schemaVersion", "id", "projectId", "repository", "source", "track", "category", "challenge", "resolution", "assumptionIds", "invariantIds", "evidenceIds", "knownLimitations", "interpretation"],
+  "properties": {
+    "schemaVersion": { "const": "nodekit.evolution-event/v1" },
+    "id": { "$ref": "#/$defs/id" },
+    "projectId": { "$ref": "#/$defs/nonEmpty" },
+    "repository": { "$ref": "#/$defs/nonEmpty" },
+    "source": {
+      "type": "object",
+      "required": ["commitSha", "occurredAt"],
+      "properties": {
+        "commitSha": { "$ref": "#/$defs/sha" },
+        "pullRequest": { "type": "integer", "minimum": 1 },
+        "issue": { "type": "integer", "minimum": 1 },
+        "occurredAt": { "$ref": "#/$defs/time" }
+      },
+      "additionalProperties": false
+    },
+    "track": { "enum": ["product", "architecture", "harness"] },
+    "category": { "enum": ["workflow", "schema", "runtime", "agent", "ui", "evaluation", "security", "release"] },
+    "challenge": { "$ref": "#/$defs/nonEmpty" },
+    "observedFailure": { "$ref": "#/$defs/nonEmpty" },
+    "resolution": { "$ref": "#/$defs/nonEmpty" },
+    "assumptionIds": { "$ref": "#/$defs/ids" },
+    "invariantIds": { "$ref": "#/$defs/ids" },
+    "evidenceIds": { "$ref": "#/$defs/nonEmptyIds" },
+    "predecessorIds": { "$ref": "#/$defs/ids" },
+    "supersedesIds": { "$ref": "#/$defs/ids" },
+    "extractedFromIds": { "$ref": "#/$defs/ids" },
+    "modelContext": {
+      "type": "object",
+      "properties": {
+        "requestedRoute": { "$ref": "#/$defs/nonEmpty" },
+        "resolvedModel": { "$ref": "#/$defs/nonEmpty" },
+        "provider": { "$ref": "#/$defs/nonEmpty" },
+        "harnessVersion": { "$ref": "#/$defs/nonEmpty" },
+        "promptHash": { "$ref": "#/$defs/hash" }
+      },
+      "additionalProperties": false
+    },
+    "knownLimitations": { "type": "array", "items": { "$ref": "#/$defs/nonEmpty" }, "uniqueItems": true },
+    "interpretation": {
+      "type": "object",
+      "required": ["status", "reviewedBy", "reviewedAt"],
+      "properties": {
+        "status": { "const": "human-reviewed" },
+        "reviewedBy": { "$ref": "#/$defs/nonEmpty" },
+        "reviewedAt": { "$ref": "#/$defs/time" }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$defs": {
+    "nonEmpty": { "type": "string", "minLength": 1 },
+    "id": { "type": "string", "pattern": "^[a-z][a-z0-9._:-]+$" },
+    "ids": { "type": "array", "items": { "$ref": "#/$defs/id" }, "uniqueItems": true },
+    "nonEmptyIds": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/id" }, "uniqueItems": true },
+    "sha": { "type": "string", "pattern": "^[a-f0-9]{40}$" },
+    "hash": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "time": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}T" }
+  },
+  "additionalProperties": false
+}

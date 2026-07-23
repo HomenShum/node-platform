@@ -1,0 +1,20 @@
+{
+  "schemaVersion": "nodekit.presentation-proof/v1",
+  "artifact": {
+    "path": "outputs/nodekit-figured-out-proof.pptx",
+    "bytes": 252024,
+    "sha256": "603bb034dd4ef8eac28ce37a9f93c56bd1ea80bf7552e3cb139d59dea5b4ab3d",
+    "slides": 8
+  },
+  "source": "changes/nodekit-proof-campaign-2026-07-20/presentation/exports/nodekit-proof-campaign-2026-07-20.final.pptx",
+  "checks": {
+    "artifactToolImportAndExport": true,
+    "exactTemplateFidelity": true,
+    "overflow": false,
+    "perSlideVisualInspection": true,
+    "staleFactoryClaimsRemoved": true,
+    "speakerNotesUpdated": true
+  },
+  "status": "passed",
+  "generatedAt": "2026-07-21T20:10:33.143Z"
+}

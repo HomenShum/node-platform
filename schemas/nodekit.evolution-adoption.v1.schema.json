@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/HomenShum/node-platform/blob/main/schemas/nodekit.evolution-adoption.v1.schema.json",
+  "type": "object",
+  "required": ["schemaVersion", "id", "invariantId", "consumer", "adoptedAtCommit", "evidenceIds", "status"],
+  "properties": {
+    "schemaVersion": { "const": "nodekit.evolution-adoption/v1" },
+    "id": { "$ref": "#/$defs/id" },
+    "invariantId": { "$ref": "#/$defs/id" },
+    "consumer": {
+      "type": "object",
+      "required": ["repository"],
+      "properties": {
+        "repository": { "$ref": "#/$defs/text" },
+        "application": { "$ref": "#/$defs/text" },
+        "package": { "$ref": "#/$defs/text" }
+      },
+      "additionalProperties": false
+    },
+    "adoptedAtCommit": { "$ref": "#/$defs/sha" },
+    "evidenceIds": { "$ref": "#/$defs/ids" },
+    "status": { "enum": ["declared", "verified", "drifted", "removed"] }
+  },
+  "$defs": {
+    "id": { "type": "string", "pattern": "^[a-z][a-z0-9._:-]+$" },
+    "text": { "type": "string", "minLength": 1 },
+    "ids": { "type": "array", "items": { "$ref": "#/$defs/id" }, "uniqueItems": true },
+    "sha": { "type": "string", "pattern": "^[a-f0-9]{40}$" }
+  },
+  "additionalProperties": false
+}

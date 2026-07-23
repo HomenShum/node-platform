@@ -1,0 +1,19 @@
+{
+  "schemaVersion": "nodekit.assumption/v1",
+  "id": "asm:strong-model-infers-topology",
+  "statement": "A strong general model can infer the intended product topology from an open-ended frontend request without a protected product contract or rendered direction comparison.",
+  "scope": {
+    "applications": [
+      "NodeVideo"
+    ],
+    "taskFamilies": [
+      "major-frontend-generation"
+    ]
+  },
+  "status": "scope-limited",
+  "introducedByEventId": "evt:nodevideo-topology-contract",
+  "supportingEvidenceIds": [],
+  "contradictingEvidenceIds": [
+    "evd:nodevideo-topology-failure"
+  ]
+}

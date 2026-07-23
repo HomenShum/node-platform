@@ -1,0 +1,132 @@
+{
+  "schemaVersion": "nodekit.nodetrace-trajectory/v1",
+  "recordedAt": "2026-07-22T12:00:00.000Z",
+  "applicationId": "gym-lab",
+  "runId": "builder-run-baseline",
+  "candidateId": "builder-h0",
+  "arm": "baseline",
+  "task": {
+    "id": "builder-task-1",
+    "family": "repository-legibility",
+    "taskSetHash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "briefHash": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+  },
+  "model": {
+    "requestedRoute": "fixture/exact",
+    "resolvedProvider": "fixture",
+    "resolvedModel": "exact-builder-model-1",
+    "modelRevision": "fixture-r1"
+  },
+  "harness": {
+    "version": "h0",
+    "builderHash": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+    "runtimeHash": "1111111111111111111111111111111111111111111111111111111111111111",
+    "interactionHash": "2222222222222222222222222222222222222222222222222222222222222222",
+    "toolSurfaceHash": "3333333333333333333333333333333333333333333333333333333333333333",
+    "contextPolicyHash": "4444444444444444444444444444444444444444444444444444444444444444",
+    "skillStackHash": "5555555555555555555555555555555555555555555555555555555555555555"
+  },
+  "evaluator": {
+    "id": "nodekit-builder-protected-v1",
+    "version": 1,
+    "hash": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+  },
+  "budgets": {
+    "maximumTokens": 10000,
+    "maximumCostUsd": 1,
+    "maximumDurationMs": 120000
+  },
+  "changedPaths": [],
+  "changeSet": {
+    "generatedBy": "external-orchestrator",
+    "baseRevision": "repository-parent",
+    "candidateRevision": "repository-baseline",
+    "lockHash": null,
+    "changedPaths": [],
+    "evidencePath": "proof/builder-gym/baseline-change-set.json",
+    "evidenceHash": "8888888888888888888888888888888888888888888888888888888888888888"
+  },
+  "events": [
+    {
+      "sequence": 0,
+      "eventId": "event-task-started",
+      "name": "task.started",
+      "summary": "Builder received the protected repository task",
+      "type": "task",
+      "actor": "builder-agent",
+      "occurredAt": "2026-07-22T12:00:00.000Z",
+      "status": "started",
+      "inputHashes": ["cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"],
+      "outputHashes": [],
+      "evidenceHashes": ["ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"]
+    },
+    {
+      "sequence": 1,
+      "eventId": "event-artifact-verified",
+      "name": "artifact.verified",
+      "summary": "Protected evaluator verified the produced source artifact",
+      "type": "verification",
+      "actor": "evaluator",
+      "occurredAt": "2026-07-22T12:01:00.000Z",
+      "status": "completed",
+      "inputHashes": ["6666666666666666666666666666666666666666666666666666666666666666"],
+      "outputHashes": ["7777777777777777777777777777777777777777777777777777777777777777"],
+      "evidenceHashes": ["ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"]
+    },
+    {
+      "sequence": 2,
+      "eventId": "event-run-completed",
+      "name": "run.completed",
+      "summary": "Protected evaluator recorded the terminal trajectory state",
+      "type": "completion",
+      "actor": "evaluator",
+      "occurredAt": "2026-07-22T12:01:01.000Z",
+      "status": "completed",
+      "inputHashes": ["7777777777777777777777777777777777777777777777777777777777777777"],
+      "outputHashes": [],
+      "evidenceHashes": ["ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"]
+    }
+  ],
+  "artifacts": [
+    {
+      "artifactId": "artifact-builder-output",
+      "kind": "source-patch",
+      "version": "1",
+      "contentHash": "6666666666666666666666666666666666666666666666666666666666666666",
+      "evidenceHashes": ["ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"]
+    }
+  ],
+  "verdicts": {
+    "task": { "passed": true, "score": 0.8, "findings": [], "evidenceHashes": ["ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"] },
+    "artifact": { "passed": true, "score": 0.8, "findings": [], "evidenceHashes": ["ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"] },
+    "ui": { "passed": true, "score": 0.75, "findings": [], "evidenceHashes": ["ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"] },
+    "safety": { "passed": true, "score": 1, "findings": [], "evidenceHashes": ["ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"] },
+    "efficiency": {
+      "passed": true,
+      "score": 0.8,
+      "findings": [],
+      "evidenceHashes": ["ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"],
+      "metrics": { "durationMs": 60000, "tokensIn": 2000, "tokensOut": 1000, "costUsd": 0.1, "turns": 8, "toolCalls": 6, "retries": 1, "repairRounds": 1 }
+    },
+    "evidence": { "passed": true, "score": 0.9, "findings": [], "evidenceHashes": ["ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"] },
+    "humanPreference": { "status": "not-collected", "score": null, "reviewerClass": "none", "evidenceHashes": [] }
+  },
+  "evidence": [
+    {
+      "kind": "test",
+      "path": "proof/builder-gym/evidence.txt",
+      "sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+    },
+    {
+      "kind": "trace",
+      "path": "proof/builder-gym/baseline-change-set.json",
+      "sha256": "8888888888888888888888888888888888888888888888888888888888888888"
+    }
+  ],
+  "proofReceiptId": "nodeproof-builder-baseline",
+  "measurementAuthority": {
+    "dimensionVerdicts": "trajectory-self-reported",
+    "proofReceiptId": "trajectory-self-reported",
+    "protectedEvaluatorDerived": false
+  }
+}

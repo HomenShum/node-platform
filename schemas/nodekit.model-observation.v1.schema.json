@@ -1,0 +1,165 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/HomenShum/node-platform/blob/main/schemas/nodekit.model-observation.v1.schema.json",
+  "title": "NodeKit evaluated model-run observation",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "runId",
+    "applicationId",
+    "taskId",
+    "taskFamily",
+    "model",
+    "harness",
+    "budgets",
+    "cognitive",
+    "execution",
+    "artifact",
+    "efficiency",
+    "failures",
+    "evidenceRefs",
+    "proofReceiptId"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "nodekit.model-observation/v1" },
+    "runId": { "$ref": "#/$defs/nonEmpty" },
+    "applicationId": { "$ref": "#/$defs/nonEmpty" },
+    "taskId": { "$ref": "#/$defs/nonEmpty" },
+    "taskFamily": { "$ref": "#/$defs/nonEmpty" },
+    "model": {
+      "type": "object",
+      "required": ["requestedRoute", "resolvedProvider", "resolvedModel"],
+      "properties": {
+        "requestedRoute": { "$ref": "#/$defs/nonEmpty" },
+        "resolvedProvider": { "$ref": "#/$defs/nonEmpty" },
+        "resolvedModel": { "$ref": "#/$defs/nonEmpty" },
+        "modelRevision": { "$ref": "#/$defs/nonEmpty" }
+      },
+      "additionalProperties": false
+    },
+    "harness": {
+      "type": "object",
+      "required": ["version", "hash", "toolSurfaceHash", "contextPolicyHash", "skillStackHash"],
+      "properties": {
+        "version": { "$ref": "#/$defs/nonEmpty" },
+        "hash": { "$ref": "#/$defs/hash" },
+        "toolSurfaceHash": { "$ref": "#/$defs/hash" },
+        "contextPolicyHash": { "$ref": "#/$defs/hash" },
+        "skillStackHash": { "$ref": "#/$defs/hash" }
+      },
+      "additionalProperties": false
+    },
+    "budgets": {
+      "type": "object",
+      "properties": {
+        "maximumTokens": { "type": "integer", "minimum": 0 },
+        "maximumCostUsd": { "type": "number", "minimum": 0 },
+        "maximumDurationMs": { "type": "integer", "minimum": 0 }
+      },
+      "additionalProperties": false
+    },
+    "cognitive": {
+      "$ref": "#/$defs/scoreGroup",
+      "required": ["briefUnderstanding", "decomposition", "constraintRetention", "ambiguityDetection", "referenceUse", "repairReasoning"]
+    },
+    "execution": {
+      "$ref": "#/$defs/scoreGroup",
+      "required": ["toolSelection", "validArguments", "toolOrdering", "resultInspection", "recovery", "scopedChanges", "completion"]
+    },
+    "artifact": {
+      "$ref": "#/$defs/scoreGroup",
+      "required": ["correctness", "usability", "domainQuality", "evidenceIntegrity"]
+    },
+    "efficiency": {
+      "type": "object",
+      "required": ["latencyMs", "toolCalls", "retries"],
+      "properties": {
+        "latencyMs": { "type": "integer", "minimum": 0 },
+        "tokensIn": { "type": "integer", "minimum": 0 },
+        "tokensOut": { "type": "integer", "minimum": 0 },
+        "costUsd": { "type": "number", "minimum": 0 },
+        "toolCalls": { "type": "integer", "minimum": 0 },
+        "retries": { "type": "integer", "minimum": 0 },
+        "repairRounds": { "type": "integer", "minimum": 0 }
+      },
+      "additionalProperties": false
+    },
+    "failures": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/failure" }
+    },
+    "evidenceRefs": { "$ref": "#/$defs/stringList" },
+    "proofReceiptId": { "$ref": "#/$defs/nonEmpty" }
+  },
+  "$defs": {
+    "nonEmpty": { "type": "string", "minLength": 1 },
+    "hash": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "score": { "type": "number", "minimum": 0, "maximum": 1 },
+    "stringList": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/nonEmpty" },
+      "uniqueItems": true
+    },
+    "scoreGroup": {
+      "type": "object",
+      "properties": {
+        "briefUnderstanding": { "$ref": "#/$defs/score" },
+        "decomposition": { "$ref": "#/$defs/score" },
+        "constraintRetention": { "$ref": "#/$defs/score" },
+        "ambiguityDetection": { "$ref": "#/$defs/score" },
+        "referenceUse": { "$ref": "#/$defs/score" },
+        "repairReasoning": { "$ref": "#/$defs/score" },
+        "toolSelection": { "$ref": "#/$defs/score" },
+        "validArguments": { "$ref": "#/$defs/score" },
+        "toolOrdering": { "$ref": "#/$defs/score" },
+        "resultInspection": { "$ref": "#/$defs/score" },
+        "recovery": { "$ref": "#/$defs/score" },
+        "scopedChanges": { "$ref": "#/$defs/score" },
+        "completion": { "$ref": "#/$defs/score" },
+        "correctness": { "$ref": "#/$defs/score" },
+        "usability": { "$ref": "#/$defs/score" },
+        "domainQuality": { "$ref": "#/$defs/score" },
+        "visualQuality": { "$ref": "#/$defs/score" },
+        "evidenceIntegrity": { "$ref": "#/$defs/score" },
+        "editability": { "$ref": "#/$defs/score" },
+        "exportQuality": { "$ref": "#/$defs/score" }
+      },
+      "additionalProperties": false
+    },
+    "failure": {
+      "type": "object",
+      "required": ["failureId", "failureClass", "severity", "model", "taskId", "harnessVersion", "behavior", "expectedBehavior", "probableCause", "evidenceRefs"],
+      "properties": {
+        "failureId": { "$ref": "#/$defs/nonEmpty" },
+        "failureClass": {
+          "enum": [
+            "BRIEF_MISS", "PRODUCT_TOPOLOGY_MISS", "GENERIC_DASHBOARD_FALLBACK", "GENERIC_FALLBACK", "OVERPLANNING", "UNDERPLANNING", "WRONG_PRIMITIVE",
+            "LAYOUT_REPETITION", "TEXT_DENSITY", "TOOL_AVOIDANCE", "TOOL_MISUSE", "NO_RESULT_INSPECTION",
+            "FALSE_COMPLETION", "WEAK_REPAIR", "CONTEXT_DRIFT", "ORCHESTRATION_FAILURE", "UNSUPPORTED_CLAIM",
+            "COST_INEFFICIENCY", "REPOSITORY_LEGIBILITY_FAILURE", "REFERENCE_DISCOVERY_FAILURE", "UI_OPERABILITY_FAILURE", "MOBILE_TOPOLOGY_FAILURE", "BACKSTAGE_COMPLEXITY_LEAK",
+            "AUTHORITY_VIOLATION", "STALE_WRITE_FAILURE", "EXPORT_FAILURE", "RECOVERY_FAILURE"
+          ]
+        },
+        "severity": { "enum": ["P0", "P1", "P2", "P3"] },
+        "model": { "$ref": "#/$defs/nonEmpty" },
+        "taskId": { "$ref": "#/$defs/nonEmpty" },
+        "harnessVersion": { "$ref": "#/$defs/nonEmpty" },
+        "behavior": { "$ref": "#/$defs/nonEmpty" },
+        "expectedBehavior": { "$ref": "#/$defs/nonEmpty" },
+        "probableCause": { "enum": ["model", "prompt", "skill", "tool", "context", "reference", "renderer", "validator", "runtime", "product contract", "unknown"] },
+        "evidenceRefs": { "$ref": "#/$defs/stringList" },
+        "repair": {
+          "type": "object",
+          "properties": {
+            "candidateSkillId": { "$ref": "#/$defs/nonEmpty" },
+            "candidateHarnessId": { "$ref": "#/$defs/nonEmpty" },
+            "result": { "enum": ["improved", "unchanged", "regressed"] }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

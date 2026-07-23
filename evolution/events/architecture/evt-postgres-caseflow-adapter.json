@@ -1,0 +1,36 @@
+{
+  "schemaVersion": "nodekit.evolution-event/v1",
+  "id": "evt:postgres-caseflow-adapter",
+  "projectId": "nodekit",
+  "repository": "HomenShum/node-platform",
+  "source": {
+    "commitSha": "5cc61578b3c1bd5b5c8195b83347b91f8b83242b",
+    "occurredAt": "2026-07-22T01:41:03-07:00"
+  },
+  "track": "architecture",
+  "category": "runtime",
+  "challenge": "A checked-in SQL schema was being tracked as portability progress even though no executable NodeKit runtime implemented or proved the full Caseflow contract.",
+  "observedFailure": "The PostgreSQL layer lacked cases, runs, approvals, exceptions, receipts, owner-scoped runtime methods, public package exports, TypeScript declarations, and live provider conformance.",
+  "resolution": "NodeKit now ships a driver-neutral PostgreSQL Caseflow adapter, complete transactional schema, owner-scoped operations, stable public and typed exports, a disposable-provider conformance runner, and a complete Supabase RLS projection over the portable tables.",
+  "assumptionIds": [
+    "asm:postgres-ddl-is-adapter"
+  ],
+  "invariantIds": [
+    "inv:postgres-caseflow-conformance"
+  ],
+  "evidenceIds": [
+    "evd:postgres-caseflow-conformance"
+  ],
+  "predecessorIds": [
+    "evt:caseflow-idempotent-retries"
+  ],
+  "knownLimitations": [
+    "The Supabase SQL projection has not yet passed authenticated live Auth, Storage, Realtime, Queue, and Cron conformance.",
+    "PostgreSQL subscriptions use polling and durable jobs remain an external runtime capability by design."
+  ],
+  "interpretation": {
+    "status": "human-reviewed",
+    "reviewedBy": "project-owner",
+    "reviewedAt": "2026-07-22T01:41:03-07:00"
+  }
+}

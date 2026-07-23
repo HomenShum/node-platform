@@ -1,0 +1,17 @@
+{
+  "schemaVersion": "nodekit.evolution-event/v1",
+  "id": "evt:domain-blank-factory",
+  "projectId": "nodekit",
+  "repository": "HomenShum/node-platform",
+  "source": { "commitSha": "8d4f7e6e8235751d07c456208f841b15edf8de39", "occurredAt": "2026-07-21T15:53:03-07:00" },
+  "track": "product",
+  "category": "workflow",
+  "challenge": "The primary initializer silently specialized the product.",
+  "observedFailure": "A blank creation command selected a reference workflow without user authority.",
+  "resolution": "NodeKit now exposes one domain-blank factory and keeps narrow applications as references.",
+  "assumptionIds": ["asm:domain-preset-harmless"],
+  "invariantIds": ["inv:domain-blank-create"],
+  "evidenceIds": ["evd:domain-blank-factory"],
+  "knownLimitations": ["Reference applications still require explicit user selection after creation."],
+  "interpretation": { "status": "human-reviewed", "reviewedBy": "founder", "reviewedAt": "2026-07-21T15:53:03-07:00" }
+}

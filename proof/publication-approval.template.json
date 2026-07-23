@@ -1,0 +1,40 @@
+{
+  "schemaVersion": "nodekit.publication-approval/v1",
+  "candidateCommit": "0000000000000000000000000000000000000000",
+  "nodekitSourceHash": "0000000000000000000000000000000000000000000000000000000000000000",
+  "nodekitIdentity": "0000000000000000000000000000000000000000/0000000000000000000000000000000000000000000000000000000000000000",
+  "releaseCandidate": {
+    "nodekitCommit": "0000000000000000000000000000000000000000",
+    "nodekitSourceHash": "0000000000000000000000000000000000000000000000000000000000000000",
+    "nodekitTarballSha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "packageName": "@homenshum/nodekit",
+    "packageVersion": "0.0.0-unverified"
+  },
+  "approved": true,
+  "approvedBy": "REPLACE_WITH_APPROVER_ID",
+  "approvedAt": "1970-01-01T00:00:00.000Z",
+  "scopes": ["npm-publish", "convex-directory-submit"],
+  "attestationPayload": {
+    "schemaVersion": "nodekit.publication-approval-attestation-payload/v1",
+    "type": "publicationApproval",
+    "candidateCommit": "0000000000000000000000000000000000000000",
+    "nodekitSourceHash": "0000000000000000000000000000000000000000000000000000000000000000",
+    "nodekitTarballSha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "decision": "approved",
+    "scopes": ["convex-directory-submit", "npm-publish"],
+    "submissionManifest": {
+      "path": "proof/submission-candidate.json",
+      "sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+    }
+  },
+  "attestation": {
+    "schemaVersion": "nodekit.detached-attestation/v1",
+    "algorithm": "Ed25519",
+    "keyId": "REPLACE_WITH_TRUSTED_PUBLICATION_KEY_ID",
+    "signedAt": "1970-01-01T00:00:00.000Z",
+    "payloadType": "publicationApproval",
+    "payloadSha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "signatureEncoding": "base64url",
+    "signature": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+  }
+}

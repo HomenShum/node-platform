@@ -1,0 +1,170 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://nodekit.dev/schemas/nodekit.protected-agent-evaluation.v1.schema.json",
+  "title": "NodeKit legacy protected external task evaluation",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion", "runId", "taskId", "taskBriefSha256", "taskSetSha256", "evaluatorSha256",
+    "nodekitCommit", "nodekitSourceHash", "nodekitTarballSha256", "postAgentTreeHash", "candidateArchiveSha256",
+    "applicationHash", "configHash", "browserManifestSha256", "screenshotEvidenceRootSha256",
+    "evaluatorScreenshotSha256", "visualReviewInventorySha256", "visualReviewInventorySelfHash", "isolation", "isolationSha256",
+    "producer", "checks", "taskRelevance", "sourceFilesInspected", "generatedAt", "passed", "evaluationSha256"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "nodekit.protected-agent-evaluation/v1" },
+    "runId": { "type": "string", "minLength": 1 },
+    "taskId": { "enum": ["research-map", "volunteer-onboarding", "launch-presentation"] },
+    "taskBriefSha256": { "$ref": "#/$defs/sha256" }, "taskSetSha256": { "$ref": "#/$defs/sha256" },
+    "evaluatorSha256": { "$ref": "#/$defs/sha256" }, "nodekitCommit": { "$ref": "#/$defs/commit" },
+    "nodekitSourceHash": { "$ref": "#/$defs/sha256" }, "nodekitTarballSha256": { "$ref": "#/$defs/sha256" },
+    "postAgentTreeHash": { "$ref": "#/$defs/commit" }, "candidateArchiveSha256": { "$ref": "#/$defs/sha256" },
+    "applicationHash": { "$ref": "#/$defs/sha256" }, "configHash": { "$ref": "#/$defs/sha256" },
+    "browserManifestSha256": { "$ref": "#/$defs/sha256" }, "screenshotEvidenceRootSha256": { "$ref": "#/$defs/sha256" },
+    "evaluatorScreenshotSha256": { "$ref": "#/$defs/sha256" }, "visualReviewInventorySha256": { "$ref": "#/$defs/sha256" },
+    "visualReviewInventorySelfHash": { "$ref": "#/$defs/sha256" }, "isolation": { "$ref": "#/$defs/isolation" },
+    "isolationSha256": { "$ref": "#/$defs/sha256" }, "producer": { "$ref": "#/$defs/producer" },
+    "checks": {
+      "type": "object", "additionalProperties": false,
+      "required": ["applicationIdentityBound", "browserEvidenceBound", "candidateArchiveBound", "candidateTreeBound",
+        "evaluatorBytesBound", "guidedInteractionPassed", "independentScreenshotCaptured", "isolationBound", "renderedTaskRelevant",
+        "sourceTaskRelevant", "taskBytesBound", "taskSetBound", "visualReviewPassed"],
+      "properties": {
+        "applicationIdentityBound": { "const": true }, "browserEvidenceBound": { "const": true },
+        "candidateArchiveBound": { "const": true }, "candidateTreeBound": { "const": true },
+        "evaluatorBytesBound": { "const": true }, "guidedInteractionPassed": { "const": true },
+        "independentScreenshotCaptured": { "const": true }, "isolationBound": { "const": true },
+        "renderedTaskRelevant": { "const": true }, "sourceTaskRelevant": { "const": true },
+        "taskBytesBound": { "const": true }, "taskSetBound": { "const": true }, "visualReviewPassed": { "const": true }
+      }
+    },
+    "taskRelevance": { "$ref": "#/$defs/taskRelevance" },
+    "sourceFilesInspected": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } },
+    "generatedAt": { "type": "string", "format": "date-time" }, "passed": { "const": true },
+    "evaluationSha256": { "$ref": "#/$defs/sha256" }
+  },
+  "$defs": {
+    "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "commit": { "type": "string", "pattern": "^[a-f0-9]{40}$" },
+    "producer": {
+      "type": "object", "additionalProperties": false,
+      "required": ["authority", "candidateEvidenceAccess", "candidateHostAccess", "candidateWriteAccess", "executedAfterCandidateArchive", "externalNetworkEgress", "isolationMode"],
+      "properties": {
+        "authority": { "const": "campaign-protected-evaluator" }, "candidateEvidenceAccess": { "const": false },
+        "candidateHostAccess": { "const": false }, "candidateWriteAccess": { "const": false },
+        "executedAfterCandidateArchive": { "const": true }, "externalNetworkEgress": { "const": false },
+        "isolationMode": { "const": "docker-internal-two-container" }
+      }
+    },
+    "mount": {
+      "type": "object", "additionalProperties": false, "required": ["destination", "readOnly", "type"],
+      "properties": { "destination": { "type": "string", "pattern": "^/" }, "readOnly": { "type": "boolean" }, "type": { "const": "bind" } }
+    },
+    "candidateContainer": {
+      "type": "object", "additionalProperties": false, "required": ["containerId", "mounts", "readOnlyRootFilesystem"],
+      "properties": {
+        "containerId": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+        "mounts": { "type": "array", "minItems": 1, "maxItems": 1, "items": { "$ref": "#/$defs/mount" } },
+        "readOnlyRootFilesystem": { "const": true }
+      }
+    },
+    "browserContainer": {
+      "type": "object", "additionalProperties": false, "required": ["containerId", "mounts", "readOnlyRootFilesystem"],
+      "properties": {
+        "containerId": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+        "mounts": { "type": "array", "minItems": 6, "maxItems": 6, "items": { "$ref": "#/$defs/mount" } },
+        "readOnlyRootFilesystem": { "const": true }
+      }
+    },
+    "isolation": {
+      "type": "object", "additionalProperties": false,
+      "required": ["schemaVersion", "mode", "browserLaneSha256", "browserDependencies", "docker", "image", "network", "candidateContainer", "browserContainer", "checks", "isolationSha256"],
+      "properties": {
+        "schemaVersion": { "const": "nodekit.protected-evaluator-isolation/v1" }, "mode": { "const": "docker-internal-two-container" },
+        "browserLaneSha256": { "$ref": "#/$defs/sha256" }, "isolationSha256": { "$ref": "#/$defs/sha256" },
+        "browserDependencies": {
+          "type": "array", "minItems": 4, "maxItems": 4,
+          "prefixItems": [
+            { "$ref": "#/$defs/playwrightDependency" },
+            { "$ref": "#/$defs/playwrightCoreDependency" },
+            { "$ref": "#/$defs/axePlaywrightDependency" },
+            { "$ref": "#/$defs/axeCoreDependency" }
+          ],
+          "items": false
+        },
+        "docker": { "type": "object", "additionalProperties": false, "required": ["apiVersion", "architecture", "operatingSystem", "serverVersion"],
+          "properties": { "apiVersion": { "type": "string", "minLength": 1 }, "architecture": { "type": "string", "minLength": 1 },
+            "operatingSystem": { "type": "string", "minLength": 1 }, "serverVersion": { "type": "string", "minLength": 1 } } },
+        "image": { "type": "object", "additionalProperties": false, "required": ["architecture", "id", "operatingSystem", "reference", "repoDigests"],
+          "properties": { "architecture": { "type": "string", "minLength": 1 }, "id": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+            "operatingSystem": { "type": "string", "minLength": 1 }, "reference": { "type": "string", "minLength": 1 },
+            "repoDigests": { "type": "array", "uniqueItems": true, "items": { "type": "string", "minLength": 1 } } } },
+        "network": { "type": "object", "additionalProperties": false, "required": ["driver", "internal", "networkId"],
+          "properties": { "driver": { "const": "bridge" }, "internal": { "const": true }, "networkId": { "type": "string", "pattern": "^[a-f0-9]{64}$" } } },
+        "candidateContainer": { "$ref": "#/$defs/candidateContainer" }, "browserContainer": { "$ref": "#/$defs/browserContainer" },
+        "checks": { "type": "object", "additionalProperties": false,
+          "required": ["browserCannotReadCandidate", "browserEgressBlocked", "browserReadOnlyRootFilesystem", "candidateCertificationOracleAbsent", "candidateEgressBlocked", "candidateHasNoEvidenceMount", "candidateReadOnlyRootFilesystem", "candidateSourceReadOnly", "exactImageBound", "hostNamespacesNotShared", "internalNetworkOnly", "noPublishedPorts", "separateEvaluatorContainer"],
+          "properties": {
+            "browserCannotReadCandidate": { "const": true }, "browserEgressBlocked": { "const": true }, "browserReadOnlyRootFilesystem": { "const": true },
+            "candidateCertificationOracleAbsent": { "const": true }, "candidateEgressBlocked": { "const": true }, "candidateHasNoEvidenceMount": { "const": true },
+            "candidateReadOnlyRootFilesystem": { "const": true }, "candidateSourceReadOnly": { "const": true }, "exactImageBound": { "const": true },
+            "hostNamespacesNotShared": { "const": true }, "internalNetworkOnly": { "const": true }, "noPublishedPorts": { "const": true },
+            "separateEvaluatorContainer": { "const": true }
+          }
+        }
+      }
+    },
+    "dependencyBase": {
+      "type": "object", "additionalProperties": false,
+      "required": ["destination", "fileCount", "name", "treeSha256", "version"],
+      "properties": {
+        "destination": { "type": "string", "pattern": "^/runner/node_modules/" },
+        "fileCount": { "type": "integer", "minimum": 1 },
+        "name": { "type": "string", "minLength": 1 },
+        "treeSha256": { "$ref": "#/$defs/sha256" },
+        "version": { "type": "string", "minLength": 1 }
+      }
+    },
+    "playwrightDependency": {
+      "allOf": [
+        { "$ref": "#/$defs/dependencyBase" },
+        { "properties": { "destination": { "const": "/runner/node_modules/playwright" }, "name": { "const": "playwright" }, "version": { "const": "1.61.1" } } }
+      ]
+    },
+    "playwrightCoreDependency": {
+      "allOf": [
+        { "$ref": "#/$defs/dependencyBase" },
+        { "properties": { "destination": { "const": "/runner/node_modules/playwright-core" }, "name": { "const": "playwright-core" }, "version": { "const": "1.61.1" } } }
+      ]
+    },
+    "axePlaywrightDependency": {
+      "allOf": [
+        { "$ref": "#/$defs/dependencyBase" },
+        { "properties": { "destination": { "const": "/runner/node_modules/@axe-core/playwright" }, "name": { "const": "@axe-core/playwright" }, "version": { "const": "4.12.1" } } }
+      ]
+    },
+    "axeCoreDependency": {
+      "allOf": [
+        { "$ref": "#/$defs/dependencyBase" },
+        { "properties": { "destination": { "const": "/runner/node_modules/axe-core" }, "name": { "const": "axe-core" }, "version": { "const": "4.12.1" } } }
+      ]
+    },
+    "group": {
+      "type": "object", "additionalProperties": false, "required": ["alternatives", "group", "matches", "passed"],
+      "properties": {
+        "alternatives": { "type": "array", "minItems": 1, "items": { "type": "string" } },
+        "group": { "type": "integer", "minimum": 1 },
+        "matches": { "type": "array", "minItems": 1, "items": { "type": "string" } }, "passed": { "const": true }
+      }
+    },
+    "groups": { "type": "array", "minItems": 4, "maxItems": 4, "items": { "$ref": "#/$defs/group" } },
+    "taskRelevance": {
+      "type": "object", "additionalProperties": false,
+      "required": ["renderedGroups", "renderedTextSha256", "sourceGroups", "sourceTextSha256"],
+      "properties": {
+        "renderedGroups": { "$ref": "#/$defs/groups" }, "sourceGroups": { "$ref": "#/$defs/groups" },
+        "renderedTextSha256": { "$ref": "#/$defs/sha256" }, "sourceTextSha256": { "$ref": "#/$defs/sha256" }
+      }
+    }
+  }
+}

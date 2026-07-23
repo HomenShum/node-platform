@@ -1,0 +1,9 @@
+{
+  "schemaVersion": "nodekit.evolution-adoption/v1",
+  "id": "adp:nodekit-browser-certification",
+  "invariantId": "inv:rendered-browser-evidence",
+  "consumer": { "repository": "HomenShum/node-platform", "application": "NodeKit factory", "package": "@homenshum/nodekit" },
+  "adoptedAtCommit": "e398398d7f1dd4ff0b65409d2c8da971e83bc488",
+  "evidenceIds": ["evd:rendered-browser-certification"],
+  "status": "verified"
+}

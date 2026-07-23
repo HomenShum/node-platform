@@ -5,6 +5,9 @@ on:
   push:
     branches: [main]
 
+permissions:
+  contents: read
+
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -15,6 +18,8 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      - run: npm run typecheck:public
+      - run: npm run typecheck:component
       - run: npm test
       - run: npm run audit:prod
       - run: npm run registry:check
@@ -28,3 +33,26 @@ jobs:
           npm install --ignore-scripts --prefix "$install_dir" "$package_dir"/*.tgz
           "$install_dir/node_modules/.bin/nodekit" registry check
           "$install_dir/node_modules/.bin/nodekit" doctor --repo-root "$GITHUB_WORKSPACE"
+
+  exact-candidate:
+    name: Exact candidate factory gate
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Run the empty-directory exact-candidate journey
+        run: npm run acceptance:factory
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: exact-candidate-${{ github.sha }}
+          if-no-files-found: error
+          path: |
+            proof/factory-acceptance.json
+            proof/ease/latest/**

@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/HomenShum/node-platform/blob/main/schemas/nodekit.canary-receipt.v1.schema.json",
+  "title": "NodeKit fresh-agent canary receipt",
+  "type": "object",
+  "required": ["schemaVersion", "canaryId", "candidateId", "freshContext", "humanReprompts", "substantiveChanges", "protectedEvaluatorUnchanged", "checksPassed", "evidenceRefs", "passed"],
+  "properties": {
+    "schemaVersion": { "const": "nodekit.canary-receipt/v1" },
+    "canaryId": { "type": "string", "minLength": 1 },
+    "candidateId": { "type": "string", "minLength": 1 },
+    "freshContext": { "const": true },
+    "humanReprompts": { "const": 0 },
+    "substantiveChanges": { "const": true },
+    "protectedEvaluatorUnchanged": { "const": true },
+    "checksPassed": { "const": true },
+    "evidenceRefs": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 }, "uniqueItems": true },
+    "passed": { "const": true }
+  },
+  "additionalProperties": false
+}

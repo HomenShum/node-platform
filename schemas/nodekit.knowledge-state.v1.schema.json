@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/HomenShum/node-platform/blob/main/schemas/nodekit.knowledge-state.v1.schema.json",
+  "title": "NodeKit knowledge environment state",
+  "type": "object",
+  "required": ["schemaVersion", "caseId", "runId", "goal", "graphId", "graphVersion", "selectedSubgraphIds", "actionHistory", "currentArtifactIds", "currentTaskIds", "unresolvedQuestionIds", "contradictionIds", "permissions", "budget"],
+  "properties": {
+    "schemaVersion": { "const": "nodekit.knowledge-state/v1" },
+    "caseId": { "type": "string" },
+    "runId": { "type": "string" },
+    "goal": { "type": "string" },
+    "graphId": { "$ref": "#/$defs/nonEmpty" },
+    "graphVersion": { "type": "integer", "minimum": 0 },
+    "selectedSubgraphIds": { "$ref": "#/$defs/stringList" },
+    "actionHistory": { "type": "array", "items": { "type": "object" } },
+    "currentArtifactIds": { "$ref": "#/$defs/stringList" },
+    "currentTaskIds": { "$ref": "#/$defs/stringList" },
+    "unresolvedQuestionIds": { "$ref": "#/$defs/stringList" },
+    "contradictionIds": { "$ref": "#/$defs/stringList" },
+    "permissions": {
+      "type": "object",
+      "required": ["retrieve", "propose", "apply"],
+      "properties": {
+        "retrieve": { "type": "boolean" },
+        "propose": { "type": "boolean" },
+        "apply": { "type": "boolean" }
+      },
+      "additionalProperties": false
+    },
+    "budget": {
+      "type": "object",
+      "required": ["maximumGraphEdits", "maximumSearches", "maximumToolCalls", "maximumTokens"],
+      "properties": {
+        "maximumGraphEdits": { "type": "integer", "minimum": 0 },
+        "maximumSearches": { "type": "integer", "minimum": 0 },
+        "maximumToolCalls": { "type": "integer", "minimum": 0 },
+        "maximumTokens": { "type": "integer", "minimum": 0 }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$defs": {
+    "nonEmpty": { "type": "string", "minLength": 1 },
+    "stringList": { "type": "array", "items": { "type": "string", "minLength": 1 }, "uniqueItems": true }
+  },
+  "additionalProperties": false
+}

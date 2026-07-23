@@ -1,0 +1,140 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://nodekit.dev/schemas/nodekit.postgres-conformance.v2.schema.json",
+  "title": "NodeKit exact-package live PostgreSQL conformance receipt",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion", "adapter", "candidateCommit", "nodekitCommit", "nodekitSourceHash", "nodekitIdentity",
+    "releaseCandidate", "environment", "testedAt", "ownerScope", "migration", "knowledgeMigration", "packageInstallation",
+    "postgres", "capabilities", "conformance", "assertions", "passed", "errors", "publicationPerformed", "deployPerformed"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "nodekit.postgres-conformance/v2" },
+    "adapter": { "const": "@homenshum/nodekit/adapters/postgres" },
+    "candidateCommit": { "$ref": "#/$defs/commit" },
+    "nodekitCommit": { "$ref": "#/$defs/commit" },
+    "nodekitSourceHash": { "$ref": "#/$defs/sha256" },
+    "nodekitIdentity": { "type": "string", "pattern": "^[a-f0-9]{40}/[a-f0-9]{64}$" },
+    "releaseCandidate": { "$ref": "#/$defs/releaseCandidate" },
+    "environment": { "const": "live-postgresql" },
+    "testedAt": { "$ref": "#/$defs/timestamp" },
+    "ownerScope": { "const": "isolated-test-identities" },
+    "migration": {
+      "type": "object", "additionalProperties": false, "required": ["packagePath", "sha256"],
+      "properties": {
+        "packagePath": { "const": "adapters/postgres/001_caseflow.sql" },
+        "sha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "knowledgeMigration": {
+      "type": "object", "additionalProperties": false, "required": ["packagePath", "sha256"],
+      "properties": {
+        "packagePath": { "const": "adapters/postgres/002_knowledge_runtime.sql" },
+        "sha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "packageInstallation": {
+      "type": "object", "additionalProperties": false,
+      "required": ["installTool", "isolated", "lifecycleScriptsDisabled", "packageJsonSha256", "resolvedAdapterPath", "resolvedKnowledgeAdapterPath", "immutableTarballCopySha256", "sourceCheckoutImported"],
+      "properties": {
+        "installTool": { "const": "npm" },
+        "isolated": { "const": true },
+        "lifecycleScriptsDisabled": { "const": true },
+        "packageJsonSha256": { "$ref": "#/$defs/sha256" },
+        "resolvedAdapterPath": { "type": "string", "pattern": "^node_modules/@homenshum/nodekit/src/adapters/postgres\\.mjs$" },
+        "resolvedKnowledgeAdapterPath": { "type": "string", "pattern": "^node_modules/@homenshum/nodekit/src/adapters/postgres-knowledge\\.mjs$" },
+        "immutableTarballCopySha256": { "$ref": "#/$defs/sha256" },
+        "sourceCheckoutImported": { "const": false }
+      }
+    },
+    "postgres": {
+      "type": "object", "additionalProperties": false, "required": ["serverVersion", "serverVersionNum"],
+      "properties": {
+        "serverVersion": { "type": "string", "pattern": "^[0-9]+(?:\\.[0-9]+){0,3}(?:[-+._A-Za-z0-9 ]*)?$", "maxLength": 128 },
+        "serverVersionNum": { "type": "integer", "minimum": 120000 }
+      }
+    },
+    "capabilities": { "$ref": "#/$defs/capabilities" },
+    "conformance": { "$ref": "#/$defs/conformance" },
+    "assertions": { "$ref": "#/$defs/assertions" },
+    "passed": { "const": true },
+    "errors": { "type": "array", "maxItems": 0 },
+    "publicationPerformed": { "const": false },
+    "deployPerformed": { "const": false }
+  },
+  "$defs": {
+    "commit": { "type": "string", "pattern": "^[a-f0-9]{40}$" },
+    "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "timestamp": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{3}Z$" },
+    "releaseCandidate": {
+      "type": "object", "additionalProperties": false,
+      "required": ["nodekitCommit", "nodekitSourceHash", "nodekitTarballSha256", "packageName", "packageVersion"],
+      "properties": {
+        "nodekitCommit": { "$ref": "#/$defs/commit" },
+        "nodekitSourceHash": { "$ref": "#/$defs/sha256" },
+        "nodekitTarballSha256": { "$ref": "#/$defs/sha256" },
+        "packageName": { "const": "@homenshum/nodekit" },
+        "packageVersion": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+(?:-[0-9A-Za-z.-]+)?$" }
+      }
+    },
+    "capabilities": {
+      "type": "object", "additionalProperties": false,
+      "required": ["schemaVersion", "provider", "durableState", "transactions", "optimisticConcurrency", "subscriptions", "durableJobs", "fileStorage", "presence", "scheduledJobs", "localDevelopment"],
+      "properties": {
+        "schemaVersion": { "const": "nodekit.runtime-capabilities/v1" },
+        "provider": { "const": "postgres" },
+        "durableState": { "const": true }, "transactions": { "const": true }, "optimisticConcurrency": { "const": true },
+        "subscriptions": { "const": "polling" }, "durableJobs": { "const": "external" },
+        "fileStorage": { "const": false }, "presence": { "const": false }, "scheduledJobs": { "const": false },
+        "localDevelopment": { "const": true }
+      }
+    },
+    "conformanceAssertions": {
+      "type": "object", "additionalProperties": false,
+      "required": ["activeRunStartIsIdempotent", "canonicalVersionAdvancedOnce", "contentAddressedReceipt", "exceptionStatePreserved", "nextActionOwnerExplicit", "oneAuthoritativeCase", "repeatedCompletionIsIdempotent", "repeatedDecisionIsIdempotent", "staleProposalFailedClosed"],
+      "properties": {
+        "activeRunStartIsIdempotent": { "const": true }, "canonicalVersionAdvancedOnce": { "const": true },
+        "contentAddressedReceipt": { "const": true }, "exceptionStatePreserved": { "const": true },
+        "nextActionOwnerExplicit": { "const": true }, "oneAuthoritativeCase": { "const": true },
+        "repeatedCompletionIsIdempotent": { "const": true }, "repeatedDecisionIsIdempotent": { "const": true },
+        "staleProposalFailedClosed": { "const": true }
+      }
+    },
+    "capabilityNegotiation": {
+      "type": "object", "additionalProperties": false,
+      "required": ["schemaVersion", "provider", "missing", "passed"],
+      "properties": {
+        "schemaVersion": { "const": "nodekit.runtime-capability-negotiation/v1" }, "provider": { "const": "postgres" },
+        "missing": { "type": "array", "maxItems": 0 }, "passed": { "const": true }
+      }
+    },
+    "conformance": {
+      "type": "object", "additionalProperties": false,
+      "required": ["schemaVersion", "capabilities", "capabilityNegotiation", "assertions", "passed"],
+      "properties": {
+        "schemaVersion": { "const": "nodekit.adapter-conformance/v1" },
+        "capabilities": { "$ref": "#/$defs/capabilities" },
+        "capabilityNegotiation": { "$ref": "#/$defs/capabilityNegotiation" },
+        "assertions": { "$ref": "#/$defs/conformanceAssertions" },
+        "passed": { "const": true }
+      }
+    },
+    "assertions": {
+      "type": "object", "additionalProperties": false,
+      "required": ["artifactCompletionRaceAtomic", "crossOwnerDenied", "ownerIsolation", "receiptIntegrity", "reloadPreservedState", "sameBaseRaceFailedClosed", "sharedConformancePassed", "knowledgeFirstCreateRaceAtomic", "knowledgeOwnerIsolation", "knowledgePackageExportsResolved", "knowledgeProjectionApplied", "knowledgeProjectionReloaded", "knowledgeRetrievalReceiptDurable"],
+      "properties": {
+        "artifactCompletionRaceAtomic": { "const": true }, "crossOwnerDenied": { "const": true },
+        "ownerIsolation": { "const": true }, "receiptIntegrity": { "const": true },
+        "reloadPreservedState": { "const": true }, "sameBaseRaceFailedClosed": { "const": true },
+        "sharedConformancePassed": { "const": true },
+        "knowledgeFirstCreateRaceAtomic": { "const": true },
+        "knowledgeOwnerIsolation": { "const": true },
+        "knowledgePackageExportsResolved": { "const": true },
+        "knowledgeProjectionApplied": { "const": true },
+        "knowledgeProjectionReloaded": { "const": true },
+        "knowledgeRetrievalReceiptDurable": { "const": true }
+      }
+    }
+  }
+}

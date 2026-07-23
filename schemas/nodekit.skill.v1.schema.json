@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/HomenShum/node-platform/blob/main/schemas/nodekit.skill.v1.schema.json",
+  "title": "NodeKit executable skill",
+  "type": "object",
+  "required": ["schemaVersion", "id", "version", "kind", "triggers", "inputs", "requiredTools", "procedure", "constraints", "completionChecks", "failureBehavior", "positiveExamples", "negativeExamples", "expectedToolTraces", "testFixtures", "evidenceRefs"],
+  "properties": {
+    "schemaVersion": { "const": "nodekit.skill/v1" },
+    "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9._-]*$" },
+    "version": { "type": "integer", "minimum": 1 },
+    "kind": { "enum": ["role", "domain", "model-adapter", "guardrail", "recovery", "domain-role"] },
+    "triggers": {
+      "type": "object",
+      "properties": {
+        "taskFamilies": { "$ref": "#/$defs/stringList" },
+        "failureClasses": { "$ref": "#/$defs/stringList" },
+        "models": { "$ref": "#/$defs/stringList" }
+      },
+      "minProperties": 1,
+      "additionalProperties": false
+    },
+    "inputs": { "$ref": "#/$defs/stringList" },
+    "requiredTools": { "$ref": "#/$defs/stringList" },
+    "procedure": { "$ref": "#/$defs/nonEmptyStringList" },
+    "constraints": { "$ref": "#/$defs/nonEmptyStringList" },
+    "completionChecks": { "$ref": "#/$defs/nonEmptyStringList" },
+    "failureBehavior": { "$ref": "#/$defs/nonEmptyStringList" },
+    "positiveExamples": { "$ref": "#/$defs/nonEmptyStringList" },
+    "negativeExamples": { "$ref": "#/$defs/nonEmptyStringList" },
+    "expectedToolTraces": { "$ref": "#/$defs/stringList" },
+    "testFixtures": { "$ref": "#/$defs/nonEmptyStringList" },
+    "evidenceRefs": { "$ref": "#/$defs/nonEmptyStringList" }
+  },
+  "$defs": {
+    "nonEmpty": { "type": "string", "minLength": 1 },
+    "stringList": { "type": "array", "items": { "$ref": "#/$defs/nonEmpty" }, "uniqueItems": true },
+    "nonEmptyStringList": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/nonEmpty" }, "uniqueItems": true }
+  },
+  "additionalProperties": false
+}

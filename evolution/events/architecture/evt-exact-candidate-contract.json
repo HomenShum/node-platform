@@ -1,0 +1,38 @@
+{
+  "schemaVersion": "nodekit.evolution-event/v1",
+  "id": "evt:exact-candidate-contract",
+  "projectId": "nodekit",
+  "repository": "HomenShum/node-platform",
+  "source": {
+    "commitSha": "1df155370258239ddd315c1f8842ecf0aa55b7e0",
+    "occurredAt": "2026-07-22T01:00:51-07:00"
+  },
+  "track": "architecture",
+  "category": "release",
+  "challenge": "Historical receipts and internal deep imports could be mistaken for current package and submission guarantees.",
+  "observedFailure": "Existing proof aliases mixed source identities, omitted decisive revision fields, and exposed Caseflow through an unstable internal path.",
+  "resolution": "NodeKit now exposes a supported Caseflow package entry point and requires eight distinct, contract-valid decisive verdicts bound to one clean candidate revision before submission.",
+  "assumptionIds": [
+    "asm:evidence-filename-sufficient"
+  ],
+  "invariantIds": [
+    "inv:exact-candidate-evidence",
+    "inv:stable-caseflow-package-entrypoint"
+  ],
+  "evidenceIds": [
+    "evd:exact-candidate-gate",
+    "evd:caseflow-public-api"
+  ],
+  "predecessorIds": [
+    "evt:rendered-browser-certification"
+  ],
+  "knownLimitations": [
+    "Current-revision timing, fresh-agent, human, consumer, preview, package, and independent ProofLoop evidence still must be collected.",
+    "The public Caseflow entry point is portable, but no authenticated Convex consumer has yet earned submission-grade adoption status."
+  ],
+  "interpretation": {
+    "status": "human-reviewed",
+    "reviewedBy": "project-owner",
+    "reviewedAt": "2026-07-22T01:00:51-07:00"
+  }
+}

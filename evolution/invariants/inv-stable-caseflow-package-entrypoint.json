@@ -1,0 +1,27 @@
+{
+  "schemaVersion": "nodekit.invariant-claim/v1",
+  "id": "inv:stable-caseflow-package-entrypoint",
+  "statement": "Consumers use the supported NodeKit Caseflow export rather than coupling to an internal source-file path.",
+  "scope": {
+    "applications": [
+      "NodeKit factory",
+      "NodeRoom",
+      "NodeSlide",
+      "NodeVideo"
+    ],
+    "packages": [
+      "@homenshum/nodekit"
+    ],
+    "surfaces": [
+      "Caseflow adapter conformance"
+    ]
+  },
+  "enforcement": "test",
+  "verifierRefs": [
+    "package.json",
+    "src/caseflow.mjs",
+    "test/public-api.test.mjs"
+  ],
+  "introducedByEventId": "evt:exact-candidate-contract",
+  "status": "verified"
+}

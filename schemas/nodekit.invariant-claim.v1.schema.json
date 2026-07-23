@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/HomenShum/node-platform/blob/main/schemas/nodekit.invariant-claim.v1.schema.json",
+  "type": "object",
+  "required": ["schemaVersion", "id", "statement", "scope", "enforcement", "verifierRefs", "introducedByEventId", "status"],
+  "properties": {
+    "schemaVersion": { "const": "nodekit.invariant-claim/v1" },
+    "id": { "$ref": "#/$defs/id" },
+    "statement": { "$ref": "#/$defs/text" },
+    "scope": { "$ref": "#/$defs/scope" },
+    "enforcement": { "enum": ["type-system", "schema", "test", "runtime-gate", "ci", "human-policy"] },
+    "verifierRefs": { "$ref": "#/$defs/strings" },
+    "introducedByEventId": { "$ref": "#/$defs/id" },
+    "supersededByEventId": { "$ref": "#/$defs/id" },
+    "status": { "enum": ["proposed", "partially-verified", "verified", "invalidated", "superseded"] }
+  },
+  "$defs": {
+    "id": { "type": "string", "pattern": "^[a-z][a-z0-9._:-]+$" },
+    "text": { "type": "string", "minLength": 1 },
+    "strings": { "type": "array", "items": { "$ref": "#/$defs/text" }, "uniqueItems": true },
+    "scope": { "type": "object", "properties": { "applications": { "$ref": "#/$defs/strings" }, "packages": { "$ref": "#/$defs/strings" }, "surfaces": { "$ref": "#/$defs/strings" } }, "minProperties": 1, "additionalProperties": false }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": "nodekit.assumption/v1",
+  "id": "asm:evidence-filename-sufficient",
+  "statement": "A familiar proof filename and matching file hash are enough to certify a later NodeKit revision.",
+  "scope": {
+    "applications": [
+      "NodeKit factory"
+    ],
+    "taskFamilies": [
+      "release-certification"
+    ]
+  },
+  "status": "disproven",
+  "introducedByEventId": "evt:exact-candidate-contract",
+  "invalidatedByEventId": "evt:exact-candidate-contract",
+  "supportingEvidenceIds": [],
+  "contradictingEvidenceIds": [
+    "evd:exact-candidate-gate"
+  ]
+}

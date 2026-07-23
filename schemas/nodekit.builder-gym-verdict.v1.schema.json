@@ -1,0 +1,70 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/HomenShum/node-platform/blob/main/schemas/nodekit.builder-gym-verdict.v1.schema.json",
+  "title": "NodeKit Builder Gym protected comparison verdict",
+  "type": "object",
+  "required": ["schemaVersion", "comparisonId", "verdictHash", "gymId", "baselineTrajectoryHash", "candidateTrajectoryHash", "evaluatorHash", "lockHash", "protectedEvaluatorUnchanged", "fixedInputsHeld", "measurementAuthority", "protectedEvaluationPassed", "dimensions", "improvedDimensions", "heldDimensions", "regressedDimensions", "outcome", "passed", "realWorldClaimAuthorized", "promotionAuthorized", "nextRequirements"],
+  "properties": {
+    "schemaVersion": { "const": "nodekit.builder-gym-verdict/v1" },
+    "comparisonId": { "type": "string", "pattern": "^builder-gym:sha256:[a-f0-9]{64}$" },
+    "verdictHash": { "$ref": "#/$defs/hash" },
+    "gymId": { "const": "nodekit-builder" },
+    "baselineTrajectoryHash": { "$ref": "#/$defs/hash" },
+    "candidateTrajectoryHash": { "$ref": "#/$defs/hash" },
+    "evaluatorHash": { "$ref": "#/$defs/hash" },
+    "lockHash": { "$ref": "#/$defs/hash" },
+    "protectedEvaluatorUnchanged": { "const": true },
+    "fixedInputsHeld": { "const": true },
+    "measurementAuthority": { "const": "trajectory-self-reported" },
+    "protectedEvaluationPassed": { "const": false },
+    "dimensions": {
+      "type": "object",
+      "required": ["task", "artifact", "ui", "safety", "efficiency", "evidence", "humanPreference"],
+      "properties": {
+        "task": { "$ref": "#/$defs/comparison" },
+        "artifact": { "$ref": "#/$defs/comparison" },
+        "ui": { "$ref": "#/$defs/comparison" },
+        "safety": { "$ref": "#/$defs/comparison" },
+        "efficiency": { "$ref": "#/$defs/comparison" },
+        "evidence": { "$ref": "#/$defs/comparison" },
+        "humanPreference": { "$ref": "#/$defs/comparison" }
+      },
+      "additionalProperties": false
+    },
+    "improvedDimensions": { "$ref": "#/$defs/dimensionList" },
+    "heldDimensions": { "$ref": "#/$defs/dimensionList" },
+    "regressedDimensions": { "$ref": "#/$defs/dimensionList" },
+    "outcome": { "enum": ["improved", "held", "regressed"] },
+    "passed": { "type": "boolean" },
+    "realWorldClaimAuthorized": { "const": false },
+    "promotionAuthorized": { "const": false },
+    "nextRequirements": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string", "minLength": 1 },
+      "uniqueItems": true
+    }
+  },
+  "$defs": {
+    "hash": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "scoreOrNull": { "type": ["number", "null"], "minimum": 0, "maximum": 1 },
+    "comparison": {
+      "type": "object",
+      "required": ["baseline", "candidate", "outcome", "passed", "reason"],
+      "properties": {
+        "baseline": { "$ref": "#/$defs/scoreOrNull" },
+        "candidate": { "$ref": "#/$defs/scoreOrNull" },
+        "outcome": { "enum": ["improved", "held", "regressed", "unmeasured"] },
+        "passed": { "type": "boolean" },
+        "reason": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    },
+    "dimensionList": {
+      "type": "array",
+      "items": { "enum": ["task", "artifact", "ui", "safety", "efficiency", "evidence", "humanPreference"] },
+      "uniqueItems": true
+    }
+  },
+  "additionalProperties": false
+}

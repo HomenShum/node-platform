@@ -1,0 +1,85 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/HomenShum/node-platform/blob/main/schemas/nodekit.skill-benchmark-verdict.v1.schema.json",
+  "title": "Content-addressed protected skill benchmark verdict",
+  "type": "object",
+  "required": ["schemaVersion", "verdictId", "verdictHash", "candidateId", "benchmarkHash", "harnessHash", "evaluatorHash", "resolvedModel", "baselineSkillHash", "candidateSkillHash", "fixedTaskInputHash", "benchmarkInput", "evaluatorReceipts", "evidenceClosureRootSha256", "trustedKeyIds", "arms", "meaningfulImprovement", "nonRegression", "passed", "measurementAuthority", "protectedEvaluationPassed", "promotionAuthorized"],
+  "properties": {
+    "schemaVersion": { "const": "nodekit.skill-benchmark-verdict/v1" },
+    "verdictId": { "type": "string", "pattern": "^skill-benchmark:sha256:[a-f0-9]{64}$" },
+    "verdictHash": { "$ref": "#/$defs/hash" },
+    "candidateId": { "type": "string", "pattern": "^skill-candidate-[a-z0-9-]+$" },
+    "benchmarkHash": { "$ref": "#/$defs/hash" },
+    "harnessHash": { "$ref": "#/$defs/hash" },
+    "evaluatorHash": { "$ref": "#/$defs/hash" },
+    "resolvedModel": { "type": "string", "minLength": 1 },
+    "baselineSkillHash": { "$ref": "#/$defs/hash" },
+    "candidateSkillHash": { "$ref": "#/$defs/hash" },
+    "fixedTaskInputHash": { "$ref": "#/$defs/hash" },
+    "benchmarkInput": { "$ref": "#/$defs/ref" },
+    "evaluatorReceipts": {
+      "type": "array",
+      "minItems": 6,
+      "items": {
+        "type": "object",
+        "required": ["arm", "path", "receiptHash", "runId", "sha256", "taskId"],
+        "properties": {
+          "arm": { "enum": ["baseline", "candidate"] },
+          "path": { "$ref": "#/$defs/path" },
+          "receiptHash": { "$ref": "#/$defs/hash" },
+          "runId": { "type": "string", "minLength": 1 },
+          "sha256": { "$ref": "#/$defs/hash" },
+          "taskId": { "type": "string", "minLength": 1 }
+        },
+        "additionalProperties": false
+      },
+      "uniqueItems": true
+    },
+    "evidenceClosureRootSha256": { "$ref": "#/$defs/hash" },
+    "trustedKeyIds": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 }, "uniqueItems": true },
+    "arms": {
+      "type": "object",
+      "required": ["baseline", "candidate"],
+      "properties": { "baseline": { "$ref": "#/$defs/arm" }, "candidate": { "$ref": "#/$defs/arm" } },
+      "additionalProperties": false
+    },
+    "meaningfulImprovement": { "type": "boolean" },
+    "nonRegression": {
+      "type": "object",
+      "required": ["accuracy", "safety", "editability", "exportQuality", "userCompletion", "latency", "cost"],
+      "properties": {
+        "accuracy": { "type": "boolean" }, "safety": { "type": "boolean" }, "editability": { "type": "boolean" },
+        "exportQuality": { "type": "boolean" }, "userCompletion": { "type": "boolean" }, "latency": { "type": "boolean" }, "cost": { "type": "boolean" }
+      },
+      "additionalProperties": false
+    },
+    "passed": { "type": "boolean" },
+    "measurementAuthority": { "const": "protected-evaluator-signed" },
+    "protectedEvaluationPassed": { "const": true },
+    "promotionAuthorized": { "const": false }
+  },
+  "$defs": {
+    "hash": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "score": { "type": "number", "minimum": 0, "maximum": 1 },
+    "path": { "type": "string", "minLength": 1, "pattern": "^(?![A-Za-z]:)(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))(?!.*\\\\).+$" },
+    "ref": {
+      "type": "object", "required": ["path", "sha256"],
+      "properties": { "path": { "$ref": "#/$defs/path" }, "sha256": { "$ref": "#/$defs/hash" } },
+      "additionalProperties": false
+    },
+    "arm": {
+      "type": "object",
+      "required": ["runs", "successRate", "targetFailureRate", "accuracy", "safety", "editability", "exportQuality", "userCompletion", "medianLatencyMs", "costPerSuccessUsd"],
+      "properties": {
+        "runs": { "type": "integer", "minimum": 3 },
+        "successRate": { "$ref": "#/$defs/score" }, "targetFailureRate": { "$ref": "#/$defs/score" },
+        "accuracy": { "$ref": "#/$defs/score" }, "safety": { "$ref": "#/$defs/score" },
+        "editability": { "$ref": "#/$defs/score" }, "exportQuality": { "$ref": "#/$defs/score" },
+        "userCompletion": { "$ref": "#/$defs/score" }, "medianLatencyMs": { "type": "number", "minimum": 0 },
+        "costPerSuccessUsd": { "type": "number", "minimum": 0 }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

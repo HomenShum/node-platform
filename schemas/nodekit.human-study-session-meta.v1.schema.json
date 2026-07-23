@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://nodekit.dev/schemas/nodekit.human-study-session-meta.v1.schema.json",
+  "title": "NodeKit privacy-safe fresh-human study session metadata",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion", "participantId", "nodekitCommit", "nodekitSourceHash",
+    "instruction", "consentRecorded", "consentVersion", "recordingConsent", "fresh", "createdAt"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "nodekit.human-study-session-meta/v1" },
+    "participantId": { "type": "string", "pattern": "^participant_[a-f0-9]{16}$" },
+    "nodekitCommit": { "type": "string", "pattern": "^[a-f0-9]{40}$" },
+    "nodekitSourceHash": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "instruction": { "const": "Use this app to complete the job shown on screen." },
+    "consentRecorded": { "const": true },
+    "consentVersion": { "const": "nodekit-human-study-consent/v1" },
+    "recordingConsent": { "type": "boolean" },
+    "fresh": { "const": true },
+    "createdAt": { "type": "string", "format": "date-time" }
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "schemaVersion": "nodekit.task-index/v1",
+  "taskClass": "heldout",
+  "protected": true,
+  "tasks": [
+    {
+      "id": "builder-task-1",
+      "family": "repository-legibility",
+      "title": "Inspect, change, verify, and explain a bounded NodeKit repository task"
+    }
+  ]
+}

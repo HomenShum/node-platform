@@ -1,0 +1,117 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://nodekit.dev/schemas/nodekit.managed-supabase-portability-verdict.v1.schema.json",
+  "title": "NodeKit decisive managed Supabase portability verdict",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "candidateCommit", "nodekitCommit", "nodekitSourceHash", "nodekitIdentity", "releaseCandidate", "passed", "projectRef", "projectUrl", "environment", "testedAt", "checks", "postgresConformance", "exportImport", "evidence", "attestationPayload", "attestation"],
+  "properties": {
+    "schemaVersion": { "const": "nodekit.managed-supabase-portability-verdict/v1" },
+    "candidateCommit": { "$ref": "#/$defs/commit" },
+    "nodekitCommit": { "$ref": "#/$defs/commit" },
+    "nodekitSourceHash": { "$ref": "#/$defs/sha256" },
+    "nodekitIdentity": { "$ref": "#/$defs/nodekitIdentity" },
+    "releaseCandidate": { "$ref": "#/$defs/releaseCandidate" },
+    "passed": { "const": true },
+    "projectRef": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{5,62}$" },
+    "projectUrl": { "type": "string", "pattern": "^https://[a-z0-9][a-z0-9-]{5,62}\\.supabase\\.co$", "maxLength": 2048 },
+    "environment": { "const": "managed-supabase" },
+    "testedAt": { "$ref": "#/$defs/timestamp" },
+    "checks": { "$ref": "#/$defs/checks" },
+    "postgresConformance": { "$ref": "#/$defs/postgresConformance" },
+    "exportImport": { "$ref": "#/$defs/exportImport" },
+    "evidence": { "$ref": "#/$defs/evidence" },
+    "attestationPayload": { "$ref": "#/$defs/externalPayload" },
+    "attestation": { "$ref": "#/$defs/attestation" }
+  },
+  "$defs": {
+    "commit": { "type": "string", "pattern": "^[a-f0-9]{40}$" },
+    "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "nodekitIdentity": { "type": "string", "pattern": "^[a-f0-9]{40}/[a-f0-9]{64}$" },
+    "timestamp": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{3}Z$" },
+    "canonicalTimestamp": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{3}Z$" },
+    "evidencePath": { "type": "string", "minLength": 1, "pattern": "^(?!/)(?!\\./)(?!.*//)(?!.*\\/$)(?!.*(?:^|/)\\.\\.?(?:/|$))(?![A-Za-z]:)(?!.*\\u0000)[^\\\\]+$" },
+    "releaseCandidate": {
+      "type": "object", "additionalProperties": false,
+      "required": ["nodekitCommit", "nodekitSourceHash", "nodekitTarballSha256", "packageName", "packageVersion"],
+      "properties": {
+        "nodekitCommit": { "$ref": "#/$defs/commit" }, "nodekitSourceHash": { "$ref": "#/$defs/sha256" },
+        "nodekitTarballSha256": { "$ref": "#/$defs/sha256" }, "packageName": { "const": "@homenshum/nodekit" },
+        "packageVersion": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+(?:-[0-9A-Za-z.-]+)?$" }
+      }
+    },
+    "checks": {
+      "type": "object", "additionalProperties": false,
+      "required": ["authenticatedOwnerRead", "crossOwnerDenied", "directLifecycleWritesDenied", "proposalRpcPrincipalDerived", "storageBytesRoundTrip", "realtimeDelivery", "queueIsolation", "queueConsumption", "boundedCronInvocation", "exportImportHashesMatch"],
+      "properties": {
+        "authenticatedOwnerRead": { "const": true }, "crossOwnerDenied": { "const": true },
+        "directLifecycleWritesDenied": { "const": true }, "proposalRpcPrincipalDerived": { "const": true },
+        "storageBytesRoundTrip": { "const": true }, "realtimeDelivery": { "const": true },
+        "queueIsolation": { "const": true }, "queueConsumption": { "const": true },
+        "boundedCronInvocation": { "const": true }, "exportImportHashesMatch": { "const": true }
+      }
+    },
+    "postgresConformance": {
+      "type": "object", "additionalProperties": false,
+      "required": ["schemaVersion", "path", "sha256", "serverVersionNum", "exactPackageInstalled", "passed"],
+      "properties": {
+        "schemaVersion": { "const": "nodekit.postgres-conformance/v2" },
+        "path": { "$ref": "#/$defs/evidencePath" },
+        "sha256": { "$ref": "#/$defs/sha256" },
+        "serverVersionNum": { "type": "integer", "minimum": 120000 },
+        "exactPackageInstalled": { "const": true },
+        "passed": { "const": true }
+      }
+    },
+    "exportImport": {
+      "type": "object", "additionalProperties": false,
+      "required": ["sourceProvider", "targetProvider", "sourceArtifactSha256", "targetArtifactSha256", "sourceReceiptSha256", "targetReceiptSha256"],
+      "properties": {
+        "sourceProvider": { "const": "convex" }, "targetProvider": { "const": "supabase" },
+        "sourceArtifactSha256": { "$ref": "#/$defs/sha256" }, "targetArtifactSha256": { "$ref": "#/$defs/sha256" },
+        "sourceReceiptSha256": { "$ref": "#/$defs/sha256" }, "targetReceiptSha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "evidenceRef": {
+      "type": "object", "additionalProperties": false, "required": ["kind", "path", "sha256"],
+      "properties": {
+        "kind": { "enum": ["postgres-conformance", "auth-rls-report", "storage-roundtrip", "realtime-delivery", "queue-report", "cron-report", "export-import-report", "managed-service-receipt"] },
+        "path": { "$ref": "#/$defs/evidencePath" }, "sha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "evidence": {
+      "type": "array", "minItems": 8, "maxItems": 8, "uniqueItems": true,
+      "items": { "$ref": "#/$defs/evidenceRef" },
+      "allOf": [
+        { "contains": { "properties": { "kind": { "const": "postgres-conformance" } }, "required": ["kind"] }, "minContains": 1, "maxContains": 1 },
+        { "contains": { "properties": { "kind": { "const": "auth-rls-report" } }, "required": ["kind"] }, "minContains": 1, "maxContains": 1 },
+        { "contains": { "properties": { "kind": { "const": "storage-roundtrip" } }, "required": ["kind"] }, "minContains": 1, "maxContains": 1 },
+        { "contains": { "properties": { "kind": { "const": "realtime-delivery" } }, "required": ["kind"] }, "minContains": 1, "maxContains": 1 },
+        { "contains": { "properties": { "kind": { "const": "queue-report" } }, "required": ["kind"] }, "minContains": 1, "maxContains": 1 },
+        { "contains": { "properties": { "kind": { "const": "cron-report" } }, "required": ["kind"] }, "minContains": 1, "maxContains": 1 },
+        { "contains": { "properties": { "kind": { "const": "export-import-report" } }, "required": ["kind"] }, "minContains": 1, "maxContains": 1 },
+        { "contains": { "properties": { "kind": { "const": "managed-service-receipt" } }, "required": ["kind"] }, "minContains": 1, "maxContains": 1 }
+      ]
+    },
+    "externalPayload": {
+      "type": "object", "additionalProperties": false,
+      "required": ["schemaVersion", "type", "candidateCommit", "nodekitSourceHash", "nodekitTarballSha256", "verdict", "evidenceRootSha256", "verdictBodySha256"],
+      "properties": {
+        "schemaVersion": { "const": "nodekit.external-gate-verification-attestation-payload/v1" }, "type": { "const": "managedSupabasePortability" },
+        "candidateCommit": { "$ref": "#/$defs/commit" }, "nodekitSourceHash": { "$ref": "#/$defs/sha256" },
+        "nodekitTarballSha256": { "$ref": "#/$defs/sha256" }, "verdict": { "const": "passed" },
+        "evidenceRootSha256": { "$ref": "#/$defs/sha256" }, "verdictBodySha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "attestation": {
+      "type": "object", "additionalProperties": false,
+      "required": ["schemaVersion", "algorithm", "keyId", "signedAt", "payloadType", "payloadSha256", "signatureEncoding", "signature"],
+      "properties": {
+        "schemaVersion": { "const": "nodekit.detached-attestation/v1" }, "algorithm": { "const": "Ed25519" },
+        "keyId": { "type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:@-]{0,127}$" }, "signedAt": { "$ref": "#/$defs/canonicalTimestamp" },
+        "payloadType": { "const": "managedSupabasePortability" }, "payloadSha256": { "$ref": "#/$defs/sha256" },
+        "signatureEncoding": { "const": "base64url" }, "signature": { "type": "string", "pattern": "^[A-Za-z0-9_-]{86}$" }
+      }
+    }
+  }
+}

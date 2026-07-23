@@ -1,0 +1,141 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/HomenShum/node-platform/blob/main/schemas/nodekit.evidence-snapshot.v1.schema.json",
+  "title": "NodeKit byte-authenticated immutable evidence snapshot",
+  "type": "object",
+  "required": ["schemaVersion", "snapshotId", "source", "raw", "locators", "freshness", "storedAt", "contentHash"],
+  "properties": {
+    "schemaVersion": { "const": "nodekit.evidence-snapshot/v1" },
+    "snapshotId": { "type": "string", "pattern": "^evidence_[a-f0-9]{24}$" },
+    "source": {
+      "type": "object",
+      "required": ["uri", "capturedAt", "mediaType"],
+      "properties": {
+        "uri": { "type": "string", "pattern": "^[A-Za-z][A-Za-z0-9+.-]*://.+$" },
+        "capturedAt": { "$ref": "#/$defs/dateTime" },
+        "mediaType": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    },
+    "raw": {
+      "type": "object",
+      "required": ["byteLength", "sha256", "blobPath"],
+      "properties": {
+        "byteLength": { "type": "integer", "minimum": 1 },
+        "sha256": { "$ref": "#/$defs/hash" },
+        "blobPath": { "type": "string", "pattern": "^\\.nodeagent/evidence/blobs/sha256/[a-f0-9]{2}/[a-f0-9]{64}\\.bin$" }
+      },
+      "additionalProperties": false
+    },
+    "locators": {
+      "type": "array",
+      "maxItems": 10000,
+      "items": { "$ref": "#/$defs/locator" }
+    },
+    "freshness": {
+      "type": "object",
+      "required": ["checkedAt"],
+      "properties": {
+        "checkedAt": { "$ref": "#/$defs/dateTime" },
+        "expiresAt": { "$ref": "#/$defs/dateTime" }
+      },
+      "additionalProperties": false
+    },
+    "storedAt": { "$ref": "#/$defs/dateTime" },
+    "contentHash": { "$ref": "#/$defs/hash" }
+  },
+  "$defs": {
+    "dateTime": { "type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T.*Z$" },
+    "hash": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "source": { "enum": ["user", "provider", "parser"] },
+    "byteAnchor": {
+      "type": "object",
+      "required": ["kind", "source", "startByte", "endByte", "anchorSha256"],
+      "properties": {
+        "kind": { "type": "string" },
+        "source": { "$ref": "#/$defs/source" },
+        "startByte": { "type": "integer", "minimum": 0 },
+        "endByte": { "type": "integer", "minimum": 1 },
+        "anchorSha256": { "$ref": "#/$defs/hash" }
+      }
+    },
+    "locator": {
+      "oneOf": [
+        {
+          "allOf": [{ "$ref": "#/$defs/byteAnchor" }],
+          "type": "object",
+          "properties": {
+            "kind": { "const": "text" },
+            "source": { "$ref": "#/$defs/source" },
+            "startByte": { "type": "integer", "minimum": 0 },
+            "endByte": { "type": "integer", "minimum": 1 },
+            "anchorSha256": { "$ref": "#/$defs/hash" }
+          },
+          "required": ["kind", "source", "startByte", "endByte", "anchorSha256"],
+          "additionalProperties": false
+        },
+        {
+          "allOf": [{ "$ref": "#/$defs/byteAnchor" }],
+          "type": "object",
+          "properties": {
+            "kind": { "const": "pdf-page" },
+            "source": { "$ref": "#/$defs/source" },
+            "startByte": { "type": "integer", "minimum": 0 },
+            "endByte": { "type": "integer", "minimum": 1 },
+            "anchorSha256": { "$ref": "#/$defs/hash" },
+            "pageNumber": { "type": "integer", "minimum": 1 }
+          },
+          "required": ["kind", "source", "startByte", "endByte", "anchorSha256", "pageNumber"],
+          "additionalProperties": false
+        },
+        {
+          "allOf": [{ "$ref": "#/$defs/byteAnchor" }],
+          "type": "object",
+          "properties": {
+            "kind": { "const": "image-region" },
+            "source": { "$ref": "#/$defs/source" },
+            "startByte": { "type": "integer", "minimum": 0 },
+            "endByte": { "type": "integer", "minimum": 1 },
+            "anchorSha256": { "$ref": "#/$defs/hash" },
+            "coordinateSpace": { "enum": ["pixels", "normalized"] },
+            "x": { "type": "number", "minimum": 0 },
+            "y": { "type": "number", "minimum": 0 },
+            "width": { "type": "number", "exclusiveMinimum": 0 },
+            "height": { "type": "number", "exclusiveMinimum": 0 }
+          },
+          "required": ["kind", "source", "startByte", "endByte", "anchorSha256", "coordinateSpace", "x", "y", "width", "height"],
+          "additionalProperties": false
+        },
+        {
+          "allOf": [{ "$ref": "#/$defs/byteAnchor" }],
+          "type": "object",
+          "properties": {
+            "kind": { "const": "video-range" },
+            "source": { "$ref": "#/$defs/source" },
+            "startByte": { "type": "integer", "minimum": 0 },
+            "endByte": { "type": "integer", "minimum": 1 },
+            "anchorSha256": { "$ref": "#/$defs/hash" },
+            "startMs": { "type": "number", "minimum": 0 },
+            "endMs": { "type": "number", "exclusiveMinimum": 0 }
+          },
+          "required": ["kind", "source", "startByte", "endByte", "anchorSha256", "startMs", "endMs"],
+          "additionalProperties": false
+        },
+        {
+          "allOf": [{ "$ref": "#/$defs/byteAnchor" }],
+          "type": "object",
+          "properties": {
+            "kind": { "const": "byte-range" },
+            "source": { "$ref": "#/$defs/source" },
+            "startByte": { "type": "integer", "minimum": 0 },
+            "endByte": { "type": "integer", "minimum": 1 },
+            "anchorSha256": { "$ref": "#/$defs/hash" }
+          },
+          "required": ["kind", "source", "startByte", "endByte", "anchorSha256"],
+          "additionalProperties": false
+        }
+      ]
+    }
+  },
+  "additionalProperties": false
+}

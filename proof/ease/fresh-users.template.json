@@ -1,0 +1,29 @@
+{
+  "schemaVersion": "nodekit.fresh-user-study/v1",
+  "nodekitCommit": "0000000000000000000000000000000000000000",
+  "nodekitSourceHash": "0000000000000000000000000000000000000000000000000000000000000000",
+  "instruction": "Use this app to complete the job shown on screen.",
+  "evidenceRequirements": {
+    "pathFormat": "repository-relative POSIX path",
+    "requiredKindsPerParticipant": ["screenshot", "session-log"],
+    "optionalKinds": ["recording"],
+    "hashAlgorithm": "sha256",
+    "example": {
+      "kind": "screenshot",
+      "path": "proof/ease/humans/participant-01/completion.png",
+      "sha256": "replace-with-the-exact-64-character-file-hash"
+    }
+  },
+  "participants": [],
+  "thresholds": {
+    "minimumUnassistedCompletions": 4,
+    "minimumOutcomeComprehensions": 4,
+    "minimumFinalArtifactsLocated": 4,
+    "minimumUnresolvedIssuesLocated": 4,
+    "maximumMedianFirstMeaningfulActionMs": 30000,
+    "maximumMedianNeutralJourneyMs": 180000,
+    "minimumMedianSingleEaseQuestion": 6,
+    "maximumP0P1Failures": 0
+  },
+  "status": "not-run"
+}
