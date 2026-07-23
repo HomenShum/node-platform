@@ -1,0 +1,128 @@
+{
+  "schemaVersion": "nodekit.atlas-relevance/v0",
+  "note": "Honest relevance benchmark for the Atlas ranker. Queries are phrased the way a coding agent would ask, deliberately avoiding the asset's own title tokens where possible, so the fielded ranker (intent/alias/behavior/proximity + ontology) is tested against a naive substring baseline rather than a title-copy match. All assets are copy-mode react so the --framework filter is exercised; ranking quality is independent of reuse mode. Graded relevance: relevant=2, acceptable=1, everything else=0.",
+  "corpus": [
+    {
+      "slug": "queue-table",
+      "draft": {
+        "kind": "primitive", "title": "Reviewable queue table",
+        "summary": "A dense approval list that keeps the reviewer's place across a run of batch decisions.",
+        "intent": { "userJob": "let a reviewer approve many items in a row without losing their place", "productStages": ["populated", "proposal"], "artifactKinds": ["queue-table"], "supportedDomains": ["operations", "finance"], "aliases": ["review-queue", "bulk-approve", "batch-decision-list"] },
+        "behavior": { "states": ["populated", "proposal"], "actions": [{ "id": "approve-row", "effect": "approve", "approvalRequired": true }], "events": ["row-approved"], "keyboardOperations": [{ "keys": "j / k", "operation": "move between rows" }], "mobileStrategy": "responsive", "visibleUncertainty": true }
+      }
+    },
+    {
+      "slug": "agent-review-rail",
+      "draft": {
+        "kind": "surface", "title": "Assistant side panel",
+        "summary": "A persistent conversation column that keeps proposal cards and tool activity beside the work.",
+        "intent": { "userJob": "keep a persistent assistant next to the artifact so proposals appear alongside the work", "productStages": ["populated", "proposal"], "artifactKinds": ["agent-thread"], "supportedDomains": ["operations", "creative"], "aliases": ["copilot-rail", "agent-rail", "review-thread"] },
+        "behavior": { "states": ["populated", "proposal"], "actions": [{ "id": "send-message", "effect": "propose", "approvalRequired": false }], "events": ["proposal-emitted"], "keyboardOperations": [], "mobileStrategy": "adaptive", "visibleUncertainty": true }
+      }
+    },
+    {
+      "slug": "proposal-compare",
+      "draft": {
+        "kind": "composition", "title": "Change preview",
+        "summary": "A side-by-side that shows exactly what a proposed edit will do before anyone accepts it.",
+        "intent": { "userJob": "show what a change will do before it is applied so the user can accept or reject", "productStages": ["populated", "proposal"], "artifactKinds": ["diff"], "supportedDomains": ["operations", "creative"], "aliases": ["before-after", "diff-review", "proposal-review"] },
+        "behavior": { "states": ["proposal", "populated"], "actions": [{ "id": "accept", "effect": "approve", "approvalRequired": true }, { "id": "reject", "effect": "local-mutate", "approvalRequired": true }], "events": ["proposal-accepted"], "keyboardOperations": [], "mobileStrategy": "adaptive", "visibleUncertainty": true }
+      }
+    },
+    {
+      "slug": "exception-card",
+      "draft": {
+        "kind": "composition", "title": "Blocked run notice",
+        "summary": "Surfaces a run that could not continue and offers a safe way back without losing progress.",
+        "intent": { "userJob": "recover a run that got stuck and resume from preserved state without losing progress", "productStages": ["exception"], "artifactKinds": ["exception"], "supportedDomains": ["operations"], "aliases": ["recovery-card", "exception-first", "resume-from-checkpoint"] },
+        "behavior": { "states": ["failed_safe", "conflict"], "actions": [{ "id": "resume", "effect": "local-mutate", "approvalRequired": false }], "events": ["run-resumed"], "keyboardOperations": [], "mobileStrategy": "responsive", "visibleUncertainty": true }
+      }
+    },
+    {
+      "slug": "source-coverage-card",
+      "draft": {
+        "kind": "primitive", "title": "Data freshness indicator",
+        "summary": "Shows whether the underlying sources are fresh and complete before the user trusts a result.",
+        "intent": { "userJob": "indicate whether the underlying data is fresh and complete so the owner can trust the answer", "productStages": ["populated"], "artifactKinds": ["status-badge"], "supportedDomains": ["finance", "operations"], "aliases": ["coverage-badge", "freshness", "source-status"] },
+        "behavior": { "states": ["populated", "loading"], "actions": [], "events": [], "keyboardOperations": [], "mobileStrategy": "responsive", "visibleUncertainty": true }
+      }
+    },
+    {
+      "slug": "profit-bridge-chart",
+      "draft": {
+        "kind": "primitive", "title": "Waterfall bridge",
+        "summary": "Decomposes a single figure into the contributing causes that moved it from start to end.",
+        "intent": { "userJob": "visualize how a number decomposed into the contributing causes that moved it", "productStages": ["populated"], "artifactKinds": ["chart"], "supportedDomains": ["finance"], "aliases": ["bridge-chart", "cause-decomposition", "contribution-analysis"] },
+        "behavior": { "states": ["populated"], "actions": [{ "id": "drill", "effect": "read", "approvalRequired": false }], "events": [], "keyboardOperations": [], "mobileStrategy": "responsive", "visibleUncertainty": false }
+      }
+    },
+    {
+      "slug": "onboarding-orientation",
+      "draft": {
+        "kind": "surface", "title": "Guided first step",
+        "summary": "Meets a first-time user and helps them state the outcome they want before anything is generated.",
+        "intent": { "userJob": "guide a first-time user to state their goal before any work begins", "productStages": ["first_arrival"], "artifactKinds": ["intake"], "supportedDomains": ["operations", "creative"], "aliases": ["intake", "orientation", "first-run"] },
+        "behavior": { "states": ["first_arrival"], "actions": [{ "id": "confirm-outcome", "effect": "propose", "approvalRequired": false }], "events": ["outcome-confirmed"], "keyboardOperations": [], "mobileStrategy": "responsive", "visibleUncertainty": true }
+      }
+    },
+    {
+      "slug": "storyboard-rail",
+      "draft": {
+        "kind": "surface", "title": "Slide filmstrip",
+        "summary": "A vertical filmstrip for moving between the slides of a deck and reordering them.",
+        "intent": { "userJob": "navigate between the slides of a deck and reorder them", "productStages": ["populated"], "artifactKinds": ["deck"], "supportedDomains": ["creative"], "aliases": ["filmstrip", "slide-nav", "deck-rail"] },
+        "behavior": { "states": ["populated"], "actions": [{ "id": "reorder", "effect": "local-mutate", "approvalRequired": false }], "events": ["slide-selected"], "keyboardOperations": [{ "keys": "up / down", "operation": "move between slides" }], "mobileStrategy": "adaptive", "visibleUncertainty": false }
+      }
+    },
+    {
+      "slug": "version-history-rail",
+      "draft": {
+        "kind": "surface", "title": "Accepted versions list",
+        "summary": "Lists the canonical accepted versions so the user can return to an earlier one.",
+        "intent": { "userJob": "let the user return to an earlier accepted version of the artifact", "productStages": ["populated", "proposal"], "artifactKinds": ["version-list"], "supportedDomains": ["operations", "creative"], "aliases": ["history", "versions", "revision-rail"] },
+        "behavior": { "states": ["populated"], "actions": [{ "id": "restore", "effect": "local-mutate", "approvalRequired": true }], "events": ["version-restored"], "keyboardOperations": [], "mobileStrategy": "adaptive", "visibleUncertainty": false }
+      }
+    },
+    {
+      "slug": "empty-state",
+      "draft": {
+        "kind": "primitive", "title": "Nothing-yet panel",
+        "summary": "A calm placeholder shown before any content exists, pointing at the one first action.",
+        "intent": { "userJob": "show a calm screen when there is nothing yet and point at the first action", "productStages": ["first_arrival"], "artifactKinds": ["empty"], "supportedDomains": ["operations", "creative", "finance"], "aliases": ["empty", "zero-state", "placeholder"] },
+        "behavior": { "states": ["first_arrival"], "actions": [{ "id": "start", "effect": "propose", "approvalRequired": false }], "events": [], "keyboardOperations": [], "mobileStrategy": "responsive", "visibleUncertainty": false }
+      }
+    },
+    {
+      "slug": "mobile-action-bar",
+      "draft": {
+        "kind": "primitive", "title": "Sticky bottom bar",
+        "summary": "Keeps the current primary action reachable at the bottom of a small screen.",
+        "intent": { "userJob": "keep the main action reachable at the bottom of a phone screen", "productStages": ["populated", "proposal"], "artifactKinds": ["action-bar"], "supportedDomains": ["operations", "finance", "creative"], "aliases": ["sticky-action", "bottom-bar", "mobile-cta"] },
+        "behavior": { "states": ["populated", "proposal"], "actions": [{ "id": "primary", "effect": "propose", "approvalRequired": false }], "events": [], "keyboardOperations": [], "mobileStrategy": "responsive", "visibleUncertainty": false }
+      }
+    },
+    {
+      "slug": "presenter-controls",
+      "draft": {
+        "kind": "surface", "title": "Present mode",
+        "summary": "Full-screen controls for showing a finished deck to an audience.",
+        "intent": { "userJob": "present a finished deck full screen to an audience", "productStages": ["completed"], "artifactKinds": ["deck"], "supportedDomains": ["creative"], "aliases": ["present-mode", "slideshow", "presenter"] },
+        "behavior": { "states": ["completed"], "actions": [{ "id": "advance", "effect": "navigate", "approvalRequired": false }], "events": [], "keyboardOperations": [{ "keys": "space", "operation": "advance the slide" }], "mobileStrategy": "responsive", "visibleUncertainty": false }
+      }
+    }
+  ],
+  "queries": [
+    { "id": "q01", "terms": "let an operator sign off on many transactions quickly without losing their place", "relevant": ["queue-table"], "acceptable": ["proposal-compare"] },
+    { "id": "q02", "terms": "persistent assistant panel that keeps proposals beside the work", "relevant": ["agent-review-rail"], "acceptable": ["proposal-compare"] },
+    { "id": "q03", "terms": "show what an edit will do before it is applied", "relevant": ["proposal-compare"], "acceptable": ["version-history-rail"] },
+    { "id": "q04", "terms": "get a stuck run moving again from where it left off", "relevant": ["exception-card"], "acceptable": [] },
+    { "id": "q05", "terms": "tell the owner whether the numbers are up to date and complete", "relevant": ["source-coverage-card"], "acceptable": [] },
+    { "id": "q06", "terms": "break a figure into the causes that moved it", "relevant": ["profit-bridge-chart"], "acceptable": [] },
+    { "id": "q07", "terms": "help a new person say what outcome they want on arrival", "relevant": ["onboarding-orientation"], "acceptable": ["empty-state"] },
+    { "id": "q08", "terms": "move between the slides of a presentation and rearrange them", "relevant": ["storyboard-rail"], "acceptable": ["presenter-controls"] },
+    { "id": "q09", "terms": "go back to a previously accepted revision", "relevant": ["version-history-rail"], "acceptable": ["proposal-compare"] },
+    { "id": "q10", "terms": "calm screen with one call to action when nothing exists yet", "relevant": ["empty-state"], "acceptable": ["onboarding-orientation"] },
+    { "id": "q11", "terms": "keep the primary button reachable on a phone", "relevant": ["mobile-action-bar"], "acceptable": [] },
+    { "id": "q12", "terms": "show a completed deck to a room full screen", "relevant": ["presenter-controls"], "acceptable": ["storyboard-rail"] }
+  ]
+}
