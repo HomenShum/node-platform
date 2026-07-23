@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NodeKit Builder Journey — Re-anchor Map</title>
+<style>
+  :root {
+    --bg: #f6f7f9;
+    --panel: #ffffff;
+    --ink: #14181f;
+    --ink-soft: #4a5464;
+    --ink-faint: #7a8595;
+    --line: #e2e6ec;
+    --line-strong: #cdd4de;
+    --accent: #2f6df6;
+    --accent-soft: #eaf1ff;
+    --done: #1f8a54;
+    --done-soft: #e6f5ec;
+    --gap: #b4571a;
+    --gap-soft: #fbeee1;
+    --salon: #7a3bd6;
+    --salon-soft: #f1e9fd;
+    --shadow: 0 1px 2px rgba(20,24,31,.05), 0 8px 24px rgba(20,24,31,.05);
+    --mono: ui-monospace, "SF Mono", "Cascadia Code", "JetBrains Mono", Menlo, Consolas, monospace;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0e1116;
+      --panel: #161b22;
+      --ink: #e7ebf1;
+      --ink-soft: #a9b3c1;
+      --ink-faint: #6d7887;
+      --line: #262d38;
+      --line-strong: #333c49;
+      --accent: #6c9bff;
+      --accent-soft: #16233f;
+      --done: #48c98a;
+      --done-soft: #12271c;
+      --gap: #e0955a;
+      --gap-soft: #2b1e12;
+      --salon: #b48bf0;
+      --salon-soft: #221636;
+      --shadow: 0 1px 2px rgba(0,0,0,.4), 0 10px 30px rgba(0,0,0,.35);
+    }
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--sans);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  .wrap {
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: 40px 28px 64px;
+  }
+
+  /* Header */
+  header { margin-bottom: 30px; }
+  .eyebrow {
+    font-size: 12px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    font-weight: 600;
+    margin: 0 0 10px;
+  }
+  h1 {
+    font-size: clamp(24px, 3.4vw, 34px);
+    line-height: 1.15;
+    margin: 0 0 14px;
+    letter-spacing: -.01em;
+    font-weight: 700;
+  }
+  .lede {
+    max-width: 74ch;
+    color: var(--ink-soft);
+    font-size: 15.5px;
+    margin: 0 0 20px;
+  }
+  .thesis {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-left: 3px solid var(--accent);
+    border-radius: 10px;
+    padding: 14px 18px;
+    box-shadow: var(--shadow);
+    max-width: 96ch;
+  }
+  .thesis .k {
+    font: 600 11px/1.4 var(--mono);
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--accent);
+    white-space: nowrap;
+    padding-top: 2px;
+  }
+  .thesis .v { font-size: 15px; color: var(--ink); }
+  .thesis .v b { color: var(--ink); }
+
+  /* Stage rail */
+  .rail {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 14px;
+    margin-top: 34px;
+    align-items: stretch;
+  }
+  .stage {
+    position: relative;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    box-shadow: var(--shadow);
+    padding: 16px 16px 18px;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+  /* connector arrows between stages */
+  .stage:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    top: 34px;
+    right: -14px;
+    width: 14px;
+    height: 2px;
+    background: var(--line-strong);
+    z-index: 2;
+  }
+  .stage:not(:last-child)::before {
+    content: "";
+    position: absolute;
+    top: 30px;
+    right: -14px;
+    border-left: 7px solid var(--line-strong);
+    border-top: 5px solid transparent;
+    border-bottom: 5px solid transparent;
+    z-index: 3;
+  }
+
+  .stage-head {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    margin-bottom: 4px;
+  }
+  .num {
+    flex: none;
+    width: 26px; height: 26px;
+    border-radius: 8px;
+    background: var(--accent-soft);
+    color: var(--accent);
+    font: 700 13px/26px var(--mono);
+    text-align: center;
+  }
+  .stage h2 {
+    font-size: 15px;
+    letter-spacing: .04em;
+    margin: 0;
+    font-weight: 700;
+  }
+  .role {
+    font-size: 12px;
+    color: var(--ink-faint);
+    margin: 2px 0 12px;
+  }
+
+  .handoff {
+    background: var(--accent-soft);
+    border-radius: 9px;
+    padding: 9px 11px;
+    margin-bottom: 13px;
+  }
+  .handoff .lbl {
+    font: 600 10px/1.4 var(--mono);
+    letter-spacing: .09em;
+    text-transform: uppercase;
+    color: var(--accent);
+    display: block;
+    margin-bottom: 3px;
+  }
+  .handoff .name {
+    font: 600 13px/1.35 var(--mono);
+    color: var(--ink);
+    word-break: break-word;
+  }
+
+  .col-lbl {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font: 700 10.5px/1 var(--mono);
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    margin: 0 0 7px;
+  }
+  .col-lbl.done { color: var(--done); }
+  .col-lbl.gap  { color: var(--gap); }
+  .dot { width: 7px; height: 7px; border-radius: 50%; flex: none; }
+  .dot.done { background: var(--done); }
+  .dot.gap  { background: var(--gap); }
+
+  ul.items {
+    list-style: none;
+    margin: 0 0 14px;
+    padding: 0;
+  }
+  ul.items li {
+    position: relative;
+    font-size: 12.5px;
+    line-height: 1.42;
+    color: var(--ink-soft);
+    padding: 0 0 0 14px;
+    margin-bottom: 6px;
+  }
+  ul.items li::before {
+    content: "";
+    position: absolute;
+    left: 0; top: 7px;
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: var(--line-strong);
+  }
+  ul.items.done li::before { background: var(--done); opacity: .7; }
+  ul.items.gap  li::before { background: var(--gap); opacity: .8; }
+  ul.items li code {
+    font: 500 11.5px/1.4 var(--mono);
+    color: var(--ink);
+    background: var(--bg);
+    padding: 0 3px;
+    border-radius: 4px;
+  }
+  .gap-block { margin-top: auto; }
+
+  /* Salon strip */
+  .salon {
+    margin-top: 34px;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-top: 3px solid var(--salon);
+    border-radius: 14px;
+    box-shadow: var(--shadow);
+    padding: 22px 24px 24px;
+  }
+  .salon-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 10px 14px;
+    margin-bottom: 6px;
+  }
+  .salon-tag {
+    font: 600 10.5px/1 var(--mono);
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--salon);
+    background: var(--salon-soft);
+    padding: 5px 9px;
+    border-radius: 6px;
+  }
+  .salon h3 {
+    font-size: 17px;
+    margin: 0;
+    font-weight: 700;
+  }
+  .salon .sub { color: var(--ink-faint); font-size: 13px; }
+  .salon p.thin {
+    color: var(--ink-soft);
+    font-size: 13.5px;
+    max-width: 92ch;
+    margin: 8px 0 18px;
+  }
+  .salon-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 12px;
+  }
+  .sc {
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 11px 13px;
+  }
+  .sc .k {
+    font: 600 10px/1.3 var(--mono);
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--salon);
+    display: block;
+    margin-bottom: 4px;
+  }
+  .sc .v { font-size: 12.8px; color: var(--ink); line-height: 1.4; }
+  .sc .v code {
+    font: 500 11.5px/1.4 var(--mono);
+    background: var(--panel);
+    padding: 0 3px; border-radius: 4px;
+    color: var(--ink-soft);
+  }
+  .scope {
+    margin-top: 16px;
+    display: flex; flex-wrap: wrap; gap: 8px;
+    align-items: center;
+  }
+  .scope .lbl {
+    font: 600 10.5px/1 var(--mono);
+    letter-spacing: .08em; text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+  .pill {
+    font-size: 11.5px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    border: 1px solid var(--line-strong);
+    color: var(--ink-soft);
+    background: var(--panel);
+  }
+  .pill.no { color: var(--gap); border-color: var(--gap-soft); background: var(--gap-soft); }
+
+  /* Loop footnote */
+  .loop {
+    margin-top: 26px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    font: 600 12.5px/1.4 var(--mono);
+    color: var(--ink-soft);
+    background: var(--panel);
+    border: 1px dashed var(--line-strong);
+    border-radius: 12px;
+    padding: 14px 18px;
+  }
+  .loop .step { color: var(--ink); }
+  .loop .arr { color: var(--accent); }
+  .loop .back { color: var(--salon); }
+  .loop .note { font-family: var(--sans); font-weight: 400; font-size: 12.5px; color: var(--ink-faint); margin-left: auto; }
+
+  footer {
+    margin-top: 30px;
+    font-size: 12px;
+    color: var(--ink-faint);
+    display: flex; flex-wrap: wrap; gap: 6px 16px;
+  }
+  footer code { font: 500 11.5px var(--mono); color: var(--ink-soft); }
+
+  @media (max-width: 980px) {
+    .rail { grid-template-columns: repeat(2, 1fr); }
+    .stage:not(:last-child)::after,
+    .stage:not(:last-child)::before { display: none; }
+    .gap-block { margin-top: 8px; }
+  }
+  @media (max-width: 560px) {
+    .wrap { padding: 28px 16px 48px; }
+    .rail { grid-template-columns: 1fr; }
+    .thesis { flex-direction: column; gap: 6px; }
+    .loop .note { margin-left: 0; width: 100%; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <p class="eyebrow">NodeKit &middot; Builder Journey J0 &middot; Re-anchor Map</p>
+    <h1>From an idea to a live, improving product — one case, five handoffs.</h1>
+    <p class="lede">
+      NodeKit has powerful engines: graph-hop, Atlas, create/adopt, the frontend tournament,
+      NodeSlide/NodeVideo, the EASE gate, the evolution ledger, the harness gym. What it lacks is the
+      <em>vehicle</em> — a single case that threads one <code>caseId</code> through every stage, each with an
+      explicit handoff artifact and a receipt proving the handoff was legitimate.
+    </p>
+    <div class="thesis">
+      <span class="k">Thesis</span>
+      <span class="v"><b>Gates are stage-exit conditions, not the product.</b> The engines already gate their own
+      exits; the journey is the connective layer that carries the builder <em>between</em> them — fail-closed at every seam.</span>
+    </div>
+  </header>
+
+  <section class="rail" aria-label="The five stages">
+
+    <!-- DECIDE -->
+    <article class="stage">
+      <div class="stage-head"><span class="num">01</span><h2>DECIDE</h2></div>
+      <p class="role">Select the user, the uncertainty, the read-only wedge.</p>
+      <div class="handoff">
+        <span class="lbl">Handoff artifact</span>
+        <span class="name">OpportunityContract</span>
+      </div>
+      <div class="col-lbl done"><span class="dot done"></span>Done in repo</div>
+      <ul class="items done">
+        <li>Research engines: <code>graph research / query / gaps</code></li>
+        <li>Atlas retrieval: <code>atlas search / recipe / preview</code></li>
+        <li>Domain-blank factory: <code>create</code> refuses presets</li>
+      </ul>
+      <div class="gap-block">
+        <div class="col-lbl gap"><span class="dot gap"></span>The gap</div>
+        <ul class="items gap">
+          <li>Nothing <b>freezes</b> the product boundary before scaffold</li>
+          <li>No record of what was <b>not</b> chosen or what the app may <b>not</b> do</li>
+          <li><b>The missing primitive this J0 builds.</b></li>
+        </ul>
+      </div>
+    </article>
+
+    <!-- BUILD -->
+    <article class="stage">
+      <div class="stage-head"><span class="num">02</span><h2>BUILD</h2></div>
+      <p class="role">One golden journey against one frozen fixture.</p>
+      <div class="handoff">
+        <span class="lbl">Handoff artifact</span>
+        <span class="name">BuildEvidencePack</span>
+      </div>
+      <div class="col-lbl done"><span class="dot done"></span>Done in repo</div>
+      <ul class="items done">
+        <li><code>create</code> / <code>adopt</code> scaffolding</li>
+        <li>Frontend tournament: <code>frontend plan / benchmark / repair</code></li>
+        <li>Builder-gym: frozen fixtures + verdicts + locks</li>
+      </ul>
+      <div class="gap-block">
+        <div class="col-lbl gap"><span class="dot gap"></span>The gap</div>
+        <ul class="items gap">
+          <li>No single artifact binding <code>{fixture + golden run + receipt}</code></li>
+          <li>Gym emits verdicts, but isn't wrapped as a stage handoff</li>
+        </ul>
+      </div>
+    </article>
+
+    <!-- EXPLAIN -->
+    <article class="stage">
+      <div class="stage-head"><span class="num">03</span><h2>EXPLAIN</h2></div>
+      <p class="role">Concise deck + short video + demo script from real evidence.</p>
+      <div class="handoff">
+        <span class="lbl">Handoff artifact</span>
+        <span class="name">StoryPack</span>
+      </div>
+      <div class="col-lbl done"><span class="dot done"></span>Done in repo</div>
+      <ul class="items done">
+        <li>Present skill + change-story contract</li>
+        <li>NodeSlide / NodeVideo transports</li>
+        <li><code>presentation-pipeline</code> deck &amp; media proof</li>
+      </ul>
+      <div class="gap-block">
+        <div class="col-lbl gap"><span class="dot gap"></span>The gap</div>
+        <ul class="items gap">
+          <li>No StoryPack tying deck+video+script to the BUILD evidence</li>
+          <li>Pipeline gates a <b>campaign</b>, not a per-case stage</li>
+        </ul>
+      </div>
+    </article>
+
+    <!-- LAUNCH -->
+    <article class="stage">
+      <div class="stage-head"><span class="num">04</span><h2>LAUNCH</h2></div>
+      <p class="role">Publish the exact tested revision + one target submission.</p>
+      <div class="handoff">
+        <span class="lbl">Handoff artifact</span>
+        <span class="name">LaunchManifest</span>
+      </div>
+      <div class="col-lbl done"><span class="dot done"></span>Done in repo</div>
+      <ul class="items done">
+        <li>Submission gate + prepare / evaluate scripts</li>
+        <li>npm packaging + install-proof</li>
+        <li>Exact-revision binding: commit + source hash</li>
+      </ul>
+      <div class="gap-block">
+        <div class="col-lbl gap"><span class="dot gap"></span>The gap</div>
+        <ul class="items gap">
+          <li>No manifest binding tested revision &rarr; one submission</li>
+          <li>No deployment receipt as the stage exit</li>
+        </ul>
+      </div>
+    </article>
+
+    <!-- LEARN -->
+    <article class="stage">
+      <div class="stage-head"><span class="num">05</span><h2>LEARN</h2></div>
+      <p class="role">Real use &rarr; one friction point &rarr; one response proposal.</p>
+      <div class="handoff">
+        <span class="lbl">Handoff artifact</span>
+        <span class="name">ObservationPack</span>
+      </div>
+      <div class="col-lbl done"><span class="dot done"></span>Done in repo</div>
+      <ul class="items done">
+        <li>Evolution ledger: <code>record / verify / materiality</code></li>
+        <li>Harness gym: <code>baseline / propose / promote</code></li>
+        <li>Friction telemetry captured at scaffold time</li>
+      </ul>
+      <div class="gap-block">
+        <div class="col-lbl gap"><span class="dot gap"></span>The gap</div>
+        <ul class="items gap">
+          <li>No pack shaping use into <code>{friction, response}</code></li>
+          <li>Ledger records changes, not a Learn &rarr; Decide loop</li>
+        </ul>
+      </div>
+    </article>
+
+  </section>
+
+  <!-- Loop -->
+  <div class="loop">
+    <span class="step">DECIDE</span><span class="arr">&rarr;</span>
+    <span class="step">BUILD</span><span class="arr">&rarr;</span>
+    <span class="step">EXPLAIN</span><span class="arr">&rarr;</span>
+    <span class="step">LAUNCH</span><span class="arr">&rarr;</span>
+    <span class="step">LEARN</span>
+    <span class="back">&#8630; back to DECIDE or BUILD</span>
+    <span class="note">A stage is complete only when its refs are non-empty AND a receipt binds it — advancing without the handoff artifact throws or returns blocked.</span>
+  </div>
+
+  <!-- Salon worked example -->
+  <section class="salon" aria-label="Salon worked example">
+    <div class="salon-head">
+      <span class="salon-tag">Worked example</span>
+      <h3>Verified Weekly Salon Brief</h3>
+      <span class="sub">the salon slice, as a concrete OpportunityContract instantiating DECIDE</span>
+    </div>
+    <p class="thin">
+      The Decide&rarr;Build seam fails when a strong technical agent makes product decisions <em>while</em> coding.
+      The OpportunityContract is the approved boundary it builds <b>against</b> instead of improvising — recording the
+      user, the frozen wedge, and the authority limits so scope cannot be re-decided at the keyboard.
+    </p>
+    <div class="salon-grid">
+      <div class="sc"><span class="k">User</span><span class="v">Owner of a one-location salon.</span></div>
+      <div class="sc"><span class="k">Problem</span><span class="v">Can't tell during the week whether higher sales are producing higher profit.</span></div>
+      <div class="sc"><span class="k">Wedge</span><span class="v">A read-only weekly profit health check from uploaded files.</span></div>
+      <div class="sc"><span class="k">Primary job</span><span class="v">Understand estimated operating profit and resolve the few items blocking verification.</span></div>
+      <div class="sc"><span class="k">Inputs</span><span class="v"><code>bank_csv</code> &middot; <code>square_export</code> &middot; <code>payroll_summary</code> &middot; <code>receipt_images</code></span></div>
+      <div class="sc"><span class="k">Primary artifact</span><span class="v">A source-linked Verified Weekly Salon Brief.</span></div>
+    </div>
+    <div class="scope">
+      <span class="lbl">Authority limits &mdash; thin scope:</span>
+      <span class="pill">one salon</span>
+      <span class="pill">one week</span>
+      <span class="pill">CSV / file uploads</span>
+      <span class="pill no">no live banking</span>
+      <span class="pill no">no accounting write</span>
+      <span class="pill no">no tax advice</span>
+    </div>
+  </section>
+
+  <footer>
+    <span>Canonical model: <code>nodekit.builder-case/v1</code></span>
+    <span>Missing primitive: <code>nodekit.opportunity-contract/v1</code></span>
+    <span>Built on Caseflow &mdash; case / run / stage / artifact / receipt</span>
+  </footer>
+</div>
+</body>
+</html>

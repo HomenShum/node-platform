@@ -1,0 +1,53 @@
+{
+  "schemaVersion": "nodekit.opportunity-contract/v1",
+  "user": "Owner of a one-location salon.",
+  "problem": "The owner cannot tell during the week whether higher sales are actually producing higher operating profit.",
+  "wedge": "A read-only weekly profit health check generated from uploaded files, with no live banking connection and no accounting write-back.",
+  "primaryJob": "Understand estimated operating profit for the week and resolve the few items preventing verification.",
+  "inputs": ["bank_csv", "square_export", "payroll_summary", "receipt_images"],
+  "primaryArtifact": "A source-linked Verified Weekly Salon Brief.",
+  "rejectedAlternatives": [
+    {
+      "alternative": "Full bookkeeping sync with write-back to QuickBooks or Xero.",
+      "reason": "Requires write authority and ongoing reconciliation, which explodes scope far past a one-week read-only health check."
+    },
+    {
+      "alternative": "Live bank API connection via Plaid.",
+      "reason": "Adds credential handling and compliance surface; this slice must stay file-upload only so no live banking is touched."
+    },
+    {
+      "alternative": "Tax estimation and filing guidance.",
+      "reason": "Regulated advice outside the profit-visibility job and explicitly prohibited for this wedge."
+    },
+    {
+      "alternative": "Multi-location roll-up dashboard.",
+      "reason": "The uncertainty is per-salon per-week; a multi-location roll-up dilutes the wedge and the buyer."
+    }
+  ],
+  "openUnknowns": [
+    "Whether owners will upload all four file types every week or only a subset.",
+    "How many transactions typically lack a matching receipt and therefore block verification.",
+    "Whether square_export payout timing aligns with the bank_csv week boundary."
+  ],
+  "successCondition": "The owner can read an estimated weekly operating profit for the salon and resolve every verification item blocking that estimate, using only the uploaded files.",
+  "authorityLimits": {
+    "read": [
+      "uploaded bank_csv transactions",
+      "square_export sales and payout rows",
+      "payroll_summary totals",
+      "receipt_images"
+    ],
+    "propose": [
+      "flag transactions that need owner classification",
+      "request a missing receipt for an unmatched expense"
+    ],
+    "approve": [],
+    "prohibited": [
+      "connect to live banking",
+      "write to any accounting ledger",
+      "give tax advice",
+      "move or transfer money",
+      "categorize spending without owner confirmation"
+    ]
+  }
+}
