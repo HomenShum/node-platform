@@ -6,18 +6,20 @@ import os from "node:os";
 import path from "node:path";
 import test from "node:test";
 import { independentlyPackCandidate } from "../scripts/run-agent-ease-matrix.mjs";
+import {
+  PROTECTED_BROWSER_STATES,
+  PROTECTED_BROWSER_THEMES,
+  PROTECTED_BROWSER_VIEWPORTS,
+} from "../src/lib/protected-browser-evidence.mjs";
 import { computeNodeKitSourceHash } from "../src/lib/source-hash.mjs";
 import {
+  browserPng,
+  protectedTaskArtifact,
   submissionEvidenceFixtureBytes,
   submissionEvidenceFixtureClosure,
 } from "./submission-fixtures.mjs";
 
 const digest = (value) => createHash("sha256").update(value).digest("hex");
-const canonicalJson = (value) => {
-  if (Array.isArray(value)) return `[${value.map(canonicalJson).join(",")}]`;
-  if (value && typeof value === "object") return `{${Object.keys(value).sort().map((key) => `${JSON.stringify(key)}:${canonicalJson(value[key])}`).join(",")}}`;
-  return JSON.stringify(value);
-};
 const heldoutTaskBytes = await readFile(path.resolve("evals", "ease", "heldout-tasks.json"));
 const lowerCostEvidenceBytes = await readFile(path.resolve("evals", "ease", "lower-cost-model-evidence.json"));
 const lowerCostSnapshotBytes = await readFile(path.resolve("evals", "ease", "openai-pricing-2026-07-22.json"));
@@ -59,33 +61,113 @@ const passingChecks = Object.freeze(Object.fromEntries([
   "protectedEvaluation", "protectedEvaluatorStable", "protectedIsolation", "taskSpecificOutput", "visualReview",
 ].map((name) => [name, true])));
 
-function protectedArtifactEvidence(taskId, seed = taskId) {
-  const artifactType = {
-    "launch-presentation": "launch-presentation",
-    "research-map": "research-map",
-    "volunteer-onboarding": "volunteer-onboarding-record",
-  }[taskId];
-  const canonicalContent = taskId === "research-map"
-    ? {
-        comparisons: [{ sourceIds: ["source-1", "source-2"], summary: "Compared approaches." }], question: "Which approach is most reliable?",
-        sources: [
-          { id: "source-1", publishedAtIso: "2026-07-20T00:00:00.000Z", title: "Paper one", url: "https://example.test/one" },
-          { id: "source-2", publishedAtIso: "2026-07-21T00:00:00.000Z", title: "Paper two", url: "https://example.test/two" },
-        ], submittedOutcome: seed,
-      }
-    : taskId === "volunteer-onboarding"
-      ? { completion: { status: "confirmed" }, documents: [{ id: "doc-1", status: "reviewed" }], submittedOutcome: seed, volunteer: { id: "vol-1" } }
-      : { brief: "Launch the product", metrics: [{ name: "users", value: 42 }], review: { status: "approved" }, slides: [{ id: 1 }, { id: 2 }, { id: 3 }], submittedOutcome: seed };
-  const marker = { artifactId: `artifact_${seed}`, canonicalVersion: 2, contentSha256: digest(canonicalJson(canonicalContent)), type: artifactType };
-  const domainSummary = taskId === "research-map"
-    ? { comparisonCount: 1, questionPresent: true, sourceCount: 2 }
-    : taskId === "volunteer-onboarding"
-      ? { completionConfirmed: true, documentCount: 1, identityPresent: true }
-      : { briefPresent: true, metricCount: 1, reviewApproved: true, slideCount: 3 };
+// The protected browser lane is a separate evidence tree from the candidate-authored
+// browser certification: the campaign evaluator reopens `<runRoot>/evaluator/protected-browser/`
+// and requires a 1 + 180 + 180 file closure whose manifest is byte-shaped by
+// PROTECTED_BROWSER_STATES/VIEWPORTS/THEMES, so this fixture builds it from those exact
+// exported constants rather than from a local restatement of them.
+function protectedBrowserFixture(runId, candidateArchiveSha256, inputToken, taskId) {
+  const accessibilityResult = () => ({
+    engine: "axe-core",
+    engineVersion: "4.12.1",
+    passed: true,
+    policy: "serious-critical-zero",
+    seriousCriticalViolations: 0,
+    totalViolations: 0,
+    violationCounts: { critical: 0, serious: 0, moderate: 0, minor: 0, unknown: 0 },
+    violations: [],
+  });
+  const screenshots = PROTECTED_BROWSER_STATES.flatMap((state) => PROTECTED_BROWSER_VIEWPORTS.flatMap((viewport) => (
+    PROTECTED_BROWSER_THEMES.map((theme) => {
+      const screenshotPath = `protected-browser/screenshots/${state}--${viewport.id}--${theme}.png`;
+      const sidecarPath = screenshotPath.replace(/\.png$/, ".json");
+      const png = browserPng(viewport.width, viewport.height, `${runId}:${inputToken}:${state}:${viewport.id}:${theme}`);
+      const sidecar = {
+        accessibility: accessibilityResult(),
+        authority: "campaign-protected-browser",
+        candidateArchiveSha256,
+        consoleErrors: 0,
+        failedRequests: 0,
+        horizontalOverflowPx: 0,
+        mojibakeDetected: false,
+        pageUrl: `http://candidate:4173/?scenario=${state}`,
+        pngSha256: digest(png),
+        runId: inputToken,
+        schemaVersion: "nodekit.protected-screenshot-proof/v1",
+        state,
+        taskId,
+        theme,
+        viewport: { height: viewport.height, width: viewport.width },
+        viewportId: viewport.id,
+      };
+      const sidecarBytes = Buffer.from(`${JSON.stringify(sidecar, null, 2)}\n`);
+      return {
+        ...sidecar,
+        path: screenshotPath,
+        png,
+        pngBytes: png.length,
+        sidecarBytes: sidecarBytes.length,
+        sidecarBytesValue: sidecarBytes,
+        sidecarPath,
+        sidecarSha256: digest(sidecarBytes),
+      };
+    })
+  )));
+  const records = screenshots.map((screenshot) => ({
+    path: screenshot.path,
+    pngSha256: screenshot.pngSha256,
+    sidecarPath: screenshot.sidecarPath,
+    sidecarSha256: screenshot.sidecarSha256,
+    state: screenshot.state,
+    theme: screenshot.theme,
+    viewport: screenshot.viewport,
+    viewportId: screenshot.viewportId,
+  })).sort((left, right) => left.path.localeCompare(right.path));
+  const manifest = {
+    accessibilityAudit: {
+      engine: "axe-core",
+      engineVersion: "4.12.1",
+      passed: true,
+      policy: "serious-critical-zero",
+      scans: 180,
+      seriousCriticalViolations: 0,
+      totalViolations: 0,
+      violationCounts: { critical: 0, serious: 0, moderate: 0, minor: 0, unknown: 0 },
+    },
+    candidateArchiveSha256,
+    certificationScope: [
+      "rendered-state-coverage", "console-health", "request-health",
+      "horizontal-overflow", "mojibake", "axe-serious-critical",
+    ],
+    certified: true,
+    consoleErrors: [],
+    coveredStates: [...PROTECTED_BROWSER_STATES],
+    generatedAt: "2026-07-22T00:03:59.000Z",
+    networkFailures: [],
+    passed: true,
+    producer: {
+      authority: "campaign-protected-browser",
+      candidateHostAccess: false,
+      candidateWriteAccess: false,
+      externalNetworkEgress: false,
+    },
+    requiredStates: [...PROTECTED_BROWSER_STATES],
+    runId: inputToken,
+    schemaVersion: "nodekit.protected-browser-screenshot-manifest/v1",
+    screenshotEvidenceRootSha256: digest(JSON.stringify(records)),
+    screenshots: screenshots.map(({ png, sidecarBytesValue, ...screenshot }) => screenshot),
+    taskId,
+    themes: [...PROTECTED_BROWSER_THEMES],
+    viewports: PROTECTED_BROWSER_VIEWPORTS.map((viewport) => ({ ...viewport })),
+  };
+  manifest.manifestSha256 = digest(JSON.stringify(manifest));
+  const manifestBytes = Buffer.from(`${JSON.stringify(manifest, null, 2)}\n`);
   return {
-    artifactId: marker.artifactId, artifactType, canonicalContent, canonicalVersion: 2, contentSha256: marker.contentSha256,
-    domainSummary, exportBytes: 512, exportFile: "task-artifact.json", exportSha256: digest(`${seed}/export`),
-    inputToken: seed, inputTokenSha256: digest(seed), marker, reloadMarker: { ...marker }, reopenMarker: { ...marker }, taskId,
+    manifest,
+    manifestBytes,
+    manifestFile: "protected-browser/screenshot-manifest.json",
+    manifestSha256: digest(manifestBytes),
+    screenshots,
   };
 }
 
@@ -95,12 +177,20 @@ function protectedIsolation(runId) {
       containerId: digest(`${runId}/browser-container`),
       mounts: [
         { destination: "/output", readOnly: false, type: "bind" },
+        { destination: "/runner/node_modules/@axe-core/playwright", readOnly: true, type: "bind" },
+        { destination: "/runner/node_modules/axe-core", readOnly: true, type: "bind" },
         { destination: "/runner/node_modules/playwright", readOnly: true, type: "bind" },
         { destination: "/runner/node_modules/playwright-core", readOnly: true, type: "bind" },
         { destination: "/runner/run-protected-browser-lane.mjs", readOnly: true, type: "bind" },
       ],
       readOnlyRootFilesystem: true,
     },
+    browserDependencies: [
+      { destination: "/runner/node_modules/playwright", fileCount: 42, name: "playwright", treeSha256: digest(`${runId}/playwright-tree`), version: "1.61.1" },
+      { destination: "/runner/node_modules/playwright-core", fileCount: 310, name: "playwright-core", treeSha256: digest(`${runId}/playwright-core-tree`), version: "1.61.1" },
+      { destination: "/runner/node_modules/@axe-core/playwright", fileCount: 9, name: "@axe-core/playwright", treeSha256: digest(`${runId}/axe-playwright-tree`), version: "4.12.1" },
+      { destination: "/runner/node_modules/axe-core", fileCount: 18, name: "axe-core", treeSha256: digest(`${runId}/axe-core-tree`), version: "4.12.1" },
+    ],
     browserLaneSha256: protectedBrowserLaneSha256,
     candidateContainer: {
       containerId: digest(`${runId}/candidate-container`),
@@ -123,7 +213,7 @@ function protectedIsolation(runId) {
   return value;
 }
 
-function codingAgentIsolation(runId, driver, bootstrapMode, nodekitTarballSha256) {
+function codingAgentIsolation(runId, driver, agentModel, bootstrapMode, nodekitTarballSha256) {
   const instructions = {
     automaticPath: driver === "codex" ? "AGENTS.md" : "CLAUDE.md",
     canonicalPath: "AGENTS.md",
@@ -152,9 +242,9 @@ function codingAgentIsolation(runId, driver, bootstrapMode, nodekitTarballSha256
   bootstrap.bootstrapSha256 = digest(JSON.stringify(bootstrap));
   const value = {
     bootstrap,
-    broker: { containerId: digest(`${runId}/broker`), expiresAt: "2026-07-22T20:00:00.000Z", imageId: agentContainerImageId, runnerSha256: providerBrokerSha256 },
+    broker: { allowedModel: agentModel, containerId: digest(`${runId}/broker`), expiresAt: "2026-07-22T20:00:00.000Z", imageId: agentContainerImageId, runnerSha256: providerBrokerSha256 },
     checks: Object.fromEntries([
-      "bootstrapContractBound", "brokerCredentialExpiryBound", "brokerExactImageBound", "brokerNoPublishedPorts", "brokerRunnerBound", "capabilitiesDropped",
+      "bootstrapContractBound", "brokerCredentialExpiryBound", "brokerExactImageBound", "brokerModelBound", "brokerNoPublishedPorts", "brokerRunnerBound", "capabilitiesDropped",
       "candidateOnlyWritableHostMount", "containerCommandBound", "credentialBrokered", "dockerSocketAbsent", "exactImageBound",
       "hostNamespacesNotShared", "instructionPolicyBound", "internalNetworkBound", "noCredentialMount",
       "noEvidenceOrEvaluatorMount", "noNewPrivileges", "noPublishedPorts", "providerBrokerOnlyPeer",
@@ -261,11 +351,12 @@ async function createTarball(_root, { marker = "candidate", version = "0.2.1" } 
   };
 }
 
-function evidenceBytes(kind, { agentProcessIsolation, agentSessionId, applicationHash, candidateCommit, configHash, packageCandidate, promptSha256, runId, sourceHash, task, taskSetSha256, trialRunnerSha256 }) {
+function evidenceBytes(kind, { agentModel, agentProcessIsolation, agentSessionId, applicationHash, candidateCommit, configHash, packageCandidate, promptSha256, runId, sourceHash, task, taskSetSha256, trialRunnerSha256 }) {
   if (kind === "session") return Buffer.from(`${JSON.stringify({ type: "thread.started", thread_id: agentSessionId })}\n`);
   if (kind === "prompt") return Buffer.from(`${task.goal}\n`);
   if (kind === "prompt-hash") return Buffer.from(`${promptSha256}\n`);
   if (kind === "environment") return Buffer.from(`${JSON.stringify({
+    agentModel,
     nodekitPackage: packageCandidate.packageName,
     nodekitCommit: candidateCommit,
     nodekitSourceHash: sourceHash,
@@ -308,10 +399,13 @@ async function createMatrix(root, candidateCommit, sourceHash, packageCandidate)
         const runId = `agent_${task.id}_${agentProfile}_${index + 1}`;
         const agentSessionId = `session_${runId}`;
         const agentDriver = agentProfile === "claude-code" ? "claude-code" : "codex";
+        const agentModel = agentProfile === "lower-cost"
+          ? "gpt-5.6-luna"
+          : agentProfile === "claude-code" ? "claude-opus-4-1" : "gpt-5.6-sol";
         const bootstrapMode = task.id === "research-map" && agentProfile === "codex" && index === 0
           ? "agent-process-packed-cli-from-empty"
           : "pre-scaffolded-packed-cli";
-        const agentProcessIsolation = codingAgentIsolation(runId, agentDriver, bootstrapMode, packageCandidate.nodekitTarballSha256);
+        const agentProcessIsolation = codingAgentIsolation(runId, agentDriver, agentModel, bootstrapMode, packageCandidate.nodekitTarballSha256);
         const runRoot = path.join(root, runId);
         const fixtureManifestPath = `${runId}/candidate/browser/screenshot-manifest.json`;
         const browserManifest = JSON.parse(submissionEvidenceFixtureBytes(
@@ -355,17 +449,7 @@ async function createMatrix(root, candidateCommit, sourceHash, packageCandidate)
         const promptSha256 = digest(task.goal);
         const taskSetSha256 = digest(heldoutTaskBytes);
         const trialRunnerSha256 = protectedTrialRunnerSha256;
-        const browserManifestSha256 = digest(browserManifestBytes);
-        const screenshotEvidenceRootSha256 = digest(JSON.stringify(browserManifest.screenshots.map((entry) => ({
-          path: entry.path,
-          pngSha256: entry.pngSha256,
-          sidecarPath: entry.sidecarPath,
-          sidecarSha256: entry.sidecarSha256,
-          state: entry.state,
-          theme: entry.theme,
-          viewport: entry.viewport,
-          viewportId: entry.viewportId,
-        })).sort((left, right) => left.path.localeCompare(right.path))));
+        const candidateBrowserManifestSha256 = digest(browserManifestBytes);
         const fixtureClosure = submissionEvidenceFixtureClosure(fixtureManifestPath, candidateCommit, sourceHash);
         const evaluatorPngChild = fixtureClosure.find((entry) => entry.path.endsWith(".png"));
         const evaluatorScreenshotBytes = submissionEvidenceFixtureBytes(evaluatorPngChild.path, candidateCommit, sourceHash);
@@ -377,13 +461,18 @@ async function createMatrix(root, candidateCommit, sourceHash, packageCandidate)
         };
         const isolation = protectedIsolation(runId);
         const candidateArchiveBytes = evidenceBytes("candidate-archive", {
-          agentProcessIsolation, agentSessionId, applicationHash, candidateCommit, configHash, packageCandidate, promptSha256, runId, sourceHash, task, taskSetSha256, trialRunnerSha256,
+          agentModel, agentProcessIsolation, agentSessionId, applicationHash, candidateCommit, configHash, packageCandidate, promptSha256, runId, sourceHash, task, taskSetSha256, trialRunnerSha256,
         });
         const candidateArchiveSha256 = digest(candidateArchiveBytes);
+        const protectedInputToken = `cert_${digest(`${runId}/protected-browser-session`).slice(0, 48)}`;
+        const protectedArtifact = protectedTaskArtifact(task.id, protectedInputToken, candidateArchiveSha256);
+        const protectedBrowser = protectedBrowserFixture(runId, candidateArchiveSha256, protectedInputToken, task.id);
+        const protectedBrowserManifestSha256 = protectedBrowser.manifestSha256;
+        const screenshotEvidenceRootSha256 = protectedBrowser.manifest.screenshotEvidenceRootSha256;
         const visualInventory = {
           applicationHash,
           automatedReview: true,
-          browserManifestSha256,
+          browserManifestSha256: protectedBrowserManifestSha256,
           candidateArchiveSha256,
           configHash,
           evaluatorScreenshotSha256,
@@ -411,7 +500,8 @@ async function createMatrix(root, candidateCommit, sourceHash, packageCandidate)
         const relevanceGroups = Array.from({ length: 4 }, (_, group) => ({ alternatives: [`term-${group}`], group: group + 1, matches: [`term-${group}`], passed: true }));
         const protectedEvaluation = {
           applicationHash,
-          browserManifestSha256,
+          browserManifestSha256: protectedBrowserManifestSha256,
+          candidateBrowserManifestSha256,
           candidateArchiveSha256,
           checks: Object.fromEntries([
             "applicationIdentityBound", "artifactDownloadVerified", "artifactReloadPersistenceVerified", "artifactReopenPersistenceVerified",
@@ -431,11 +521,14 @@ async function createMatrix(root, candidateCommit, sourceHash, packageCandidate)
           passed: true,
           postAgentTreeHash: browserManifest.postAgentTreeHash,
           producer,
+          protectedBrowserManifestFile: protectedBrowser.manifestFile,
+          protectedTaskInput: protectedArtifact.protectedTaskInput,
+          protectedTaskInputSha256: protectedArtifact.protectedTaskInputSha256,
           runId,
           schemaVersion: "nodekit.protected-agent-evaluation/v2",
           screenshotEvidenceRootSha256,
           sourceFilesInspected: ["apps/web/public/index.html"],
-          taskArtifactEvidence: protectedArtifactEvidence(task.id, runId),
+          taskArtifactEvidence: protectedArtifact.taskArtifactEvidence,
           taskBriefSha256: promptSha256,
           taskId: task.id,
           taskRelevance: {
@@ -461,7 +554,7 @@ async function createMatrix(root, candidateCommit, sourceHash, packageCandidate)
           const bytes = new Set(["browser-certification", "screenshot-manifest"]).has(kind)
             ? browserManifestBytes
              : specialEvidence.get(kind) ?? evidenceBytes(kind, {
-                agentProcessIsolation, agentSessionId, applicationHash, candidateCommit, configHash, packageCandidate, promptSha256,
+                agentModel, agentProcessIsolation, agentSessionId, applicationHash, candidateCommit, configHash, packageCandidate, promptSha256,
                 runId, sourceHash, task, taskSetSha256, trialRunnerSha256,
               });
           const absolute = path.join(runRoot, ...relative.split("/"));
@@ -479,6 +572,18 @@ async function createMatrix(root, candidateCommit, sourceHash, packageCandidate)
           await mkdir(path.dirname(absolute), { recursive: true });
           await writeFile(absolute, bytes);
         }
+        const protectedBrowserRoot = path.join(runRoot, "evaluator");
+        for (const [relative, bytes] of [
+          [protectedBrowser.manifestFile, protectedBrowser.manifestBytes],
+          ...protectedBrowser.screenshots.flatMap((screenshot) => [
+            [screenshot.path, screenshot.png],
+            [screenshot.sidecarPath, screenshot.sidecarBytesValue],
+          ]),
+        ]) {
+          const absolute = path.join(protectedBrowserRoot, ...relative.split("/"));
+          await mkdir(path.dirname(absolute), { recursive: true });
+          await writeFile(absolute, bytes);
+        }
         browserManifestPaths.push(path.join(runRoot, "candidate", "browser", "screenshot-manifest.json"));
         const receipt = {
           agentBootstrap: agentProcessIsolation.bootstrap,
@@ -491,7 +596,7 @@ async function createMatrix(root, candidateCommit, sourceHash, packageCandidate)
           agentContainerImageId,
           agentDriver,
           agentExitCode: 0,
-          agentModel: agentProfile === "lower-cost" ? "gpt-5.6-luna" : null,
+          agentModel,
           agentProfile,
           agentSessionId,
           agentSessionMode: "ephemeral",

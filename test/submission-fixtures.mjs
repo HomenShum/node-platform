@@ -182,7 +182,7 @@ function pngChunk(type, data = Buffer.alloc(0)) {
   return chunk;
 }
 
-function browserPng(width, height, marker) {
+export function browserPng(width, height, marker) {
   const cacheKey = `${width}x${height}:${marker}`;
   let base = pngFixtureCache.get(cacheKey);
   if (!base) {
@@ -729,7 +729,7 @@ function codingAgentIsolation(runId, driver, agentModel, bootstrapMode, nodekitT
   return value;
 }
 
-function protectedTaskArtifact(taskId, inputToken, candidateArchiveSha256) {
+export function protectedTaskArtifact(taskId, inputToken, candidateArchiveSha256) {
   const artifactType = {
     "launch-presentation": "launch-presentation",
     "research-map": "research-map",

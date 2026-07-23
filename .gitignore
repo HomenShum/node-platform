@@ -9,3 +9,7 @@ proof/ease/agents/
 /.tmp/
 /.understand-anything/*
 !/.understand-anything/.understandignore
+
+# Windows reserved device name. A `2>NUL` redirect run under a POSIX shell on
+# Windows creates a real zero-byte file here instead of discarding output.
+/NUL
