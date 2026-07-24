@@ -1,0 +1,18 @@
+{
+  "schemaVersion": "nodekit.evolution-evidence/v1",
+  "id": "evd:builder-journey-j1-decide-build",
+  "kind": "test",
+  "artifactRef": "git:6a2716e3fcb3a344ca09e918cc7c57fc8ff9e237:evolution/artifacts/builder-journey-j1-decide-build.md",
+  "sha256": "b47acfddda4af21a529da6dd1ae8d53324ac752083354581d363ccd39b7164db",
+  "sourceCommit": "6a2716e3fcb3a344ca09e918cc7c57fc8ff9e237",
+  "generatedAt": "2026-07-23T06:55:00-07:00",
+  "environment": {
+    "reviewSurface": "node-platform",
+    "suites": "opportunity-compiler 4/4 (salon contract compiles to a valid product-design-contract, decided fields carried and protected decisions pinned, salon prohibitions survive into avoid, read-only Atlas query carries the wedge terms); typecheck:public exit 0; zero new runtime deps",
+    "evidenceBoundary": "Proves the Decide to Build compiler carries the OpportunityContract's decisions into protected product-contract fields and prohibitions into avoid. It does not run the frontend tournament or certify any application; EASE_NOT_CERTIFIED stands."
+  },
+  "verifiesInvariantIds": [
+    "inv:opportunity-carries-to-build"
+  ],
+  "result": "partial"
+}
