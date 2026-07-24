@@ -1,0 +1,20 @@
+{
+  "schemaVersion": "nodekit.invariant-claim/v1",
+  "id": "inv:build-packet-carries-opportunity",
+  "statement": "Materializing an approved OpportunityContract into a build packet writes a product-design-contract the frontend planner accepts, preserving the decided fields and protected decisions (primaryUser, primaryJob, and permissionBoundaries pinned to the nodekit authority; finalVerdict to the nodeproof authority) and the read-only Atlas query, so the Build stage cannot re-decide scope; and a packet name that could escape the packet directory is refused before any write.",
+  "scope": {
+    "applications": [
+      "NodeKit builder journey"
+    ],
+    "surfaces": [
+      "Decide to Build seam, build packet materialization, frontend planner intake"
+    ]
+  },
+  "enforcement": "test",
+  "verifierRefs": [
+    "src/lib/opportunity-compiler.mjs",
+    "test/opportunity-build-packet.test.mjs"
+  ],
+  "introducedByEventId": "evt:builder-journey-j1-finish",
+  "status": "partially-verified"
+}

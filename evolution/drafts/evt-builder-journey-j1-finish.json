@@ -1,0 +1,35 @@
+{
+  "schemaVersion": "nodekit.evolution-event/v1",
+  "id": "evt:builder-journey-j1-finish",
+  "projectId": "nodekit",
+  "repository": "HomenShum/node-platform",
+  "source": {
+    "commitSha": "7bfc50e7373aa008200c8e199098200ca12691bf",
+    "occurredAt": "2026-07-23T08:10:00-07:00"
+  },
+  "track": "product",
+  "category": "workflow",
+  "challenge": "J1 landed the Decide to Build compiler as a pure function, but it was still inert: nothing materialized its output into the files the Build stage consumes, and the base template a build agent specializes shipped a designed neo-brutalist stylesheet whose token surface was one line of eight color variables, so the design intent the compiler emits had nothing to map onto.",
+  "observedFailure": "compileOpportunityToBuild returned a product contract in memory but never wrote the packet the frontend planner reads, and the template's design language (semantic status colors, feedback surfaces, the hard shadow, type weights, radii) was hardcoded and duplicated across the light and dark blocks, so scope could still drift at Build and the design could not be expressed or rethemed through tokens.",
+  "resolution": "Added materializeBuildPacket, which compiles an approved OpportunityContract and writes the product-design-contract packet plus the Atlas reuse query into harness/frontend/product-packets, where compileFrontendPlan reads them; the packet name is validated so it cannot escape the directory. Refactored templates/base/apps/web/public/styles.css into a structured 30-token vocabulary (base palette, semantic status, feedback surfaces, accent surfaces, elevation, type scale, radius) with the dark block collapsed to token reassignments. A computed-style harness proved the refactor output-identical across 54 themed selectors in both themes.",
+  "assumptionIds": [],
+  "invariantIds": [
+    "inv:build-packet-carries-opportunity"
+  ],
+  "evidenceIds": [
+    "evd:builder-journey-j1-finish"
+  ],
+  "predecessorIds": [
+    "evt:builder-journey-j1-decide-build"
+  ],
+  "knownLimitations": [
+    "The token-preservation check was a manual computed-style audit, not a committed automated test, so it proves this refactor but does not stand as a permanent regression guard.",
+    "materializeBuildPacket produces the Build stage inputs; it does not run the frontend tournament, render three directions, or generate the salon application.",
+    "No real builder has yet carried the salon case from Decide through a certified Build; the EASE verdict remains EASE_NOT_CERTIFIED."
+  ],
+  "interpretation": {
+    "status": "human-reviewed",
+    "reviewedBy": "project-owner",
+    "reviewedAt": "2026-07-23T08:10:00-07:00"
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "schemaVersion": "nodekit.evolution-evidence/v1",
+  "id": "evd:builder-journey-j1-finish",
+  "kind": "test",
+  "artifactRef": "git:7bfc50e7373aa008200c8e199098200ca12691bf:evolution/artifacts/builder-journey-j1-finish.md",
+  "sha256": "7d58ab9cc7110a5ded70a88deaf84007a5cb88d8aebefef34ba6a0c43a802d8b",
+  "sourceCommit": "7bfc50e7373aa008200c8e199098200ca12691bf",
+  "generatedAt": "2026-07-23T08:10:00-07:00",
+  "environment": {
+    "reviewSurface": "node-platform",
+    "suites": "opportunity-build-packet 2/2 (salon compile->packet->plan carries protected decisions and the read-only atlas query; packet name path-escape refused), opportunity-compiler 4/4 regression, typecheck:public and typecheck:component exit 0; token refactor computed-style harness reports 0 diffs over 54 themed selectors in both light and dark",
+    "evidenceBoundary": "Proves the Decide to Build packet materialization carries the OpportunityContract boundary into a plan-accepted product contract, and that the template token refactor preserved rendered output. It does not run the frontend tournament or certify any application; the token check was a manual computed-style audit, not a committed test; EASE_NOT_CERTIFIED stands."
+  },
+  "verifiesInvariantIds": [
+    "inv:build-packet-carries-opportunity"
+  ],
+  "result": "partial"
+}

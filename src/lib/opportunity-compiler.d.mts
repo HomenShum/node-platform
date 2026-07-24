@@ -24,3 +24,14 @@ export interface CompiledBuildInputs {
 }
 
 export function compileOpportunityToBuild(opportunity: unknown): CompiledBuildInputs;
+
+export interface MaterializedBuildPacket extends CompiledBuildInputs {
+  packetPath: string;
+  atlasQueryPath: string;
+}
+
+export function materializeBuildPacket(options: {
+  repoRoot: string;
+  opportunity: unknown;
+  packetName?: string;
+}): Promise<MaterializedBuildPacket>;
