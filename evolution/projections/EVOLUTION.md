@@ -54,6 +54,16 @@ Canonical JSON records remain authoritative. This projection explains why materi
 - Evidence: `evd:builder-journey-j1-decide-build` (partial)
 - Known limitations: The compiler produces Build inputs; it does not yet run the frontend tournament or generate the salon application, so no contract has been carried through to a rendered, certified surface.; The protected-decision pinning is verified by a unit test over the single salon slice; no real builder has carried an OpportunityContract through compile to build to certification.; This closes the Decide to Build hand-off mechanically; it certifies no application, and the EASE verdict remains EASE_NOT_CERTIFIED.
 
+### J1 landed the Decide to Build compiler as a pure function, but it was still inert: nothing materialized its output into the files the Build stage consumes, and the base template a build agent specializes shipped a designed neo-brutalist stylesheet whose token surface was one line of eight color variables, so the design intent the compiler emits had nothing to map onto.
+
+- Event: `evt:builder-journey-j1-finish`
+- Source: `7bfc50e7373aa008200c8e199098200ca12691bf`
+- Resolution: Added materializeBuildPacket, which compiles an approved OpportunityContract and writes the product-design-contract packet plus the Atlas reuse query into harness/frontend/product-packets, where compileFrontendPlan reads them; the packet name is validated so it cannot escape the directory. Refactored templates/base/apps/web/public/styles.css into a structured 30-token vocabulary (base palette, semantic status, feedback surfaces, accent surfaces, elevation, type scale, radius) with the dark block collapsed to token reassignments. A computed-style harness proved the refactor output-identical across 54 themed selectors in both themes.
+- Observed failure: compileOpportunityToBuild returned a product contract in memory but never wrote the packet the frontend planner reads, and the template's design language (semantic status colors, feedback surfaces, the hard shadow, type weights, radii) was hardcoded and duplicated across the light and dark blocks, so scope could still drift at Build and the design could not be expressed or rethemed through tokens.
+- Invariants: `inv:build-packet-carries-opportunity` (partially-verified)
+- Evidence: `evd:builder-journey-j1-finish` (partial)
+- Known limitations: The token-preservation check was a manual computed-style audit, not a committed automated test, so it proves this refactor but does not stand as a permanent regression guard.; materializeBuildPacket produces the Build stage inputs; it does not run the frontend tournament, render three directions, or generate the salon application.; No real builder has yet carried the salon case from Decide through a certified Build; the EASE verdict remains EASE_NOT_CERTIFIED.
+
 ## Architecture evolution
 
 ### Structural availability was mislabeled as browser certification.
