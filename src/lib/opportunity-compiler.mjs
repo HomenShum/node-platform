@@ -1,3 +1,6 @@
+import { mkdir, writeFile } from "node:fs/promises";
+import path from "node:path";
+import { stringify as stringifyYaml } from "yaml";
 import { FRONTEND_REQUIRED_GUARDRAILS, FRONTEND_REQUIRED_STATES } from "./frontend-specialist.mjs";
 
 // Decide -> Build compiler. An approved OpportunityContract is the boundary the Build stage must
@@ -88,4 +91,28 @@ export function compileOpportunityToBuild(opportunity) {
   };
 
   return { productDesignContract, atlasQuery };
+}
+
+// Materialize the Decide -> Build hand-off as the files the Build stage actually consumes: a
+// product-design contract packet the frontend planner reads, and the Atlas reuse query beside it.
+// This is the seam made runnable — the OpportunityContract stops being an inert record and becomes
+// the boundary the Build stage compiles against.
+/**
+ * @param {{ repoRoot: string, opportunity: object, packetName?: string }} options
+ * @returns {Promise<{ packetPath: string, atlasQueryPath: string, productDesignContract: object, atlasQuery: object }>}
+ */
+export async function materializeBuildPacket({ repoRoot, opportunity, packetName = "opportunity" }) {
+  if (!/^[a-z0-9-]{1,64}$/.test(packetName)) {
+    throw new Error(`materializeBuildPacket packetName must be a short kebab slug, got: ${packetName}`);
+  }
+  const root = path.resolve(repoRoot);
+  const { productDesignContract, atlasQuery } = compileOpportunityToBuild(opportunity);
+  const packetDir = path.join(root, "harness", "frontend", "product-packets");
+  await mkdir(packetDir, { recursive: true });
+  const packetPath = path.join(packetDir, `${packetName}.yaml`);
+  const atlasQueryPath = path.join(packetDir, `${packetName}.atlas-query.json`);
+  await writeFile(packetPath, stringifyYaml(productDesignContract), "utf8");
+  await writeFile(atlasQueryPath, `${JSON.stringify(atlasQuery, null, 2)}\n`, "utf8");
+  const rel = (target) => path.relative(root, target).replaceAll("\\", "/");
+  return { packetPath: rel(packetPath), atlasQueryPath: rel(atlasQueryPath), productDesignContract, atlasQuery };
 }
