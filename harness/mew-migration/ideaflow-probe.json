@@ -1,0 +1,64 @@
+{
+  "wave": "0B",
+  "plan": "docs/MEW_MIGRATION_E2E_PLAN.md",
+  "probedAt": "2026-07-29T09:25:00Z",
+  "target": "Ideaflow notebook \"mew\" (owner's account)",
+  "outcome": "KILL_CONDITION",
+  "killCondition": {
+    "condition": "No signed-in Ideaflow session in the connected Chrome profile. The brief names this the kill condition for this half: never enter credentials; record and stop.",
+    "evidence": [
+      "https://ideaflow.app/ root serves the logged-out marketing page (\"Zero-Friction AI Notebook\") with a Log in button, not the notebook app.",
+      "Clicking Log in redirects to https://auth.ideaflow.app/u/login (Auth0 universal login) presenting an EMPTY email/password form with Google/Apple SSO buttons - no silent session pass-through occurred, so no Auth0 session cookie exists.",
+      "localStorage on https://ideaflow.app contains only a PostHog analytics key (ph_phc_...posthog); no @@auth0spajs@@ token-cache keys, confirming the SPA holds no cached access token.",
+      "https://ideaflow.io/ is the corporate marketing site (The Intelligence Amplification Company), not the app; no session surface there either."
+    ],
+    "notAttempted": "Credentials were never entered; SSO buttons (Continue with Google / Continue with Apple) were never clicked, per the brief and the no-authentication rule."
+  },
+  "accessMethod": null,
+  "routesTried": [
+    {
+      "route": 1,
+      "name": "documented export UI",
+      "result": "UNREACHABLE",
+      "detail": "Any export/settings UI lives behind the authenticated app shell. The unauthenticated root renders only the marketing landing page, so no export control exists to reach."
+    },
+    {
+      "route": 2,
+      "name": "observe the app's own network calls (read-only GETs)",
+      "result": "NOTHING_TO_OBSERVE",
+      "detail": "Full page load of https://ideaflow.app captured 26 requests: Next.js static chunks (/_next/static/...), manifest.json, logo192.png, Google Fonts, and PostHog analytics (us.i.posthog.com, us-assets.i.posthog.com). Zero calls to any notes/graph API - the app makes no data API calls while logged out, so there is no endpoint to replay read-only."
+    },
+    {
+      "route": 3,
+      "name": "DOM harvest",
+      "result": "EMPTY",
+      "detail": "The rendered DOM is the marketing shell (hero copy, Log in / Install App buttons, empty device mockups). No note content, links, or tags are present in the DOM to harvest."
+    }
+  ],
+  "receipt": {
+    "urlsVisited": [
+      "https://ideaflow.app/",
+      "https://auth.ideaflow.app/u/login (Auth0 universal login; state param is Auth0 flow state, not a session token)",
+      "https://ideaflow.io/"
+    ],
+    "networkObserved": [
+      "https://ideaflow.app/_next/static/chunks/* (static JS)",
+      "https://ideaflow.app/manifest.json",
+      "https://ideaflow.app/logo192.png",
+      "https://fonts.googleapis.com/css2?family=Inter",
+      "https://us.i.posthog.com/flags/ (analytics POST by the page itself, not by this probe)",
+      "https://us-assets.i.posthog.com/static/* (analytics JS)"
+    ],
+    "writesToIdeaflow": "none - navigation and read-only inspection only; the sole POST observed (PostHog /flags/) is the page's own analytics bootstrap, not initiated by this probe and not to Ideaflow",
+    "tokensOrCookiesRecorded": "none - only cookie/storage KEY NAMES were inspected (a single PostHog key); no values captured; sessionStorage key listing was blocked by the browser tool as sensitive and was not pursued"
+  },
+  "sampleNotes": [],
+  "sampleNotesNote": "Empty by rule: no authenticated access, and a synthetic notebook is defined as the failure mode. A stopped half with evidence is the success state here.",
+  "fullCountEstimate": {
+    "notes": null,
+    "links": null,
+    "tags": null,
+    "how": "Not estimable without authenticated access; no proxy estimate fabricated."
+  },
+  "unblock": "Owner input #1 from the plan: sign in to https://ideaflow.app once in the Chrome profile connected to claude-in-chrome, then re-run this probe. Routes 1-3 become testable immediately after."
+}
